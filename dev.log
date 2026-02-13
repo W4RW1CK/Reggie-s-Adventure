@@ -1,0 +1,25 @@
+
+> app-temp@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.103:3000
+
+✓ Starting...
+✓ Ready in 882ms
+ GET / 200 in 1598ms (compile: 1392ms, render: 206ms)
+ GET / 200 in 159ms (compile: 71ms, render: 88ms)
+ GET / 200 in 78ms (compile: 23ms, render: 56ms)
+ GET / 200 in 127ms (compile: 51ms, render: 76ms)
+Each child in a list should have a unique "key" prop.
+
+Check the render method of `VerifySVGs`. See https://react.dev/link/warning-keys for more information.
+Each child in a list should have a unique "key" prop.
+
+Check the render method of `VerifySVGs`. See https://react.dev/link/warning-keys for more information.
+ GET /verify-svgs 200 in 2.1s (compile: 1882ms, render: 255ms)
+ GET /verify-svgs 200 in 107ms (compile: 7ms, render: 100ms)
+✓ Compiled in 241ms
+ GET / 200 in 331ms (compile: 202ms, render: 129ms)
+ GET / 200 in 179ms (compile: 76ms, render: 103ms)

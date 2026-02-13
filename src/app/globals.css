@@ -1,0 +1,1079 @@
+@import "tailwindcss";
+/* NES.css (import from node_modules manually or via JS import if preferred, but CSS import is easier) */
+@import "nes.css/css/nes.min.css";
+
+@theme {
+  --font-press-start-2p: "Press Start 2P", monospace;
+
+  --color-bg-dark: #1a1a2e;
+  --color-bg-medium: #16213e;
+  --color-surface: #0f3460;
+  --color-text-primary: #e8e8e8;
+  --color-text-secondary: #a0a0a0;
+  --color-text-accent: #ffffff;
+  --color-border-nes: #4a4a4a;
+
+  --color-type-rayo-primary: #f5c542;
+  --color-type-rayo-secondary: #d4a017;
+  --color-type-rayo-bg: #2a2a40;
+
+  --color-type-flama-primary: #e74c3c;
+  --color-type-flama-secondary: #c0392b;
+  --color-type-flama-bg: #3d1f00;
+
+  --color-type-hielo-primary: #3498db;
+  --color-type-hielo-secondary: #2980b9;
+  --color-type-hielo-bg: #0a1628;
+
+  --color-stat-espiritu-full: #9b59b6;
+  --color-stat-espiritu-low: #4a235a;
+  --color-stat-espiritu-bg: #2c2c2c;
+
+  --color-stat-pulso-full: #f1c40f;
+  --color-stat-pulso-low: #7d6608;
+  --color-stat-pulso-bg: #2c2c2c;
+
+  --color-stat-hambre-full: #e74c3c;
+  --color-stat-hambre-low: #78281f;
+  --color-stat-hambre-bg: #2c2c2c;
+
+  --color-ui-btn-active: #4caf50;
+  --color-ui-btn-hover: #66bb6a;
+  --color-ui-btn-disabled: #555555;
+  --color-ui-btn-danger: #8b0000;
+  --color-ui-feedback-pos: #4caf50;
+  --color-ui-feedback-neg: #e74c3c;
+  --color-ui-modal-overlay: rgba(0, 0, 0, 0.7);
+}
+
+/* Global resets for NES look */
+body {
+  font-family: var(--font-press-start-2p);
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-primary);
+  image-rendering: pixelated;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* Custom scrollbar (if needed) */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-medium);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-nes);
+}
+
+/* =============================================
+   LOADING SCREEN (P1)
+   ============================================= */
+
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0a0a1a;
+  z-index: 100;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.loading-screen--fade-out {
+  opacity: 0;
+}
+
+/* CRT Scanline overlay */
+.loading-screen__scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.15) 2px,
+      rgba(0, 0, 0, 0.15) 4px);
+  pointer-events: none;
+  z-index: 101;
+}
+
+/* Center content container */
+.loading-screen__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  z-index: 102;
+}
+
+/* Stars decoration */
+.loading-screen__stars {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 8px;
+}
+
+.loading-screen__star {
+  font-size: 12px;
+  color: #f5c542;
+  animation: star-twinkle 1.5s ease-in-out infinite;
+}
+
+.loading-screen__star--1 {
+  animation-delay: 0s;
+}
+
+.loading-screen__star--2 {
+  animation-delay: 0.5s;
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.loading-screen__star--3 {
+  animation-delay: 1s;
+}
+
+@keyframes star-twinkle {
+
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Logo */
+.loading-screen__logo {
+  text-align: center;
+  line-height: 1.6;
+}
+
+.loading-screen__logo-top {
+  font-family: var(--font-press-start-2p);
+  font-size: 28px;
+  color: #f5c542;
+  text-shadow:
+    3px 3px 0px #d4a017,
+    6px 6px 0px #1a1a2e;
+  letter-spacing: 4px;
+  animation: logo-glow 3s ease-in-out infinite;
+}
+
+.loading-screen__logo-bottom {
+  font-family: var(--font-press-start-2p);
+  font-size: 20px;
+  color: #e8e8e8;
+  text-shadow:
+    2px 2px 0px #4a4a4a,
+    4px 4px 0px #1a1a2e;
+  letter-spacing: 6px;
+  margin-top: 8px;
+}
+
+@keyframes logo-glow {
+
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+
+  50% {
+    filter: brightness(1.3);
+  }
+}
+
+/* Pixel divider */
+.loading-screen__divider {
+  display: flex;
+  gap: 6px;
+  margin: 8px 0;
+}
+
+.loading-screen__pixel {
+  display: block;
+  width: 6px;
+  height: 6px;
+  background-color: #4a4a4a;
+}
+
+.loading-screen__pixel--accent {
+  background-color: #f5c542;
+}
+
+/* Loading text */
+.loading-screen__loading-text {
+  font-family: var(--font-press-start-2p);
+  font-size: 10px;
+  color: #a0a0a0;
+  letter-spacing: 2px;
+  min-width: 140px;
+  text-align: center;
+}
+
+/* NES-style progress bar */
+.loading-screen__progress-container {
+  width: 200px;
+  height: 16px;
+  border: 4px solid #e8e8e8;
+  background-color: #1a1a2e;
+  padding: 2px;
+  image-rendering: pixelated;
+}
+
+.loading-screen__progress-bar {
+  height: 100%;
+  background-color: #4caf50;
+  width: 0%;
+  animation: progress-fill 2.8s ease-in-out forwards;
+  image-rendering: pixelated;
+  /* Pixel stepped look */
+  background-image: repeating-linear-gradient(90deg,
+      #4caf50 0px,
+      #4caf50 8px,
+      #388e3c 8px,
+      #388e3c 10px);
+}
+
+@keyframes progress-fill {
+  0% {
+    width: 0%;
+  }
+
+  15% {
+    width: 10%;
+  }
+
+  40% {
+    width: 35%;
+  }
+
+  60% {
+    width: 55%;
+  }
+
+  80% {
+    width: 80%;
+  }
+
+  95% {
+    width: 95%;
+  }
+
+  100% {
+    width: 100%;
+  }
+}
+
+/* Version text */
+.loading-screen__version {
+  font-family: var(--font-press-start-2p);
+  font-size: 8px;
+  color: #555555;
+  letter-spacing: 1px;
+  margin-top: 16px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .loading-screen__logo-top {
+    font-size: 18px;
+    letter-spacing: 2px;
+  }
+
+  .loading-screen__logo-bottom {
+    font-size: 14px;
+    letter-spacing: 3px;
+  }
+
+  .loading-screen__progress-container {
+    width: 160px;
+  }
+}
+
+/* =============================================
+   TITLE SCREEN (P2)
+   ============================================= */
+
+.title-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0f0f2a;
+  cursor: pointer;
+  z-index: 90;
+  overflow: hidden;
+  /* Vignette border effect */
+  box-shadow: inset 0 0 120px 40px rgba(0, 0, 40, 0.8);
+}
+
+/* CRT scanlines (reuse from loading) */
+.title-screen__scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.1) 2px,
+      rgba(0, 0, 0, 0.1) 4px);
+  pointer-events: none;
+  z-index: 91;
+}
+
+/* Background creature silhouettes */
+.title-screen__bg-creatures {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.title-screen__creature {
+  position: absolute;
+  color: #f5c542;
+  animation: creature-float 6s ease-in-out infinite;
+}
+
+.title-screen__creature--rayo {
+  top: 10%;
+  left: 8%;
+  width: 120px;
+  color: #f5c542;
+  animation-delay: 0s;
+}
+
+.title-screen__creature--flama {
+  bottom: 15%;
+  right: 10%;
+  width: 100px;
+  color: #e74c3c;
+  animation-delay: 2s;
+}
+
+.title-screen__creature--hielo {
+  top: 20%;
+  right: 15%;
+  width: 90px;
+  color: #3498db;
+  animation-delay: 4s;
+}
+
+@keyframes creature-float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+/* Content container */
+.title-screen__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  z-index: 10;
+  animation: content-fade-in 0.8s ease-out;
+}
+
+@keyframes content-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Sparkle stars */
+.title-screen__stars-top {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 4px;
+}
+
+.title-screen__sparkle {
+  font-size: 10px;
+  color: #f5c542;
+  animation: sparkle-pulse 2s ease-in-out infinite;
+}
+
+.title-screen__sparkle--1 {
+  animation-delay: 0s;
+  color: #f5c542;
+}
+
+.title-screen__sparkle--2 {
+  animation-delay: 0.4s;
+  color: #e8e8e8;
+  font-size: 8px;
+}
+
+.title-screen__sparkle--3 {
+  animation-delay: 0.8s;
+  color: #3498db;
+  font-size: 14px;
+}
+
+.title-screen__sparkle--4 {
+  animation-delay: 1.2s;
+  color: #e8e8e8;
+  font-size: 8px;
+}
+
+.title-screen__sparkle--5 {
+  animation-delay: 1.6s;
+  color: #e74c3c;
+}
+
+@keyframes sparkle-pulse {
+
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.7);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+}
+
+/* Title text */
+.title-screen__title {
+  text-align: center;
+  line-height: 1.5;
+}
+
+.title-screen__title-main {
+  font-family: var(--font-press-start-2p);
+  font-size: 36px;
+  color: #f5c542;
+  text-shadow:
+    4px 4px 0px #d4a017,
+    8px 8px 0px rgba(0, 0, 0, 0.5);
+  letter-spacing: 5px;
+  animation: title-breathe 4s ease-in-out infinite;
+}
+
+.title-screen__title-sub {
+  font-family: var(--font-press-start-2p);
+  font-size: 24px;
+  color: #ffffff;
+  text-shadow:
+    3px 3px 0px #4a4a4a,
+    6px 6px 0px rgba(0, 0, 0, 0.4);
+  letter-spacing: 8px;
+  margin-top: 8px;
+}
+
+@keyframes title-breathe {
+
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+
+  50% {
+    filter: brightness(1.15);
+  }
+}
+
+/* Divider */
+.title-screen__divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 4px 0;
+}
+
+.title-screen__div-line {
+  display: block;
+  width: 40px;
+  height: 2px;
+  background-color: #4a4a4a;
+}
+
+.title-screen__div-diamond {
+  font-size: 8px;
+  color: #f5c542;
+}
+
+/* Version */
+.title-screen__version {
+  font-family: var(--font-press-start-2p);
+  font-size: 8px;
+  color: #555555;
+  letter-spacing: 1px;
+}
+
+/* Press Start - NES blinking */
+.title-screen__press-start {
+  font-family: var(--font-press-start-2p);
+  font-size: 14px;
+  color: #ffffff;
+  letter-spacing: 3px;
+  margin-top: 32px;
+  animation: press-start-blink 1s steps(2) infinite;
+}
+
+@keyframes press-start-blink {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Input hint */
+.title-screen__hint {
+  font-family: var(--font-press-start-2p);
+  font-size: 7px;
+  color: #444444;
+  letter-spacing: 1px;
+}
+
+/* Footer */
+.title-screen__footer {
+  position: absolute;
+  bottom: 24px;
+  font-family: var(--font-press-start-2p);
+  font-size: 7px;
+  color: #333333;
+  letter-spacing: 1px;
+  z-index: 10;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .title-screen__title-main {
+    font-size: 22px;
+    letter-spacing: 3px;
+  }
+
+  .title-screen__title-sub {
+    font-size: 16px;
+    letter-spacing: 4px;
+  }
+
+  .title-screen__press-start {
+    font-size: 11px;
+  }
+
+  .title-screen__creature--rayo {
+    width: 80px;
+  }
+
+  .title-screen__creature--flama {
+    width: 70px;
+  }
+
+  .title-screen__creature--hielo {
+    width: 60px;
+  }
+}
+
+/* =============================================
+   STORY SCREEN (P3)
+   ============================================= */
+
+.story-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #050510;
+  /* Very dark blue/black */
+  z-index: 80;
+  overflow: hidden;
+}
+
+/* Scanlines (reuse compatible) */
+.story-screen__scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.2) 2px,
+      rgba(0, 0, 0, 0.2) 4px);
+  pointer-events: none;
+  z-index: 81;
+}
+
+/* Background Particles */
+.story-screen__particles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.story-screen__particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.1);
+  animation: particle-rise 10s linear infinite;
+}
+
+.story-screen__particle--1 {
+  left: 10%;
+  bottom: -10px;
+  animation-duration: 8s;
+  animation-delay: 0s;
+}
+
+.story-screen__particle--2 {
+  left: 30%;
+  bottom: -10px;
+  animation-duration: 12s;
+  animation-delay: 2s;
+}
+
+.story-screen__particle--3 {
+  left: 50%;
+  bottom: -10px;
+  animation-duration: 7s;
+  animation-delay: 4s;
+}
+
+.story-screen__particle--4 {
+  left: 70%;
+  bottom: -10px;
+  animation-duration: 11s;
+  animation-delay: 1s;
+}
+
+.story-screen__particle--5 {
+  left: 90%;
+  bottom: -10px;
+  animation-duration: 9s;
+  animation-delay: 3s;
+}
+
+.story-screen__particle--6 {
+  left: 20%;
+  bottom: -10px;
+  animation-duration: 15s;
+  animation-delay: 5s;
+}
+
+@keyframes particle-rise {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(-110vh);
+    opacity: 0;
+  }
+}
+
+/* Content Container */
+.story-screen__content {
+  position: relative;
+  width: 90%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  z-index: 10;
+}
+
+/* NES Dialog Box */
+.story-screen__dialog {
+  background-color: #000;
+  border: 4px solid #fff;
+  box-shadow: 0 0 0 4px #000;
+  /* Outer black border for definition */
+  position: relative;
+  padding: 4px;
+}
+
+.story-screen__dialog-inner {
+  border: 2px solid #000;
+  /* Inner spacing border */
+  padding: 24px;
+  min-height: 200px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.story-screen__text {
+  font-family: var(--font-press-start-2p);
+  font-size: 14px;
+  line-height: 2;
+  color: #fff;
+  margin: 0;
+  white-space: pre-wrap;
+  /* Preserve formatting */
+}
+
+/* Blinking Cursor */
+.story-screen__cursor {
+  display: inline-block;
+  margin-left: 4px;
+  color: #f5c542;
+  animation: cursor-blink 0.8s steps(2) infinite;
+}
+
+@keyframes cursor-blink {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Continue Button Wrapper */
+.story-screen__continue-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: none;
+  /* Prevent clicks when hidden */
+}
+
+.story-screen__continue-wrapper--visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.story-screen__continue-btn {
+  font-family: var(--font-press-start-2p);
+  font-size: 12px;
+  padding: 16px 24px;
+  background-color: #fff;
+  color: #000;
+  border: 4px solid #4a4a4a;
+  /* NES feel */
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  /* Pixel push effect on hover/active would be nice */
+}
+
+.story-screen__continue-btn:hover {
+  background-color: #f5c542;
+  /* Gold hover */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.5);
+}
+
+.story-screen__continue-btn:active {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .story-screen__continue-btn {
+    width: 100%;
+    /* Full width button on mobile is easier to tap */
+    text-align: center;
+  }
+}
+
+/* =============================================
+   CREATION SCREEN (P4)
+   ============================================= */
+
+.creation-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #1a1a2e;
+  /* Deep purple/blue */
+  z-index: 70;
+  padding: 24px;
+  overflow-y: auto;
+  /* Allow scrolling on small screens */
+}
+
+.creation-screen__scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.1) 2px,
+      rgba(0, 0, 0, 0.1) 4px);
+  pointer-events: none;
+  z-index: 71;
+}
+
+.creation-screen__title {
+  font-family: var(--font-press-start-2p);
+  font-size: 24px;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 32px;
+  text-shadow: 2px 2px #000;
+  z-index: 72;
+}
+
+/* Carousel */
+.creation-screen__carousel {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 40px;
+  z-index: 72;
+  width: 100%;
+  max-width: 600px;
+  justify-content: center;
+}
+
+.creation-screen__arrow {
+  font-family: var(--font-press-start-2p);
+  color: #fff;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  transition: transform 0.2s;
+}
+
+.creation-screen__arrow:hover {
+  transform: scale(1.2);
+  color: #f5c542;
+}
+
+.creation-screen__showcase {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 220px;
+}
+
+.creation-screen__svg-container {
+  width: 180px;
+  height: 180px;
+  border: 4px solid #fff;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.3s ease;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.creation-screen__info {
+  text-align: center;
+  height: 60px;
+  /* Fixed height to prevent jumpiness */
+}
+
+.creation-screen__type-label {
+  font-family: var(--font-press-start-2p);
+  font-size: 16px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.creation-screen__type-desc {
+  font-family: var(--font-press-start-2p);
+  font-size: 10px;
+  color: #ccc;
+  line-height: 1.4;
+}
+
+/* Form */
+.creation-screen__form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 40px;
+  z-index: 72;
+  width: 100%;
+  max-width: 300px;
+}
+
+.creation-screen__label {
+  font-family: var(--font-press-start-2p);
+  font-size: 12px;
+  color: #fff;
+}
+
+.creation-screen__input {
+  font-family: var(--font-press-start-2p);
+  font-size: 14px;
+  padding: 12px;
+  text-align: center;
+  width: 100%;
+  border: 4px solid #4a4a4a;
+  background-color: #000;
+  color: #fff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.creation-screen__input:focus {
+  border-color: #f5c542;
+}
+
+.creation-screen__input--error {
+  border-color: #e74c3c;
+}
+
+.creation-screen__error {
+  font-family: var(--font-press-start-2p);
+  font-size: 8px;
+  color: #e74c3c;
+  margin-top: 4px;
+}
+
+/* Submit Button */
+.creation-screen__submit-btn {
+  font-family: var(--font-press-start-2p);
+  font-size: 14px;
+  padding: 16px 32px;
+  background-color: #27ae60;
+  color: #fff;
+  border: 4px solid #2ecc71;
+  cursor: pointer;
+  z-index: 72;
+  transition: all 0.2s;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
+}
+
+.creation-screen__submit-btn:hover:not(:disabled) {
+  background-color: #2ecc71;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.3);
+}
+
+.creation-screen__submit-btn:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+.creation-screen__submit-btn:disabled {
+  background-color: #555;
+  border-color: #444;
+  color: #888;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .creation-screen__title {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  .creation-screen__carousel {
+    gap: 12px;
+  }
+
+  .creation-screen__svg-container {
+    width: 140px;
+    height: 140px;
+  }
+}
+/* =============================================
+   REGENMON ANIMATIONS (Phase 8)
+   ============================================= */
+
+/* Idle Float */
+@keyframes float-idle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-float-idle {
+  animation: float-idle 3s ease-in-out infinite;
+}
+
+/* Happy Bounce */
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px) scale(1.05); }
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 1.5s ease-in-out infinite;
+}
+
+/* Sad Droop */
+@keyframes droop {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.95) translateY(5px); }
+}
+
+.animate-droop {
+  animation: droop 4s ease-in-out infinite;
+}
+
+/* Weak Pulse */
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; filter: grayscale(0.5); }
+  50% { opacity: 0.7; filter: grayscale(0.8); }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+/* Angry Shake */
+@keyframes shake-fast {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+.animate-shake-fast {
+  animation: shake-fast 0.5s linear infinite;
+}
