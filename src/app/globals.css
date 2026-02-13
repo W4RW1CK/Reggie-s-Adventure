@@ -1143,3 +1143,180 @@ body {
   from { text-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
   to { text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.4); }
 }
+
+/* =============================================
+   GAME BACKGROUNDS (P6)
+   ============================================= */
+
+.game-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  transition: background 1s ease;
+}
+
+.game-background__scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.1) 2px,
+      rgba(0, 0, 0, 0.1) 4px);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.game-background__layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* --- Common Ground Styles --- */
+/* Simple solid ground with a border-top */
+[class^="game-background__ground--"] {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 35%; /* Ground takes up bottom 35% */
+  border-top: 4px solid rgba(0,0,0,0.3);
+  z-index: 5;
+}
+
+.game-background__ground--rayo {
+  background-color: #3e3e5e; 
+  /* Hint of purple/grey */
+  background-image: 
+    linear-gradient(transparent 90%, rgba(0,0,0,0.2) 90%);
+  background-size: 20px 20px;
+}
+
+.game-background__ground--flama {
+  background-color: #5d2510;
+  /* Dark reddish brown */
+  background-image: 
+    radial-gradient(circle, rgba(0,0,0,0.2) 20%, transparent 20%);
+  background-size: 16px 16px;
+}
+
+.game-background__ground--hielo {
+  background-color: #deeef5;
+  /* Snowy white/blue */
+  border-top: 4px solid #fff;
+  background-image: 
+    linear-gradient(45deg, #ccdde5 25%, transparent 25%, transparent 75%, #ccdde5 75%, #ccdde5),
+    linear-gradient(45deg, #ccdde5 25%, transparent 25%, transparent 75%, #ccdde5 75%, #ccdde5);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+}
+
+
+/* --- Rayo Specifics --- */
+.game-background__mountain-back {
+  position: absolute;
+  bottom: 35%; /* Start at ground level */
+  left: 0;
+  width: 100%;
+  height: 100px;
+  background: 
+    linear-gradient(to top right, #2a2a40 50%, transparent 50%) 0 0,
+    linear-gradient(to top left, #2a2a40 50%, transparent 50%) 100% 0;
+  background-size: 100px 100px;
+  background-repeat: repeat-x;
+  opacity: 0.6;
+}
+
+.game-background__lightning {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  opacity: 0;
+}
+
+.active-storm {
+  animation: lightning-flash 5s infinite random;
+}
+
+@keyframes lightning-flash {
+  0%, 90% { opacity: 0; background-color: rgba(255, 255, 255, 0); }
+  92% { opacity: 0.8; background-color: rgba(255, 255, 255, 0.8); }
+  94% { opacity: 0; }
+  96% { opacity: 0.4; }
+  100% { opacity: 0; }
+}
+
+
+/* --- Flama Specifics --- */
+.game-background__volcano {
+  position: absolute;
+  bottom: 35%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 150px solid transparent;
+  border-right: 150px solid transparent;
+  border-bottom: 200px solid #3d1f00; /* Volcano body */
+  z-index: 2;
+}
+
+.game-background__ash {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(#444 2px, transparent 2px);
+  background-size: 32px 32px;
+  animation: ash-fall 4s linear infinite;
+  opacity: 0.5;
+  z-index: 6; /* In front of ground? maybe behind UI */
+}
+
+@keyframes ash-fall {
+  from { background-position: 0 0; }
+  to { background-position: 10px 64px; }
+}
+
+
+/* --- Hielo Specifics --- */
+.game-background__peaks {
+  position: absolute;
+  bottom: 35%;
+  width: 100%;
+  height: 150px;
+  background: 
+    linear-gradient(to top right, #cce 50%, transparent 50%) 0 0,
+    linear-gradient(to top left, #cce 50%, transparent 50%) 100% 0;
+  background-size: 60px 150px;
+  background-repeat: repeat-x;
+  opacity: 0.8;
+}
+
+.game-background__snow {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(white 2px, transparent 2px),
+    radial-gradient(white 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  animation: snow-fall 10s linear infinite;
+  z-index: 6;
+}
+
+.game-background__snow.heavy {
+  animation: snow-fall 2s linear infinite; /* Faster snow */
+  opacity: 0.8;
+}
+
+.game-background__snow.light {
+  opacity: 0.3;
+}
+
+@keyframes snow-fall {
+  from { background-position: 0 0, 20px 20px; }
+  to { background-position: 0 400px, 20px 420px; }
+}

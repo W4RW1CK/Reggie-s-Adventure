@@ -7,9 +7,7 @@ import TitleScreen from '@/components/screens/TitleScreen';
 import StoryScreen from '@/components/screens/StoryScreen';
 import CreationScreen from '@/components/screens/CreationScreen';
 import TransitionScreen from '@/components/screens/TransitionScreen';
-import {
-  GameScreen
-} from '@/components/screens/placeholders';
+import GameScreen from '@/components/screens/GameScreen';
 import { RegenmonType } from '@/lib/types';
 
 export default function Home() {
