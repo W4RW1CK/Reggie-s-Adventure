@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${pressStart2P.variable} antialiased`}>
+      <body className={`${pressStart2P.variable} antialiased`} suppressHydrationWarning>
         {children}
       </body>
     </html>

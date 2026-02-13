@@ -118,6 +118,12 @@
 
 ---
 
+### Fase 9: Pantalla de Transición (P5) (2026-02-13)
+- [x] Fase 9.1: `src/components/screens/TransitionScreen.tsx` creado con animación de puntos y timing.
+- [x] Fase 9.2: Estilos CSS agregados a `globals.css` (scanlines, animaciones de texto).
+- [x] Fase 9.3: Integración en `page.tsx` y `useScreenManager.ts` (navegación Creación -> Transición -> Juego).
+- [x] Fase 9.4: Verificación lógica de flujo completada.
+
 ## NOTAS
 
 - Solo Sesión 1 tiene documentación completa del bootcamp

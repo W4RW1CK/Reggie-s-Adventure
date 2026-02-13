@@ -1077,3 +1077,69 @@ body {
 .animate-shake-fast {
   animation: shake-fast 0.5s linear infinite;
 }
+
+/* =============================================
+   TRANSITION SCREEN (P5)
+   ============================================= */
+
+.transition-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000;
+  z-index: 95;
+  transition: opacity 0.5s ease;
+}
+
+.transition-screen--fade-out {
+  opacity: 0;
+}
+
+.transition-screen__scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.3) 2px,
+      rgba(0, 0, 0, 0.3) 4px);
+  pointer-events: none;
+  z-index: 96;
+}
+
+.transition-screen__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  z-index: 100;
+}
+
+.transition-screen__icon {
+  font-size: 48px;
+  animation: pulse-slow 2s infinite ease-in-out;
+  filter: blur(1px);
+}
+
+.transition-screen__text {
+  font-family: var(--font-press-start-2p);
+  color: #fff;
+  font-size: 14px;
+  text-align: center;
+  line-height: 1.8;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  animation: text-glow 2s infinite alternate;
+}
+
+@keyframes pulse-slow {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+@keyframes text-glow {
+  from { text-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
+  to { text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.4); }
+}

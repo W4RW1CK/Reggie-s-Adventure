@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useGameState } from './useGameState';
 
-export type ScreenState = 'LOADING' | 'TITLE' | 'STORY' | 'CREATION' | 'GAME';
+export type ScreenState = 'LOADING' | 'TITLE' | 'STORY' | 'CREATION' | 'TRANSITION' | 'GAME';
 
 export function useScreenManager() {
     const { regenmon, config, loading: dataLoading } = useGameState();

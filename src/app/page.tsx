@@ -6,6 +6,7 @@ import LoadingScreen from '@/components/screens/LoadingScreen';
 import TitleScreen from '@/components/screens/TitleScreen';
 import StoryScreen from '@/components/screens/StoryScreen';
 import CreationScreen from '@/components/screens/CreationScreen';
+import TransitionScreen from '@/components/screens/TransitionScreen';
 import {
   GameScreen
 } from '@/components/screens/placeholders';
@@ -39,11 +40,13 @@ export default function Home() {
         <CreationScreen
           onDespertar={(name, type) => {
             createRegenmon(name, type);
-            // In real flow: Go to Transition -> Game
-            // For now: Direct to Game
-            navigateTo('GAME');
+            navigateTo('TRANSITION');
           }}
         />
+      )}
+
+      {currentScreen === 'TRANSITION' && (
+        <TransitionScreen onComplete={() => navigateTo('GAME')} />
       )}
 
       {currentScreen === 'GAME' && (
