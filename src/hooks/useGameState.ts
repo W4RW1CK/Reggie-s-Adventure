@@ -70,19 +70,41 @@ export function useGameState() {
         saveConfigToStorage(newConfig);
     };
 
-    const updateStatAction = (stat: keyof RegenmonStats, amount: number) => {
-        if (!regenmon) return;
+    const updateStatsWithDeltas = (deltas: Partial<RegenmonStats>) => {
+        setRegenmon(prev => {
+            if (!prev) return null;
 
-        const currentVal = regenmon.stats[stat];
-        // Check limits
-        if (amount > 0 && currentVal >= STAT_MAX) return; // Can't go above max
-        if (amount < 0 && currentVal <= STAT_MIN) return; // Can't go below min
+            const newStats = { ...prev.stats };
+            let hasChanges = false;
 
-        const newVal = Math.max(STAT_MIN, Math.min(STAT_MAX, currentVal + amount));
+            (Object.entries(deltas) as [keyof RegenmonStats, number][]).forEach(([stat, amount]) => {
+                const currentVal = newStats[stat];
 
-        // Construct new stats object
-        const newStats = { ...regenmon.stats, [stat]: newVal };
-        handleUpdateStats(newStats);
+                // Check limits based on delta direction
+                if (amount > 0 && currentVal >= STAT_MAX) return;
+                if (amount < 0 && currentVal <= STAT_MIN) return;
+
+                const newVal = Math.max(STAT_MIN, Math.min(STAT_MAX, currentVal + amount));
+
+                if (newVal !== currentVal) {
+                    newStats[stat] = newVal;
+                    hasChanges = true;
+                }
+            });
+
+            if (!hasChanges) return prev;
+
+            const updatedRegenmon = {
+                ...prev,
+                stats: newStats,
+                lastUpdated: new Date().toISOString(),
+            };
+
+            // Side effect: save to storage
+            saveRegenmon(updatedRegenmon);
+
+            return updatedRegenmon;
+        });
     };
 
     const toggleMusic = () => {
@@ -108,7 +130,7 @@ export function useGameState() {
         config,
         loading,
         createRegenmon,
-        updateStatAction,
+        updateStatAction: updateStatsWithDeltas,
         toggleMusic,
         resetGame,
         markIntroSeen,
