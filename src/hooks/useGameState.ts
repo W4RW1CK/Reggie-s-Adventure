@@ -125,6 +125,20 @@ export function useGameState() {
         saveConfigToStorage(newConfig);
     };
 
+    const updateRegenmonName = (newName: string) => {
+        if (!regenmon) return;
+        const updated = { ...regenmon, name: newName, nameChangeUsed: true };
+        setRegenmon(updated);
+        saveRegenmon(updated);
+    };
+
+    const dismissTutorial = () => {
+        if (!regenmon) return;
+        const updated = { ...regenmon, tutorialDismissed: true };
+        setRegenmon(updated);
+        saveRegenmon(updated);
+    };
+
     return {
         regenmon,
         config,
@@ -134,5 +148,7 @@ export function useGameState() {
         toggleMusic,
         resetGame,
         markIntroSeen,
+        updateRegenmonName,
+        dismissTutorial,
     };
 }

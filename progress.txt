@@ -1,7 +1,7 @@
 # Progress — Reggie's Adventure
-# Última actualización: 2026-02-12
+# Última actualización: 2026-02-13
 
-## ESTADO ACTUAL: Archivos canónicos creados — Pendiente aprobación
+## ESTADO ACTUAL: Fase 12 Completada — Iniciando Fase 13
 
 ---
 
@@ -132,6 +132,21 @@
 - [x] Fase 10.3: `src/components/screens/GameScreen.tsx` creado integrando Background + Regenmon.
 - [x] Fase 10.4: Placeholder de GameScreen eliminado en `page.tsx` y reemplazado por componente real.
 - [x] Fase 10.5: Variaciones visuales por estado (Good/Neutral/Bad) implementadas.
+
+### Fase 11: Pantalla de Juego (P6) — UI (2026-02-13)
+- [x] Fase 11.1: `src/components/screens/GameScreen.tsx` actualizado con layout final.
+- [x] Fase 11.2: `src/components/regenmon/StatBar.tsx` implementado (Barras NES).
+- [x] Fase 11.3: `src/components/regenmon/ActionButtons.tsx` implementado (Entrenar/Comer/Dormir).
+- [x] Fase 11.4: Lógica de actualización de stats (batched updates) verificada.
+- [x] Fase 11.5: Verificación visual y funcional completada.
+
+---
+
+### Fase 12: Funcionalidades Secundarias (P7) (2026-02-13)
+- [x] Fase 12.1: `src/components/ui/NameEditor.tsx` (Renombrado único).
+- [x] Fase 12.2: `src/components/ui/ResetButton.tsx` (Modal de confirmación).
+- [x] Fase 12.3: `src/components/ui/TutorialModal.tsx` (Instrucciones).
+- [x] Fase 12.4: Verificación de persistencia y features.
 
 ## NOTAS
 
