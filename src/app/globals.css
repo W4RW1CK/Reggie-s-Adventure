@@ -1015,14 +1015,22 @@ body {
     height: 140px;
   }
 }
+
 /* =============================================
    REGENMON ANIMATIONS (Phase 8)
    ============================================= */
 
 /* Idle Float */
 @keyframes float-idle {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
 }
 
 .animate-float-idle {
@@ -1031,8 +1039,15 @@ body {
 
 /* Happy Bounce */
 @keyframes bounce-subtle {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-15px) scale(1.05); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-15px) scale(1.05);
+  }
 }
 
 .animate-bounce-subtle {
@@ -1041,8 +1056,15 @@ body {
 
 /* Sad Droop */
 @keyframes droop {
-  0%, 100% { transform: scaleY(1); }
-  50% { transform: scaleY(0.95) translateY(5px); }
+
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  50% {
+    transform: scaleY(0.95) translateY(5px);
+  }
 }
 
 .animate-droop {
@@ -1051,8 +1073,17 @@ body {
 
 /* Weak Pulse */
 @keyframes pulse-slow {
-  0%, 100% { opacity: 1; filter: grayscale(0.5); }
-  50% { opacity: 0.7; filter: grayscale(0.8); }
+
+  0%,
+  100% {
+    opacity: 1;
+    filter: grayscale(0.5);
+  }
+
+  50% {
+    opacity: 0.7;
+    filter: grayscale(0.8);
+  }
 }
 
 .animate-pulse-slow {
@@ -1061,17 +1092,49 @@ body {
 
 /* Angry Shake */
 @keyframes shake-fast {
-  0% { transform: translate(1px, 1px) rotate(0deg); }
-  10% { transform: translate(-1px, -2px) rotate(-1deg); }
-  20% { transform: translate(-3px, 0px) rotate(1deg); }
-  30% { transform: translate(3px, 2px) rotate(0deg); }
-  40% { transform: translate(1px, -1px) rotate(1deg); }
-  50% { transform: translate(-1px, 2px) rotate(-1deg); }
-  60% { transform: translate(-3px, 1px) rotate(0deg); }
-  70% { transform: translate(3px, 1px) rotate(-1deg); }
-  80% { transform: translate(-1px, -1px) rotate(1deg); }
-  90% { transform: translate(1px, 2px) rotate(0deg); }
-  100% { transform: translate(1px, -2px) rotate(-1deg); }
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+
+  10% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+
+  20% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+
+  30% {
+    transform: translate(3px, 2px) rotate(0deg);
+  }
+
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+
+  50% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+
+  70% {
+    transform: translate(3px, 1px) rotate(-1deg);
+  }
+
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+
+  90% {
+    transform: translate(1px, 2px) rotate(0deg);
+  }
+
+  100% {
+    transform: translate(1px, -2px) rotate(-1deg);
+  }
 }
 
 .animate-shake-fast {
@@ -1135,13 +1198,27 @@ body {
 }
 
 @keyframes pulse-slow {
-  0%, 100% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.1); opacity: 1; }
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
 }
 
 @keyframes text-glow {
-  from { text-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
-  to { text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.4); }
+  from {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+  }
+
+  to {
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.4);
+  }
 }
 
 /* =============================================
@@ -1180,24 +1257,25 @@ body {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 35%; /* Ground takes up bottom 35% */
-  border-top: 4px solid rgba(0,0,0,0.3);
+  height: 35%;
+  /* Ground takes up bottom 35% */
+  border-top: 4px solid rgba(0, 0, 0, 0.3);
   z-index: 5;
 }
 
 .game-background__ground--rayo {
-  background-color: #3e3e5e; 
+  background-color: #3e3e5e;
   /* Hint of purple/grey */
-  background-image: 
-    linear-gradient(transparent 90%, rgba(0,0,0,0.2) 90%);
+  background-image:
+    linear-gradient(transparent 90%, rgba(0, 0, 0, 0.2) 90%);
   background-size: 20px 20px;
 }
 
 .game-background__ground--flama {
   background-color: #5d2510;
   /* Dark reddish brown */
-  background-image: 
-    radial-gradient(circle, rgba(0,0,0,0.2) 20%, transparent 20%);
+  background-image:
+    radial-gradient(circle, rgba(0, 0, 0, 0.2) 20%, transparent 20%);
   background-size: 16px 16px;
 }
 
@@ -1205,7 +1283,7 @@ body {
   background-color: #deeef5;
   /* Snowy white/blue */
   border-top: 4px solid #fff;
-  background-image: 
+  background-image:
     linear-gradient(45deg, #ccdde5 25%, transparent 25%, transparent 75%, #ccdde5 75%, #ccdde5),
     linear-gradient(45deg, #ccdde5 25%, transparent 25%, transparent 75%, #ccdde5 75%, #ccdde5);
   background-size: 20px 20px;
@@ -1216,11 +1294,12 @@ body {
 /* --- Rayo Specifics --- */
 .game-background__mountain-back {
   position: absolute;
-  bottom: 35%; /* Start at ground level */
+  bottom: 35%;
+  /* Start at ground level */
   left: 0;
   width: 100%;
   height: 100px;
-  background: 
+  background:
     linear-gradient(to top right, #2a2a40 50%, transparent 50%) 0 0,
     linear-gradient(to top left, #2a2a40 50%, transparent 50%) 100% 0;
   background-size: 100px 100px;
@@ -1243,11 +1322,29 @@ body {
 }
 
 @keyframes lightning-flash {
-  0%, 90% { opacity: 0; background-color: rgba(255, 255, 255, 0); }
-  92% { opacity: 0.8; background-color: rgba(255, 255, 255, 0.8); }
-  94% { opacity: 0; }
-  96% { opacity: 0.4; }
-  100% { opacity: 0; }
+
+  0%,
+  90% {
+    opacity: 0;
+    background-color: rgba(255, 255, 255, 0);
+  }
+
+  92% {
+    opacity: 0.8;
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+
+  94% {
+    opacity: 0;
+  }
+
+  96% {
+    opacity: 0.4;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
 
 
@@ -1261,7 +1358,8 @@ body {
   height: 0;
   border-left: 150px solid transparent;
   border-right: 150px solid transparent;
-  border-bottom: 200px solid #3d1f00; /* Volcano body */
+  border-bottom: 200px solid #3d1f00;
+  /* Volcano body */
   z-index: 2;
 }
 
@@ -1272,12 +1370,18 @@ body {
   background-size: 32px 32px;
   animation: ash-fall 4s linear infinite;
   opacity: 0.5;
-  z-index: 6; /* In front of ground? maybe behind UI */
+  z-index: 6;
+  /* In front of ground? maybe behind UI */
 }
 
 @keyframes ash-fall {
-  from { background-position: 0 0; }
-  to { background-position: 10px 64px; }
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 10px 64px;
+  }
 }
 
 
@@ -1287,7 +1391,7 @@ body {
   bottom: 35%;
   width: 100%;
   height: 150px;
-  background: 
+  background:
     linear-gradient(to top right, #cce 50%, transparent 50%) 0 0,
     linear-gradient(to top left, #cce 50%, transparent 50%) 100% 0;
   background-size: 60px 150px;
@@ -1298,7 +1402,7 @@ body {
 .game-background__snow {
   position: absolute;
   inset: 0;
-  background-image: 
+  background-image:
     radial-gradient(white 2px, transparent 2px),
     radial-gradient(white 1px, transparent 1px);
   background-size: 40px 40px;
@@ -1308,7 +1412,8 @@ body {
 }
 
 .game-background__snow.heavy {
-  animation: snow-fall 2s linear infinite; /* Faster snow */
+  animation: snow-fall 2s linear infinite;
+  /* Faster snow */
   opacity: 0.8;
 }
 
@@ -1317,8 +1422,13 @@ body {
 }
 
 @keyframes snow-fall {
-  from { background-position: 0 0, 20px 20px; }
-  to { background-position: 0 400px, 20px 420px; }
+  from {
+    background-position: 0 0, 20px 20px;
+  }
+
+  to {
+    background-position: 0 400px, 20px 420px;
+  }
 }
 
 /* =============================================
@@ -1397,8 +1507,8 @@ body {
   }
 
   /* TutorialModal scroll on small screens */
-  .fixed.z-40 > .nes-container,
-  .fixed.z-50 > .nes-container {
+  .fixed.z-40>.nes-container,
+  .fixed.z-50>.nes-container {
     max-height: 85vh;
     overflow-y: auto;
   }
@@ -1501,11 +1611,12 @@ body {
 
 /* --- Desktop: > 768px --- */
 @media (min-width: 769px) {
+
   /* Center game in a vertical column on desktop */
   .game-container {
-    max-width: 480px;
-    margin: 0 auto;
-    box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
+    max-width: 100%;
+    margin: 0;
+    box-shadow: none;
     position: relative;
   }
 
@@ -1525,24 +1636,31 @@ body {
   }
 
   .game-screen__day-label {
-    font-size: 10px;
+    font-size: 12px;
+    margin-top: 16px;
+    margin-left: 16px;
   }
 
   .game-screen__bottom-ui {
-    max-width: 420px;
+    max-width: 500px;
     margin: 0 auto;
+    padding-bottom: 32px;
   }
 
+  /* Move regenmon slightly up to center better in the large space */
   .game-screen__regenmon-area {
-    margin-top: -12px;
+    margin-top: -4vh;
+    transform: scale(1.2);
+    /* Make it bigger on desktop */
   }
 
   .game-screen__regenmon-wrapper {
-    margin-bottom: 16px;
+    margin-bottom: 24px;
   }
 
   .nes-btn {
-    min-height: 52px;
+    min-height: 60px;
+    font-size: 14px !important;
   }
 }
 
@@ -1567,8 +1685,13 @@ body {
 
 /* --- Utility: Smooth animations --- */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .animate-fadeIn {
@@ -1576,8 +1699,15 @@ body {
 }
 
 @keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .animate-slideUp {
@@ -1585,9 +1715,19 @@ body {
 }
 
 @keyframes popIn {
-  0% { transform: scale(0.8); opacity: 0; }
-  70% { transform: scale(1.05); }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  70% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .animate-popIn {
