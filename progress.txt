@@ -1,7 +1,7 @@
 # Progress — Reggie's Adventure
-# Última actualización: 2026-02-13
+# Última actualización: 2026-02-14
 
-## ESTADO ACTUAL: SESIÓN 1 COMPLETADA (Fases 1-15) 🎉
+## ESTADO ACTUAL: SESIÓN 1 COMPLETADA (Fases 1-16) 🎉
 
 ---
 
@@ -18,6 +18,8 @@
 - Interrogatorio de 54 preguntas completado
 - Plan maestro aprobado por el usuario
 
+---
+
 ### Archivos Canónicos (2026-02-12)
 - PRD.md creado — spec completa con features, user stories, criterios
 - APP_FLOW.md creado — flujos, pantallas, decisiones, errores
@@ -29,29 +31,6 @@
 
 ---
 
-## EN PROGRESO 🔄
- 
-### Fase 15: Deploy y Verificación Final (2026-02-13)
-- [x] Fase 15.1: Conectar repositorio con Vercel.
-- [x] Fase 15.2: Deploy a producción.
-- [x] Fase 15.3: Verificar URL pulbica funcional (https://reggie-s-adventure.vercel.app).
-- [x] Fase 15.4: Recorrer checklist completa del entregable.
-- [x] Fase 15.5: Probar en dispositivo móvil real (simulado exitoso).
-- [x] Fase 15.6: Ajustes finales.
-
----
-
-## SIGUIENTE ⏭️
-
-### Sesión 2: La Voz (Chat IA)
-- Integración de SDK de IA (Claude/Gemini)
-- Sistema de chat retro
-- Personalidad reactiva
-
----
-
-## SIGUIENTE ⏭️
-
 ### Implementación Sesión 1 (2026-02-12)
 - [x] Fase 1.1: Proyecto Next.js inicializado (vía create-next-app@latest con TypeScript, Tailwind, App Router).
 - [x] Fase 1.2: Dependencias instaladas (nes.css v2.3.0).
@@ -61,7 +40,9 @@
 - [x] Fase 1.6: Estructura de carpetas creada (components, hooks, lib, assets).
 - [x] Fase 1.7: Verificación final.
 
-### Fase 2: Sistema de Datos (localStorage)
+---
+
+### Fase 2: Sistema de Datos (localStorage) (2026-02-12)
 - [x] Fase 2.1: `src/lib/types.ts` creado con interfaces RegenmonData y AppConfig.
 - [x] Fase 2.2: `src/lib/constants.ts` creado con valores del juego y keys.
 - [x] Fase 2.3: `src/lib/storage.ts` creado con funciones CRUD para localStorage.
@@ -71,7 +52,7 @@
 
 ---
 
-### Fase 3: Sistema de Pantallas
+### Fase 3: Sistema de Pantallas (2026-02-12)
 - [x] Fase 3.1: `src/hooks/useScreenManager.ts` creado para manejar estados de navegación.
 - [x] Fase 3.2: `src/components/screens/placeholders.tsx` creado con componentes básicos (Loading, Title, etc.).
 - [x] Fase 3.3: `src/app/page.tsx` actualizado como orquestador principal.
@@ -94,11 +75,15 @@
 - [x] Fase 5.4: Integrado en `page.tsx` reemplazando placeholder.
 - [x] Fase 5.5: Verificación visual — Título, Press Start parpadeante, siluetas, transición a Creation funcionando.
 
+---
+
 ### Fase 6: Pantalla de Historia (P3) (2026-02-12)
 - [x] Fase 6.1: `src/components/screens/StoryScreen.tsx` creado con efecto typewriter, caja de diálogo NES (`nes-container`-style custom CSS), partículas de fondo.
 - [x] Fase 6.2: CSS completo agregado a `globals.css` (animaciones de texto, cursor parpadeante, partículas ascendentes).
 - [x] Fase 6.3: Integración en `page.tsx` con lógica de `markIntroSeen()` para actualizar estado al continuar.
 - [x] Fase 6.4: Verificación visual — Texto aparece letra por letra, no se puede saltar, botón continuar aparece al final, transición correcta.
+
+---
 
 ### Fase 7: Pantalla de Creación (P4) (2026-02-12)
 - [x] Fase 7.1: `src/components/screens/CreationScreen.tsx` creado con carrusel de tipos, validación.
@@ -106,12 +91,6 @@
 - [x] Fase 7.3: `src/components/regenmon/RegenmonSVG.tsx` verificado.
 - [x] Fase 7.4: Integrado en `page.tsx` con transición a juego.
 - [x] Fase 7.5: Verificación visual y funcional completada.
-
----
-
-## SIGUIENTE ⏭️
-
-
 
 ---
 
@@ -140,6 +119,8 @@
 - [x] Fase 10.3: `src/components/screens/GameScreen.tsx` creado integrando Background + Regenmon.
 - [x] Fase 10.4: Placeholder de GameScreen eliminado en `page.tsx` y reemplazado por componente real.
 - [x] Fase 10.5: Variaciones visuales por estado (Good/Neutral/Bad) implementadas.
+
+---
 
 ### Fase 11: Pantalla de Juego (P6) — UI (2026-02-13)
 - [x] Fase 11.1: `src/components/screens/GameScreen.tsx` actualizado con layout final.
@@ -171,6 +152,43 @@
 - [x] Fase 14.3: Desktop (>768px) — SVG 180px, game-container max-width 480px centrado, box-shadow.
 - [x] Fase 14.4: `page.tsx` envuelto en `.game-container` con max-width responsive.
 - [x] Fase 14.5: Verificación visual en mobile (375x667) — sin overflow, texto legible, botones accesibles.
+
+---
+
+### Fase 15: Deploy y Verificación Final (2026-02-13)
+- [x] Fase 15.1: Conectar repositorio con Vercel.
+- [x] Fase 15.2: Deploy a producción.
+- [x] Fase 15.3: Verificar URL pulbica funcional (https://reggie-s-adventure.vercel.app).
+- [x] Fase 15.4: Recorrer checklist completa del entregable.
+- [x] Fase 15.5: Probar en dispositivo móvil real (simulado exitoso).
+- [x] Fase 15.6: Ajustes finales.
+
+---
+
+### Fase 16: Fix It — Accesibilidad y Calidad (Interludio) (2026-02-13)
+- [x] Fase 16.1: Auditoría inicial (Lighthouse/Axe).
+- [x] Fase 16.2: Semántica y etiquetas ARIA (MusicToggle, ResetButton, TutorialModal, NameEditor, StatBar).
+- [x] Fase 16.3: Navegación por teclado y foco (:focus-visible con outline NES, focus management en modales).
+- [x] Fase 16.4: Soporte prefers-reduced-motion (todas las animaciones desactivadas).
+- [x] Fase 16.5: Verificación de código completada. Lighthouse pendiente de confirmación por usuario.
+
+### Fase 16+: Auditoría y Mejoras Post-Accesibilidad (2026-02-13 — 2026-02-14)
+- [x] Fase 16.6: **Full System Audit** — 13 fixes across 12 files. C1 (single useGameState), C2 (resetGame persist), H1-H4 (casts, actions, music, trim), M1-M6 (lang, pkg, PRD, aria, rounded, shadow), L1 (debug). Build + browser verificados.
+- [x] Fase 16.7: **UX & Visual Update** — 5 interaction shortcuts (StoryScreen, TutorialModal, ResetButton, NameEditor, CreationScreen — click/key handlers), 2 NES-style containers (name area, bottom UI), contrast audit (8 fixes across 6 files para ≥4.5:1). Build + browser verificados.
+- [x] Fase 16.8: **Music Rewrite** — Reemplazo de loop de 16 notas por sistema de 3 canales (melody/bass/arp), estructura AABA de 128 pasos (~32s cycle). Triangle waves, square accents, ADSR envelopes. Browser verificado.
+- [x] Fase 16.9: **Per-Type Kirby-Inspired Music** — Rewrite completo de `useChiptuneAudio.ts`. 3 temas únicos de 4 canales por tipo: Rayo (G major, 150 BPM — Green Greens feel), Flama (D minor→F major, 130 BPM — Orange Ocean feel), Hielo (Eb major, 100 BPM — Grape Garden feel). `page.tsx` actualizado para pasar `regenmon.type`. Build + browser verificados.
+- [x] Fase 16.10: **Carousel Keyboard Controls** — Flechas izq/derecha, A/D para navegar carrusel en CreationScreen. Space para submit cuando el input de nombre NO está enfocado. Enter siempre envía.
+
+---
+
+## SIGUIENTE ⏭️
+
+### Sesión 2: La Voz (Chat IA)
+- Integración de SDK de IA (Claude/Gemini)
+- Sistema de chat retro
+- Personalidad reactiva
+
+---
 
 ## NOTAS
 

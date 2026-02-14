@@ -2,6 +2,7 @@
 
 import { useGameState } from '@/hooks/useGameState';
 import { useScreenManager } from '@/hooks/useScreenManager';
+import { useChiptuneAudio } from '@/hooks/useChiptuneAudio';
 import LoadingScreen from '@/components/screens/LoadingScreen';
 import TitleScreen from '@/components/screens/TitleScreen';
 import StoryScreen from '@/components/screens/StoryScreen';
@@ -11,15 +12,28 @@ import GameScreen from '@/components/screens/GameScreen';
 import { RegenmonType } from '@/lib/types';
 
 export default function Home() {
-  const { createRegenmon, resetGame, markIntroSeen } = useGameState();
-  const { currentScreen, navigateTo, handleStartGame } = useScreenManager();
+  const {
+    regenmon,
+    config,
+    createRegenmon,
+    updateStatAction,
+    toggleMusic,
+    resetGame,
+    markIntroSeen,
+    updateRegenmonName,
+    dismissTutorial,
+  } = useGameState();
 
-  // Debug (optional, can remove later)
-  // console.log('Current Screen:', currentScreen);
+  const { currentScreen, navigateTo, handleStartGame } = useScreenManager({
+    regenmon,
+    config,
+  });
+
+  // Music plays only on the Game screen when enabled
+  useChiptuneAudio({ enabled: config.musicEnabled && currentScreen === 'GAME', type: regenmon?.type ?? 'rayo' });
 
   return (
     <main className="min-h-screen w-full overflow-hidden bg-black text-white font-mono">
-      {/* Responsive wrapper: max-width 480px centered on desktop */}
       <div className="game-container">
         {currentScreen === 'LOADING' && (
           <LoadingScreen onComplete={() => navigateTo('TITLE')} />
@@ -49,11 +63,19 @@ export default function Home() {
           <TransitionScreen onComplete={() => navigateTo('GAME')} />
         )}
 
-        {currentScreen === 'GAME' && (
-          <GameScreen onReset={() => {
-            resetGame();
-            navigateTo('TITLE');
-          }} />
+        {currentScreen === 'GAME' && regenmon && (
+          <GameScreen
+            regenmon={regenmon}
+            musicEnabled={config.musicEnabled}
+            onToggleMusic={toggleMusic}
+            onUpdateStats={updateStatAction}
+            onUpdateName={updateRegenmonName}
+            onDismissTutorial={dismissTutorial}
+            onReset={() => {
+              resetGame();
+              navigateTo('TITLE');
+            }}
+          />
         )}
       </div>
     </main>

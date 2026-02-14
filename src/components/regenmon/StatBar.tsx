@@ -18,11 +18,18 @@ export default function StatBar({ label, value, max = 100, color, icon }: StatBa
                     <span className="text-lg">{icon}</span>
                     <span className="uppercase tracking-wider">{label}</span>
                 </span>
-                <span className="opacity-80 font-mono">{Math.round(value)}/{max}</span>
+                <span className="font-mono">{Math.round(value)}/{max}</span>
             </div>
 
             {/* NES-style container for the bar */}
-            <div className="w-full h-6 bg-[#212529] border-4 border-white relative">
+            <div
+                className="w-full h-6 bg-[#212529] border-4 border-white relative"
+                role="progressbar"
+                aria-label={`${label}: ${Math.round(value)} de ${max}`}
+                aria-valuenow={Math.round(value)}
+                aria-valuemin={0}
+                aria-valuemax={max}
+            >
                 {/* Internal bar */}
                 <div
                     className="h-full transition-all duration-500 ease-out relative"

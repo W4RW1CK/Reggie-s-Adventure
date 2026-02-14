@@ -279,7 +279,7 @@ body {
 .loading-screen__version {
   font-family: var(--font-press-start-2p);
   font-size: 8px;
-  color: #555555;
+  color: #888888;
   letter-spacing: 1px;
   margin-top: 16px;
 }
@@ -523,7 +523,7 @@ body {
 .title-screen__version {
   font-family: var(--font-press-start-2p);
   font-size: 8px;
-  color: #555555;
+  color: #888888;
   letter-spacing: 1px;
 }
 
@@ -551,7 +551,7 @@ body {
 .title-screen__hint {
   font-family: var(--font-press-start-2p);
   font-size: 7px;
-  color: #444444;
+  color: #777777;
   letter-spacing: 1px;
 }
 
@@ -561,7 +561,7 @@ body {
   bottom: 24px;
   font-family: var(--font-press-start-2p);
   font-size: 7px;
-  color: #333333;
+  color: #777777;
   letter-spacing: 1px;
   z-index: 10;
 }
@@ -1732,4 +1732,53 @@ body {
 
 .animate-popIn {
   animation: popIn 0.3s ease-out;
+}
+
+/* =============================================
+   ACCESSIBILITY (Phase 16)
+   ============================================= */
+
+/* Focus Visible - Custom NES style */
+:focus-visible {
+  outline: 4px solid var(--color-ui-btn-active);
+  outline-offset: 4px;
+  box-shadow: 0 0 0 6px black;
+  z-index: 1000;
+}
+
+/* Button focus specific for NES buttons */
+.nes-btn:focus-visible {
+  position: relative;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Specific animations disable */
+  .animate-float,
+  .animate-float-idle,
+  .animate-bounce-subtle,
+  .animate-droop,
+  .animate-pulse-slow,
+  .animate-shake-fast,
+  .loading-screen__star,
+  .loading-screen__logo-top,
+  .loading-screen__progress-bar,
+  .title-screen__creature,
+  .title-screen__sparkle,
+  .title-screen__title-main,
+  .story-screen__particle,
+  .story-screen__cursor,
+  .game-background * {
+    animation: none !important;
+    transition: none !important;
+  }
 }

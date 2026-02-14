@@ -138,9 +138,9 @@ Escala: 4px base
 |--------|-------|----------------|
 | `mobile` | `< 480px` | Layout vertical compacto, Regenmon mediano |
 | `tablet` | `480px - 768px` | Layout vertical holgado, Regenmon más grande |
-| `desktop` | `> 768px` | Layout centrado con max-width, Regenmon grande |
+| `desktop` | `> 768px` | Fondo llena viewport completo, UI centrada, Regenmon grande |
 
-**Max-width del contenido en desktop:** `480px` (simula una pantalla vertical centrada)
+**Desktop:** El fondo (paisaje) cubre el viewport completo. Los elementos de UI (stats, botones) se centran con `max-width: 500px`. El Regenmon se escala a `1.2x`. Ya no se simula una pantalla móvil.
 
 ---
 
@@ -196,6 +196,35 @@ Escala: 4px base
 4. **Press Start 2P a 8px mínimo** — nunca más chico o se vuelve ilegible
 5. **Touch targets mínimo 44x44px** en móvil
 6. **Paisaje de fondo siempre cubre viewport** (background-size: cover)
+
+---
+
+## Accesibilidad (A11y)
+
+### Contraste y Color
+- Verificar siempre contraste texto/fondo (mínimo 4.5:1).
+- No usar solo color para transmitir información (usar iconos + texto).
+
+### Navegación por Teclado
+- **Focus visible:** El navegador debe mostrar el outline por defecto o uno personalizado estilo NES (borde pixelado). Nunca `outline: none`.
+- Orden de tabulación lógico.
+
+### Semántica y ARIA
+- Botones de iconos (ajustes, música) deben tener `aria-label="Descripción"`.
+- Barras de progreso deben tener `aria-valuenow`, `aria-valuemin`, `aria-valuemax`.
+- Mensajes de estado (updates de stats) deben usar `role="status"` o `aria-live="polite"`.
+
+### Movimiento Preferido
+```css
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+```
 
 ---
 

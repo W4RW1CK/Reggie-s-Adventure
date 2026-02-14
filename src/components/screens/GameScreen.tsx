@@ -1,6 +1,5 @@
 'use client';
 
-import { useGameState } from '@/hooks/useGameState';
 import GameBackground from '@/components/game/GameBackground';
 import RegenmonSVG from '@/components/regenmon/RegenmonSVG';
 import StatBar from '@/components/regenmon/StatBar';
@@ -8,21 +7,30 @@ import ActionButtons from '../regenmon/ActionButtons';
 import NameEditor from '../ui/NameEditor';
 import ResetButton from '../ui/ResetButton';
 import TutorialModal from '../ui/TutorialModal';
+import MusicToggle from '../ui/MusicToggle';
 import { useState, useEffect, useMemo } from 'react';
+import { RegenmonData } from '@/lib/types';
+import { STAT_MAX, STAT_MIN } from '@/lib/constants';
 
 interface GameScreenProps {
+    regenmon: RegenmonData;
+    musicEnabled: boolean;
+    onToggleMusic: () => void;
+    onUpdateStats: (deltas: Partial<import('@/lib/types').RegenmonStats>) => void;
+    onUpdateName: (newName: string) => void;
+    onDismissTutorial: () => void;
     onReset: () => void;
 }
 
-export default function GameScreen({ onReset }: GameScreenProps) {
-    const {
-        regenmon,
-        updateStatAction,
-        updateRegenmonName,
-        dismissTutorial,
-        resetGame
-    } = useGameState();
-
+export default function GameScreen({
+    regenmon,
+    musicEnabled,
+    onToggleMusic,
+    onUpdateStats,
+    onUpdateName,
+    onDismissTutorial,
+    onReset,
+}: GameScreenProps) {
     const [showTutorial, setShowTutorial] = useState(false);
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 480);
 
@@ -41,14 +49,11 @@ export default function GameScreen({ onReset }: GameScreenProps) {
 
     // Effect to check if tutorial should be shown
     useEffect(() => {
-        if (regenmon && !regenmon.tutorialDismissed) {
-            // Small delay to let the transition finish
+        if (!regenmon.tutorialDismissed) {
             const timer = setTimeout(() => setShowTutorial(true), 1000);
             return () => clearTimeout(timer);
         }
-    }, [regenmon?.tutorialDismissed]); // Only run when dismissal state changes (initially)
-
-    if (!regenmon) return null;
+    }, [regenmon.tutorialDismissed]);
 
     // Days alive calculation
     const daysAlive = Math.floor(
@@ -58,16 +63,13 @@ export default function GameScreen({ onReset }: GameScreenProps) {
     const handleAction = (action: 'train' | 'feed' | 'sleep') => {
         switch (action) {
             case 'train':
-                // Entrenar: +Espíritu, -Pulso, +Hambre (físico cansa)
-                (updateStatAction as any)({ espiritu: 10, pulso: -5, hambre: 5 });
+                onUpdateStats({ pulso: 10 });
                 break;
             case 'feed':
-                // Comer: -Hambre, +Pulso (energía)
-                (updateStatAction as any)({ hambre: -20, pulso: 5 });
+                onUpdateStats({ hambre: -10 });
                 break;
             case 'sleep':
-                // Dormir: +Pulso, -Hambre (un poco), +Espíritu (descanso mental)
-                (updateStatAction as any)({ pulso: 15, espiritu: 5, hambre: 2 });
+                onUpdateStats({ espiritu: 10 });
                 break;
         }
     };
@@ -75,15 +77,8 @@ export default function GameScreen({ onReset }: GameScreenProps) {
     const handleTutorialDismiss = (dontShowAgain: boolean) => {
         setShowTutorial(false);
         if (dontShowAgain) {
-            dismissTutorial();
+            onDismissTutorial();
         }
-    };
-
-    const handleReset = () => {
-        resetGame();
-        // The parent page.tsx will handle the state change based on regenmon becoming null
-        // But we can also call the prop passed down if needed for immediate feedback
-        onReset();
     };
 
     return (
@@ -101,9 +96,10 @@ export default function GameScreen({ onReset }: GameScreenProps) {
 
                 {/* Top HUD: Info */}
                 <div className="game-screen__header w-full px-3 sm:px-4 pt-3 sm:pt-4 flex justify-between items-start text-white">
-                    <div className="flex flex-col drop-shadow-md">
-                        <span className="game-screen__day-label">Día {daysAlive} de aventura</span>
+                    <div className="flex flex-col">
+                        <span className="game-screen__day-label bg-black/50 px-2 py-1 inline-block">Día {daysAlive} de aventura</span>
                     </div>
+                    <MusicToggle musicEnabled={musicEnabled} onToggle={onToggleMusic} />
                 </div>
 
                 {/* Center: Regenmon */}
@@ -116,50 +112,52 @@ export default function GameScreen({ onReset }: GameScreenProps) {
                         />
                     </div>
 
-                    <div className="mt-1 sm:mt-2 text-center">
+                    <div className="mt-1 sm:mt-2 text-center bg-black/50 border-4 border-white/20 px-4 py-2 inline-block">
                         <NameEditor
                             currentName={regenmon.name}
-                            onSave={updateRegenmonName}
+                            onSave={onUpdateName}
                             canRename={!regenmon.nameChangeUsed}
                         />
                     </div>
                 </div>
 
-                {/* Bottom UI: Stats & Actions */}
-                <div className="game-screen__bottom-ui w-full px-3 sm:px-4 flex flex-col gap-2 sm:gap-3">
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-1 gap-0.5 sm:gap-1">
-                        <StatBar
-                            label="Espíritu"
-                            value={regenmon.stats.espiritu}
-                            color="var(--color-stat-espiritu-full)"
-                            icon="🔮"
-                        />
-                        <StatBar
-                            label="Pulso"
-                            value={regenmon.stats.pulso}
-                            color="var(--color-stat-pulso-full)"
-                            icon="💛"
-                        />
-                        <StatBar
-                            label="Hambre"
-                            value={regenmon.stats.hambre}
-                            color="var(--color-stat-hambre-full)"
-                            icon="🍖"
-                        />
-                    </div>
+                {/* Bottom UI: Stats & Actions — inside an NES-style container */}
+                <div className="game-screen__bottom-ui w-full px-3 sm:px-4 pb-3 sm:pb-4">
+                    <div className="bg-black/60 border-4 border-white/25 p-3 sm:p-4 flex flex-col gap-2 sm:gap-3">
+                        {/* Stats Grid */}
+                        <div className="grid grid-cols-1 gap-0.5 sm:gap-1">
+                            <StatBar
+                                label="Espíritu"
+                                value={regenmon.stats.espiritu}
+                                color="var(--color-stat-espiritu-full)"
+                                icon="🔮"
+                            />
+                            <StatBar
+                                label="Pulso"
+                                value={regenmon.stats.pulso}
+                                color="var(--color-stat-pulso-full)"
+                                icon="💛"
+                            />
+                            <StatBar
+                                label="Hambre"
+                                value={regenmon.stats.hambre}
+                                color="var(--color-stat-hambre-full)"
+                                icon="🍖"
+                            />
+                        </div>
 
-                    {/* Actions */}
-                    <div className="mt-1 sm:mt-2">
-                        <ActionButtons
-                            onAction={handleAction}
-                            stats={regenmon.stats}
-                        />
-                    </div>
+                        {/* Actions */}
+                        <div className="mt-1 sm:mt-2">
+                            <ActionButtons
+                                onAction={handleAction}
+                                stats={regenmon.stats}
+                            />
+                        </div>
 
-                    {/* Footer: Reset */}
-                    <div className="flex justify-center mt-1 sm:mt-2 pb-3 sm:pb-4">
-                        <ResetButton onReset={handleReset} />
+                        {/* Footer: Reset */}
+                        <div className="flex justify-center mt-1 sm:mt-2">
+                            <ResetButton onReset={onReset} />
+                        </div>
                     </div>
                 </div>
 

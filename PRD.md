@@ -44,7 +44,7 @@ Al completar las 5 sesiones, el jugador tiene:
 | F1.7 | Transición | Texto "Tu Regenmon está despertando..." con fade |
 | F1.8 | Display: SVG del Regenmon | Criatura SVG modular con idle animation (rebote/respiración) |
 | F1.9 | Display: Paisaje de fondo | Pixel art que cambia según tipo Y estado emocional (cambios sutiles) |
-| F1.10 | Display: Barras de stats | 3 barras NES horizontales (Espíritu 🔮 / Pulso 💛 / Hambre 🍎) con valor visible (50/100) |
+| F1.10 | Display: Barras de stats | 3 barras NES horizontales (Espíritu 🔮 / Pulso 💛 / Hambre 🍖) con valor visible (50/100) |
 | F1.11 | Display: Botones de acción | Entrenar (+10 Pulso) / Alimentar (-10 Hambre) / Descansar (+10 Espíritu) con feedback "+10"/"-10" flotante |
 | F1.12 | Display: Fecha | "Día X de aventura" (cuenta días desde creación) |
 | F1.13 | Decaimiento de stats | Stats cambian en tiempo real. Tras 4-5h se nota baja leve. Calcula tiempo offline |
@@ -120,12 +120,20 @@ US-13: Como jugador, quiero música de fondo que pueda activar/desactivar.
 US-14: Como jugador, quiero reiniciar todo si quiero empezar desde cero.
 ```
 
-## 6. Criterios de Éxito Globales
+## 6. Requisitos de Accesibilidad (Fix It Phase)
 
-- [ ] App desplegada con URL pública funcional
-- [ ] Flujo completo sin errores: Loading → Título → Historia → Creación → Juego
-- [ ] Stats decaen en tiempo real y calculan tiempo offline
-- [ ] Regenmon reacciona visualmente a sus stats
-- [ ] Datos persisten tras recargar/cerrar navegador
-- [ ] Responsive en portrait (móvil + desktop)
-- [ ] Música funcional con toggle
+- **A1. Contraste:** Todos los textos deben cumplir WCAG AA (ratio 4.5:1).
+- **A2. Teclado:** Toda la interfaz debe ser navegable con Tab/Enter/Space. Focus visible siempre.
+- **A3. Lectores de Pantalla:** Etiquetas `aria-label` en botones sin texto. Textos dinámicos anunciados via `aria-live`.
+- **A4. Movimiento Reducido:** Respetar `prefers-reduced-motion` para animaciones y efecto typewriter.
+- **A5. Semántica:** Uso correcto de `<button>`, `<input>`, encabezados y regiones.
+
+## 7. Criterios de Éxito Globales
+
+- [x] App desplegada con URL pública funcional (https://reggie-s-adventure.vercel.app)
+- [x] Flujo completo sin errores: Loading → Título → Historia → Creación → Juego
+- [x] Stats decaen en tiempo real y calculan tiempo offline
+- [x] Regenmon reacciona visualmente a sus stats
+- [x] Datos persisten tras recargar/cerrar navegador
+- [x] Responsive en portrait (móvil + desktop)
+- [x] Música funcional con toggle

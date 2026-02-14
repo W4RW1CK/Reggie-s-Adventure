@@ -155,3 +155,6 @@ const DECAY_INTERVAL = 60000; // Cada 60 segundos revisa decaimiento
 - **No anticipar infraestructura.** No crear APIs ni tablas hasta la sesión correspondiente.
 - **Este archivo se actualiza** al llegar a cada sesión que agregue backend.
 - **Validar siempre** los datos al leer de localStorage (pueden estar corruptos).
+
+> **Nota sobre Accesibilidad:** Esta fase de "Fix It" de accesibilidad es puramente frontend y no requiere cambios en la estructura de datos ni backend.
+

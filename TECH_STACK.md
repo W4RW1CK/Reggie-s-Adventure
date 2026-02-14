@@ -75,6 +75,14 @@ Se definirá en BACKEND_STRUCTURE.md cuando lleguemos a esa sesión.
 | `git` | Control de versiones |
 | `Vercel CLI` | Deploy desde terminal (opcional) |
 
+## Accesibilidad y Calidad
+
+| Herramienta | Propósito |
+|-------------|-----------|
+| `eslint-plugin-jsx-a11y` | Linter de accesibilidad (incluido en Next.js) |
+| `axe-core` | Auditoría de accesibilidad (opcional en tests) |
+
+
 ## Estructura de Carpetas (Sesión 1)
 
 ```

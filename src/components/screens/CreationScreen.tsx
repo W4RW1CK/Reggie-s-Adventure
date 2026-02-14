@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { RegenmonType } from '@/lib/types';
 import RegenmonSVG from '@/components/regenmon/RegenmonSVG';
 
@@ -18,16 +18,17 @@ export default function CreationScreen({ onDespertar }: CreationScreenProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [name, setName] = useState('');
     const [error, setError] = useState('');
+    const inputFocusedRef = useRef(false);
 
     const currentType = TYPES[currentIndex];
 
-    const handlePrev = () => {
+    const handlePrev = useCallback(() => {
         setCurrentIndex((prev) => (prev === 0 ? TYPES.length - 1 : prev - 1));
-    };
+    }, []);
 
-    const handleNext = () => {
+    const handleNext = useCallback(() => {
         setCurrentIndex((prev) => (prev === TYPES.length - 1 ? 0 : prev + 1));
-    };
+    }, []);
 
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const val = e.target.value;
@@ -42,23 +43,57 @@ export default function CreationScreen({ onDespertar }: CreationScreenProps) {
         }
     };
 
-    const handleSubmit = () => {
-        if (name.length < 2 || name.length > 15) {
+    const handleSubmit = useCallback(() => {
+        const trimmed = name.trim();
+        if (trimmed.length < 2 || trimmed.length > 15) {
             setError('Nombre inválido');
             return;
         }
-        onDespertar(name, currentType.type);
-    };
+        onDespertar(trimmed, TYPES[currentIndex].type);
+    }, [name, currentIndex, onDespertar]);
+
+    const isValid = name.trim().length >= 2 && name.trim().length <= 15;
+
+    // Keyboard controls:
+    // - Enter always submits if valid
+    // - When name input NOT focused: arrows/A/D navigate carousel, Space submits
+    // - When name input IS focused: all keys behave normally
+    const handleKeyDown = useCallback((e: KeyboardEvent) => {
+        if (e.key === 'Enter' && isValid) {
+            e.preventDefault();
+            handleSubmit();
+            return;
+        }
+
+        // Only handle carousel/space shortcuts when input is NOT focused
+        if (!inputFocusedRef.current) {
+            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+                e.preventDefault();
+                handlePrev();
+            } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+                e.preventDefault();
+                handleNext();
+            } else if (e.key === ' ' && isValid) {
+                e.preventDefault();
+                handleSubmit();
+            }
+        }
+    }, [isValid, handleSubmit, handlePrev, handleNext]);
+
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [handleKeyDown]);
 
     return (
-        <div className="creation-screen">
+        <div className="creation-screen" onClick={() => { if (isValid) handleSubmit(); }}>
             <div className="creation-screen__scanlines" />
 
             <h1 className="creation-screen__title">CREA TU REGENMON</h1>
 
             {/* Carousel */}
-            <div className="creation-screen__carousel">
-                <button className="creation-screen__arrow" onClick={handlePrev}>◀</button>
+            <div className="creation-screen__carousel" onClick={(e) => e.stopPropagation()}>
+                <button className="creation-screen__arrow" onClick={handlePrev} aria-label="Tipo anterior">◀</button>
 
                 <div className="creation-screen__showcase">
                     <div className="creation-screen__svg-container" style={{ borderColor: currentType.color }}>
@@ -72,17 +107,19 @@ export default function CreationScreen({ onDespertar }: CreationScreenProps) {
                     </div>
                 </div>
 
-                <button className="creation-screen__arrow" onClick={handleNext}>▶</button>
+                <button className="creation-screen__arrow" onClick={handleNext} aria-label="Tipo siguiente">▶</button>
             </div>
 
             {/* Form */}
-            <div className="creation-screen__form">
+            <div className="creation-screen__form" onClick={(e) => e.stopPropagation()}>
                 <label className="creation-screen__label">NOMBRE:</label>
                 <input
                     type="text"
                     className={`creation-screen__input ${error ? 'creation-screen__input--error' : ''}`}
                     value={name}
                     onChange={handleNameChange}
+                    onFocus={() => { inputFocusedRef.current = true; }}
+                    onBlur={() => { inputFocusedRef.current = false; }}
                     placeholder="Escribe un nombre..."
                     maxLength={15}
                 />
@@ -92,8 +129,11 @@ export default function CreationScreen({ onDespertar }: CreationScreenProps) {
             {/* Action */}
             <button
                 className="creation-screen__submit-btn"
-                onClick={handleSubmit}
-                disabled={name.length < 2 || name.length > 15}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    handleSubmit();
+                }}
+                disabled={!isValid}
             >
                 ¡DESPERTAR!
             </button>

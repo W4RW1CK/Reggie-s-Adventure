@@ -1,6 +1,6 @@
 # 🔨 IMPLEMENTATION_PLAN — Reggie's Adventure
 > **Versión actual:** v0.1 — El Despertar
-> **Última actualización:** 2026-02-12
+> **Última actualización:** 2026-02-14
 
 ---
 
@@ -209,7 +209,67 @@
 15.5  Probar en dispositivo móvil real
 15.6  Ajustes finales
 ```
+ 
+### Fase 16: Fix It — Accesibilidad y Calidad (Interludio) 
 
+```
+16.1 Auditoría Inicial:
+     → Ejecutar auditoría Lighthouse / Axe en Chrome DevTools
+     → Identificar problemas de contraste y etiquetas faltantes
+ 
+16.2 Semántica y Etiquetas:
+     → Agregar aria-label a botones de iconos (MusicToggle, Reset, etc.)
+     → Asegurar uso correcto de <main>, <header>, <nav>
+     → Revisar orden de encabezados (h1, h2, h3)
+ 
+16.3 Navegación por Teclado:
+     → Verificar focus indicators visibles en todos los elementos interactivos
+     → Implementar trap-focus en modales (Tutorial, Reset)
+     → Gestionar foco al cambiar de pantalla (useScreenManager)
+ 
+16.4 Preferencias de Usuario:
+     → Implementar media query (prefers-reduced-motion) en globals.css
+     → Desactivar typewriter y partículas si el usuario prefiere movimiento reducido
+ 
+16.5 Verificación A11y:
+     → 100% score en Lighthouse Accessibility
+     → Navegación completa solo con teclado posible
+```
+ 
+---
+ 
+### Fase 16+: Auditoría y Mejoras Post-Accesibilidad
+
+```
+16.6  Full System Audit:
+      → 13 fixes across 12 files
+      → C1: Single useGameState instance, C2: resetGame persist
+      → H1-H4: type casts, action handlers, music toggle, name trim
+      → M1-M6: lang attr, package.json metadata, PRD criteria, ARIA, rounded corners, shadows
+      → L1: debug console removal. Build + browser verified
+
+16.7  UX & Visual Update:
+      → 5 interaction shortcuts (StoryScreen, TutorialModal, ResetButton, NameEditor, CreationScreen)
+      → 2 NES-style containers (name area, bottom UI)
+      → Contrast audit: 8 fixes across 6 files (≥4.5:1 ratio)
+
+16.8  Music Rewrite:
+      → 3-channel engine (melody/bass/arp), 128-step AABA structure (~32s cycle)
+      → Triangle waves, square accents, proper ADSR envelopes
+
+16.9  Per-Type Kirby-Inspired Music:
+      → Full rewrite of useChiptuneAudio.ts — 3 unique 4-channel themes
+      → Rayo: G major, 150 BPM (Green Greens feel)
+      → Flama: D minor→F major, 130 BPM (Orange Ocean feel)
+      → Hielo: Eb major, 100 BPM (Grape Garden feel)
+      → page.tsx updated to pass regenmon.type
+
+16.10 Carousel Keyboard Controls:
+      → Arrow keys (Left/Right) and A/D for carousel navigation in CreationScreen
+      → Space to submit when name input NOT focused
+      → Enter always submits if valid
+```
+ 
 ---
 
 ## Sesiones Futuras (estructura general)

@@ -274,6 +274,17 @@ ABRIR APP
 
 ---
 
+## Consideraciones de Accesibilidad en el Flujo
+
+1.  **Transiciones:**
+    -   Al cambiar de pantalla, el foco debe moverse al contenedor principal o al primer elemento interactivo de la nueva pantalla para usuarios de teclado/screen readers.
+    -   Evitar "trampas de foco" en modales (Tutorial/Reset). El foco debe ciclar dentro del modal.
+
+2.  **Feedback:**
+    -   Las acciones (Entrenar, Alimentar) deben anunciar el resultado al lector de pantalla ("Tu Regenmon comió, Hambre bajó a 30").
+
+---
+
 ## Mapa de Navegación Visual
 
 ```

@@ -76,7 +76,7 @@ export function saveConfig(config: AppConfig): void {
 
 export function loadConfig(): AppConfig {
     const defaults: AppConfig = {
-        musicEnabled: true,
+        musicEnabled: false,
         isFirstTime: true,
     };
     return getStorageItem<AppConfig>(STORAGE_KEYS.CONFIG, defaults) || defaults;

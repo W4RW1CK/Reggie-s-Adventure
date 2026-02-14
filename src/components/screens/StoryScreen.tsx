@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 interface StoryScreenProps {
     onContinue: () => void;
@@ -18,6 +18,14 @@ export default function StoryScreen({ onContinue }: StoryScreenProps) {
 
     // Typewriter effect
     useEffect(() => {
+        const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+        if (mediaQuery.matches) {
+            setDisplayedText(STORY_TEXT);
+            setIsComplete(true);
+            return;
+        }
+
         const interval = setInterval(() => {
             if (charIndexRef.current < STORY_TEXT.length) {
                 charIndexRef.current += 1;
@@ -31,8 +39,29 @@ export default function StoryScreen({ onContinue }: StoryScreenProps) {
         return () => clearInterval(interval);
     }, []);
 
+    // Global keyboard handler: Enter/Space = continue (when text is done)
+    const handleKeyDown = useCallback((e: KeyboardEvent) => {
+        if (!isComplete) return;
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onContinue();
+        }
+    }, [isComplete, onContinue]);
+
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [handleKeyDown]);
+
+    // Click/tap anywhere = continue (when text is done)
+    const handleClick = () => {
+        if (isComplete) {
+            onContinue();
+        }
+    };
+
     return (
-        <div className="story-screen">
+        <div className="story-screen" onClick={handleClick}>
             {/* Scanline overlay */}
             <div className="story-screen__scanlines" />
 
@@ -50,7 +79,6 @@ export default function StoryScreen({ onContinue }: StoryScreenProps) {
             <div className="story-screen__content">
                 {/* NES-style dialog box */}
                 <div className="story-screen__dialog">
-                    {/* Dialog border (NES double-border effect) */}
                     <div className="story-screen__dialog-inner">
                         <p className="story-screen__text">
                             {displayedText}
@@ -63,7 +91,10 @@ export default function StoryScreen({ onContinue }: StoryScreenProps) {
                 <div className={`story-screen__continue-wrapper ${isComplete ? 'story-screen__continue-wrapper--visible' : ''}`}>
                     <button
                         className="story-screen__continue-btn"
-                        onClick={onContinue}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onContinue();
+                        }}
                         disabled={!isComplete}
                     >
                         Continuar ▶
