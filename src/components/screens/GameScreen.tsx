@@ -8,7 +8,7 @@ import ActionButtons from '../regenmon/ActionButtons';
 import NameEditor from '../ui/NameEditor';
 import ResetButton from '../ui/ResetButton';
 import TutorialModal from '../ui/TutorialModal';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 interface GameScreenProps {
     onReset: () => void;
@@ -24,6 +24,20 @@ export default function GameScreen({ onReset }: GameScreenProps) {
     } = useGameState();
 
     const [showTutorial, setShowTutorial] = useState(false);
+    const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 480);
+
+    // Track window size for responsive SVG
+    useEffect(() => {
+        const handleResize = () => setWindowWidth(window.innerWidth);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    const regenmonSize = useMemo(() => {
+        if (windowWidth < 480) return 130;
+        if (windowWidth < 768) return 160;
+        return 180;
+    }, [windowWidth]);
 
     // Effect to check if tutorial should be shown
     useEffect(() => {
@@ -83,26 +97,26 @@ export default function GameScreen({ onReset }: GameScreenProps) {
             )}
 
             {/* Main Content Layer */}
-            <div className="relative z-10 w-full h-full flex flex-col items-center justify-between pb-6 pt-4">
+            <div className="game-screen__content relative z-10 w-full h-full flex flex-col items-center justify-between">
 
                 {/* Top HUD: Info */}
-                <div className="game-screen__header w-full px-4 flex justify-between items-start text-white">
+                <div className="game-screen__header w-full px-3 sm:px-4 pt-3 sm:pt-4 flex justify-between items-start text-white">
                     <div className="flex flex-col drop-shadow-md">
-                        <span className="text-[10px] opacity-100">Día {daysAlive} de aventura</span>
+                        <span className="game-screen__day-label">Día {daysAlive} de aventura</span>
                     </div>
                 </div>
 
                 {/* Center: Regenmon */}
-                <div className="flex-1 flex flex-col items-center justify-center -mt-10">
-                    <div className="relative animate-float mb-4">
+                <div className="game-screen__regenmon-area flex-1 flex flex-col items-center justify-center">
+                    <div className="relative animate-float game-screen__regenmon-wrapper">
                         <RegenmonSVG
                             type={regenmon.type}
                             stats={regenmon.stats}
-                            size={180}
+                            size={regenmonSize}
                         />
                     </div>
 
-                    <div className="mt-2 text-center">
+                    <div className="mt-1 sm:mt-2 text-center">
                         <NameEditor
                             currentName={regenmon.name}
                             onSave={updateRegenmonName}
@@ -112,9 +126,9 @@ export default function GameScreen({ onReset }: GameScreenProps) {
                 </div>
 
                 {/* Bottom UI: Stats & Actions */}
-                <div className="w-full max-w-md px-4 flex flex-col gap-4 mb-4">
+                <div className="game-screen__bottom-ui w-full px-3 sm:px-4 flex flex-col gap-2 sm:gap-3">
                     {/* Stats Grid */}
-                    <div className="grid grid-cols-1 gap-1">
+                    <div className="grid grid-cols-1 gap-0.5 sm:gap-1">
                         <StatBar
                             label="Espíritu"
                             value={regenmon.stats.espiritu}
@@ -136,7 +150,7 @@ export default function GameScreen({ onReset }: GameScreenProps) {
                     </div>
 
                     {/* Actions */}
-                    <div className="mt-2">
+                    <div className="mt-1 sm:mt-2">
                         <ActionButtons
                             onAction={handleAction}
                             stats={regenmon.stats}
@@ -144,7 +158,7 @@ export default function GameScreen({ onReset }: GameScreenProps) {
                     </div>
 
                     {/* Footer: Reset */}
-                    <div className="flex justify-center mt-2">
+                    <div className="flex justify-center mt-1 sm:mt-2 pb-3 sm:pb-4">
                         <ResetButton onReset={handleReset} />
                     </div>
                 </div>

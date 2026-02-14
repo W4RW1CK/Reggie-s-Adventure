@@ -19,40 +19,43 @@ export default function Home() {
 
   return (
     <main className="min-h-screen w-full overflow-hidden bg-black text-white font-mono">
-      {currentScreen === 'LOADING' && (
-        <LoadingScreen onComplete={() => navigateTo('TITLE')} />
-      )}
+      {/* Responsive wrapper: max-width 480px centered on desktop */}
+      <div className="game-container">
+        {currentScreen === 'LOADING' && (
+          <LoadingScreen onComplete={() => navigateTo('TITLE')} />
+        )}
 
-      {currentScreen === 'TITLE' && (
-        <TitleScreen onStart={handleStartGame} />
-      )}
+        {currentScreen === 'TITLE' && (
+          <TitleScreen onStart={handleStartGame} />
+        )}
 
-      {currentScreen === 'STORY' && (
-        <StoryScreen onContinue={() => {
-          markIntroSeen();
-          navigateTo('CREATION');
-        }} />
-      )}
+        {currentScreen === 'STORY' && (
+          <StoryScreen onContinue={() => {
+            markIntroSeen();
+            navigateTo('CREATION');
+          }} />
+        )}
 
-      {currentScreen === 'CREATION' && (
-        <CreationScreen
-          onDespertar={(name, type) => {
-            createRegenmon(name, type);
-            navigateTo('TRANSITION');
-          }}
-        />
-      )}
+        {currentScreen === 'CREATION' && (
+          <CreationScreen
+            onDespertar={(name, type) => {
+              createRegenmon(name, type);
+              navigateTo('TRANSITION');
+            }}
+          />
+        )}
 
-      {currentScreen === 'TRANSITION' && (
-        <TransitionScreen onComplete={() => navigateTo('GAME')} />
-      )}
+        {currentScreen === 'TRANSITION' && (
+          <TransitionScreen onComplete={() => navigateTo('GAME')} />
+        )}
 
-      {currentScreen === 'GAME' && (
-        <GameScreen onReset={() => {
-          resetGame();
-          navigateTo('TITLE'); // or LOADING
-        }} />
-      )}
+        {currentScreen === 'GAME' && (
+          <GameScreen onReset={() => {
+            resetGame();
+            navigateTo('TITLE');
+          }} />
+        )}
+      </div>
     </main>
   );
 }

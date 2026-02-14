@@ -1,7 +1,7 @@
 # Progress — Reggie's Adventure
 # Última actualización: 2026-02-13
 
-## ESTADO ACTUAL: Fase 12 Completada — Iniciando Fase 13
+## ESTADO ACTUAL: Fase 14 Completada — Iniciando Fase 15
 
 ---
 
@@ -79,15 +79,11 @@
 - [x] Fase 5.4: Integrado en `page.tsx` reemplazando placeholder.
 - [x] Fase 5.5: Verificación visual — Título, Press Start parpadeante, siluetas, transición a Creation funcionando.
 
----
-
 ### Fase 6: Pantalla de Historia (P3) (2026-02-12)
 - [x] Fase 6.1: `src/components/screens/StoryScreen.tsx` creado con efecto typewriter, caja de diálogo NES (`nes-container`-style custom CSS), partículas de fondo.
 - [x] Fase 6.2: CSS completo agregado a `globals.css` (animaciones de texto, cursor parpadeante, partículas ascendentes).
 - [x] Fase 6.3: Integración en `page.tsx` con lógica de `markIntroSeen()` para actualizar estado al continuar.
 - [x] Fase 6.4: Verificación visual — Texto aparece letra por letra, no se puede saltar, botón continuar aparece al final, transición correcta.
-
----
 
 ### Fase 7: Pantalla de Creación (P4) (2026-02-12)
 - [x] Fase 7.1: `src/components/screens/CreationScreen.tsx` creado con carrusel de tipos, validación.
@@ -100,10 +96,13 @@
 
 ## SIGUIENTE ⏭️
 
-### Sesión 2: Loop de Juego (Tamagotchi)
-- Planificación detallada de Sesión 2
-- Implementación del Core Loop (Tick Rate, Decaimiento)
-- Interfaz Principal de Juego (HUD)
+### Fase 15: Deploy y Verificación Final
+- [ ] Fase 15.1: Conectar repositorio con Vercel.
+- [ ] Fase 15.2: Deploy a producción.
+- [ ] Fase 15.3: Verificar URL pública funcional.
+- [ ] Fase 15.4: Recorrer checklist completa del entregable (PRD.md → criterios de éxito).
+- [ ] Fase 15.5: Probar en dispositivo móvil real.
+- [ ] Fase 15.6: Ajustes finales.
 
 ---
 
@@ -147,6 +146,22 @@
 - [x] Fase 12.2: `src/components/ui/ResetButton.tsx` (Modal de confirmación).
 - [x] Fase 12.3: `src/components/ui/TutorialModal.tsx` (Instrucciones).
 - [x] Fase 12.4: Verificación de persistencia y features.
+
+---
+
+### Fase 13: Decaimiento de Stats (2026-02-13)
+- [x] Fase 13.1: `src/hooks/useStatDecay.ts` implementa cálculo de decaimiento offline (horas * DECAY_RATE_PER_HOUR).
+- [x] Fase 13.2: Intervalo activo cada 60s (DECAY_INTERVAL_MS) aplica decaimiento en vivo.
+- [x] Fase 13.3: Espíritu/Pulso bajan, Hambre sube. Refs para evitar dependency cycles.
+
+---
+
+### Fase 14: Responsive (2026-02-13)
+- [x] Fase 14.1: Mobile (<480px) — SVG 130px, font 8px day label, compact spacing, touch targets ≥44px.
+- [x] Fase 14.2: Tablet (480-768px) — SVG 160px, max-width 440px bottom UI, touch targets ≥48px.
+- [x] Fase 14.3: Desktop (>768px) — SVG 180px, game-container max-width 480px centrado, box-shadow.
+- [x] Fase 14.4: `page.tsx` envuelto en `.game-container` con max-width responsive.
+- [x] Fase 14.5: Verificación visual en mobile (375x667) — sin overflow, texto legible, botones accesibles.
 
 ## NOTAS
 
