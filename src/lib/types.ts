@@ -56,3 +56,9 @@ export interface PlayerData {
     name: string;          // Nombre descubierto por la IA
     discoveredAt: number;  // Timestamp de descubrimiento
 }
+
+export interface RegenmonMemory {
+    key: string;           // Identificador único (ej: "likes_pizza")
+    value: string;         // Dato recordado (ej: "El usuario ama la pizza")
+    discoveredAt: number;  // Timestamp
+}

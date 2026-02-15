@@ -1,6 +1,7 @@
 import { ChatMessage, ChatResponse } from '../types';
 import { createGeminiProvider } from './gemini';
 import { createOpenAIProvider } from './openai';
+import { createMockProvider } from './mock'; // [NEW]
 import { AIProvider } from './interface';
 
 export function getAIProvider(): AIProvider {
@@ -14,6 +15,12 @@ export function getAIProvider(): AIProvider {
         return createOpenAIProvider(process.env.OPENAI_API_KEY);
     }
 
-    // 3. Fallback / Error
+    // 3. Fallback to Mock Provider in Development
+    if (process.env.NODE_ENV === 'development') {
+        console.warn('⚠️ No valid API keys found. Using Mock AI Provider for testing.');
+        return createMockProvider();
+    }
+
+    // 4. Error in Production
     throw new Error('No AI provider configured. Please set GEMINI_API_KEY or OPENAI_API_KEY.');
 }

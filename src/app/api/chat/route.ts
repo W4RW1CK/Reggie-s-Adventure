@@ -26,6 +26,8 @@ function isRateLimited(ip: string): boolean {
 }
 
 export async function POST(req: NextRequest) {
+    let body: ChatRequest | null = null;
+
     try {
         // 1. Rate Limiting
         // In Vercel, x-forwarded-for works, or fallback to unknown
@@ -38,7 +40,7 @@ export async function POST(req: NextRequest) {
         }
 
         // 2. Parse Request
-        const body = await req.json() as ChatRequest;
+        body = await req.json() as ChatRequest;
         const { message, history, regenmon, playerName } = body;
 
         if (!message || !regenmon) {
@@ -76,6 +78,24 @@ export async function POST(req: NextRequest) {
 
     } catch (error: any) {
         console.error('Chat API Error:', error);
+
+        // [FIX] Fallback to Mock Provider in Development if API fails
+        if (process.env.NODE_ENV === 'development' && body) {
+            console.warn('⚠️ API Request failed. Falling back to Mock Provider.');
+            try {
+                // Dynamic import to avoid circular deps if needed, or just import at top if clean
+                const { createMockProvider } = require('@/lib/ai/mock');
+                const mockProvider = createMockProvider();
+                const response = await mockProvider.chat(
+                    "SYSTEM_PROMPT_IGNORED_BY_MOCK",
+                    [],
+                    body.message || ""
+                );
+                return NextResponse.json(response);
+            } catch (mockError) {
+                console.error('Mock Fallback Error:', mockError);
+            }
+        }
 
         // Handle missing provider configuration specifically
         if (error.message.includes('No AI provider configured')) {

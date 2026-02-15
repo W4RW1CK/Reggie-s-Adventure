@@ -30,6 +30,7 @@ export const STORAGE_KEYS = {
     CONFIG: 'reggie-adventure-config',
     CHAT: 'reggie-adventure-chat',
     PLAYER: 'reggie-adventure-player',
+    MEMORIES: 'reggie-adventure-memories', // [NEW Phase 26]
 };
 
 // Chat Constants

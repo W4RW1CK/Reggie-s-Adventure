@@ -203,11 +203,11 @@ US-28: Como jugador, quiero un tutorial actualizado que me explique la función 
 - [x] Datos persisten tras recargar/cerrar navegador
 - [x] Responsive en portrait (móvil + desktop)
 - [x] Música funcional con toggle
-- [ ] Chat funcional con respuestas de IA con personalidad por tipo
-- [ ] Stats reactivos a conversaciones (Espíritu ±5, Pulso -2, Hambre +1)
-- [ ] Historial de chat persistente (max 50 mensajes)
-- [ ] Nombre del jugador descubierto y recordado por el Regenmon
-- [ ] API-agnostic: funciona con Gemini (dev) y OpenAI (prod)
+- [x] Chat funcional con respuestas de IA con personalidad por tipo
+- [x] Stats reactivos a conversiones (Espíritu ±5, Pulso -2, Hambre +1)
+- [x] Historial de chat persistente (max 50 mensajes)
+- [x] Nombre del jugador descubierto y recordado por el Regenmon
+- [x] API-agnostic: funciona con Gemini (dev) y OpenAI (prod)
 - [ ] Lore integrado: personalidad, fragmentos de memoria, tono filosófico (ver LORE.md)
 
 ---

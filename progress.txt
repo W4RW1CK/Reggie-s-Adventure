@@ -215,8 +215,11 @@
     - [x] 24.1 Conexión con onUpdateStats (GameScreen).
 - [x] Fase 25: **Descubrimiento del Nombre**
     - [x] 25.1 Player Name persistence en responses.
-
-
+- [x] Fase 26: **Infraestructura de Memoria (Bonus)**
+    - [x] 26.1 Interfaz `RegenmonMemory` en `src/lib/types.ts`.
+    - [x] 26.2 Funciones CRUD (`saveMemory`, `loadMemories`, etc.) en `src/lib/storage.ts`.
+    - [x] 26.3 Integración con `deleteRegenmon` para limpieza completa.
+    - [x] 26.4 Verificación manual de persistencia.
 
 
 ---

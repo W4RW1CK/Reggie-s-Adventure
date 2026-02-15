@@ -1,4 +1,4 @@
-import { RegenmonData, AppConfig, RegenmonStats, ChatMessage, PlayerData } from './types';
+import { RegenmonData, AppConfig, RegenmonStats, ChatMessage, PlayerData, RegenmonMemory } from './types';
 import { STORAGE_KEYS, INITIAL_STATS } from './constants';
 
 // --- Helpers ---
@@ -66,6 +66,9 @@ export function updateName(newName: string): RegenmonData | null {
 export function deleteRegenmon(): void {
     if (!isBrowser) return;
     localStorage.removeItem(STORAGE_KEYS.DATA);
+    clearChatHistory();
+    clearPlayerData();
+    clearMemories(); // [NEW Phase 26]
 }
 
 // --- App Config CRUD ---
@@ -110,5 +113,38 @@ export function loadPlayerData(): PlayerData | null {
 export function clearPlayerData(): void {
     if (!isBrowser) return;
     localStorage.removeItem(STORAGE_KEYS.PLAYER);
+}
+
+// --- Memories CRUD ---
+
+export function saveMemory(key: string, value: string): void {
+    const memories = loadMemories();
+    const newMemory: RegenmonMemory = {
+        key,
+        value,
+        discoveredAt: Date.now(),
+    };
+
+    // Filter out existing memory with same key if it exists (update)
+    const updatedMemories = [
+        ...memories.filter(m => m.key !== key),
+        newMemory
+    ];
+
+    setStorageItem(STORAGE_KEYS.MEMORIES, updatedMemories);
+}
+
+export function loadMemories(): RegenmonMemory[] {
+    return getStorageItem<RegenmonMemory[]>(STORAGE_KEYS.MEMORIES, []) || [];
+}
+
+export function getMemory(key: string): RegenmonMemory | undefined {
+    const memories = loadMemories();
+    return memories.find(m => m.key === key);
+}
+
+export function clearMemories(): void {
+    if (!isBrowser) return;
+    localStorage.removeItem(STORAGE_KEYS.MEMORIES);
 }
 
