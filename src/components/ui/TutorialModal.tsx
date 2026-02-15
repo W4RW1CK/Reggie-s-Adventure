@@ -39,41 +39,41 @@ export default function TutorialModal({ onDismiss }: TutorialModalProps) {
             onClick={handleBackdropClick}
         >
             <div className="nes-container is-dark with-title max-w-md w-full animate-slideUp">
-                <p id="tutorial-title" className="title text-[#f1c40f]">GUÍA DE CUIDADO</p>
+                <p id="tutorial-title" className="title text-[#f1c40f]">GUÍA DE LA CONEXIÓN</p>
 
                 <div className="flex flex-col gap-4 text-xs sm:text-sm">
                     <p>
-                        Tu Regenmon necesita atención constante para sobrevivir y evolucionar.
+                        Tu Regenmon es un fragmento del mundo digital antiguo. Cuídalo para que juntos puedan regenerarlo.
                     </p>
 
                     <div className="grid grid-cols-1 gap-2 my-2">
                         <div className="flex items-center gap-3">
                             <span className="text-xl">🔮</span>
                             <div>
-                                <span className="text-[#9b59b6] font-bold">ESPÍRITU</span>
-                                <p className="text-[10px] opacity-90">Afecta su voluntad. Mejóralo descansando o jugando.</p>
+                                <span className="text-[#9b59b6] font-bold">ESPÍRITU — Esperanza</span>
+                                <p className="text-[10px] opacity-90">Cuánto cree en la regeneración del mundo. Descansa para recuperar la fe.</p>
                             </div>
                         </div>
 
                         <div className="flex items-center gap-3">
                             <span className="text-xl">💛</span>
                             <div>
-                                <span className="text-[#f1c40f] font-bold">PULSO</span>
-                                <p className="text-[10px] opacity-90">Su energía vital. Baja con el entrenamiento, sube con comida/sueño.</p>
+                                <span className="text-[#f1c40f] font-bold">PULSO — Energía vital</span>
+                                <p className="text-[10px] opacity-90">Su fuerza para existir. Entrenar la consume, comer y dormir la restoran.</p>
                             </div>
                         </div>
 
                         <div className="flex items-center gap-3">
                             <span className="text-xl">🍖</span>
                             <div>
-                                <span className="text-[#e74c3c] font-bold">HAMBRE</span>
-                                <p className="text-[10px] opacity-90">Si llega a 100, tu Regenmon sufrirá. Mantenla bajo control.</p>
+                                <span className="text-[#e74c3c] font-bold">HAMBRE — Necesidad</span>
+                                <p className="text-[10px] opacity-90">Necesita datos limpios para nutrirse. Si llega a 100, la corrupción lo alcanza.</p>
                             </div>
                         </div>
                     </div>
 
                     <div className="bg-gray-800 p-2 text-[10px] border-4 border-gray-600">
-                        <span className="text-yellow-400">⚡ OJO:</span> Los stats decaen incluso cuando no estás. ¡Vuelve pronto!
+                        <span className="text-yellow-400">⚡ OJO:</span> El mundo digital se degrada incluso cuando no estás. ¡Vuelve pronto!
                     </div>
 
                     <div className="mt-4 flex flex-col gap-3">

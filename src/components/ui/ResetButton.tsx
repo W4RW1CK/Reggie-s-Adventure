@@ -66,10 +66,10 @@ export default function ResetButton({ onReset }: ResetButtonProps) {
 
                         <div className="flex flex-col gap-4 text-center">
                             <p className="text-sm">
-                                ¿Estás seguro de que quieres abandonar este mundo?
+                                ¿Estás seguro de que quieres romper La Conexión?
                             </p>
                             <p className="text-xs text-red-400">
-                                Tu Regenmon y todo su progreso se perderán para siempre en el vacío digital.
+                                Tu Regenmon volverá a ser un fragmento perdido en La Red Primordial. No recordará nada.
                             </p>
                             <p className="text-xs text-red-500 font-bold blink mb-2">
                                 ESTA ACCIÓN ES IRREVERSIBLE

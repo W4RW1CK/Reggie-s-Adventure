@@ -11,6 +11,10 @@ import MusicToggle from '../ui/MusicToggle';
 import { useState, useEffect, useMemo } from 'react';
 import { RegenmonData } from '@/lib/types';
 import { STAT_MAX, STAT_MIN } from '@/lib/constants';
+import { ChatBox } from '../chat/ChatBox';
+import { useChat } from '@/hooks/useChat';
+import { useChiptuneAudio } from '@/hooks/useChiptuneAudio';
+import classNames from 'classnames';
 
 interface GameScreenProps {
     regenmon: RegenmonData;
@@ -81,6 +85,29 @@ export default function GameScreen({
         }
     };
 
+    // Chat Integration
+    const {
+        isOpen: isChatOpen,
+        toggleChat,
+        messages,
+        sendMessage,
+        isLoading: isChatLoading
+    } = useChat({
+        regenmon,
+        updateStatAction: onUpdateStats
+    });
+
+    const handleSendMessage = (text: string) => {
+        sendMessage(text);
+    };
+
+    // Audio Integration (Fade volume when chat is open)
+    useChiptuneAudio({
+        enabled: musicEnabled,
+        type: regenmon.type,
+        volume: isChatOpen ? 0.6 : 1.0
+    });
+
     return (
         <div className="game-screen w-full h-screen relative overflow-hidden flex flex-col">
             {/* Background Layer */}
@@ -128,18 +155,21 @@ export default function GameScreen({
                         <div className="grid grid-cols-1 gap-0.5 sm:gap-1">
                             <StatBar
                                 label="Espíritu"
+                                subtitle="Esperanza"
                                 value={regenmon.stats.espiritu}
                                 color="var(--color-stat-espiritu-full)"
                                 icon="🔮"
                             />
                             <StatBar
                                 label="Pulso"
+                                subtitle="Energía vital"
                                 value={regenmon.stats.pulso}
                                 color="var(--color-stat-pulso-full)"
                                 icon="💛"
                             />
                             <StatBar
                                 label="Hambre"
+                                subtitle="Necesidad"
                                 value={regenmon.stats.hambre}
                                 color="var(--color-stat-hambre-full)"
                                 icon="🍖"
@@ -154,12 +184,39 @@ export default function GameScreen({
                             />
                         </div>
 
+
                         {/* Footer: Reset */}
                         <div className="flex justify-center mt-1 sm:mt-2">
                             <ResetButton onReset={onReset} />
                         </div>
                     </div>
+
+                    {/* Chat Button (Session 2) */}
+                    {!isChatOpen && (
+                        <div className="mt-2">
+                            <button
+                                type="button"
+                                className="nes-btn w-full is-success"
+                                onClick={toggleChat}
+                                aria-label="Abrir chat con tu Regenmon"
+                            >
+                                💬 Conversar
+                            </button>
+                        </div>
+                    )}
                 </div>
+
+                {/* Chat Overlay */}
+                <ChatBox
+                    isOpen={isChatOpen}
+                    onClose={toggleChat}
+                    messages={messages}
+                    onSendMessage={handleSendMessage}
+                    isLoading={isChatLoading}
+                    regenmonType={regenmon.type}
+                    regenmonName={regenmon.name}
+                    stats={regenmon.stats}
+                />
 
             </div>
         </div>

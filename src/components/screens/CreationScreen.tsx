@@ -8,10 +8,10 @@ interface CreationScreenProps {
     onDespertar: (name: string, type: RegenmonType) => void;
 }
 
-const TYPES: { type: RegenmonType; label: string; desc: string; color: string }[] = [
-    { type: 'rayo', label: 'RAYO', desc: 'Ágil y enérgico', color: '#f5c542' },
-    { type: 'flama', label: 'FLAMA', desc: 'Fuerte y apasionado', color: '#e74c3c' },
-    { type: 'hielo', label: 'HIELO', desc: 'Calmado y resistente', color: '#3498db' },
+const TYPES: { type: RegenmonType; label: string; emoji: string; loreTitle: string; desc: string; color: string }[] = [
+    { type: 'rayo', label: '⚡️ RAYO', emoji: '⚡️', loreTitle: 'El Impulso', desc: 'Veloz, directo, chispeante. La corriente que alguna vez fue el flujo limpio de información.', color: '#f5c542' },
+    { type: 'flama', label: '🔥 FLAMA', emoji: '🔥', loreTitle: 'La Pasión', desc: 'Cálido, emotivo, intenso. El calor que alguna vez fue la conexión genuina entre seres.', color: '#e74c3c' },
+    { type: 'hielo', label: '❄️ HIELO', emoji: '❄️', loreTitle: 'La Memoria', desc: 'Sabio, reflexivo, sereno. Los archivos donde el conocimiento vivía eterno.', color: '#3498db' },
 ];
 
 export default function CreationScreen({ onDespertar }: CreationScreenProps) {
@@ -103,6 +103,9 @@ export default function CreationScreen({ onDespertar }: CreationScreenProps) {
                         <h2 className="creation-screen__type-label" style={{ color: currentType.color }}>
                             {currentType.label}
                         </h2>
+                        <p className="creation-screen__lore-title" style={{ color: currentType.color, opacity: 0.8, fontSize: '10px', letterSpacing: '0.1em' }}>
+                            — {currentType.loreTitle} —
+                        </p>
                         <p className="creation-screen__type-desc">{currentType.desc}</p>
                     </div>
                 </div>

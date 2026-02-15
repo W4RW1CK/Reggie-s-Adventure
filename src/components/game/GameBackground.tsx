@@ -58,15 +58,17 @@ export default function GameBackground({ type, stats }: GameBackgroundProps) {
     };
 
     return (
-        <div className="game-background" style={{
-            ...getBackgroundStyle(),
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            minHeight: '100%',
-            zIndex: 0
-        }}>
+        <div className="game-background"
+            aria-label={`Paisaje: ${type === 'rayo' ? 'Llanura Eléctrica' : type === 'flama' ? 'Volcán Ardiente' : 'Montaña Nevada'} — ${mood === 'good' ? 'Ambiente brillante y despejado' : mood === 'bad' ? 'Tormenta oscura y opresiva' : 'Ambiente neutral'}`}
+            style={{
+                ...getBackgroundStyle(),
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                minHeight: '100%',
+                zIndex: 0
+            }}>
             {/* Scanlines overlay (lighter here maybe) */}
             <div className="game-background__scanlines" />
 

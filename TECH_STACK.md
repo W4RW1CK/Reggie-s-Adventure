@@ -1,6 +1,6 @@
 # ⚙️ TECH_STACK — Reggie's Adventure
-> **Versión actual:** v0.1 — El Despertar
-> **Última actualización:** 2026-02-12
+> **Versión actual:** v0.2 — La Voz
+> **Última actualización:** 2026-02-14
 
 ---
 
@@ -28,12 +28,22 @@
 |--------|--------|-----------|
 | `Press Start 2P` | Google Fonts (CDN) | Fuente pixel art principal |
 
+## IA Conversacional (Sesión 2)
+
+| Paquete | Versión | Propósito |
+|---------|---------|-----------|
+| `@google/generative-ai` | `latest` | Gemini API — desarrollo local |
+| `openai` | `latest` | OpenAI API — producción (Frutero) |
+
+> **Nota:** Solo se usa UNA API a la vez. El auto-switch detecta `GEMINI_API_KEY` (dev) u `OPENAI_API_KEY` (prod). Arquitectura API-agnostic permite agregar Claude en el futuro sin cambiar código.
+>
+> 📜 **System Prompts:** El contenido de `lib/ai/prompts.ts` se basa íntegramente en [LORE.md](./LORE.md) — la biblia narrativa del universo.
+
 ## Sesiones Futuras (no instalar todavía)
 
 | Paquete | Versión | Sesión | Propósito |
 |---------|---------|--------|-----------|
-| `@anthropic-ai/sdk` | `latest` | S2 | Claude API para chat |
-| `@google/generative-ai` | `latest` | S2 | Gemini API para chat |
+| `@anthropic-ai/sdk` | `latest` | S2+ | Claude API (opción futura de chat) |
 | `@privy-io/react-auth` | `latest` | S3 | Autenticación de usuarios |
 | `@supabase/supabase-js` | `latest` | S3 | Base de datos en la nube |
 
@@ -52,13 +62,31 @@
 
 ---
 
+## Variables de Entorno
+
+### Desarrollo (`.env.local`)
+```
+GEMINI_API_KEY=tu_key_de_google_ai_studio
+```
+
+### Producción (Vercel Environment Variables)
+```
+OPENAI_API_KEY=key_proporcionada_por_frutero
+# (O la key que decidas usar: Gemini, Claude, etc.)
+```
+
+> **Regla:** Las API keys NUNCA se commitean al repo. Solo existen en `.env.local` o en las variables de Vercel.
+
+---
+
 ## Almacenamiento
 
-### Sesión 1: localStorage
+### Sesión 1-2: localStorage
 ```
-Clave: "reggie-adventure-data"
-Tipo: JSON string
-Contenido: ver APP_FLOW.md → P4 → Datos que se guardan
+Clave: "reggie-adventure-data"    → Datos del Regenmon
+Clave: "reggie-adventure-config"   → Configuración de la app
+Clave: "reggie-adventure-chat"     → Historial de chat (max 50 mensajes)
+Clave: "reggie-adventure-player"   → Nombre del jugador (descubierto por IA)
 ```
 
 ### Sesión 3+: Supabase
@@ -83,7 +111,7 @@ Se definirá en BACKEND_STRUCTURE.md cuando lleguemos a esa sesión.
 | `axe-core` | Auditoría de accesibilidad (opcional en tests) |
 
 
-## Estructura de Carpetas (Sesión 1)
+## Estructura de Carpetas (Sesión 1 + 2)
 
 ```
 reggie-adventure/
@@ -91,6 +119,9 @@ reggie-adventure/
 │   └── audio/              # Música 8-bit
 ├── src/
 │   ├── app/
+│   │   ├── api/
+│   │   │   └── chat/
+│   │   │       └── route.ts      # [NEW S2] API Route para chat con IA
 │   │   ├── layout.tsx      # Layout principal, fuentes, metadata
 │   │   ├── page.tsx        # Página única — maneja todos los estados
 │   │   └── globals.css     # Estilos globales + NES.css imports
@@ -106,6 +137,11 @@ reggie-adventure/
 │   │   │   ├── RegenmonSVG.tsx
 │   │   │   ├── StatBar.tsx
 │   │   │   └── ActionButtons.tsx
+│   │   ├── chat/           # [NEW S2] Sistema de chat
+│   │   │   ├── ChatBox.tsx           # Caja de diálogo NES principal
+│   │   │   ├── ChatBubble.tsx        # Burbujas individuales
+│   │   │   ├── ChatInput.tsx         # Input + botón enviar
+│   │   │   └── TypingIndicator.tsx   # Indicador "Escribiendo..."
 │   │   └── ui/             # Componentes reutilizables
 │   │       ├── MusicToggle.tsx
 │   │       ├── TutorialModal.tsx
@@ -114,13 +150,20 @@ reggie-adventure/
 │   ├── hooks/
 │   │   ├── useGameState.ts       # Estado del juego + localStorage
 │   │   ├── useStatDecay.ts       # Lógica de decaimiento temporal
-│   │   └── useScreenManager.ts   # Navegación entre pantallas
+│   │   ├── useScreenManager.ts   # Navegación entre pantallas
+│   │   └── useChat.ts            # [NEW S2] Estado del chat + API calls
 │   ├── lib/
 │   │   ├── constants.ts    # Valores fijos (decay rate, stat limits, etc.)
 │   │   ├── types.ts        # TypeScript types
-│   │   └── storage.ts      # Funciones de localStorage
+│   │   ├── storage.ts      # Funciones de localStorage
+│   │   └── ai/             # [NEW S2] Capa de abstracción IA
+│   │       ├── provider.ts       # Auto-switch Gemini/OpenAI/Claude
+│   │       ├── gemini.ts         # Adaptador Gemini
+│   │       ├── openai.ts         # Adaptador OpenAI
+│   │       └── prompts.ts        # System prompts por tipo
 │   └── assets/
 │       └── backgrounds/    # Paisajes pixel art
+├── .env.local              # [NEW S2] API keys (NO commitear)
 ├── PRD.md
 ├── APP_FLOW.md
 ├── TECH_STACK.md
@@ -128,6 +171,7 @@ reggie-adventure/
 ├── BACKEND_STRUCTURE.md
 ├── IMPLEMENTATION_PLAN.md
 ├── progress.txt
+├── model.md
 ├── package.json
 ├── tsconfig.json
 ├── next.config.js

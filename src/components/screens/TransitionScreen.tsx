@@ -44,7 +44,7 @@ export default function TransitionScreen({ onComplete }: TransitionScreenProps) 
                     ⚡ 🔥 ❄️
                 </div>
                 <h2 className="transition-screen__text">
-                    Tu Regenmon está despertando{dots}
+                    La Conexión se sella{dots}
                 </h2>
             </div>
         </div>

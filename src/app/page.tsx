@@ -2,7 +2,6 @@
 
 import { useGameState } from '@/hooks/useGameState';
 import { useScreenManager } from '@/hooks/useScreenManager';
-import { useChiptuneAudio } from '@/hooks/useChiptuneAudio';
 import LoadingScreen from '@/components/screens/LoadingScreen';
 import TitleScreen from '@/components/screens/TitleScreen';
 import StoryScreen from '@/components/screens/StoryScreen';
@@ -29,8 +28,6 @@ export default function Home() {
     config,
   });
 
-  // Music plays only on the Game screen when enabled
-  useChiptuneAudio({ enabled: config.musicEnabled && currentScreen === 'GAME', type: regenmon?.type ?? 'rayo' });
 
   return (
     <main className="min-h-screen w-full overflow-hidden bg-black text-white font-mono">

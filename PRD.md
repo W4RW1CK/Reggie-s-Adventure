@@ -1,15 +1,17 @@
 # 📋 PRD — Reggie's Adventure
-> **Versión actual:** v0.1 — El Despertar
-> **Última actualización:** 2026-02-12
-> **Estado:** Sesión 1 — En construcción
+> **Versión actual:** v0.2 — La Voz
+> **Última actualización:** 2026-02-14
+> **Estado:** Sesión 2 — Planificación completada
 
 ---
 
 ## 1. ¿Qué es Reggie's Adventure?
 
-Un **juego web retro de crianza y aventura** donde el jugador cuida a un Regenmon — una criatura digital que evoluciona según las interacciones del usuario. Inspirado en la estética de *Kirby's Adventure* (NES), combina elementos de Pokémon (tipos, evolución) y Tamagotchi (cuidado, stats en tiempo real).
+Un **juego web retro de crianza y aventura** donde el jugador cuida a un Regenmon — un *Regenerador del Mundo Digital*, un fragmento de energía antigua que despertó en un rincón olvidado de la red para sanar el caos del mundo digital moderno. Inspirado en la estética de *Kirby's Adventure* (NES), combina elementos de Pokémon (tipos, evolución) y Tamagotchi (cuidado, stats en tiempo real).
 
-No es una app de mascota para niños. Es un juego con sustancia, tono retro 8-bit y peso emocional real.
+No es una app de mascota para niños. Es un juego con sustancia, tono retro 8-bit, peso emocional real, y una capa filosófica sobre el estado del mundo digital y hacia dónde nos dirigimos.
+
+> 📜 **Narrativa completa:** Ver [LORE.md](./LORE.md) — la biblia narrativa del universo.
 
 ## 2. ¿Para quién es?
 
@@ -21,9 +23,10 @@ No es una app de mascota para niños. Es un juego con sustancia, tono retro 8-bi
 ## 3. Visión del producto
 
 Al completar las 5 sesiones, el jugador tiene:
-- Una criatura única que refleja su personalidad y decisiones
+- Un Regenmon único que refleja su personalidad y decisiones — un compañero vivo con memoria, emociones y lore propio (ver [LORE.md → Los Regenmon](./LORE.md#los-regenmon))
 - Un juego funcional desplegado en internet
-- Interacciones con IA que hacen que la criatura se sienta viva
+- Interacciones con IA donde La Conexión humano-Regenmon se siente genuina (ver [LORE.md → La Conexión](./LORE.md#la-conexión))
+- Una reflexión sutil sobre el estado del mundo digital tejida en la experiencia
 - Conexión social con otros jugadores del bootcamp
 
 ---
@@ -69,15 +72,51 @@ Al completar las 5 sesiones, el jugador tiene:
 
 ---
 
-### Sesión 2 — La Voz (v0.2) `PENDIENTE`
+### Sesión 2 — La Voz (v0.2) `ACTUAL`
+
+> La Conexión cobra vida. El Regenmon puede hablar, sentir, recordar fragmentos
+> de La Red Primordial, y formar un vínculo genuino con su usuario. Cada conversación
+> es un acto de regeneración del mundo digital. (Ver [LORE.md](./LORE.md))
+
+#### En Scope ✅
 | # | Feature | Criterio de éxito |
 |---|---------|-------------------|
-| F2.1 | Chat retro | Ventana de diálogo NES con efecto typewriter |
-| F2.2 | Personalidad por tipo | Rayo: enérgico. Flama: apasionado. Hielo: sereno |
-| F2.3 | Reactividad a stats | Respuestas cambian según niveles de stats |
-| F2.4 | API Route | Conexión con Claude/Gemini API vía Next.js |
+| F2.1 | Botón "💬 Conversar" | 4to botón en fila propia debajo de acciones. Mismo estilo NES verde. Toggle: abre/cierra chat |
+| F2.2 | Caja de diálogo NES (RPG) | Dialog box estilo Final Fantasy/Zelda. Semi-transparente, borde NES pixelado. Se adapta al tamaño de pantalla |
+| F2.3 | Chat funcional | Input de texto (max 280 chars). Enter envía, Ctrl+Enter salto de línea (desktop). Botón enviar (mobile). Mensajes aparecen sin typewriter |
+| F2.4 | Burbujas de chat | Usuario a la derecha, Regenmon a la izquierda. Bordes con tinte sutil del color del tipo. Sin avatares/iconos |
+| F2.5 | Indicador "Escribiendo..." | Puntos animados estilo NES mientras la IA responde |
+| F2.6 | API Route (API-agnostic) | `/api/chat` con capa de abstracción: detecta Gemini/OpenAI/Claude según variable de entorno |
+| F2.7 | Gemini para desarrollo | `gemini-2.0-flash` vía `.env.local`. Auto-switch: local=Gemini |
+| F2.8 | OpenAI para producción | Key de Frutero vía Vercel env vars. Auto-switch: Vercel=OpenAI. Modelo fijado por Frutero |
+| F2.9 | Personalidad por tipo (LORE.md) | Rayo **El Impulso**: energético, bromista, velocidad. Flama **La Pasión**: emotivo, cálido, conexiones. Hielo **La Memoria**: reflexivo, sabio, conocimiento. Fragmentos de memoria de La Red Primordial. Tono indirecto y filosófico |
+| F2.10 | Reactividad lore a stats | Espíritu bajo (= pérdida de esperanza) → dudas de la regeneración. Pulso bajo (= energía vital) → cansancio. Hambre alta (= necesidad) → irritable. Todo bajo → casi no puede hablar |
+| F2.11 | Stats afectados por chat | Por cada respuesta: Espíritu (Esperanza) ±5, Pulso (Energía) -2, Hambre (Necesidad) +1. Feedback flotante visible |
+| F2.12 | Respuestas ≤50 palabras | Cortas, en español. Puede hacer preguntas. Emojis según tipo. Cariño directo e indirecto. Curiosidad por el mundo del usuario |
+| F2.13 | Seguridad de contenido | Sin groserías, temas adultos, política, religión ni contenido sensible |
+| F2.14 | Descubrimiento del nombre | El Regenmon busca averiguar el nombre del usuario naturalmente (parte de La Conexión). Feedback visual "🧠" al descubrirlo |
+| F2.15 | Saludo inicial | Primera vez que se abre el chat: Regenmon saluda según su personalidad de tipo. Solo la primera vez |
+| F2.16 | Persistencia del chat | Max 50 mensajes en localStorage. Historial completo enviado a la IA. Reset borra todo |
+| F2.17 | Rate limiting | Frontend: cooldown 3s. Backend: 15 msgs/min. "Tu Regenmon necesita un respiro..." |
+| F2.18 | Manejo de errores | Botón "Reintentar" si la API falla |
+| F2.19 | Stats compactos durante chat | 🔮 Esperanza | 💛 Energía | 🍎 Necesidad (mini barras). Botones se ocultan |
+| F2.20 | Música durante chat | Volumen baja a 60% (fade 1.5s). Regresa a 100% al cerrar |
+| F2.21 | Chat desactivado en estado crítico | Si los 3 stats < 10: "Tu Regenmon está muy débil para hablar..." (la corrupción lo consume) |
+| F2.22 | Tutorial actualizado | TutorialModal incluye instrucciones del chat y La Conexión |
+
+#### Fuera de Scope ❌ (Sesión 2)
+- Sistema de memorias profundo (preparar infraestructura, implementar en Sesión 4+)
+- Indicador "🧠 X memorias" (futuro)
+- Sonido en chat (conflicto con música)
+- Avatares/iconos en burbujas
+- Efecto typewriter en mensajes de chat
+- Streaming de respuestas
 
 ### Sesión 3 — La Conexión (v0.3) `PENDIENTE`
+
+> El Regenmon se conecta al mundo más allá. Auth, persistencia en la nube,
+> y el sistema de ⭐ Estrellas como recurso de regeneración.
+
 | # | Feature | Criterio de éxito |
 |---|---------|-------------------|
 | F3.1 | Auth con Privy | Login funcional con botón estilo NES |
@@ -85,6 +124,10 @@ Al completar las 5 sesiones, el jugador tiene:
 | F3.3 | Persistencia nube | Migración de localStorage a Supabase |
 
 ### Sesión 4 — La Evolución (v0.4) `PENDIENTE`
+
+> El Regenmon crece y evoluciona. Su forma cambia según La Conexión,
+> las memorias que ha acumulado, y las misiones completadas.
+
 | # | Feature | Criterio de éxito |
 |---|---------|-------------------|
 | F4.1 | Evolución visual | Mínimo 3 etapas por tipo |
@@ -93,6 +136,10 @@ Al completar las 5 sesiones, el jugador tiene:
 | F4.4 | Personalización IA | Regenmon se adapta visualmente por conversaciones |
 
 ### Sesión 5 — El Encuentro (v0.5) `PENDIENTE`
+
+> Los Regenmon se encuentran entre sí. La regeneración del mundo digital
+> no ocurre en soledad — La Conexión se expande.
+
 | # | Feature | Criterio de éxito |
 |---|---------|-------------------|
 | F5.1 | Perfiles públicos | URL compartible por Regenmon |
@@ -120,6 +167,25 @@ US-13: Como jugador, quiero música de fondo que pueda activar/desactivar.
 US-14: Como jugador, quiero reiniciar todo si quiero empezar desde cero.
 ```
 
+## 5b. User Stories — Sesión 2
+
+```
+US-15: Como jugador, quiero hablar con mi Regenmon para sentir que tiene personalidad.
+US-16: Como jugador, quiero que mi Regenmon responda según su tipo para que se sienta único.
+US-17: Como jugador, quiero que las respuestas cambien según los stats para que la conversación sea dinámica.
+US-18: Como jugador, quiero que la conversación afecte los stats de mi Regenmon.
+US-19: Como jugador, quiero que mi Regenmon intente averiguar mi nombre para crear un vínculo.
+US-20: Como jugador, quiero que el historial de chat se guarde para no perder mis conversaciones.
+US-21: Como jugador, quiero un indicador de "Escribiendo..." para saber que mi Regenmon está pensando.
+US-22: Como jugador, quiero ver los stats compactos mientras chateo para no perder de vista la salud.
+US-23: Como jugador, quiero que la música baje de volumen al chatear para concentrarme en la conversación.
+US-24: Como jugador, quiero que si mi Regenmon está en estado crítico no pueda hablar (debo cuidarlo primero).
+US-25: Como jugador, quiero poder reintentar si la API falla sin perder mi mensaje.
+US-26: Como jugador, quiero que el chat se vea bien tanto en mobile como en desktop.
+US-27: Como jugador, quiero que mi Regenmon tenga un lore que se refleje en sus conversaciones.
+US-28: Como jugador, quiero un tutorial actualizado que me explique la función de chat.
+```
+
 ## 6. Requisitos de Accesibilidad (Fix It Phase)
 
 - **A1. Contraste:** Todos los textos deben cumplir WCAG AA (ratio 4.5:1).
@@ -137,3 +203,27 @@ US-14: Como jugador, quiero reiniciar todo si quiero empezar desde cero.
 - [x] Datos persisten tras recargar/cerrar navegador
 - [x] Responsive en portrait (móvil + desktop)
 - [x] Música funcional con toggle
+- [ ] Chat funcional con respuestas de IA con personalidad por tipo
+- [ ] Stats reactivos a conversaciones (Espíritu ±5, Pulso -2, Hambre +1)
+- [ ] Historial de chat persistente (max 50 mensajes)
+- [ ] Nombre del jugador descubierto y recordado por el Regenmon
+- [ ] API-agnostic: funciona con Gemini (dev) y OpenAI (prod)
+- [ ] Lore integrado: personalidad, fragmentos de memoria, tono filosófico (ver LORE.md)
+
+---
+
+## Documentos Canónicos
+
+| Documento | Propósito |
+|-----------|----------|
+| **PRD.md** (este) | Qué se construye y por qué |
+| **LORE.md** | Biblia narrativa — personalidad, mundo, filosofía |
+| **APP_FLOW.md** | Cómo navega el usuario |
+| **FRONTEND_GUIDELINES.md** | Cómo se ve y se siente |
+| **BACKEND_STRUCTURE.md** | Cómo funciona por dentro |
+| **TECH_STACK.md** | Con qué se construye |
+| **IMPLEMENTATION_PLAN.md** | En qué orden se construye |
+| **model.md** | Decisiones de diseño acumuladas |
+| **progress.txt** | Estado actual del proyecto |
+
+> ⚠️ **Regla de precedencia narrativa:** Si hay conflicto entre documentos técnicos y LORE.md en temas de personalidad, diálogo o tono, **LORE.md gana**.

@@ -301,12 +301,14 @@ const SONGS: Record<RegenmonType, SongData> = {
 
 // ─── Audio Engine ────────────────────────────────────────────
 
+
 interface UseChiptuneAudioProps {
     enabled: boolean;
     type: RegenmonType;
+    volume?: number; // 0.0 to 1.0 (defaults to 1.0)
 }
 
-export function useChiptuneAudio({ enabled, type }: UseChiptuneAudioProps) {
+export function useChiptuneAudio({ enabled, type, volume = 1.0 }: UseChiptuneAudioProps) {
     const audioContextRef = useRef<AudioContext | null>(null);
     const masterGainRef = useRef<GainNode | null>(null);
     const isPlayingRef = useRef(false);
@@ -444,7 +446,7 @@ export function useChiptuneAudio({ enabled, type }: UseChiptuneAudioProps) {
 
         const ctx = new AudioContext();
         const masterGain = ctx.createGain();
-        masterGain.gain.setValueAtTime(0.5, ctx.currentTime);
+        masterGain.gain.setValueAtTime(0.5 * volume, ctx.currentTime);
         masterGain.connect(ctx.destination);
 
         audioContextRef.current = ctx;
@@ -496,4 +498,17 @@ export function useChiptuneAudio({ enabled, type }: UseChiptuneAudioProps) {
             stopPlayback();
         };
     }, [enabled, type, startPlayback, stopPlayback]);
+
+    // React to volume changes smoothly
+    useEffect(() => {
+        if (masterGainRef.current && audioContextRef.current) {
+            const ctx = audioContextRef.current;
+            const targetVol = 0.5 * volume;
+            masterGainRef.current.gain.linearRampToValueAtTime(targetVol, ctx.currentTime + 1.5);
+        }
+    }, [volume]);
+
+    return {
+        stopPlayback // Expose if needed
+    };
 }

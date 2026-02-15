@@ -1,6 +1,9 @@
 # 🗺️ APP_FLOW — Reggie's Adventure
-> **Versión actual:** v0.1 — El Despertar
-> **Última actualización:** 2026-02-12
+> **Versión actual:** v0.2 — La Voz
+> **Última actualización:** 2026-02-14
+>
+> 📜 **Narrativa y personalidad:** Todo diálogo, texto de historia y comportamiento conversacional
+> debe ser consistente con [LORE.md](./LORE.md). En caso de conflicto, LORE.md prevalece.
 
 ---
 
@@ -85,9 +88,11 @@ ABRIR APP
 **Trigger:** Primera vez que se abre la app O después de un reinicio.
 **Contenido:**
 - Caja de diálogo estilo NES (fondo oscuro, borde pixelado)
-- Texto con efecto typewriter:
-  > *"En un rincón olvidado del mundo digital, una señal se enciende... algo quiere despertar. Un fragmento de energía antigua espera a alguien que le dé forma. Ese alguien... eres tú."*
+- Texto con efecto typewriter (ver LORE.md → El Origen):
+  > *"En un rincón olvidado del mundo digital, una señal se enciende... algo quiere despertar. Un fragmento de energía antigua — de un tiempo en que la información fluía como ríos de luz y las conexiones eran puras — espera a alguien que le dé forma. Ese alguien... eres tú."*
 - Botón "Continuar ▶" aparece al terminar el texto
+
+**Contexto narrativo:** Esta intro describe el Despertar — el momento en que la energía de La Red Primordial elige al usuario como su compañero. El Regenmon aún no tiene forma; la tomará en P4 cuando el usuario elija su tipo.
 
 **Interacción:**
 1. Texto aparece letra por letra (no se puede saltar)
@@ -102,10 +107,14 @@ ABRIR APP
 ### P4: Creación
 
 **Trigger:** No existe Regenmon en localStorage.
+**Contexto narrativo:** La energía antigua está lista para tomar forma. El usuario elige cuál de las tres formas elementales cristalizará — cada una representa un aspecto diferente de La Red Primordial que se perdió.
 **Contenido:**
 - Título "Crea tu Regenmon"
-- Carrusel de tipos (uno a la vez): ⚡ Rayo / 🔥 Flama / ❄️ Hielo
-  - Cada tipo muestra: SVG de la criatura + nombre + mini-descripción
+- Carrusel de tipos (uno a la vez):
+  - ⚡ **Rayo — El Impulso:** *"La corriente que alguna vez fue el flujo limpio de información. Veloz, directo, chispeante."*
+  - 🔥 **Flama — La Pasión:** *"El calor que alguna vez fue la conexión genuina entre seres. Cálido, emotivo, intenso."*
+  - ❄️ **Hielo — La Memoria:** *"Los archivos donde el conocimiento vivía eterno. Sabio, reflexivo, sereno."*
+  - Cada tipo muestra: SVG de la criatura + nombre + mini-descripción (con significado lore)
   - Flechas para navegar entre tipos
 - Campo de nombre:
   - Placeholder: "Nombre de tu Regenmon"
@@ -146,6 +155,7 @@ ABRIR APP
 ### P5: Transición
 
 **Trigger:** Datos guardados exitosamente tras P4.
+**Contexto narrativo:** El Despertar — la energía antigua cristaliza en la forma elegida. La Conexión entre usuario y Regenmon se sella al darle nombre (ver LORE.md → El Despertar).
 **Contenido:**
 - Fondo oscuro
 - Texto centrado: "Tu Regenmon está despertando..."
@@ -164,11 +174,13 @@ ABRIR APP
 
 1. **Header:**
    - 🎵 Toggle música (esquina superior derecha)
-   - "v0.1 — El Despertar" (discreto)
+   - "v0.2 — La Voz" (discreto)
 
-2. **Paisaje de fondo:**
-   - Pixel art según tipo (Rayo: llanura eléctrica / Flama: volcán / Hielo: montaña nevada)
-   - Cambia sutilmente según estado emocional
+2. **Paisaje de fondo — Zonas del Mundo Digital (ver LORE.md → Los Paisajes):**
+   - ⚡ Rayo: **Llanura Eléctrica** — los campos donde fluía la información libre. Stats altos: cielo despejado, corrientes de luz. Stats bajos: tormentas, estática.
+   - 🔥 Flama: **Volcán Ardiente** — el corazón donde se forjaban las conexiones. Stats altos: volcán dormido, cielo cálido. Stats bajos: erupciones violentas, humo.
+   - ❄️ Hielo: **Montaña Nevada** — los archivos antiguos del conocimiento. Stats altos: nieve cristalina, aurora boreal. Stats bajos: ventisca ciega, hielo negro.
+   - Cambia según estado emocional (la regeneración o degeneración del mundo es visible)
 
 3. **Regenmon:**
    - SVG centrado con idle animation (rebote/respiración)
@@ -176,23 +188,40 @@ ABRIR APP
    - Nombre debajo + ✏️ (si cambio no usado)
 
 4. **Info:**
-   - "Día X de aventura"
+   - "Día X de aventura" (visible pero discreto, también durante chat)
 
-5. **Stats:**
-   - 🔮 Espíritu [====----] 50/100
-   - 💛 Pulso [====----] 50/100
-   - 🍎 Hambre [====----] 50/100
+5. **Stats — Estado del Regenmon (ver LORE.md → Stats y Lore):**
+   - 🔮 Espíritu (**= Esperanza**) [====----] 50/100
+   - 💛 Pulso (**= Energía vital**) [====----] 50/100
+   - 🍎 Hambre (**= Necesidad**) [====----] 50/100
+   - **Modo compacto (durante chat):** 🔮 80 | 💛 50 | 🍎 30 (mini barras con emoji + número)
 
 6. **Botones de acción:**
    - ⚡ Entrenar | 🍎 Alimentar | 💤 Descansar
    - Layout responsive (fila u otra disposición según pantalla)
+   - **Se ocultan durante chat**
 
-7. **Footer:**
+7. **Botón "💬 Conversar" (Sesión 2):**
+   - Fila propia debajo de los 3 botones de acción
+   - Mismo estilo NES verde
+   - Toggle: abre/cierra la caja de diálogo NES
+   - Cambia a "✕ Cerrar" cuando el chat está abierto
+   - **Se desactiva** si los 3 stats < 10 (tooltip: "Tu Regenmon está muy débil para hablar...")
+
+8. **Caja de Diálogo NES (Sesión 2):**
+   - Aparece al presionar "💬 Conversar"
+   - Estilo Final Fantasy/Zelda: semi-transparente, borde NES pixelado
+   - Se adapta al tamaño de pantalla automáticamente
+   - Contiene: historial de burbujas + input de texto + botón enviar
+   - Música baja a 60% con fade 1.5s al abrir
+   - **Cerrar:** Botón "✕ Cerrar", clic fuera de la caja, o toggle del botón. Fade leve al cerrar. Botones de acción reaparecen con animación sutil.
+
+9. **Footer:**
    - Botón "Reiniciar" (discreto, centrado)
 
 **Tutorial Modal (si no descartado):**
 - Aparece superpuesto al entrar a P6
-- Instrucciones breves de las acciones
+- Instrucciones breves de las acciones **+ mención del chat (Sesión 2)**
 - Checkbox: "No volver a mostrar"
 - Botón para cerrar
 
@@ -265,11 +294,92 @@ ABRIR APP
 1. Al entrar a P6: ¿tutorialDismissed === false?
    ├── SÍ (no descartado) → Mostrar modal con instrucciones
    └── NO (ya descartado) → No mostrar nada
-2. Usuario lee instrucciones
+2. Usuario lee instrucciones (incluye mención del chat)
 3. ¿Marca checkbox "No volver a mostrar"?
    ├── SÍ → tutorialDismissed = true, se guarda en localStorage
    └── NO → Seguirá apareciendo la próxima vez
 4. Cierra modal → juega normalmente
+```
+
+### Flujo: Conversar (Sesión 2)
+
+```
+1. Usuario presiona "💬 Conversar"
+2. ¿Los 3 stats < 10?
+   ├── SÍ → Botón desactivado, tooltip "Tu Regenmon está muy débil para hablar..."
+   └── NO → Continúa
+3. Música baja a 60% (fade 1.5s)
+4. Botones de acción (Entrenar/Alimentar/Descansar) desaparecen
+5. Stats pasan a modo compacto (🔮 80 | 💛 50 | 🍎 30)
+6. Botón "Conversar" cambia a "✕ Cerrar"
+7. Caja de diálogo NES aparece (fade in)
+8. ¿Es la primera vez que abre el chat?
+   ├── SÍ → Regenmon saluda automáticamente
+   └── NO → Muestra historial de mensajes previos
+```
+
+### Flujo: Enviar Mensaje de Chat (Sesión 2)
+
+```
+1. Usuario escribe mensaje (max 280 chars)
+2. Envía con Enter (desktop), botón (mobile). Ctrl+Enter = salto de línea (desktop)
+3. ¿Cooldown activo (3s desde último envío)?
+   ├── SÍ → Botón desactivado (invisible al usuario)
+   └── NO → Continúa
+4. Mensaje del usuario aparece en burbuja (derecha)
+5. Input se limpia
+6. Indicador "Escribiendo..." aparece (puntos animados NES)
+7. Se envía request a /api/chat con:
+   - Mensaje del usuario
+   - Historial completo (max 50 mensajes)
+   - Stats actuales del Regenmon
+   - Nombre + tipo del Regenmon
+   - Días de vida
+   - Nombre del jugador (si lo conoce)
+8. ¿API responde exitosamente?
+   ├── SÍ → Continúa al paso 9
+   └── NO → Muestra botón "Reintentar"
+9. ¿Rate limit excedido (15 msgs/min)?
+   ├── SÍ → Mensaje amigable: "Tu Regenmon necesita un respiro..."
+   └── NO → Continúa
+10. Indicador "Escribiendo..." desaparece
+11. Respuesta del Regenmon aparece en burbuja (izquierda) con bounce
+12. Scroll automático al último mensaje
+13. Stats se actualizan:
+    - Espíritu: ±5 (decidido por la IA, fallback 0)
+    - Pulso: -2 (fijo)
+    - Hambre: +1 (fijo)
+14. Feedback flotante visible para cada cambio de stat
+15. Regenmon actualiza expresión/postura si corresponde
+16. ¿La IA descubrió el nombre del jugador?
+    ├── SÍ → Se guarda en playerName, feedback visual "🧠"
+    └── NO → Nada
+17. Mensaje se agrega al historial en localStorage
+18. Si historial > 50 mensajes → se eliminan los más antiguos
+```
+
+### Flujo: Cerrar Chat (Sesión 2)
+
+```
+1. Usuario cierra el chat (botón "✕ Cerrar", clic fuera, o toggle "Conversar")
+2. Caja de diálogo NES desaparece (fade leve)
+3. Botón "✕ Cerrar" vuelve a "💬 Conversar"
+4. Stats regresan a modo completo (barras normales)
+5. Botones de acción reaparecen (animación sutil)
+6. Música regresa a 100% (fade 1.5s)
+```
+
+### Flujo: Descubrimiento del Nombre del Jugador (Sesión 2)
+
+```
+1. El system prompt instruye al Regenmon a averiguar el nombre de forma natural
+2. Cuando el usuario menciona su nombre en la conversación:
+3. La IA incluye "playerName" en su respuesta JSON
+4. Se guarda en localStorage (clave: reggie-adventure-player)
+5. Feedback visual: "🧠 ¡Tu Regenmon aprendió tu nombre!"
+6. En conversaciones futuras, el Regenmon usa el nombre
+7. Si el usuario dice que cambió de nombre → la IA actualiza playerName
+8. Al hacer reset → se borra playerName
 ```
 
 ---
@@ -282,6 +392,12 @@ ABRIR APP
 
 2.  **Feedback:**
     -   Las acciones (Entrenar, Alimentar) deben anunciar el resultado al lector de pantalla ("Tu Regenmon comió, Hambre bajó a 30").
+
+3.  **Chat (Sesión 2):**
+    -   Al abrir el chat, foco se mueve al input de texto.
+    -   Mensajes nuevos anunciados via `aria-live="polite"`.
+    -   Indicador "Escribiendo..." tiene `aria-label` descriptivo.
+    -   Botón "Conversar" desactivado tiene `aria-disabled` + tooltip accesible.
 
 ---
 
@@ -299,4 +415,6 @@ ABRIR APP
 [Creación] → ¡Despertar! →fade→ [Transición] →fade→ [Juego]
 
 [Juego] → Reiniciar → Confirmar →fade→ [Título] → [Historia] → [Creación]
+
+[Juego] → 💬 Conversar → [Chat NES Dialog] → ✕ Cerrar → [Juego]
 ```

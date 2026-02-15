@@ -1,4 +1,4 @@
-import { RegenmonData, AppConfig, RegenmonStats } from './types';
+import { RegenmonData, AppConfig, RegenmonStats, ChatMessage, PlayerData } from './types';
 import { STORAGE_KEYS, INITIAL_STATS } from './constants';
 
 // --- Helpers ---
@@ -81,3 +81,34 @@ export function loadConfig(): AppConfig {
     };
     return getStorageItem<AppConfig>(STORAGE_KEYS.CONFIG, defaults) || defaults;
 }
+
+// --- Chat History CRUD ---
+
+export function saveChatHistory(history: ChatMessage[]): void {
+    setStorageItem(STORAGE_KEYS.CHAT, history);
+}
+
+export function loadChatHistory(): ChatMessage[] {
+    return getStorageItem<ChatMessage[]>(STORAGE_KEYS.CHAT, []) || [];
+}
+
+export function clearChatHistory(): void {
+    if (!isBrowser) return;
+    localStorage.removeItem(STORAGE_KEYS.CHAT);
+}
+
+// --- Player Data CRUD ---
+
+export function savePlayerData(data: PlayerData): void {
+    setStorageItem(STORAGE_KEYS.PLAYER, data);
+}
+
+export function loadPlayerData(): PlayerData | null {
+    return getStorageItem<PlayerData>(STORAGE_KEYS.PLAYER);
+}
+
+export function clearPlayerData(): void {
+    if (!isBrowser) return;
+    localStorage.removeItem(STORAGE_KEYS.PLAYER);
+}
+

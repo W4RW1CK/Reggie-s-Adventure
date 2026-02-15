@@ -27,3 +27,32 @@ export interface AppConfig {
     musicEnabled: boolean;     // Toggle de música
     isFirstTime: boolean;      // ¿Primera vez que abre la app?
 }
+
+export interface ChatMessage {
+    role: 'user' | 'assistant';
+    content: string;
+    timestamp: number;
+}
+
+export interface ChatRequest {
+    message: string;         // Mensaje del usuario (max 280 chars)
+    history: ChatMessage[];  // Historial completo (max 50 mensajes)
+    regenmon: {
+        name: string;           // Nombre del Regenmon
+        type: RegenmonType;
+        stats: RegenmonStats;
+        daysAlive: number;      // Días desde la creación
+    };
+    playerName?: string;      // Nombre del jugador (si ya se descubrió)
+}
+
+export interface ChatResponse {
+    message: string;           // Respuesta del Regenmon (≤50 palabras)
+    spiritChange: number;      // -5 a +5 (cambio en Espíritu)
+    playerName?: string;       // Si descubrió el nombre del jugador
+}
+
+export interface PlayerData {
+    name: string;          // Nombre descubierto por la IA
+    discoveredAt: number;  // Timestamp de descubrimiento
+}

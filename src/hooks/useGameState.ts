@@ -116,7 +116,7 @@ export function useGameState() {
     const resetGame = () => {
         deleteRegenmon();
         setRegenmon(null);
-        const newConfig = { ...config, isFirstTime: false };
+        const newConfig = { ...config, isFirstTime: true };
         setConfig(newConfig);
         saveConfigToStorage(newConfig);
     };

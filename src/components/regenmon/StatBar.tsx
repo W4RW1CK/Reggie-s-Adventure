@@ -2,13 +2,14 @@ import React from 'react';
 
 interface StatBarProps {
     label: string;
+    subtitle?: string;
     value: number;
     max?: number;
     color: string; // Hex color for the bar
     icon: string;
 }
 
-export default function StatBar({ label, value, max = 100, color, icon }: StatBarProps) {
+export default function StatBar({ label, subtitle, value, max = 100, color, icon }: StatBarProps) {
     const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
 
     return (
@@ -17,6 +18,7 @@ export default function StatBar({ label, value, max = 100, color, icon }: StatBa
                 <span className="flex items-center gap-2">
                     <span className="text-lg">{icon}</span>
                     <span className="uppercase tracking-wider">{label}</span>
+                    {subtitle && <span className="text-[8px] opacity-60 ml-1 normal-case">({subtitle})</span>}
                 </span>
                 <span className="font-mono">{Math.round(value)}/{max}</span>
             </div>
