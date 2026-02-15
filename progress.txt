@@ -220,7 +220,10 @@
     - [x] 26.2 Funciones CRUD (`saveMemory`, `loadMemories`, etc.) en `src/lib/storage.ts`.
     - [x] 26.3 Integración con `deleteRegenmon` para limpieza completa.
     - [x] 26.4 Verificación manual de persistencia.
-
+- [x] Fase 27: **Tutorial Actualizado**
+    - [x] 27.1 `TutorialModal.tsx` con soporte multipágina (Intro/Stats + Chat).
+    - [x] 27.2 Contenido sobre "La Voz" (Vínculo, Memoria, Música).
+    - [x] 27.3 Navegación (Siguiente/Atrás) y persistencia del estado "visto".
 
 ---
 
