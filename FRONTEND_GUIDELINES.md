@@ -1,6 +1,6 @@
 # 🎨 FRONTEND_GUIDELINES — Reggie's Adventure
-> **Versión actual:** v0.2 — La Voz
-> **Última actualización:** 2026-02-14
+> **Versión actual:** v0.3 — La Conexión
+> **Última actualización:** 2026-02-15
 >
 > 📜 **Lore visual:** Los colores por tipo, paisajes, y animaciones del Regenmon
 > reflejan su significado narrativo. Ver [LORE.md](./LORE.md) para contexto.
@@ -9,10 +9,11 @@
 
 ## Identidad Visual
 
-**Inspiración:** Kirby's Adventure (NES, 1993)
+**Inspiración:** Kirby's Adventure (NES, 1993) + Game Boy Color
 **Sensación:** Retro 8-bit con sustancia. No infantil, no genérico. Un juego que se siente clásico y querido.
 **Principio:** La vibra de Kirby's Adventure — colores vibrantes, formas redondeadas, ambiente cálido pero con personalidad.
 **Tono narrativo:** Místico + épico + oscuro pero esperanzador (ver LORE.md). La estética debe transmitir que este es un mundo digital vivo, antiguo, y que necesita sanarse.
+**Temas:** Dos modos visuales: **Dark (NES)** y **Light (GBC)**. Toggle en Settings.
 
 ---
 
@@ -45,7 +46,7 @@ font-family: 'Press Start 2P', monospace;
 
 ## Paleta de Colores
 
-### Colores Base
+### Colores Base (Tema Dark — NES)
 
 | Nombre | Hex | Uso |
 |--------|-----|-----|
@@ -57,26 +58,51 @@ font-family: 'Press Start 2P', monospace;
 | `text-accent` | `#ffffff` | Texto destacado |
 | `border-nes` | `#4a4a4a` | Bordes estilo NES |
 
+### Colores Base (Tema Light — GBC)
+
+> *(Nuevo en Sesión 3)* — Inspirado en la paleta del Game Boy Color
+
+| Nombre | Hex | Uso |
+|--------|-----|-----|
+| `bg-light` | `#f5f0e1` | Fondo principal crema |
+| `bg-light-secondary` | `#e8dcc8` | Fondo secundario |
+| `surface-light` | `#d4c5a9` | Contenedores, cajas |
+| `text-primary-light` | `#2a2a2a` | Texto principal |
+| `text-secondary-light` | `#5a5a5a` | Texto secundario |
+| `text-accent-light` | `#1a1a1a` | Texto destacado |
+| `border-gbc` | `#8b8370` | Bordes estilo GBC |
+
 ### Colores por Tipo (ver LORE.md → Los Regenmon)
 
 > Cada tipo representa un aspecto perdido de La Red Primordial.
 > Los colores reflejan su esencia narrativa.
 
-| Tipo | Representa | Primario | Secundario | Fondo Paisaje |
-|------|-----------|----------|------------|---------------|
-| ⚡ Rayo | **El Impulso** — el flujo limpio de información | `#f5c542` | `#d4a017` | `#2a2a40` (cielo tormentoso) |
-| 🔥 Flama | **La Pasión** — la conexión genuina entre seres | `#e74c3c` | `#c0392b` | `#3d1f00` (volcánico) |
-| ❄️ Hielo | **La Memoria** — el conocimiento preservado | `#3498db` | `#2980b9` | `#0a1628` (nocturno nevado) |
+| Tipo | Representa | Primario | Secundario | Fondo Dark | Fondo Light |
+|------|-----------|----------|------------|------------|-------------|
+| ⚡ Rayo | **El Impulso** | `#f5c542` | `#d4a017` | `#2a2a40` | `#f5f0d0` |
+| 🔥 Flama | **La Pasión** | `#e74c3c` | `#c0392b` | `#3d1f00` | `#f5e0d0` |
+| ❄️ Hielo | **La Memoria** | `#3498db` | `#2980b9` | `#0a1628` | `#d0e8f5` |
 
 ### Colores de Stats (ver LORE.md → Stats y Lore)
 
 > Los stats no son números arbitrarios. Representan el estado interno del Regenmon.
+> Todos funcionan igual: 100 = bien, 0 = mal.
 
 | Stat | Significado Lore | Barra Llena | Barra Baja | Fondo Barra |
 |------|-----------------|-------------|------------|-------------|
 | 🔮 Espíritu | **Esperanza** — cuánto cree en la regeneración | `#9b59b6` | `#4a235a` | `#2c2c2c` |
 | 💛 Pulso | **Energía vital** — fuerza para existir y actuar | `#f1c40f` | `#7d6608` | `#2c2c2c` |
-| 🍎 Hambre | **Necesidad** — datos limpios que lo nutren | `#e74c3c` | `#78281f` | `#2c2c2c` |
+| 🍎 Esencia | **Nutrición digital** — datos puros que lo nutren | `#27ae60` | `#1a5c33` | `#2c2c2c` |
+
+> ⚠️ **Cambio S3:** Esencia reemplaza Hambre. Color cambió de rojo a verde para reflejar que 100=bueno/nutrido.
+
+### Colores de Fragmentos 💠
+
+| Elemento | Color | Hex |
+|----------|-------|-----|
+| Fragmento icono | Cyan brillante | `#00e5ff` |
+| Fragmento texto | Cyan suave | `#80deea` |
+| Sin login (---) | Gris apagado | `#666666` |
 
 ### Colores de UI
 
@@ -86,6 +112,7 @@ font-family: 'Press Start 2P', monospace;
 | Botón hover | Verde claro | `#66bb6a` |
 | Botón desactivado | Gris | `#555555` |
 | Botón peligro (reset) | Rojo apagado | `#8b0000` |
+| Botón Purificar | Púrpura/cyan | `#7c4dff` |
 | Feedback positivo (+10) | Verde | `#4caf50` |
 | Feedback negativo (-10) | Rojo | `#e74c3c` |
 | Modal overlay | Negro semi-transparente | `rgba(0,0,0,0.7)` |
@@ -115,29 +142,28 @@ Escala: 4px base
 - **Centrado vertical** del contenido principal
 - **Un solo scroll** si el contenido excede la pantalla
 
-### Estructura de la Pantalla de Juego (P6)
+### Estructura de la Pantalla de Juego (P6) — Actualizada S3
 
 ```
 ┌─────────────────────────────────────┐
-│ 🎵          v0.1 — El Despertar     │ ← Header (fijo arriba)
+│ 🎵  💠 100 Fragmentos   v0.3  │ ← Header (música + Fragmentos + versión)
 ├─────────────────────────────────────┤
 │                                     │
-│         [Paisaje de Fondo]          │ ← Background (absoluto, cubre todo)
+│         [Paisaje de Fondo]          │ ← Background (adapta por tema Dark/Light)
 │                                     │
 │          ┌─────────────┐            │
-│          │  Regenmon    │            │ ← SVG centrado
+│          │  Regenmon    │            │ ← SVG centrado (reworked S3)
 │          │  (SVG idle)  │            │
 │          └─────────────┘            │
-│           "Nombre" ✏️               │
+│           "Nombre"                   │
 │          Día X de aventura          │
 │                                     │
-│  🔮 Espíritu [████████──] 80/100    │ ← Stats
-│  💛 Pulso    [█████─────] 50/100    │
-│  🍎 Hambre   [███───────] 30/100    │
+│  🔮 Esperanza [==========] 80/100    │ ← Stats
+│  💛 Energía   [█████─────] 50/100    │
+│  🍎 Esencia  [███───────] 30/100    │
 │                                     │
-│  [Entrenar] [Alimentar] [Descansar] │ ← Botones
+│  [🔮 Purificar (10💠)] [⚙️] [💬 Conversar]  │ ← Botones (S3)
 │                                     │
-│          [Reiniciar]                │ ← Footer (discreto)
 └─────────────────────────────────────┘
 ```
 
@@ -163,12 +189,39 @@ Escala: 4px base
 - Valor a la derecha (`50/100`)
 - Color dinámico según nivel del stat
 
-### Botones de Acción
+### Botones de Acción (S3 — Nuevo layout)
+
+> **S3:** Los botones Entrenar/Alimentar/Descansar fueron reemplazados.
+
+**Layout:** `[🔮 Purificar (10💠)]  [⚙️]  [💬 Conversar]`
+
+| Botón | Estilo | Comportamiento |
+|-------|--------|----------------|
+| Purificar | NES btn, color púrpura/cyan | Cuesta 10 Fragmentos. Disabled si <10💠 o Esencia=100. Tooltip: "Necesitas 10 💠" |
+| ⚙️ | NES btn, pequeño (icono solo) | Abre/cierra panel Settings |
+| Conversar | NES btn verde | Toggle chat. Cambia a "✕ Cerrar" cuando abierto |
+
 - Estilo NES.css (`nes-btn`)
 - Padding: `12px 16px`
 - Fuente: Press Start 2P a `10px`
 - Estados: normal / hover / active / disabled
 - Disabled: gris, cursor not-allowed, opacidad 0.5
+- **Se ocultan durante chat** (Purificar y ⚙️)
+
+### Panel Settings (⚙️) (S3 — Nuevo)
+
+Panel expandible que aparece al presionar ⚙️. Contiene:
+
+| Opción | Icono | Control |
+|--------|-------|---------|
+| Música | 🎵 | Toggle on/off |
+| Reiniciar | 🔄 | Botón con confirmación |
+| Cambiar nombre | 📝 | Campo inline, mismas validaciones |
+| Sesión | 🚪 | "Iniciar Sesión" / "Cerrar Sesión" |
+| Texto | 🔤 | A+ / A- para agrandar/disminuir |
+| Tema | 🌙/☀️ | Toggle Dark (NES) / Light (GBC) |
+
+Estilo: NES container (`nes-container is-dark`), posición fija o slide-in, fondo opaco.
 
 ### Modales
 - Fondo: `rgba(0,0,0,0.7)` overlay
@@ -261,8 +314,9 @@ Escala: 4px base
 
 ```css
 /* Mismo estilo NES verde que los otros botones */
-/* Fila propia debajo de Entrenar/Alimentar/Descansar */
-/* Cambia texto a "✕ Cerrar" cuando chat está abierto */
+/* Fila única con los 3 botones (S3) */
+/* Conversar cambia texto a "✕ Cerrar" cuando chat está abierto */
+/* Purificar y ⚙️ se ocultan durante chat */
 ```
 
 ### Stats Compactos (durante chat)
@@ -380,4 +434,6 @@ Escala: 4px base
 - **Chat: sin sonido** — la música de fondo es suficiente, evitar ruido
 - **Chat: sin typewriter** — los mensajes aparecen de golpe
 - **Chat: sin avatares** — posición izq/der distingue Regenmon/usuario
+- **Tema Dark (NES)** es el default. Light (GBC) activable en Settings
+- **Temas afectan:** backgrounds, bordes, colores de texto, UI containers. NO afectan colores de tipo ni stats
 - Este archivo se actualiza cuando se agreguen nuevos componentes o cambien colores

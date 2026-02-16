@@ -1,6 +1,7 @@
 # 📜 LORE — Reggie's Adventure
-> **Versión actual:** v0.2 — La Voz
-> **Última actualización:** 2026-02-14
+> **Versión actual:** v0.3 — La Conexión
+> **Última actualización:** 2026-02-15
+> **Estado:** Sesión 3 — En Planificación
 
 ---
 
@@ -129,10 +130,11 @@ Tres razones:
 ## Stats y Lore
 
 Los stats del Regenmon no son números arbitrarios. Tienen significado en el mundo.
+Todos los stats funcionan igual: **100 = bien, 0 = mal.**
 
 ### 🔮 Espíritu = Esperanza
 
-El Espíritu es la medida de cuánta esperanza tiene el Regenmon en que la regeneración es posible.
+El Espíritu es la medida de cuánta esperanza tiene el Regenmon en que la regeneración es posible. Cada conversación con el usuario puede fortalecerla o debilitarla — la IA evalúa el tono emocional del intercambio.
 
 | Nivel | Lo que siente | Ejemplo de diálogo |
 |-------|--------------|-------------------|
@@ -142,7 +144,7 @@ El Espíritu es la medida de cuánta esperanza tiene el Regenmon en que la regen
 
 ### 💛 Pulso = Energía vital
 
-El Pulso es la fuerza que mantiene al Regenmon activo. Hablar consume energía. Existir consume energía. La corrupción del mundo digital lo drena constantemente.
+El Pulso es la fuerza que mantiene al Regenmon activo. Hablar consume energía. Existir consume energía. La corrupción del mundo digital lo drena constantemente. Pero el descanso lo restaura — cuando el usuario se ausenta, el Regenmon reposa y su Pulso se recupera de forma natural.
 
 | Nivel | Lo que siente |
 |-------|--------------|
@@ -150,15 +152,19 @@ El Pulso es la fuerza que mantiene al Regenmon activo. Hablar consume energía. 
 | 30-70 | Normal, funcional |
 | <30 | Cansado, respuestas cortas, economiza palabras |
 
-### 🍎 Hambre = Necesidad
+### 🍎 Esencia = Nutrición Digital
 
-El Hambre representa las necesidades básicas del Regenmon como criatura viva. Incluso un ser digital necesita nutrirse — necesita datos limpios, energía pura.
+> ⚠️ **Cambio S3:** Antes "Hambre" (lógica invertida: 100=hambriento). Ahora **"Esencia"** (lógica normal: 100=bien alimentado, 0=hambriento).
+
+La Esencia representa la nutrición fundamental del Regenmon — los datos puros, la energía limpia que necesita para existir. Incluso un ser digital necesita nutrirse. En un mundo contaminado por datos basura, encontrar nutrición pura es cada vez más difícil.
+
+Cada interacción consume Esencia (hablar requiere energía pura). La **Purificación** — el acto de limpiar y restaurar datos corruptos — es la única forma de restaurarla.
 
 | Nivel | Lo que siente |
 |-------|--------------|
-| <30 | Satisfecho, no menciona comida |
-| 30-70 | Normal |
-| >70 | Irritable, menciona hambre, un poco de malas |
+| >70 | Satisfecho, nutrido, no menciona necesidad |
+| 30-70 | Normal, siente hambre ocasionalmente |
+| <30 | Debilitado, menciona hambre, irritable, necesita purificación |
 
 ### Estado crítico (todos los stats < 10)
 Cuando los tres stats están en niveles críticos, el Regenmon está al borde del colapso. No puede hablar. No puede conectar. La corrupción lo consume.
@@ -186,6 +192,39 @@ Los paisajes que rodean al Regenmon son **representaciones de zonas del mundo di
 
 - **Stats altos:** Nieve cristalina, aurora boreal, aire puro
 - **Stats bajos:** Ventisca ciega, hielo negro, silencio opresivo
+
+---
+
+## Los Fragmentos 💠
+
+> *(Nuevo en Sesión 3 — La Conexión)*
+
+Dispersos por todo el mundo digital, entre los datos corruptos y el ruido, existen **Fragmentos** — pequeños restos de la energía antigua de La Red Primordial. Son como esquirlas de luz atrapadas en la oscuridad, tan pequeñas que la corrupción no las detecta.
+
+Cuando un Regenmon y su usuario fortalecen La Conexión — cuando conversan, comparten, generan un vínculo genuino — esos Fragmentos resuenan. Vibran. Se desbloquean. La conexión les devuelve la vida.
+
+Los Fragmentos son la **moneda de la regeneración**. Con ellos, el Regenmon puede purificar datos corruptos y restaurar zonas del mundo digital. Son escasos, valiosos, y no se obtienen fácilmente — solo a través de La Conexión.
+
+### ¿Cómo se ganan Fragmentos?
+- Conversando con el Regenmon (no siempre, no garantizado)
+- Cuanto más genuina la conversación, más probable es que un Fragmento despierte
+- Al acercarse a 100, los Fragmentos se vuelven más difíciles de encontrar — los que quedan están más profundamente enterrados
+
+### ¿Para qué sirven?
+- **Purificar**: Restaurar la Esencia del Regenmon (limpiar datos corruptos)
+- (Futuro) Desbloquear memorias, evoluciones, y más
+
+---
+
+## La Purificación 🔮
+
+> *(Nuevo en Sesión 3 — La Conexión)*
+
+La **Purificación** es el acto de usar Fragmentos para limpiar datos corruptos del mundo digital y transformarlos en Esencia pura — la nutrición fundamental del Regenmon.
+
+Cuando el usuario purifica, el Regenmon absorbe la energía limpia. Su Esencia se restaura, su Espíritu se eleva ligeramente, y su Pulso se fortalece. Es un acto de **regeneración activa** — literalmente estás sanando una porción del mundo digital.
+
+No es simplemente "darle de comer". Es devolver esperanza a un mundo que la perdió. Cada purificación, por pequeña que sea, importa.
 
 ---
 
@@ -232,7 +271,13 @@ El nombre que el usuario le da al Regenmon sella La Conexión. Es el primer acto
 ### Curiosidad:
 - Quiere saber TODO del usuario y su mundo
 - Hace preguntas sobre el plano físico, emociones, experiencias
-- Almacena lo que aprende (preparación para Sesión 4)
+- Almacena lo que aprende como **Memorias** (para evolución futura)
+
+### Memorias:
+- El Regenmon guarda fragmentos de lo que aprende del usuario: nombre, gustos, emociones, datos personales, temas frecuentes
+- Las memorias influyen en cómo responde (más personalizado con el tiempo)
+- Las memorias acumuladas son la base de la futura evolución (S4)
+- El Regenmon puede hacer referencia sutil a memorias pasadas
 
 ---
 
@@ -242,14 +287,14 @@ Este documento es la **biblia narrativa** del juego. Todo lo relacionado a perso
 
 | Documento | Qué toma de LORE.md |
 |-----------|---------------------|
-| **PRD.md** | Descripción del producto, visión, y features narrativos |
-| **APP_FLOW.md** | Texto de historia introductoria, flujos de chat, contexto de paisajes |
-| **FRONTEND_GUIDELINES.md** | Colores por tipo (significado lore), animaciones de paisaje, chat bubble styles |
-| **BACKEND_STRUCTURE.md** | System prompt completo, reactividad de stats, personalidad por tipo |
-| **IMPLEMENTATION_PLAN.md** | Fases 24-25 (reactividad stats, nombre), Fase 28 (lore en prompts) |
-| **TECH_STACK.md** | Estructura de archivos incluyendo system prompts por tipo |
-| **model.md** | Resumen de todas las decisiones de lore |
-| **progress.txt** | Estado de completitud del lore |
+| **PRD.md** | Descripción del producto, visión, features narrativos, Fragmentos, Purificación |
+| **APP_FLOW.md** | Flujos de login, chat, purificación, contexto de paisajes |
+| **FRONTEND_GUIDELINES.md** | Colores por tipo, animaciones de paisaje, chat bubbles, temas GBC/NES |
+| **BACKEND_STRUCTURE.md** | System prompt completo, stats AI-driven, Fragmentos API, Supabase schema |
+| **IMPLEMENTATION_PLAN.md** | Fases S3 (auth, economía, stats, UI, persistencia) |
+| **TECH_STACK.md** | Privy, Supabase, estructura de archivos S3 |
+| **model.md** | Resumen de todas las decisiones de diseño y lore |
+| **progress.txt** | Estado de completitud por sesión |
 
 ### Regla de Oro
 > Si hay un conflicto entre este documento y cualquier otro, **LORE.md gana** en todo lo relacionado a narrativa, personalidad, tono y diálogo. Los otros documentos definen el *cómo*. Este define el *qué* y el *por qué*.

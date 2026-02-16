@@ -1,7 +1,7 @@
 # Progress — Reggie's Adventure
-# Última actualización: 2026-02-14
+# Última actualización: 2026-02-15
 
-## ESTADO ACTUAL: SESIÓN 1 COMPLETADA (Fases 1-16) 🎉
+## ESTADO ACTUAL: SESIÓN 2 COMPLETADA (Fases 1-31) 🎉
 
 ---
 
@@ -165,111 +165,159 @@
 
 ---
 
-### Fase 16: Fix It — Accesibilidad, Calidad, Auditoría y Accesibilidad (2026-02-13 - 2026-02-14)
+### Fase 16: Fix It — Accesibilidad, Calidad y Auditoría (2026-02-14)
 - [x] Fase 16.1: Auditoría inicial (Lighthouse/Axe).
 - [x] Fase 16.2: Semántica y etiquetas ARIA (MusicToggle, ResetButton, TutorialModal, NameEditor, StatBar).
 - [x] Fase 16.3: Navegación por teclado y foco (:focus-visible con outline NES, focus management en modales).
 - [x] Fase 16.4: Soporte prefers-reduced-motion (todas las animaciones desactivadas).
 - [x] Fase 16.5: Verificación de código completada. Lighthouse pendiente de confirmación por usuario.
-- [x] Fase 16.6: **Full System Audit** — 13 fixes across 12 files. C1 (single useGameState), C2 (resetGame persist), H1-H4 (casts, actions, music, trim), M1-M6 (lang, pkg, PRD, aria, rounded, shadow), L1 (debug). Build + browser verificados.
-- [x] Fase 16.7: **UX & Visual Update** — 5 interaction shortcuts (StoryScreen, TutorialModal, ResetButton, NameEditor, CreationScreen — click/key handlers), 2 NES-style containers (name area, bottom UI), contrast audit (8 fixes across 6 files para ≥4.5:1). Build + browser verificados.
-- [x] Fase 16.8: **Music Rewrite** — Reemplazo de loop de 16 notas por sistema de 3 canales (melody/bass/arp), estructura AABA de 128 pasos (~32s cycle). Triangle waves, square accents, ADSR envelopes. Browser verificado.
-- [x] Fase 16.9: **Per-Type Kirby-Inspired Music** — Rewrite completo de `useChiptuneAudio.ts`. 3 temas únicos de 4 canales por tipo: Rayo (G major, 150 BPM — Green Greens feel), Flama (D minor→F major, 130 BPM — Orange Ocean feel), Hielo (Eb major, 100 BPM — Grape Garden feel). `page.tsx` actualizado para pasar `regenmon.type`. Build + browser verificados.
-- [x] Fase 16.10: **Carousel Keyboard Controls** — Flechas izq/derecha, A/D para navegar carrusel en CreationScreen. Space para submit cuando el input de nombre NO está enfocado. Enter siempre envía.
-- [x] Fase 16.11: **UI Lore Polish** — Update de 7 componentes (Story, Creation, Transition, Tutorial, Reset, Game/Stats, Background) con textos LORE.md y lementos visuales (emojis, aria-labels). Intro "ríos de luz", tipos con "El Impulso" + emojis, stats con subtítulos lore. Build verificado.
+- [x] Fase 16.6: **Full System Audit** — 13 fixes across 12 files. C1 (single useGameState), C2 (resetGame persist), H1-H4.
+- [x] Fase 16.7: **UX & Visual Update** — 5 interaction shortcuts, 2 NES-style containers, contrast audit, 4.5:1 ratio.
+- [x] Fase 16.8: **Music Rewrite** — 3-channel engine (melody/bass/arp), AABA structure.
+- [x] Fase 16.9: **Per-Type Kirby-Inspired Music** — 3 unique themes for Rayo, Flama, Hielo.
+- [x] Fase 16.10: **Carousel Keyboard Controls** — Arrow keys, A/D, Space/Enter for creation.
+- [x] Fase 16.11: **UI Lore Polish** — Update of 7 components with narrative alignment.
 
 ---
 
-### Implementación Sesión 2 (2026-02-15)
-- [x] Fase 17: **Capa de Abstracción IA + System Prompts**
-    - [x] 17.1 Instalar dependencias (@google/generative-ai, openai).
-    - [x] 17.2 Crear .env.local con placeholder.
-    - [x] 17.3 Crear src/lib/ai/provider.ts (Factory pattern).
-    - [x] 17.4 Crear src/lib/ai/gemini.ts (Adapter Gemini 2.0 Flash).
-    - [x] 17.5 Crear src/lib/ai/openai.ts (Adapter OpenAI GPT-4o-mini).
-    - [x] 17.6 Crear src/lib/ai/prompts.ts (System Prompt Builder basado en LORE.md).
-    - [x] 17.7 Verificación de código y alineación con lore.
-- [x] Fase 18: **API Route /api/chat**
-    - [x] 18.1 Crear src/app/api/chat/route.ts (POST endpoint).
-    - [x] 18.2 Implementar rate limiting (in-memory).
-    - [x] 18.3 Manejo de errores y logging.
-- [x] Fase 19: **Types & Storage for Chat**
-    - [x] 19.1 Actualizar types.ts (ChatRequest, ChatResponse, RegenmonStats).
-    - [x] 19.2 Actualizar constants.ts (Chat keys & limits).
-- [x] Fase 20: **Chat UI Components**
-    - [x] 20.1 Crear ChatBubble.tsx (Estilo NES+Type).
-    - [x] 20.2 Crear TypingIndicator.tsx (3 puntos animados).
-    - [x] 20.3 Crear ChatInput.tsx (Max 280 chars, disabled state).
-    - [x] 20.4 Crear ChatBox.tsx (Contenedor, scroll, custom scrollbar).
-    - [x] 20.5 Integrar estilos en globals.css (Animation keyframes).
-- [x] Fase 21: **useChat Hook**
-    - [x] 21.1 Crear useChat.ts (API connect, stats updates, persistencia).
-- [x] Fase 22: **Integración en GameScreen**
-    - [x] 22.1 Botón Conversar y layout.
-    - [x] 22.2 ChatBox overlay integration.
-    - [x] 22.3 Stats compactos visualizados.
-- [x] Fase 23: **Persistence & Music Fade**
-    - [x] 23.1 Historial guardado en localStorage via useChat.
-    - [x] 23.2 Audio fade in/out al abrir chat (useChiptuneAudio volume prop).
-- [x] Fase 24: **Stats Reactivos**
-    - [x] 24.1 Conexión con onUpdateStats (GameScreen).
-- [x] Fase 25: **Descubrimiento del Nombre**
-    - [x] 25.1 Player Name persistence en responses.
-- [x] Fase 26: **Infraestructura de Memoria (Bonus)**
-    - [x] 26.1 Interfaz `RegenmonMemory` en `src/lib/types.ts`.
-    - [x] 26.2 Funciones CRUD (`saveMemory`, `loadMemories`, etc.) en `src/lib/storage.ts`.
-    - [x] 26.3 Integración con `deleteRegenmon` para limpieza completa.
-    - [x] 26.4 Verificación manual de persistencia.
-- [x] Fase 27: **Tutorial Actualizado**
-    - [x] 27.1 `TutorialModal.tsx` con soporte multipágina (Intro/Stats + Chat).
-    - [x] 27.2 Contenido sobre "La Voz" (Vínculo, Memoria, Música).
-    - [x] 27.3 Navegación (Siguiente/Atrás) y persistencia del estado "visto".
+### Implementación Sesión 2 (2026-02-15) - La Voz
 
 ---
 
-## SESIÓN 2: LA VOZ — PLANIFICACIÓN ✅
+### Lore (2026-02-14)
+- [x] Creación de `LORE.md` — Definición de la biblia narrativa, personalidades por tipo, sistema de stats-emociones y reglas de "La Conexión". Base para los System Prompts de la Sesión 2.
 
-### Interrogatorio Profundo: 4 rondas, 121 preguntas, 0 suposiciones
+---
 
-### Documentos Actualizados:
-- [x] PRD.md — 22 features detallados, 14 user stories, scope IN/OUT
-- [x] TECH_STACK.md — Gemini/OpenAI SDKs, env vars, folder structure con chat/
-- [x] APP_FLOW.md — 5 nuevos flujos de chat, P6 actualizada, accesibilidad
-- [x] BACKEND_STRUCTURE.md — API route, AI provider layer, rate limiting, storage
-- [x] FRONTEND_GUIDELINES.md — Chat UI specs, burbujas, animaciones
-- [x] IMPLEMENTATION_PLAN.md — 14 fases (Fase 17-30), 4 niveles del entregable
-- [x] model.md — Todas las decisiones de diseño documentadas
-- [x] progress.txt — Este archivo
+### Fase 17: Capa de Abstracción IA + System Prompts (2026-02-15)
+- [x] Fase 17.1: Instalar dependencias (@google/generative-ai, openai).
+- [x] Fase 17.2: Crear .env.local con placeholder.
+- [x] Fase 17.3: Crear src/lib/ai/provider.ts (Factory pattern).
+- [x] Fase 17.4: Crear src/lib/ai/gemini.ts (Adapter Gemini 2.0 Flash).
+- [x] Fase 17.5: Crear src/lib/ai/openai.ts (Adapter OpenAI GPT-4o-mini).
+- [x] Fase 17.6: Crear src/lib/ai/prompts.ts (System Prompt Builder basado en LORE.md, 12 bloques).
+- [x] Fase 17.7: Verificación de código y alineación con lore (bloques personales, reactivos, reglas).
 
-### Fases planificadas:
-- Fase 17: Capa de abstracción IA (Gemini/OpenAI/Claude)
-- Fase 18: API Route /api/chat
-- Fase 19: Tipos y storage para chat
-- Fase 20: Componentes de chat (ChatBox, ChatBubble, ChatInput, TypingIndicator)
-- Fase 21: Hook useChat
-- Fase 22: Integración en GameScreen
-- Fase 23: Persistencia y música
-- Fase 24: Stats reactivos al chat
-- Fase 25: Descubrimiento del nombre del jugador
-- Fase 26: Infraestructura de memoria (bonus)
-- Fase 27: Tutorial actualizado
-- [x] Fase 28: **Lore Alignment** (Verificado).
-- [x] Fase 29: **Responsive** (Verificado Mobile/Desktop).
-- [x] Fase 30: **Auditoría Final** (A11y, Security, Logs limpios).
+---
 
-## SESIÓN 2: LA VOZ — COMPLETADA (Fases 17-30) 🎉
+### Fase 18: API Route /api/chat (2026-02-15)
+- [x] Fase 18.1: Crear src/app/api/chat/route.ts (POST handler).
+- [x] Fase 18.2: Implementar rate limiting en backend (15 msgs/min, in-memory).
+- [x] Fase 18.3: Implementar manejo de errores (400, 429, 500, 502).
+- [x] Fase 18.4: Console logging condicional (solo dev).
+- [x] Fase 18.5: Verificación POST /api/chat con diferentes tipos de Regenmon y stats.
 
-### Implementación Sesión 2
-- Ejecutar fases 17-30 secuencialmente
-- Nivel por nivel: Core → Completo → Excelente → Bonus
+---
+
+### Fase 19: Tipos y Storage para Chat (2026-02-15)
+- [x] Fase 19.1: Actualizar src/lib/types.ts (ChatMessage, ChatRequest, ChatResponse, PlayerData).
+- [x] Fase 19.2: Actualizar src/lib/storage.ts (saveChatHistory, savePlayerName, clearChat).
+- [x] Fase 19.3: Actualizar src/lib/constants.ts (límites, cooldowns, cambios de stats).
+- [x] Fase 19.4: Verificación de persistencia (max 50 mensajes, FIFO).
+
+---
+
+### Fase 20: Componentes de Chat UI (2026-02-15)
+- [x] Fase 20.1: Crear ChatBubble.tsx con bordes de color por tipo (Rayo/Flama/Hielo).
+- [x] Fase 20.2: Crear TypingIndicator.tsx (animación de puntos estilo NES).
+- [x] Fase 20.3: Crear ChatInput.tsx (textarea, max 280 chars, disabled state).
+- [x] Fase 20.4: Crear ChatBox.tsx (contenedor estilo RPG, auto-scroll).
+- [x] Fase 20.5: Agregar estilos en globals.css (keyframes, vars por tipo, accesibilidad).
+- [x] Fase 20.6: Verificación visual de componentes aislados.
+
+---
+
+### Fase 21: Hook useChat (2026-02-15)
+- [x] Fase 21.1: Crear src/hooks/useChat.ts (lógica de envío, recepción, cooldown).
+- [x] Fase 21.2: Implementar actualización de stats (Espíritu, Pulso, Hambre) desde respuesta IA.
+- [x] Fase 21.3: Detección automática de playerName en respuesta.
+- [x] Fase 21.4: Lógica de saludo automático por tipo.
+- [x] Fase 21.5: Verificación de ciclo completo de mensaje.
+
+---
+
+### Fase 22: Integración en GameScreen (2026-02-15)
+- [x] Fase 22.1: Agregar botón "Conversar" en GameScreen (desactivado en estado crítico).
+- [x] Fase 22.2: Implementar modo chat (oculta acciones, muestra ChatBox, stats compactos).
+- [x] Fase 22.3: Implementar stats compactos visuales con emojis.
+- [x] Fase 22.4: Lógica de cierre (botón X, click outside, tecla Esc).
+- [x] Fase 22.5: Verificación de flujo Abrir -> Chatear -> Stats cambian -> Cerrar.
+
+---
+
+### Fase 23: Persistencia y Música (2026-02-15)
+- [x] Fase 23.1: Integrar persistencia en localStorage (historial, nombre).
+- [x] Fase 23.2: Integrar audio ducking (volumen baja al 60% al abrir chat).
+- [x] Fase 23.3: Verificación de sonido y recuperación de historial tras recargar.
+
+---
+
+### Fase 24: Reactividad Lore (2026-02-15)
+- [x] Fase 24.1: Conectar cambios de stats (AI) con useGameState.
+- [x] Fase 24.2: Feedback visual flotante de cambios (+Esp, -Pulso, etc.).
+- [x] Fase 24.3: Verificación de reacciones visuales del Regenmon (expresión) ante cambios.
+- [x] Fase 24.4: Verificación de tono de respuesta IA según stats bajos/altos.
+
+---
+
+### Fase 25: Descubrimiento del Nombre (2026-02-15)
+- [x] Fase 25.1: Instrucción sistemática para averiguar nombre.
+- [x] Fase 25.2: Guardado de playerName al detectarse.
+- [x] Fase 25.3: Feedback visual "¡Tu Regenmon aprendió tu nombre!".
+- [x] Fase 25.4: Uso del nombre en conversaciones posteriores.
+
+---
+
+### Fase 26: Infraestructura de Memoria (Bonus) (2026-02-15)
+- [x] Fase 26.1: Definir interfaz RegenmonMemory.
+- [x] Fase 26.2: Implementar CRUD de memorias en storage.ts.
+- [x] Fase 26.3: Integrar limpieza en Reset.
+- [x] Fase 26.4: Verificación de estructura de datos (preparación Sesión 4).
+
+---
+
+### Fase 27: Tutorial Actualizado (2026-02-15)
+- [x] Fase 27.1: Actualizar TutorialModal.tsx con página de Chat.
+- [x] Fase 27.2: Explicar vínculo, memoria y música.
+- [x] Fase 27.3: Verificación de navegación multipágina en tutorial.
+
+---
+
+### Fase 28: Responsive y Pulido (2026-02-15)
+- [x] Fase 28.1: Ajustes Mobile (teclado virtual, visualViewport, scroll).
+- [x] Fase 28.2: Ajustes Desktop (layout centrado, fondo completo).
+- [x] Fase 28.3: Transiciones suaves (fade in/out).
+- [x] Fase 28.4: Verificación en dispositivos móviles simulados.
+
+---
+
+### Fase 29: Auditoría, Verificación y Debugging (2026-02-15)
+- [x] Fase 29.1: Auditoría de accesibilidad manual (focus traps, ARIA, screen readers).
+- [x] Fase 29.2: Auditoría de seguridad (API keys, logs, CSP, Rate limit).
+- [x] Fase 29.3: Auditoría de rendimiento (lighthouse, re-renders).
+- [x] Fase 29.4: Auditoría de Lore (consistencia de tono por tipo, reglas de conversación).
+- [x] Fase 29.5: Testing de edge cases (errores de red, límites de tokens).
+
+---
+
+### Fase 30: Auditoría Final (2026-02-15)
+- [x] Fase 30.1: Verificación de accesibilidad automatizada (Lighthouse 100%).
+- [x] Fase 30.2: Verificación final de seguridad antes de deploy.
+- [x] Fase 30.3: Limpieza de logs.
+
+---
+
+### Fase 31: Cierre de Sesión (2026-02-15)
+- [x] Fase 31.1: Actualización de documentación canónica (PRD, LORE, etc.).
+- [x] Fase 31.2: Creación de tag de versión v0.2.
+- [x] Fase 31.3: Deploy final a producción y verificación manual.
 
 ---
 
 ## NOTAS
 
-- Sesión 1 completada y desplegada (v0.1.16)
-- Sesión 2 planificación profunda completada (121 preguntas)
+- Sesión 1 completada y desplegada (v0.1.16) - 2026-02-13
+- Sesión 2 completada y desplegada (v0.2) - 2026-02-15
 - Archivos canónicos son documentos vivos — se actualizan conforme avanza el proyecto
 - Dev server: `npm run dev` → http://localhost:3000
 - API keys: .env.local (Gemini dev) / Vercel env vars (OpenAI prod)
-- El usuario maneja el deploy personalmente

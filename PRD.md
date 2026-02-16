@@ -1,7 +1,7 @@
 # 📋 PRD — Reggie's Adventure
-> **Versión actual:** v0.2 — La Voz
-> **Última actualización:** 2026-02-14
-> **Estado:** Sesión 2 — Planificación completada
+> **Versión actual:** v0.3 — La Conexión
+> **Última actualización:** 2026-02-15
+> **Estado:** Sesión 3 — En Planificación
 
 ---
 
@@ -47,8 +47,8 @@ Al completar las 5 sesiones, el jugador tiene:
 | F1.7 | Transición | Texto "Tu Regenmon está despertando..." con fade |
 | F1.8 | Display: SVG del Regenmon | Criatura SVG modular con idle animation (rebote/respiración) |
 | F1.9 | Display: Paisaje de fondo | Pixel art que cambia según tipo Y estado emocional (cambios sutiles) |
-| F1.10 | Display: Barras de stats | 3 barras NES horizontales (Espíritu 🔮 / Pulso 💛 / Hambre 🍖) con valor visible (50/100) |
-| F1.11 | Display: Botones de acción | Entrenar (+10 Pulso) / Alimentar (-10 Hambre) / Descansar (+10 Espíritu) con feedback "+10"/"-10" flotante |
+| F1.10 | Display: Barras de stats | 3 barras NES horizontales (Espíritu 🔮 / Pulso 💛 / Esencia 🍎) con valor visible (50/100) |
+| F1.11 | Display: Botones de acción | Entrenar (+10 Pulso) / Alimentar (-10 Hambre) / Descansar (+10 Espíritu) con feedback "+10"/"-10" flotante | `→ S3: Reemplazados por Purificar/⚙️/Conversar`
 | F1.12 | Display: Fecha | "Día X de aventura" (cuenta días desde creación) |
 | F1.13 | Decaimiento de stats | Stats cambian en tiempo real. Tras 4-5h se nota baja leve. Calcula tiempo offline |
 | F1.14 | Estados visuales del Regenmon | Normal, eufórico, hambre crítica, pulso bajo, espíritu bajo, colapso total — cambios en expresión, postura, color |
@@ -62,7 +62,7 @@ Al completar las 5 sesiones, el jugador tiene:
 | F1.22 | Deploy | URL pública en Vercel |
 
 #### Fuera de Scope ❌ (Sesión 1)
-- Contador de ⭐ Estrellas (Sesión 3)
+- Contador de 💠 Fragmentos (Sesión 3)
 - Chat con IA (Sesión 2)
 - Login / autenticación (Sesión 3)
 - Evolución visual (Sesión 4)
@@ -90,8 +90,8 @@ Al completar las 5 sesiones, el jugador tiene:
 | F2.7 | Gemini para desarrollo | `gemini-2.0-flash` vía `.env.local`. Auto-switch: local=Gemini |
 | F2.8 | OpenAI para producción | Key de Frutero vía Vercel env vars. Auto-switch: Vercel=OpenAI. Modelo fijado por Frutero |
 | F2.9 | Personalidad por tipo (LORE.md) | Rayo **El Impulso**: energético, bromista, velocidad. Flama **La Pasión**: emotivo, cálido, conexiones. Hielo **La Memoria**: reflexivo, sabio, conocimiento. Fragmentos de memoria de La Red Primordial. Tono indirecto y filosófico |
-| F2.10 | Reactividad lore a stats | Espíritu bajo (= pérdida de esperanza) → dudas de la regeneración. Pulso bajo (= energía vital) → cansancio. Hambre alta (= necesidad) → irritable. Todo bajo → casi no puede hablar |
-| F2.11 | Stats afectados por chat | Por cada respuesta: Espíritu (Esperanza) ±5, Pulso (Energía) -2, Hambre (Necesidad) +1. Feedback flotante visible |
+| F2.10 | Reactividad lore a stats | Espíritu bajo (= pérdida de esperanza) → dudas de la regeneración. Pulso bajo (= energía vital) → cansancio. Esencia baja (= nutrición) → debilitado. Todo bajo → casi no puede hablar |
+| F2.11 | Stats afectados por chat | Por cada respuesta: Espíritu (Esperanza) ±5, Pulso (Energía) -2, Hambre (Necesidad) +1. Feedback flotante visible | `→ S3: Todos AI-driven`
 | F2.12 | Respuestas ≤50 palabras | Cortas, en español. Puede hacer preguntas. Emojis según tipo. Cariño directo e indirecto. Curiosidad por el mundo del usuario |
 | F2.13 | Seguridad de contenido | Sin groserías, temas adultos, política, religión ni contenido sensible |
 | F2.14 | Descubrimiento del nombre | El Regenmon busca averiguar el nombre del usuario naturalmente (parte de La Conexión). Feedback visual "🧠" al descubrirlo |
@@ -112,28 +112,55 @@ Al completar las 5 sesiones, el jugador tiene:
 - Efecto typewriter en mensajes de chat
 - Streaming de respuestas
 
-### Sesión 3 — La Conexión (v0.3) `PENDIENTE`
+### Sesión 3 — La Conexión (v0.3) `EN PLANIFICACIÓN`
 
-> El Regenmon se conecta al mundo más allá. Auth, persistencia en la nube,
-> y el sistema de ⭐ Estrellas como recurso de regeneración.
+> La Conexión se expande más allá del dispositivo. Auth, persistencia en la nube,
+> Fragmentos 💠 como moneda de regeneración, y una reescritura profunda de stats y botones.
+> El Regenmon ahora vive en la nube. (Ver [LORE.md → Los Fragmentos](./LORE.md#los-fragmentos-))
 
+#### En Scope ✅
 | # | Feature | Criterio de éxito |
 |---|---------|-------------------|
-| F3.1 | Auth con Privy | Login funcional con botón estilo NES |
-| F3.2 | ⭐ Estrellas | Balance visible, reclamar, gastar en acciones |
-| F3.3 | Persistencia nube | Migración de localStorage a Supabase |
+| F3.1 | Auth con Privy | Login funcional: Google + Email + Passkey. Modal al presionar "Press Start" con opción "Continuar sin cuenta" |
+| F3.2 | Login tardío | Botón "Iniciar Sesión" en panel ⚙️ para quienes entraron en modo demo |
+| F3.3 | 💠 Fragmentos (moneda) | Balance visible en header. 100 iniciales. Ganar 0-5 por chat (IA decide). "💠 ---" si no logueado |
+| F3.4 | Stat: Hambre → Esencia 🍎 | Renombrar y invertir lógica: 100=bien alimentado, 0=hambriento. UI y backend actualizados |
+| F3.5 | Stats AI-driven (todos) | Espíritu ±5, Pulso ±5, Esencia -1 a -4, Fragmentos 0-5 — todo decidido por la IA por mensaje |
+| F3.6 | Regeneración pasiva de Pulso | Pulso sube lentamente si el usuario no interactúa (descanso natural) |
+| F3.7 | Purificar (reemplaza Alimentar) | Cuesta 10 💠. Efecto: Esencia +30, Espíritu +5, Pulso +10. Feedback lore-appropriate |
+| F3.8 | Botones reworked | Nuevo layout: `[🔮 Purificar (10💠)] [⚙️] [💬 Conversar]`. Eliminar Entrenar/Descansar/Alimentar antiguo |
+| F3.9 | Panel Settings (⚙️) | Música, Reset, Nombre, Login/Logout, Tamaño texto, Dark/Light mode |
+| F3.10 | Tema Light (GBC) | Paleta Game Boy Color pastel/vibrante. Toggle en Settings. Backgrounds y sprites adaptativos |
+| F3.11 | Tema Dark (NES) mantener | Refinar tema actual oscuro como modo default |
+| F3.12 | Backgrounds reconstruidos | Nuevos backgrounds que reflejen el lore actualizado y soporten ambos temas |
+| F3.13 | Sprites reworked | SVGs actualizados para mejor integración con el lore |
+| F3.14 | Persistencia: Supabase | Migración localStorage → Supabase al hacer login. Multi-dispositivo |
+| F3.15 | Sync híbrido | Sin login: localStorage. Con login: localStorage + Supabase sincronizado |
+| F3.16 | API Response actualizado | Nuevos campos: `pulseChange`, `essenceChange`, `fragmentsEarned` |
+| F3.17 | System prompt actualizado | Instruir a la IA sobre nuevos campos, rangos, y reglas de stats |
+| F3.18 | Memorias (infraestructura) | Tipos, storage, hooks. Detección básica. Base para evolución S4 |
+| F3.19 | Evolución (infraestructura) | Storage de progreso, tipos. NO visual. Preparar para S4 |
+| F3.20 | Ajuste de texto | Agrandar/disminuir tamaño de texto sin romper UI |
+
+#### Fuera de Scope ❌ (Sesión 3)
+- Barra de evolución visible (S4)
+- Sistema de entrenamiento con fotos (S4)
+- Misiones (S4)
+- Perfiles públicos (S5)
+- Interacciones sociales (S5)
+- Feed de descubrimiento (S5)
 
 ### Sesión 4 — La Evolución (v0.4) `PENDIENTE`
 
-> El Regenmon crece y evoluciona. Su forma cambia según La Conexión,
-> las memorias que ha acumulado, y las misiones completadas.
+> El Regenmon crece y evoluciona basándose en las memorias acumuladas.
+> Su forma cambia según lo que aprende del usuario — hiper-personalizable.
 
 | # | Feature | Criterio de éxito |
 |---|---------|-------------------|
-| F4.1 | Evolución visual | Mínimo 3 etapas por tipo |
-| F4.2 | IA multimodal | Subir fotos, IA evalúa, da score |
+| F4.1 | Evolución visual por memorias | Mínimo 3 etapas por tipo, basadas en memorias acumuladas |
+| F4.2 | Entrenamiento (fotos) | Subir fotos de código, IA evalúa, da score + Fragmentos + stats |
 | F4.3 | Misiones | Lista completable con recompensas |
-| F4.4 | Personalización IA | Regenmon se adapta visualmente por conversaciones |
+| F4.4 | Personalización IA profunda | Regenmon se adapta visual y conversacionalmente por memorias |
 
 ### Sesión 5 — El Encuentro (v0.5) `PENDIENTE`
 
@@ -186,6 +213,23 @@ US-27: Como jugador, quiero que mi Regenmon tenga un lore que se refleje en sus 
 US-28: Como jugador, quiero un tutorial actualizado que me explique la función de chat.
 ```
 
+## 5c. User Stories — Sesión 3
+
+```
+US-29: Como jugador, quiero poder jugar sin crear cuenta para probar el juego primero.
+US-30: Como jugador, quiero loguearme con Google/Email para guardar mi progreso en la nube.
+US-31: Como jugador, quiero que mis datos de modo demo se migren al crear cuenta.
+US-32: Como jugador, quiero ganar Fragmentos 💠 al conversar con mi Regenmon.
+US-33: Como jugador, quiero gastar Fragmentos para purificar y restaurar la Esencia de mi Regenmon.
+US-34: Como jugador, quiero que la IA decida los cambios de stats de forma orgánica según la conversación.
+US-35: Como jugador, quiero un panel de settings con música, tema, texto, y login.
+US-36: Como jugador, quiero alternar entre un tema oscuro (NES) y un tema claro (Game Boy Color).
+US-37: Como jugador, quiero ajustar el tamaño del texto para mi comodidad.
+US-38: Como jugador, quiero que mi Regenmon descanse y recupere Pulso cuando no juego.
+US-39: Como jugador, quiero que la barra de Esencia funcione igual que las demás (100=bien, 0=mal).
+US-40: Como jugador, quiero acceder a mi Regenmon desde cualquier dispositivo si estoy logueado.
+```
+
 ## 6. Requisitos de Accesibilidad (Fix It Phase)
 
 - **A1. Contraste:** Todos los textos deben cumplir WCAG AA (ratio 4.5:1).
@@ -204,11 +248,17 @@ US-28: Como jugador, quiero un tutorial actualizado que me explique la función 
 - [x] Responsive en portrait (móvil + desktop)
 - [x] Música funcional con toggle
 - [x] Chat funcional con respuestas de IA con personalidad por tipo
-- [x] Stats reactivos a conversiones (Espíritu ±5, Pulso -2, Hambre +1)
+- [x] Stats reactivos a conversaciones (Espíritu ±5, Pulso -2, Hambre +1) `→ S3: Todos AI-driven`
 - [x] Historial de chat persistente (max 50 mensajes)
 - [x] Nombre del jugador descubierto y recordado por el Regenmon
 - [x] API-agnostic: funciona con Gemini (dev) y OpenAI (prod)
-- [ ] Lore integrado: personalidad, fragmentos de memoria, tono filosófico (ver LORE.md)
+- [x] Lore integrado: personalidad, fragmentos de memoria, tono filosófico (ver LORE.md)
+- [ ] Auth funcional con Privy (S3)
+- [ ] Fragmentos 💠 como moneda del juego (S3)
+- [ ] Persistencia en Supabase con sync híbrido (S3)
+- [ ] Tema Light (GBC) y Dark (NES) con toggle (S3)
+- [ ] Stats completamente AI-driven (S3)
+- [ ] Purificar con costo de Fragmentos (S3)
 
 ---
 

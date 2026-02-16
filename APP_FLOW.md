@@ -1,6 +1,6 @@
 # 🗺️ APP_FLOW — Reggie's Adventure
-> **Versión actual:** v0.2 — La Voz
-> **Última actualización:** 2026-02-14
+> **Versión actual:** v0.3 — La Conexión
+> **Última actualización:** 2026-02-15
 >
 > 📜 **Narrativa y personalidad:** Todo diálogo, texto de historia y comportamiento conversacional
 > debe ser consistente con [LORE.md](./LORE.md). En caso de conflicto, LORE.md prevalece.
@@ -22,7 +22,7 @@
 
 ---
 
-## Flujo Principal
+## Flujo Principal (S3 — actualizado con Privy)
 
 ```
 ABRIR APP
@@ -33,18 +33,27 @@ ABRIR APP
     ▼
 [P2: Título] ── usuario presiona Start (clic/tap/tecla) ──▶
     │
-    ├── ¿Es la primera vez O viene de un reset?
+    ├── ¿Ya está logueado (sesión persistente Privy)?
     │       │
-    │       ├── SÍ ──▶ [P3: Historia] ── "Continuar ▶" ──▶ [P4: Creación]
-    │       │
-    │       └── NO ──▶ ¿Existe Regenmon en localStorage?
-    │                       │
-    │                       ├── SÍ ──▶ [P6: Juego]
-    │                       │
-    │                       └── NO ──▶ [P4: Creación]
+    │       └── SÍ ──▶ ¿Existe Regenmon? ──▶ [P6: Juego]
     │
-    ▼
-[P4: Creación] ── llenar datos ── "¡Despertar!" ──▶ [P5: Transición] ──▶ [P6: Juego]
+    └── NO ──▶ [Modal de Privy]
+                    │
+                    ├── Login (Google/Email/Passkey) ──▶ ¿Existe data en Supabase?
+                    │       │
+                    │       ├── SÍ ──▶ Cargar de Supabase ──▶ [P6: Juego]
+                    │       └── NO ──▶ ¿Existen datos en localStorage?
+                    │               │
+                    │               ├── SÍ ──▶ Migrar a Supabase ──▶ [P6: Juego]
+                    │               └── NO ──▶ [P3: Historia] ──▶ [P4: Creación]
+                    │
+                    └── "Continuar sin cuenta" ──▶ Modo demo (localStorage)
+                            │
+                            ├── ¿Es 1ra vez?
+                            │       ├── SÍ ──▶ [P3: Historia] ──▶ [P4: Creación]
+                            │       └── NO ──▶ ¿Existe Regenmon?
+                            │               ├── SÍ ──▶ [P6: Juego (demo)]
+                            │               └── NO ──▶ [P4: Creación]
 ```
 
 ---
@@ -72,12 +81,12 @@ ABRIR APP
 
 **Interacción:**
 1. Usuario presiona "Press Start" (clic, tap, o tecla Enter/Space)
-2. → Evalúa si es primera vez o si viene de reset
+2. → Si ya está logueado (sesión Privy persistente) → directo al Juego
+3. → Si no está logueado → Modal de Privy aparece
 
-**Decisión:**
-- Si `isFirstTime === true` O `cameFromReset === true` → P3: Historia
-- Si `regenmonExists === true` → P6: Juego
-- Si `regenmonExists === false` → P4: Creación
+**Decisión (S3):**
+- Si `privyUser !== null` → cargar de Supabase → P6: Juego
+- Si Privy modal → login o demo
 
 **Errores:** Ninguno posible.
 
@@ -135,7 +144,8 @@ ABRIR APP
 {
   "name": "string",
   "type": "rayo | flama | hielo",
-  "stats": { "espiritu": 50, "pulso": 50, "hambre": 50 },
+  "stats": { "espiritu": 50, "pulso": 50, "esencia": 50 },
+  "fragmentos": 100,
   "createdAt": "ISO timestamp",
   "nameChangeUsed": false,
   "tutorialDismissed": false,
@@ -169,59 +179,53 @@ ABRIR APP
 
 ### P6: Juego (Pantalla Principal)
 
-**Trigger:** Existe Regenmon en localStorage.
+**Trigger:** Existe Regenmon en localStorage o Supabase.
 **Contenido (de arriba a abajo):**
 
 1. **Header:**
-   - 🎵 Toggle música (esquina superior derecha)
-   - "v0.2 — La Voz" (discreto)
+   - 🎵 Toggle música (esquina superior izquierda)
+   - 💠 Balance de Fragmentos (centro/derecha)
+     - Logueado: "💠 100 Fragmentos"
+     - No logueado: "💠 --- Fragmentos"
+   - "v0.3 — La Conexión" (discreto)
 
 2. **Paisaje de fondo — Zonas del Mundo Digital (ver LORE.md → Los Paisajes):**
-   - ⚡ Rayo: **Llanura Eléctrica** — los campos donde fluía la información libre. Stats altos: cielo despejado, corrientes de luz. Stats bajos: tormentas, estática.
-   - 🔥 Flama: **Volcán Ardiente** — el corazón donde se forjaban las conexiones. Stats altos: volcán dormido, cielo cálido. Stats bajos: erupciones violentas, humo.
-   - ❄️ Hielo: **Montaña Nevada** — los archivos antiguos del conocimiento. Stats altos: nieve cristalina, aurora boreal. Stats bajos: ventisca ciega, hielo negro.
-   - Cambia según estado emocional (la regeneración o degeneración del mundo es visible)
+   - ⚡ Rayo: **Llanura Eléctrica** — adapta a tema Dark/Light
+   - 🔥 Flama: **Volcán Ardiente** — adapta a tema Dark/Light
+   - ❄️ Hielo: **Montaña Nevada** — adapta a tema Dark/Light
+   - Cambia según estado emocional + tema visual activo
 
 3. **Regenmon:**
    - SVG centrado con idle animation (rebote/respiración)
    - Expresión/postura/color cambian según stats
-   - Nombre debajo + ✏️ (si cambio no usado)
+   - Nombre debajo (cambio de nombre en Settings)
 
 4. **Info:**
-   - "Día X de aventura" (visible pero discreto, también durante chat)
+   - "Día X de aventura" (visible pero discreto)
 
-5. **Stats — Estado del Regenmon (ver LORE.md → Stats y Lore):**
-   - 🔮 Espíritu (**= Esperanza**) [====----] 50/100
-   - 💛 Pulso (**= Energía vital**) [====----] 50/100
-   - 🍎 Hambre (**= Necesidad**) [====----] 50/100
-   - **Modo compacto (durante chat):** 🔮 80 | 💛 50 | 🍎 30 (mini barras con emoji + número)
+5. **Stats — Estado del Regenmon (100=bien, 0=mal):**
+   - 🔮 Esperanza [====----] 50/100
+   - 💛 Energía vital [====----] 50/100
+   - 🍎 Esencia [====----] 50/100
+   - **Modo compacto (durante chat):** 🔮 80 | 💛 50 | 🍎 30
 
-6. **Botones de acción:**
-   - ⚡ Entrenar | 🍎 Alimentar | 💤 Descansar
-   - Layout responsive (fila u otra disposición según pantalla)
-   - **Se ocultan durante chat**
+6. **Botones de acción (S3):**
+   - `[🔮 Purificar (10💠)]  [⚙️]  [💬 Conversar]`
+   - **Purificar:** Cuesta 10 Fragmentos. Disabled si <10💠 o Esencia=100
+   - **⚙️:** Abre panel de Settings
+   - **Conversar:** Toggle chat (cambia a "✕ Cerrar")
+   - **Se ocultan Purificar y ⚙️ durante chat**
+   - **Conversar se desactiva** si los 3 stats < 10
 
-7. **Botón "💬 Conversar" (Sesión 2):**
-   - Fila propia debajo de los 3 botones de acción
-   - Mismo estilo NES verde
-   - Toggle: abre/cierra la caja de diálogo NES
-   - Cambia a "✕ Cerrar" cuando el chat está abierto
-   - **Se desactiva** si los 3 stats < 10 (tooltip: "Tu Regenmon está muy débil para hablar...")
-
-8. **Caja de Diálogo NES (Sesión 2):**
+7. **Caja de Diálogo NES (Sesión 2, mantenida):**
    - Aparece al presionar "💬 Conversar"
    - Estilo Final Fantasy/Zelda: semi-transparente, borde NES pixelado
-   - Se adapta al tamaño de pantalla automáticamente
    - Contiene: historial de burbujas + input de texto + botón enviar
    - Música baja a 60% con fade 1.5s al abrir
-   - **Cerrar:** Botón "✕ Cerrar", clic fuera de la caja, o toggle del botón. Fade leve al cerrar. Botones de acción reaparecen con animación sutil.
-
-9. **Footer:**
-   - Botón "Reiniciar" (discreto, centrado)
 
 **Tutorial Modal (si no descartado):**
 - Aparece superpuesto al entrar a P6
-- Instrucciones breves de las acciones **+ mención del chat (Sesión 2)**
+- Instrucciones actualizadas (Purificar, Fragmentos, Settings, Chat)
 - Checkbox: "No volver a mostrar"
 - Botón para cerrar
 
@@ -229,63 +233,92 @@ ABRIR APP
 
 ## Flujos Secundarios
 
-### Flujo: Presionar Acción
+### Flujo: Purificar (S3 — reemplaza Alimentar/Entrenar/Descansar)
 
 ```
-1. Usuario presiona botón de acción (Entrenar/Alimentar/Descansar)
-2. ¿El stat objetivo está en su límite?
-   ├── SÍ → Botón está desactivado, no pasa nada
+1. Usuario presiona [🔮 Purificar (10💠)]
+2. ¿Fragmentos >= 10?
+   ├── NO → Botón desactivado con tooltip "Necesitas 10 💠"
+   └── SÍ → Continúa
+3. ¿Esencia ya está al máximo (100)?
+   ├── SÍ → Botón desactivado, tooltip "Esencia al máximo"
    └── NO → Continúa
-3. Se modifica el stat (+10 o -10)
-4. Si el valor excede 100 → se redondea a 100
-5. Si el valor baja de 0 → se redondea a 0
-6. Aparece "+10" o "-10" flotante (animación)
-7. Stats se actualizan visualmente
-8. Regenmon actualiza expresión/postura si corresponde
-9. Paisaje se ajusta sutilmente si corresponde
-10. localStorage se actualiza
-11. Si stat llega a límite → botón se desactiva
+4. Se restan 10 Fragmentos
+5. Se aplican: Esencia +30, Espíritu +5, Pulso +10
+6. Feedback flotante: "+30 🍎" y efecto visual lore-appropriate
+7. Balance de Fragmentos se actualiza en header
+8. Stats se actualizan visualmente
+9. Regenmon muestra reacción contextual (texto lore-appropriate, no genérico)
+10. Paisaje se ajusta si corresponde
+11. localStorage (y Supabase si logueado) se actualizan
 ```
 
-### Flujo: Cambio de Nombre
+### Flujo: Settings (⚙️) (S3 — Nuevo)
 
 ```
-1. Usuario presiona ✏️ junto al nombre
+1. Usuario presiona [⚙️]
+2. Panel de Settings aparece (slide-in o modal)
+3. Opciones disponibles:
+   - 🎵 Música: Toggle on/off
+   - 🔄 Reiniciar: → Modal de confirmación retro (misma lógica actual)
+   - 📝 Cambiar nombre: Campo inline, validaciones 2-15 chars
+   - 🚪 Sesión: "Iniciar Sesión" (abre Privy) / "Cerrar Sesión"
+   - 🔤 Texto: A+ / A- para ajustar tamaño
+   - 🌙/☀️ Tema: Toggle Dark (NES) / Light (GBC)
+4. Cerrar: Botón "✕" o clic fuera del panel
+```
+
+### Flujo: Login tardío (desde Settings) (S3)
+
+```
+1. Usuario en modo demo presiona "Iniciar Sesión" en Settings
+2. Modal de Privy aparece
+3. Usuario se loguea (Google/Email/Passkey)
+4. Se migran datos de localStorage a Supabase
+5. Balance de Fragmentos pasa de "---" a valor real
+6. Panel Settings actualiza: "Cerrar Sesión" reemplaza "Iniciar Sesión"
+7. A partir de ahora, datos se sincronizan con Supabase
+```
+
+### Flujo: Cambio de Nombre (S3 — ahora desde Settings)
+
+```
+1. Usuario abre Settings (⚙️) y presiona "📝 Cambiar nombre"
 2. ¿nameChangeUsed === true?
-   ├── SÍ → ✏️ no existe (ya desapareció)
+   ├── SÍ → Opción no disponible (texto gris: "Ya usaste tu cambio")
    └── NO → Continúa
-3. Aparece campo de edición con leyenda: "Esta es tu única oportunidad de cambiar el nombre."
-4. Usuario escribe nuevo nombre (mismas validaciones: 2-15 chars)
-5. ¿Confirma el cambio?
-   ├── SÍ → Se guarda nuevo nombre, nameChangeUsed = true, ✏️ desaparece
-   └── NO → Se cierra editor, nada cambia
+3. Aparece campo de edición con leyenda: "Esta es tu única oportunidad."
+4. Validación: 2-15 caracteres
+5. ¿Confirma?
+   ├── SÍ → Se guarda nuevo nombre, nameChangeUsed = true
+   └── NO → Se cierra editor
 ```
 
-### Flujo: Reiniciar
+### Flujo: Reiniciar (desde Settings)
 
 ```
-1. Usuario presiona "Reiniciar"
-2. Modal de confirmación retro aparece:
+1. Usuario abre Settings y presiona "🔄 Reiniciar"
+2. Modal de confirmación:
    "¿Abandonar a [nombre]? Esta memoria se perderá para siempre..."
    [Cancelar] [Confirmar]
 3. ¿Confirma?
-   ├── SÍ → Se borra todo del localStorage, cameFromReset = true → P2: Título → P3: Historia → P4: Creación
-   └── NO → Modal se cierra, nada cambia
+   ├── SÍ → Borra localStorage (y Supabase si logueado) → P2: Título → P3 → P4
+   └── NO → Modal se cierra
 ```
 
-### Flujo: Decaimiento de Stats
+### Flujo: Decaimiento de Stats (S3 — actualizado)
 
 ```
 1. Al abrir la app (o en intervalos regulares si está abierta):
 2. Calcular tiempo transcurrido desde última actualización
 3. Aplicar decaimiento proporcional al tiempo:
    - Espíritu: baja gradualmente
-   - Pulso: baja gradualmente
-   - Hambre: sube gradualmente
+   - Pulso: baja PERO regenera pasivamente (descanso natural)
+   - Esencia: baja gradualmente (100=bien, 0=mal)
 4. Ritmo: tras 4-5 horas → baja leve (no grave)
 5. Respetar límites 0-100
 6. Actualizar Regenmon visual + paisaje
-7. Guardar timestamp de última actualización en localStorage
+7. Guardar timestamp en localStorage (y sync a Supabase si logueado)
 ```
 
 ### Flujo: Tutorial Modal
@@ -301,15 +334,15 @@ ABRIR APP
 4. Cierra modal → juega normalmente
 ```
 
-### Flujo: Conversar (Sesión 2)
+### Flujo: Conversar (Sesión 2, actualizado S3)
 
 ```
 1. Usuario presiona "💬 Conversar"
 2. ¿Los 3 stats < 10?
-   ├── SÍ → Botón desactivado, tooltip "Tu Regenmon está muy débil para hablar..."
+   ├── SÍ → Botón desactivado, tooltip "Tu Regenmon está muy débil..."
    └── NO → Continúa
 3. Música baja a 60% (fade 1.5s)
-4. Botones de acción (Entrenar/Alimentar/Descansar) desaparecen
+4. Botones Purificar y ⚙️ desaparecen
 5. Stats pasan a modo compacto (🔮 80 | 💛 50 | 🍎 30)
 6. Botón "Conversar" cambia a "✕ Cerrar"
 7. Caja de diálogo NES aparece (fade in)
@@ -401,20 +434,31 @@ ABRIR APP
 
 ---
 
-## Mapa de Navegación Visual
+## Mapa de Navegación Visual (S3)
 
 ```
 [Loading] →fade→ [Título]
                      │
-                     ├── Press Start (1ra vez) →fade→ [Historia] →fade→ [Creación]
-                     │
-                     ├── Press Start (sin Regenmon) →fade→ [Creación]
-                     │
-                     └── Press Start (con Regenmon) →fade→ [Juego]
+                     └── Press Start → ¿Logueado?
+                                         │
+                                         ├── SÍ →fade→ [Juego]
+                                         │
+                                         └── NO → [Privy Modal]
+                                                     │
+                                                     ├── Login → [Juego (Supabase)]
+                                                     │
+                                                     └── Demo → ¿1ra vez?
+                                                                  │
+                                                                  ├── SÍ → [Historia] → [Creación] → [Juego]
+                                                                  └── NO → [Juego (demo)]
 
 [Creación] → ¡Despertar! →fade→ [Transición] →fade→ [Juego]
 
-[Juego] → Reiniciar → Confirmar →fade→ [Título] → [Historia] → [Creación]
+[Juego] → ⚙️ Settings → Reiniciar → Confirmar → [Título] → [Historia] → [Creación]
 
 [Juego] → 💬 Conversar → [Chat NES Dialog] → ✕ Cerrar → [Juego]
+
+[Juego] → 🔮 Purificar → Stats/Fragmentos actualizados → [Juego]
+
+[Juego (demo)] → ⚙️ → Iniciar Sesión → [Privy] → Migrar datos → [Juego (Supabase)]
 ```

@@ -1,0 +1,46 @@
+Quiero crear una app web de mascota virtual tipo Tamagotchi llamada "Regenmon".
+
+Estilo Visual
+Estética pixel art / retro 8-bit (tipo Nintendo, Game Boy)
+Usa la librería NES.css para los componentes
+Fuente "Press Start 2P" de Google Fonts
+Diseño responsive (celular, tablet, computadora)
+
+Pantalla 1: Crear tu Regenmon
+Aparece cuando es la primera vez que entras (no hay datos guardados).
+
+Necesito:
+Título "Crea tu Regenmon"
+Campo para escribir el nombre (entre 2 y 15 letras)
+3 opciones para elegir tipo:
+🌱 Semilla (verde)
+💧 Gota (azul)
+✨ Chispa (amarillo)
+Botón "¡Eclosionar!" que solo se activa cuando:
+El nombre es válido
+Seleccionaste un tipo
+
+Pantalla 2: Tu Regenmon
+Aparece después de crear, o si ya existe uno guardado.
+
+Necesito:
+Encabezado con título "🥚 Regenmon" y botón "Reiniciar"
+Área central que muestre:
+El nombre de tu Regenmon
+El emoji grande del tipo que elegiste
+Fondo del color del tipo
+3 barras de estadísticas (todas inician en 50/100):
+💚 Felicidad (barra verde)
+⚡️ Energía (barra amarilla)
+🍎 Hambre (barra roja)
+
+Funcionalidad
+Guardar los datos en localStorage para que no se pierdan
+El botón Reiniciar debe pedir confirmación antes de borrar
+Si confirma, borra los datos y vuelve a la pantalla de crear
+
+Datos a guardar
+Nombre
+Tipo (semilla/gota/chispa)
+Felicidad, Energía, Hambre (números)
+Fecha de creación

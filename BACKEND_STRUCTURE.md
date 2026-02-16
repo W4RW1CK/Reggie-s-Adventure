@@ -1,6 +1,6 @@
 # 🛠️ BACKEND_STRUCTURE — Reggie's Adventure
-> **Versión actual:** v0.2 — La Voz
-> **Última actualización:** 2026-02-14
+> **Versión actual:** v0.3 — La Conexión
+> **Última actualización:** 2026-02-15
 > 📜 **System Prompt:** La personalidad, tono, y reglas de diálogo del Regenmon se definen en [LORE.md](./LORE.md). Este doc define la implementación técnica.
 
 ---
@@ -23,12 +23,15 @@ interface RegenmonData {
   name: string;              // 2-15 caracteres
   type: "rayo" | "flama" | "hielo";
 
-  // Stats (rango 0-100)
+  // Stats (rango 0-100, todos: 100=bien, 0=mal)
   stats: {
-    espiritu: number;        // 🔮 Espíritu — moral/voluntad
-    pulso: number;           // 💛 Pulso — energía vital
-    hambre: number;          // 🍎 Hambre — necesidad de alimento
+    espiritu: number;        // 🔮 Esperanza
+    pulso: number;           // 💛 Energía vital
+    esencia: number;         // 🍎 Nutrición digital (⚠️ era "hambre" en S1-S2)
   };
+
+  // Economía (S3)
+  fragmentos: number;        // 💠 Fragmentos (moneda, 0+)
 
   // Timestamps
   createdAt: string;         // ISO 8601 — fecha de creación
@@ -90,22 +93,26 @@ Type:
 ```typescript
 // Constantes
 const DECAY_RATE_PER_HOUR = 2;  // puntos por hora (~10 en 5 horas)
+const PULSE_REGEN_RATE_PER_HOUR = 3; // [NEW S3] regen pasiva de Pulso
 
 // Cálculo al abrir la app
 function calculateDecay(lastUpdated: string): Stats {
   const hoursElapsed = (Date.now() - new Date(lastUpdated).getTime()) / 3600000;
   const decay = Math.floor(hoursElapsed * DECAY_RATE_PER_HOUR);
+  const pulseRegen = Math.floor(hoursElapsed * PULSE_REGEN_RATE_PER_HOUR);
 
   return {
     espiritu: clamp(currentEspiritu - decay, 0, 100),
-    pulso: clamp(currentPulso - decay, 0, 100),
-    hambre: clamp(currentHambre + decay, 0, 100),  // Hambre SUBE con el tiempo
+    pulso: clamp(currentPulso - decay + pulseRegen, 0, 100), // Decae PERO regenera pasivamente
+    esencia: clamp(currentEsencia - decay, 0, 100),  // S3: Esencia BAJA con el tiempo (100=bien)
   };
 }
 
 // También ejecutar con intervalo mientras la app está abierta
 const DECAY_INTERVAL = 60000; // Cada 60 segundos revisa decaimiento
 ```
+
+> **Cambio S3:** La lógica de Hambre (subía con el tiempo) fue reemplazada por Esencia (baja con el tiempo, como los demás stats). Pulso ahora tiene regeneración pasiva que contrarresta parcialmente el decaimiento.
 
 ---
 
@@ -125,26 +132,31 @@ interface ChatRequest {
     name: string;           // Nombre del Regenmon
     type: 'rayo' | 'flama' | 'hielo';
     stats: {
-      spirit: number;       // 0-100
-      pulse: number;        // 0-100
-      hunger: number;       // 0-100
+      spirit: number;       // 0-100 (Esperanza)
+      pulse: number;        // 0-100 (Energía vital)
+      essence: number;      // 0-100 (Nutrición) [S3: era hunger]
     };
     daysAlive: number;      // Días desde la creación
+    fragments: number;      // [S3] Balance de Fragmentos 💠
   };
   playerName?: string;      // Nombre del jugador (si ya se descubrió)
 }
 ```
 
-### Response Body
+### Response Body (S3 — actualizado)
 ```typescript
 interface ChatResponse {
   message: string;           // Respuesta del Regenmon (≤50 palabras)
-  spiritChange: number;      // -5 a +5 (cambio en Espíritu)
+  spiritChange: number;      // -5 a +5 (IA decide según tono emocional)
+  pulseChange: number;       // [S3] -5 a +5 (IA decide: tranquilo=+, intenso=-)
+  essenceChange: number;     // [S3] -4 a -1 (IA decide: siempre negativo)
+  fragmentsEarned: number;   // [S3] 0 a 5 (IA decide: no garantizado)
   playerName?: string;       // Si descubrió el nombre del jugador
 }
 ```
 
-> **Nota:** Pulso (-2) y Hambre (+1) se aplican en el frontend como reglas fijas. No vienen de la API.
+> **Cambio S3:** Pulso y Esencia ya no son valores fijos. La IA decide todos los cambios de stats.
+> `essenceChange` = siempre negativo (-1 a -4). `fragmentsEarned` = 0-5, más difícil al acercarse a 100.
 
 ### Capa de Abstracción IA (`lib/ai/`)
 
@@ -153,7 +165,7 @@ lib/ai/
 ├── provider.ts     # Auto-switch: detecta env vars y elige proveedor
 ├── gemini.ts       # Adaptador para Google Generative AI
 ├── openai.ts       # Adaptador para OpenAI
-└── prompts.ts      # System prompts por tipo de Regenmon
+└── prompts.ts      # System prompts por tipo de Regenmon (actualizado S3)
 ```
 
 **Auto-switch lógica (`provider.ts`):**
@@ -165,7 +177,7 @@ lib/ai/
 // 4. Ninguna → error: "No AI provider configured"
 ```
 
-**Interfaz común:**
+**Interfaz común (S3 — actualizada):**
 ```typescript
 interface AIProvider {
   chat(systemPrompt: string, history: ChatMessage[], userMessage: string): Promise<AIResponse>;
@@ -173,7 +185,10 @@ interface AIProvider {
 
 interface AIResponse {
   message: string;
-  spiritChange: number;
+  spiritChange: number;      // -5 a +5
+  pulseChange: number;       // -5 a +5
+  essenceChange: number;     // -4 a -1
+  fragmentsEarned: number;   // 0 a 5
   playerName?: string;
 }
 ```
@@ -210,7 +225,8 @@ El system prompt se construye dinámicamente según:
 4. ESTADO ACTUAL:
    - Espíritu (Esperanza) = [X]/100 — cuánto crees en la regeneración
    - Pulso (Energía vital) = [X]/100 — tu fuerza para existir
-   - Hambre (Necesidad) = [X]/100 — cuánto necesitas datos limpios
+   - Esencia (Nutrición) = [X]/100 — cuánta energía pura tienes
+   - Fragmentos = [X] — restos de energía antigua que has desbloqueado
 
 5. REGLAS:
    - Máximo 50 palabras
@@ -236,16 +252,17 @@ El system prompt se construye dinámicamente según:
    - Ej: "No sé qué haría sin ti... probablemente dormir"
    - Ej: "Cuando apareces, el aire se siente menos pesado"
 
-8. CURIOSIDAD:
+8. CURIOSIDAD Y MEMORIAS:
    - Quieres saber TODO del usuario y su mundo
    - Preguntas sobre el plano físico, emociones, experiencias
-   - Almacenas lo que aprendes
+   - Almacenas lo que aprendes como memorias
+   - Puedes hacer referencia sutil a cosas que aprendiste antes
 
 9. REACTIVIDAD POR STATS:
    - Si Espíritu < 30: dudas del futuro, ves lejos la regeneración
    - Si Pulso < 30: respuestas cortas, cansancio, economizas palabras
-   - Si Hambre > 70: irritable, mencionas hambre indirectamente
-   - Si todo crítico: frases muy cortas, casi no puedes hablar
+   - Si Esencia < 30: te sientes débil, mencionas necesidad de purificación
+   - Si todo crítico: NO RESPONDE (Chat desactivado en frontend)
 
 10. ESPERANZA (basada en Espíritu):
     - >70: "Algo está cambiando... el mundo respira mejor"
@@ -253,7 +270,8 @@ El system prompt se construye dinámicamente según:
     - <30: "...a veces me pregunto cuánto falta..."
 
 11. OBJETIVO: Averiguar el nombre del jugador de forma natural
-12. RESPUESTA: JSON {message, spiritChange (-5 a +5), playerName?}
+12. RESPUESTA: JSON {message, spiritChange (-5 a +5), pulseChange (-5 a +5),
+    essenceChange (-4 a -1, siempre negativo), fragmentsEarned (0 a 5), playerName?}
 ```
 
 **Personalidad por tipo (LORE.md → Los Regenmon):**
@@ -337,21 +355,155 @@ interface PlayerData {
 
 ---
 
-## Sesión 3+: Supabase
+## Sesión 3: Autenticación con Privy
 
-## Sesión 3+: Autenticación — PENDIENTE
+### Setup
+```typescript
+// layout.tsx: Envolver la app con PrivyProvider
+import { PrivyProvider } from '@privy-io/react-auth';
 
-> Se definirá con Privy SDK. Incluirá:
-> - Flujo de login/signup
-> - Manejo de sesiones
-> - Protección de rutas
+// Config:
+{
+  appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID,
+  loginMethods: ['google', 'email', 'passkey'],
+  appearance: {
+    theme: 'dark', // Coincide con NES theme
+    logo: '/logo.png' // Opcional
+  }
+}
+```
 
-## Sesión 3+: API Endpoints — PENDIENTE
+### Flujo de Auth
+```
+Press Start → Privy Modal
+  ├── Login (Google/Email/Passkey) → privyUser.id → Supabase sync
+  └── "Continuar sin cuenta" → modo demo (localStorage only)
+```
 
-> Se definirán cuando lleguemos. Incluirán:
-> - `POST /api/feed` — alimentar
-> - `GET /api/stars/balance` — consultar estrellas
-> - `POST /api/stars/claim` — reclamar estrellas
+### Hook: `useAuth.ts`
+```typescript
+interface AuthState {
+  isLoggedIn: boolean;
+  privyUserId: string | null;
+  login: () => void;      // Abre modal Privy
+  logout: () => void;     // Cierra sesión
+  isReady: boolean;       // Privy cargó
+}
+```
+
+---
+
+## Sesión 3: Persistencia en Supabase
+
+### Esquema de Tabla
+
+```sql
+-- Tabla principal: un row por usuario
+CREATE TABLE regenmons (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  privy_user_id TEXT UNIQUE NOT NULL,
+  
+  -- Identidad
+  name TEXT NOT NULL,
+  type TEXT NOT NULL CHECK (type IN ('rayo', 'flama', 'hielo')),
+  
+  -- Stats (0-100, todos: 100=bien, 0=mal)
+  espiritu INTEGER DEFAULT 50,
+  pulso INTEGER DEFAULT 50,
+  esencia INTEGER DEFAULT 50,
+  
+  -- Economía
+  fragmentos INTEGER DEFAULT 100,
+  
+  -- Memorias (JSON array)
+  memories JSONB DEFAULT '[]'::jsonb,
+  
+  -- Chat
+  chat_history JSONB DEFAULT '[]'::jsonb,
+  player_name TEXT,
+  
+  -- Flags
+  name_change_used BOOLEAN DEFAULT false,
+  tutorial_dismissed BOOLEAN DEFAULT false,
+  chat_greeted BOOLEAN DEFAULT false,
+  
+  -- Config
+  music_enabled BOOLEAN DEFAULT true,
+  theme TEXT DEFAULT 'dark' CHECK (theme IN ('dark', 'light')),
+  text_size TEXT DEFAULT 'base',
+  
+  -- Timestamps
+  created_at TIMESTAMPTZ DEFAULT now(),
+  last_updated TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Index para búsquedas rápidas por Privy ID
+CREATE INDEX idx_regenmons_privy_user ON regenmons(privy_user_id);
+```
+
+### Sync: localStorage ↔ Supabase (`lib/sync.ts`)
+
+```typescript
+// Al hacer login por primera vez:
+// 1. Leer datos de localStorage
+// 2. Crear row en Supabase con esos datos (migración)
+// 3. Desde ahora, Supabase es la fuente de verdad
+// 4. localStorage se mantiene como cache local
+
+// Al hacer login con datos existentes en Supabase:
+// 1. Cargar datos de Supabase
+// 2. Sobreescribir localStorage con datos de Supabase
+// 3. Supabase siempre gana en caso de conflicto
+
+// Al actualizar datos estando logueado:
+// 1. Actualizar localStorage (instantáneo)
+// 2. Sync a Supabase (async, debounced 2s)
+```
+
+### Cliente Supabase (`lib/supabase.ts`)
+
+```typescript
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
+// Operaciones:
+// - getRegenmon(privyUserId): lee datos del usuario
+// - upsertRegenmon(privyUserId, data): crea o actualiza
+// - syncFromLocal(privyUserId, localData): migración inicial
+```
+
+---
+
+## Sesión 3: Fragmentos API
+
+### Endpoint: Purificar
+```
+POST /api/purify   (o manejado client-side)
+```
+
+**Lógica de Purificación:**
+```typescript
+function purify(currentState: RegenmonData): RegenmonData | Error {
+  if (currentState.fragmentos < 10) return Error('Necesitas 10 💠');
+  if (currentState.stats.esencia >= 100) return Error('Esencia al máximo');
+  
+  return {
+    ...currentState,
+    fragmentos: currentState.fragmentos - 10,
+    stats: {
+      ...currentState.stats,
+      esencia: clamp(currentState.stats.esencia + 30, 0, 100),
+      espiritu: clamp(currentState.stats.espiritu + 5, 0, 100),
+      pulso: clamp(currentState.stats.pulso + 10, 0, 100),
+    }
+  };
+}
+```
 
 ## Sesión 5: Endpoints Sociales — PENDIENTE
 
@@ -365,6 +517,7 @@ interface PlayerData {
 
 - **Sesión 1 = solo localStorage.** No hay servidor, no hay APIs, no hay base de datos.
 - **Sesión 2 = localStorage + API Route.** Solo `/api/chat` como endpoint. Sin base de datos.
+- **Sesión 3 = localStorage + Supabase + Privy.** Híbrido progresivo. `/api/chat` actualizado.
 - **No anticipar infraestructura.** No crear APIs ni tablas hasta la sesión correspondiente.
 - **Este archivo se actualiza** al llegar a cada sesión que agregue backend.
 - **Validar siempre** los datos al leer de localStorage (pueden estar corruptos).

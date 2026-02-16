@@ -1,6 +1,6 @@
 # ⚙️ TECH_STACK — Reggie's Adventure
-> **Versión actual:** v0.2 — La Voz
-> **Última actualización:** 2026-02-14
+> **Versión actual:** v0.3 — La Conexión
+> **Última actualización:** 2026-02-15
 
 ---
 
@@ -39,13 +39,20 @@
 >
 > 📜 **System Prompts:** El contenido de `lib/ai/prompts.ts` se basa íntegramente en [LORE.md](./LORE.md) — la biblia narrativa del universo.
 
+## Auth y Persistencia (Sesión 3)
+
+| Paquete | Versión | Propósito |
+|---------|---------|-----------|
+| `@privy-io/react-auth` | `latest` | Autenticación de usuarios (Google, Email, Passkey) |
+| `@supabase/supabase-js` | `latest` | Base de datos PostgreSQL en la nube |
+
+> **Nota:** Privy maneja la autenticación y devuelve un user ID único. Supabase almacena los datos del juego vinculados a ese user ID. Credenciales propias (no del bootcamp).
+
 ## Sesiones Futuras (no instalar todavía)
 
 | Paquete | Versión | Sesión | Propósito |
 |---------|---------|--------|-----------|
 | `@anthropic-ai/sdk` | `latest` | S2+ | Claude API (opción futura de chat) |
-| `@privy-io/react-auth` | `latest` | S3 | Autenticación de usuarios |
-| `@supabase/supabase-js` | `latest` | S3 | Base de datos en la nube |
 
 ---
 
@@ -54,10 +61,9 @@
 | Servicio | Sesión | Propósito | Requiere API Key |
 |----------|--------|-----------|------------------|
 | Vercel | S1+ | Deploy y hosting | No (auth con GitHub) |
-| Claude API / Gemini API | S2 | Chat IA con personalidad | Sí |
-| Privy | S3 | Autenticación | Sí |
-| Supabase | S3 | Base de datos | Sí |
-| Frutero API | S3 | Sistema de ⭐ Estrellas | Sí |
+| Claude API / Gemini API | S2+ | Chat IA con personalidad | Sí |
+| Privy | S3 | Autenticación (Google/Email/Passkey) | Sí (propia) |
+| Supabase | S3 | Base de datos PostgreSQL | Sí (propia) |
 | Gemini Vision | S4 | IA multimodal (fotos) | Sí |
 
 ---
@@ -67,12 +73,19 @@
 ### Desarrollo (`.env.local`)
 ```
 GEMINI_API_KEY=tu_key_de_google_ai_studio
+NEXT_PUBLIC_PRIVY_APP_ID=tu_privy_app_id
+PRIVY_APP_SECRET=tu_privy_app_secret
+NEXT_PUBLIC_SUPABASE_URL=tu_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_supabase_anon_key
 ```
 
 ### Producción (Vercel Environment Variables)
 ```
 OPENAI_API_KEY=key_proporcionada_por_frutero
-# (O la key que decidas usar: Gemini, Claude, etc.)
+NEXT_PUBLIC_PRIVY_APP_ID=tu_privy_app_id
+PRIVY_APP_SECRET=tu_privy_app_secret
+NEXT_PUBLIC_SUPABASE_URL=tu_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_supabase_anon_key
 ```
 
 > **Regla:** Las API keys NUNCA se commitean al repo. Solo existen en `.env.local` o en las variables de Vercel.
@@ -81,16 +94,19 @@ OPENAI_API_KEY=key_proporcionada_por_frutero
 
 ## Almacenamiento
 
-### Sesión 1-2: localStorage
+### Sesión 1-2: localStorage (se mantiene como fallback para modo demo)
 ```
 Clave: "reggie-adventure-data"    → Datos del Regenmon
-Clave: "reggie-adventure-config"   → Configuración de la app
+Clave: "reggie-adventure-config"   → Configuración de la app (música, tema, texto)
 Clave: "reggie-adventure-chat"     → Historial de chat (max 50 mensajes)
 Clave: "reggie-adventure-player"   → Nombre del jugador (descubierto por IA)
+Clave: "reggie-adventure-fragments" → [NEW S3] Balance de Fragmentos 💠
+Clave: "reggie-adventure-memories"  → [NEW S3] Memorias del Regenmon
 ```
 
-### Sesión 3+: Supabase
-Se definirá en BACKEND_STRUCTURE.md cuando lleguemos a esa sesión.
+### Sesión 3+: Supabase (usuarios autenticados)
+Híbrido progresivo: localStorage como fallback, Supabase como fuente principal al loguearse.
+Esquema detallado en [BACKEND_STRUCTURE.md](./BACKEND_STRUCTURE.md).
 
 ---
 
@@ -111,7 +127,7 @@ Se definirá en BACKEND_STRUCTURE.md cuando lleguemos a esa sesión.
 | `axe-core` | Auditoría de accesibilidad (opcional en tests) |
 
 
-## Estructura de Carpetas (Sesión 1 + 2)
+## Estructura de Carpetas (Sesión 1 + 2 + 3)
 
 ```
 reggie-adventure/
@@ -121,10 +137,10 @@ reggie-adventure/
 │   ├── app/
 │   │   ├── api/
 │   │   │   └── chat/
-│   │   │       └── route.ts      # [NEW S2] API Route para chat con IA
-│   │   ├── layout.tsx      # Layout principal, fuentes, metadata
+│   │   │       └── route.ts      # API Route para chat con IA (S2, actualizado S3)
+│   │   ├── layout.tsx      # Layout principal, fuentes, metadata, PrivyProvider
 │   │   ├── page.tsx        # Página única — maneja todos los estados
-│   │   └── globals.css     # Estilos globales + NES.css imports
+│   │   └── globals.css     # Estilos globales + NES.css imports + temas GBC/NES
 │   ├── components/
 │   │   ├── screens/        # Cada pantalla como componente
 │   │   │   ├── LoadingScreen.tsx
@@ -132,44 +148,55 @@ reggie-adventure/
 │   │   │   ├── StoryScreen.tsx
 │   │   │   ├── CreationScreen.tsx
 │   │   │   ├── TransitionScreen.tsx
-│   │   │   └── GameScreen.tsx
+│   │   │   └── GameScreen.tsx     # [MOD S3] Nuevos botones, Fragmentos, Settings
 │   │   ├── regenmon/       # Todo relacionado al Regenmon
-│   │   │   ├── RegenmonSVG.tsx
+│   │   │   ├── RegenmonSVG.tsx     # [MOD S3] Sprites reworked
 │   │   │   ├── StatBar.tsx
-│   │   │   └── ActionButtons.tsx
-│   │   ├── chat/           # [NEW S2] Sistema de chat
-│   │   │   ├── ChatBox.tsx           # Caja de diálogo NES principal
-│   │   │   ├── ChatBubble.tsx        # Burbujas individuales
-│   │   │   ├── ChatInput.tsx         # Input + botón enviar
-│   │   │   └── TypingIndicator.tsx   # Indicador "Escribiendo..."
+│   │   │   └── ActionButtons.tsx   # [MOD S3] Purificar/⚙️/Conversar
+│   │   ├── chat/           # Sistema de chat
+│   │   │   ├── ChatBox.tsx
+│   │   │   ├── ChatBubble.tsx
+│   │   │   ├── ChatInput.tsx
+│   │   │   └── TypingIndicator.tsx
+│   │   ├── settings/       # [NEW S3] Panel de settings
+│   │   │   └── SettingsPanel.tsx    # Música, Reset, Nombre, Auth, Texto, Tema
+│   │   ├── auth/           # [NEW S3] Componentes de autenticación
+│   │   │   └── LoginButton.tsx      # Botón/modal de login con Privy
 │   │   └── ui/             # Componentes reutilizables
 │   │       ├── MusicToggle.tsx
 │   │       ├── TutorialModal.tsx
 │   │       ├── ResetButton.tsx
-│   │       └── NameEditor.tsx
+│   │       ├── NameEditor.tsx
+│   │       └── FragmentCounter.tsx  # [NEW S3] Muestra balance de 💠
 │   ├── hooks/
-│   │   ├── useGameState.ts       # Estado del juego + localStorage
-│   │   ├── useStatDecay.ts       # Lógica de decaimiento temporal
+│   │   ├── useGameState.ts       # Estado del juego + localStorage/Supabase
+│   │   ├── useStatDecay.ts       # Lógica de decaimiento + regen pasiva Pulso
 │   │   ├── useScreenManager.ts   # Navegación entre pantallas
-│   │   └── useChat.ts            # [NEW S2] Estado del chat + API calls
+│   │   ├── useChat.ts            # Estado del chat + API calls
+│   │   ├── useAuth.ts            # [NEW S3] Wrapper de Privy hooks
+│   │   ├── useFragments.ts       # [NEW S3] Economía de Fragmentos
+│   │   └── useTheme.ts           # [NEW S3] Dark/Light mode + tamaño texto
 │   ├── lib/
 │   │   ├── constants.ts    # Valores fijos (decay rate, stat limits, etc.)
-│   │   ├── types.ts        # TypeScript types
+│   │   ├── types.ts        # TypeScript types (actualizado S3)
 │   │   ├── storage.ts      # Funciones de localStorage
-│   │   └── ai/             # [NEW S2] Capa de abstracción IA
+│   │   ├── supabase.ts     # [NEW S3] Cliente Supabase + funciones CRUD
+│   │   ├── sync.ts         # [NEW S3] Sync localStorage ↔ Supabase
+│   │   └── ai/             # Capa de abstracción IA
 │   │       ├── provider.ts       # Auto-switch Gemini/OpenAI/Claude
 │   │       ├── gemini.ts         # Adaptador Gemini
 │   │       ├── openai.ts         # Adaptador OpenAI
-│   │       └── prompts.ts        # System prompts por tipo
+│   │       └── prompts.ts        # System prompts por tipo (actualizado S3)
 │   └── assets/
-│       └── backgrounds/    # Paisajes pixel art
-├── .env.local              # [NEW S2] API keys (NO commitear)
+│       └── backgrounds/    # Paisajes pixel art (reconstruidos S3)
+├── .env.local              # API keys (NO commitear)
 ├── PRD.md
 ├── APP_FLOW.md
 ├── TECH_STACK.md
 ├── FRONTEND_GUIDELINES.md
 ├── BACKEND_STRUCTURE.md
 ├── IMPLEMENTATION_PLAN.md
+├── LORE.md
 ├── progress.txt
 ├── model.md
 ├── package.json
