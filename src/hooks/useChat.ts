@@ -51,8 +51,8 @@ export function useChat({ regenmon, updateStatAction }: UseChatProps) {
 
         // Critical state check
         const { espiritu, pulso, hambre } = regenmon.stats;
-        if (espiritu < CHAT_CRITICAL_THRESHOLD &&
-            pulso < CHAT_CRITICAL_THRESHOLD &&
+        if (espiritu < CHAT_CRITICAL_THRESHOLD ||
+            pulso < CHAT_CRITICAL_THRESHOLD ||
             hambre < CHAT_CRITICAL_THRESHOLD) {
             // Should be handled by UI disabling, but safety check
             return;
@@ -77,7 +77,7 @@ export function useChat({ regenmon, updateStatAction }: UseChatProps) {
             const playerData = loadPlayerData();
             const request: ChatRequest = {
                 message: text,
-                history: messages.slice(-10), // Send last 10 for context window
+                history: updatedHistory.slice(-10), // Send updated history including current message
                 regenmon: {
                     name: regenmon.name,
                     type: regenmon.type,
@@ -128,13 +128,18 @@ export function useChat({ regenmon, updateStatAction }: UseChatProps) {
 
         } catch (error) {
             console.error('Chat Error:', error);
-            // Optional: Add system message about error
+            
+            // Remove the optimistically added user message
+            setMessages(prev => prev.slice(0, -1));
+            
+            // Add system error message
             const errorMsg: ChatMessage = {
                 role: 'assistant',
                 content: '... (ruido estático) ...',
                 timestamp: Date.now(),
             };
             setMessages(prev => [...prev, errorMsg]);
+            saveChatHistory([...messages, errorMsg]);
         } finally {
             setIsLoading(false);
         }

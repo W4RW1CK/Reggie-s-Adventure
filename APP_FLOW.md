@@ -1,9 +1,12 @@
 # 🗺️ APP_FLOW — Reggie's Adventure
 > **Versión actual:** v0.3 — La Conexión
-> **Última actualización:** 2026-02-15
+> **Última actualización:** 2026-02-16
+> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `EN PLANIFICACIÓN`
 >
 > 📜 **Narrativa y personalidad:** Todo diálogo, texto de historia y comportamiento conversacional
 > debe ser consistente con [LORE.md](./LORE.md). En caso de conflicto, LORE.md prevalece.
+> 🎨 **Estilo visual:** [FRONTEND_GUIDELINES.md](./FRONTEND_GUIDELINES.md) — cómo se ve cada pantalla y componente
+> 🛠️ **Datos y APIs:** [BACKEND_STRUCTURE.md](./BACKEND_STRUCTURE.md) — qué datos se guardan/leen en cada flujo
 
 ---
 
@@ -183,11 +186,15 @@ ABRIR APP
 **Contenido (de arriba a abajo):**
 
 1. **Header:**
-   - 🎵 Toggle música (esquina superior izquierda)
-   - 💠 Balance de Fragmentos (centro/derecha)
+   - 💠 Balance de Fragmentos (izquierda)
      - Logueado: "💠 100 Fragmentos"
      - No logueado: "💠 --- Fragmentos"
-   - "v0.3 — La Conexión" (discreto)
+   - Identidad del usuario (derecha, discreto, **evolutiva**)
+     - No logueado: no se muestra nada
+     - Logueado + nombre NO descubierto: email/método auth truncado (ej: "mel@...")
+     - Logueado + nombre descubierto por Regenmon: muestra el nombre (ej: "Mel")
+     - Transición: al descubrir nombre → animación sutil de cambio (fade email → nombre)
+   - "v0.3 — La Conexión" (discreto, solo si cabe)
 
 2. **Paisaje de fondo — Zonas del Mundo Digital (ver LORE.md → Los Paisajes):**
    - ⚡ Rayo: **Llanura Eléctrica** — adapta a tema Dark/Light
@@ -197,7 +204,10 @@ ABRIR APP
 
 3. **Regenmon:**
    - SVG centrado con idle animation (rebote/respiración)
-   - Expresión/postura/color cambian según stats
+   - **8 estados visuales** según stats (ver FRONTEND_GUIDELINES.md → Estados Visuales):
+     - Promedio ≥90=Eufórico, ≥70=Contento, ≥30=Neutro, ≥10=Decaído, <10=Crítico
+     - Override: si cualquier stat <10, muestra sprite del stat más bajo
+   - Expresión/postura/color cambian según estado activo
    - Nombre debajo (cambio de nombre en Settings)
 
 4. **Info:**
@@ -206,11 +216,11 @@ ABRIR APP
 5. **Stats — Estado del Regenmon (100=bien, 0=mal):**
    - 🔮 Esperanza [====----] 50/100
    - 💛 Energía vital [====----] 50/100
-   - 🍎 Esencia [====----] 50/100
-   - **Modo compacto (durante chat):** 🔮 80 | 💛 50 | 🍎 30
+   - 🌱 Esencia [====----] 50/100
+   - **Modo compacto (durante chat):** 🔮 80 | 💛 50 | 🌱 30
 
 6. **Botones de acción (S3):**
-   - `[🔮 Purificar (10💠)]  [⚙️]  [💬 Conversar]`
+   - `[🌀 Purificar (10💠)]  [⚙️]  [💬 Conversar]`
    - **Purificar:** Cuesta 10 Fragmentos. Disabled si <10💠 o Esencia=100
    - **⚙️:** Abre panel de Settings
    - **Conversar:** Toggle chat (cambia a "✕ Cerrar")
@@ -236,7 +246,7 @@ ABRIR APP
 ### Flujo: Purificar (S3 — reemplaza Alimentar/Entrenar/Descansar)
 
 ```
-1. Usuario presiona [🔮 Purificar (10💠)]
+1. Usuario presiona [🌀 Purificar (10💠)]
 2. ¿Fragmentos >= 10?
    ├── NO → Botón desactivado con tooltip "Necesitas 10 💠"
    └── SÍ → Continúa
@@ -245,13 +255,37 @@ ABRIR APP
    └── NO → Continúa
 4. Se restan 10 Fragmentos
 5. Se aplican: Esencia +30, Espíritu +5, Pulso +10
-6. Feedback flotante: "+30 🍎" y efecto visual lore-appropriate
+6. Feedback flotante: "+30 🌱" y efecto visual lore-appropriate
 7. Balance de Fragmentos se actualiza en header
 8. Stats se actualizan visualmente
 9. Regenmon muestra reacción contextual (texto lore-appropriate, no genérico)
 10. Paisaje se ajusta si corresponde
 11. localStorage (y Supabase si logueado) se actualizan
 ```
+
+### Flujo: Buscar Fragmentos (S3 — Anti-frustración)
+
+> Lore: Cuando el Regenmon no tiene Fragmentos, puede sentir restos dormidos de La Red Primordial
+> cercanos — demasiado débiles para despertar solos, pero suficientes para seguir adelante.
+
+```
+1. ¿Balance de Fragmentos === 0?
+   ├── NO → Botón no aparece (oculto, no disabled)
+   └── SÍ → Aparece botón "🔍 Buscar Fragmentos" debajo de los botones principales
+2. Usuario presiona "🔍 Buscar Fragmentos"
+3. Efecto visual: breve animación de búsqueda (partículas convergiendo)
+4. Se otorgan 15 Fragmentos 💠
+5. Feedback: "+15 💠" flotante + Regenmon dice algo lore-appropriate
+   (ej: "Sentí algo... restos de luz, escondidos entre el ruido. Es poco, pero nos alcanza.")
+6. Botón desaparece
+7. Balance se actualiza en header
+8. localStorage (y Supabase si logueado) se actualizan
+```
+
+> **Nota:** Solo aparece a 0 Fragmentos. No es repetible indefinidamente — una vez que
+> tienes Fragmentos de nuevo, la única forma de ganar más es conversando (La Conexión).
+
+---
 
 ### Flujo: Settings (⚙️) (S3 — Nuevo)
 
@@ -343,7 +377,7 @@ ABRIR APP
    └── NO → Continúa
 3. Música baja a 60% (fade 1.5s)
 4. Botones Purificar y ⚙️ desaparecen
-5. Stats pasan a modo compacto (🔮 80 | 💛 50 | 🍎 30)
+5. Stats pasan a modo compacto (🔮 80 | 💛 50 | 🌱 30)
 6. Botón "Conversar" cambia a "✕ Cerrar"
 7. Caja de diálogo NES aparece (fade in)
 8. ¿Es la primera vez que abre el chat?
@@ -378,11 +412,12 @@ ABRIR APP
 10. Indicador "Escribiendo..." desaparece
 11. Respuesta del Regenmon aparece en burbuja (izquierda) con bounce
 12. Scroll automático al último mensaje
-13. Stats se actualizan:
-    - Espíritu: ±5 (decidido por la IA, fallback 0)
-    - Pulso: -2 (fijo)
-    - Hambre: +1 (fijo)
-14. Feedback flotante visible para cada cambio de stat
+13. Stats se actualizan (S3 — todos AI-driven):
+    - Espíritu: ±5 (IA decide según tono emocional)
+    - Pulso: ±5 (IA decide: tranquilo=+, intenso=-)
+    - Esencia: -1 a -4 (IA decide, siempre baja)
+    - Fragmentos: 0-5 ganados (IA decide, no garantizado)
+14. Feedback flotante visible para cada cambio de stat + Fragmentos ganados
 15. Regenmon actualiza expresión/postura si corresponde
 16. ¿La IA descubrió el nombre del jugador?
     ├── SÍ → Se guarda en playerName, feedback visual "🧠"
@@ -402,17 +437,19 @@ ABRIR APP
 6. Música regresa a 100% (fade 1.5s)
 ```
 
-### Flujo: Descubrimiento del Nombre del Jugador (Sesión 2)
+### Flujo: Descubrimiento del Nombre del Jugador (Sesión 2, ampliado S3)
 
 ```
 1. El system prompt instruye al Regenmon a averiguar el nombre de forma natural
 2. Cuando el usuario menciona su nombre en la conversación:
 3. La IA incluye "playerName" en su respuesta JSON
-4. Se guarda en localStorage (clave: reggie-adventure-player)
+4. Se guarda en localStorage (clave: reggie-adventure-player) y Supabase si logueado
 5. Feedback visual: "🧠 ¡Tu Regenmon aprendió tu nombre!"
-6. En conversaciones futuras, el Regenmon usa el nombre
-7. Si el usuario dice que cambió de nombre → la IA actualiza playerName
-8. Al hacer reset → se borra playerName
+6. [S3] Header se actualiza: email/auth → nombre del jugador (fade sutil)
+   → Este momento refuerza La Conexión: tu Regenmon te conoce
+7. En conversaciones futuras, el Regenmon usa el nombre
+8. Si el usuario dice que cambió de nombre → la IA actualiza playerName → header se actualiza
+9. Al hacer reset → se borra playerName → header vuelve a email/auth
 ```
 
 ---
@@ -424,7 +461,7 @@ ABRIR APP
     -   Evitar "trampas de foco" en modales (Tutorial/Reset). El foco debe ciclar dentro del modal.
 
 2.  **Feedback:**
-    -   Las acciones (Entrenar, Alimentar) deben anunciar el resultado al lector de pantalla ("Tu Regenmon comió, Hambre bajó a 30").
+    -   Las acciones (Purificar) deben anunciar el resultado al lector de pantalla ("Purificación completa, Esencia subió a 80").
 
 3.  **Chat (Sesión 2):**
     -   Al abrir el chat, foco se mueve al input de texto.
@@ -458,7 +495,46 @@ ABRIR APP
 
 [Juego] → 💬 Conversar → [Chat NES Dialog] → ✕ Cerrar → [Juego]
 
-[Juego] → 🔮 Purificar → Stats/Fragmentos actualizados → [Juego]
+[Juego] → 🌀 Purificar → Stats/Fragmentos actualizados → [Juego]
 
 [Juego (demo)] → ⚙️ → Iniciar Sesión → [Privy] → Migrar datos → [Juego (Supabase)]
 ```
+
+### Flujo: Historial de Actividades (S3 — Bonus)
+
+> Lore: Un registro de los actos de regeneración — cada purificación, cada conexión,
+> cada fragmento encontrado queda grabado en la memoria del mundo digital.
+
+```
+1. Sección colapsable "📜 Historial" debajo de los botones de acción
+2. Por defecto: colapsada (solo se ve el título "📜 Historial")
+3. Al expandir: muestra las últimas 10 acciones en orden cronológico inverso
+4. Cada entrada muestra:
+   - Icono de acción (🌀 Purificó / 💬 Conversó / 🔍 Buscó Fragmentos)
+   - Cambio de 💠 (ej: "-10 💠" o "+3 💠")
+   - Tiempo relativo (ej: "hace 5 min", "hace 2h", "ayer")
+5. Se oculta durante chat (como Purificar y ⚙️)
+6. Datos en localStorage (clave: reggie-adventure-history)
+7. Sync a Supabase si logueado (campo JSONB)
+8. Max 10 entradas (FIFO — las más antiguas se eliminan)
+9. Reset borra historial
+```
+
+---
+
+## Referencias Cruzadas
+
+Este archivo define **cómo navega el usuario** por la app. Los otros documentos definen qué se ve, qué se guarda y por qué.
+
+| Documento | Relación con APP_FLOW.md |
+|-----------|--------------------------|
+| [LORE.md](./LORE.md) | Los textos de historia (P3), creación (P4), y transición (P5) vienen de LORE; el chat refleja La Conexión |
+| [PRD.md](./PRD.md) | Cada feature se experimenta a través de los flujos documentados aquí |
+| [FRONTEND_GUIDELINES.md](./FRONTEND_GUIDELINES.md) | Define cómo se ven las pantallas, componentes y transiciones de cada flujo |
+| [BACKEND_STRUCTURE.md](./BACKEND_STRUCTURE.md) | Define qué datos se guardan/leen en cada paso del flujo (localStorage, Supabase, API) |
+| [TECH_STACK.md](./TECH_STACK.md) | Las herramientas (Privy para auth, Supabase para sync) habilitan los flujos de S3 |
+| [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) | Los flujos se implementan fase por fase (P1→Fase 4, P6→Fases 10-11, Auth→Fase 34, etc.) |
+| [model.md](./model.md) | Las decisiones de UX (lazy login, botones S3, stats compactos) se documentan allá |
+| [progress.txt](./progress.txt) | Trackea qué flujos ya están implementados y verificados |
+
+> **Regla de precedencia:** En caso de conflicto entre este documento y [LORE.md](./LORE.md) en temas de narrativa, diálogo o tono, **LORE.md prevalece**.

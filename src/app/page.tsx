@@ -8,6 +8,7 @@ import StoryScreen from '@/components/screens/StoryScreen';
 import CreationScreen from '@/components/screens/CreationScreen';
 import TransitionScreen from '@/components/screens/TransitionScreen';
 import GameScreen from '@/components/screens/GameScreen';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { RegenmonType } from '@/lib/types';
 
 export default function Home() {
@@ -61,18 +62,20 @@ export default function Home() {
         )}
 
         {currentScreen === 'GAME' && regenmon && (
-          <GameScreen
-            regenmon={regenmon}
-            musicEnabled={config.musicEnabled}
-            onToggleMusic={toggleMusic}
-            onUpdateStats={updateStatAction}
-            onUpdateName={updateRegenmonName}
-            onDismissTutorial={dismissTutorial}
-            onReset={() => {
-              resetGame();
-              navigateTo('TITLE');
-            }}
-          />
+          <ErrorBoundary>
+            <GameScreen
+              regenmon={regenmon}
+              musicEnabled={config.musicEnabled}
+              onToggleMusic={toggleMusic}
+              onUpdateStats={updateStatAction}
+              onUpdateName={updateRegenmonName}
+              onDismissTutorial={dismissTutorial}
+              onReset={() => {
+                resetGame();
+                navigateTo('TITLE');
+              }}
+            />
+          </ErrorBoundary>
         )}
       </div>
     </main>

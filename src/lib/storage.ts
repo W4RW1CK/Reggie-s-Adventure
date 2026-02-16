@@ -5,13 +5,17 @@ import { STORAGE_KEYS, INITIAL_STATS } from './constants';
 
 const isBrowser = typeof window !== 'undefined';
 
-function getStorageItem<T>(key: string, defaultValue: T | null = null): T | null {
+function getStorageItem<T>(key: string, defaultValue: T): T {
     if (!isBrowser) return defaultValue;
     try {
         const item = localStorage.getItem(key);
-        return item ? JSON.parse(item) : defaultValue;
+        if (!item) return defaultValue;
+        const parsed = JSON.parse(item);
+        return parsed !== null ? parsed : defaultValue;
     } catch (error) {
         console.error(`Error reading ${key} from localStorage:`, error);
+        // Clear corrupted data
+        localStorage.removeItem(key);
         return defaultValue;
     }
 }
@@ -32,7 +36,7 @@ export function saveRegenmon(data: RegenmonData): void {
 }
 
 export function loadRegenmon(): RegenmonData | null {
-    return getStorageItem<RegenmonData>(STORAGE_KEYS.DATA);
+    return getStorageItem<RegenmonData | null>(STORAGE_KEYS.DATA, null);
 }
 
 export function updateStats(newStats: Partial<RegenmonStats>): RegenmonData | null {
@@ -82,7 +86,7 @@ export function loadConfig(): AppConfig {
         musicEnabled: false,
         isFirstTime: true,
     };
-    return getStorageItem<AppConfig>(STORAGE_KEYS.CONFIG, defaults) || defaults;
+    return getStorageItem<AppConfig>(STORAGE_KEYS.CONFIG, defaults);
 }
 
 // --- Chat History CRUD ---
@@ -92,7 +96,7 @@ export function saveChatHistory(history: ChatMessage[]): void {
 }
 
 export function loadChatHistory(): ChatMessage[] {
-    return getStorageItem<ChatMessage[]>(STORAGE_KEYS.CHAT, []) || [];
+    return getStorageItem<ChatMessage[]>(STORAGE_KEYS.CHAT, []);
 }
 
 export function clearChatHistory(): void {
@@ -107,7 +111,7 @@ export function savePlayerData(data: PlayerData): void {
 }
 
 export function loadPlayerData(): PlayerData | null {
-    return getStorageItem<PlayerData>(STORAGE_KEYS.PLAYER);
+    return getStorageItem<PlayerData | null>(STORAGE_KEYS.PLAYER, null);
 }
 
 export function clearPlayerData(): void {
@@ -135,7 +139,7 @@ export function saveMemory(key: string, value: string): void {
 }
 
 export function loadMemories(): RegenmonMemory[] {
-    return getStorageItem<RegenmonMemory[]>(STORAGE_KEYS.MEMORIES, []) || [];
+    return getStorageItem<RegenmonMemory[]>(STORAGE_KEYS.MEMORIES, []);
 }
 
 export function getMemory(key: string): RegenmonMemory | undefined {

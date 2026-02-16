@@ -1,7 +1,11 @@
 # 🛠️ BACKEND_STRUCTURE — Reggie's Adventure
 > **Versión actual:** v0.3 — La Conexión
-> **Última actualización:** 2026-02-15
+> **Última actualización:** 2026-02-16
+> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `EN PLANIFICACIÓN`
+>
 > 📜 **System Prompt:** La personalidad, tono, y reglas de diálogo del Regenmon se definen en [LORE.md](./LORE.md). Este doc define la implementación técnica.
+> ⚙️ **Herramientas:** [TECH_STACK.md](./TECH_STACK.md) — versiones de Supabase, Privy, IA providers
+> 🧠 **Decisiones:** [model.md](./model.md) — por qué se eligió cada esquema y arquitectura
 
 ---
 
@@ -27,7 +31,7 @@ interface RegenmonData {
   stats: {
     espiritu: number;        // 🔮 Esperanza
     pulso: number;           // 💛 Energía vital
-    esencia: number;         // 🍎 Nutrición digital (⚠️ era "hambre" en S1-S2)
+    esencia: number;         // 🌱 Nutrición digital (⚠️ era "hambre" en S1-S2)
   };
 
   // Economía (S3)
@@ -65,6 +69,38 @@ interface AppConfig {
 | **UPDATE** | `updateStats(stats)` | Al presionar acción o por decaimiento |
 | **UPDATE** | `updateName(name)` | Al usar el cambio de nombre |
 | **DELETE** | `deleteRegenmon()` | Al confirmar reinicio |
+
+### Lógica de Estado Visual del Regenmon (S3)
+
+```typescript
+type SpriteState =
+  | 'euphoric' | 'happy' | 'neutral' | 'sad' | 'critical'
+  | 'no_hope' | 'no_energy' | 'no_nutrition';
+
+function getSpriteState(stats: Stats): SpriteState {
+  const { espiritu, pulso, esencia } = stats;
+
+  // 1. Check individual critical stats (< 10) — override promedio
+  const criticals = [
+    { stat: 'espiritu', value: espiritu, state: 'no_hope' as const },
+    { stat: 'pulso', value: pulso, state: 'no_energy' as const },
+    { stat: 'esencia', value: esencia, state: 'no_nutrition' as const },
+  ].filter(s => s.value < 10);
+
+  if (criticals.length > 0) {
+    // El más bajo gana. Empate: Espíritu > Pulso > Esencia (por orden del array)
+    return criticals.reduce((min, s) => s.value < min.value ? s : min).state;
+  }
+
+  // 2. Usar promedio
+  const avg = (espiritu + pulso + esencia) / 3;
+  if (avg >= 90) return 'euphoric';
+  if (avg >= 70) return 'happy';
+  if (avg >= 30) return 'neutral';
+  if (avg >= 10) return 'sad';
+  return 'critical';
+}
+```
 
 ### Validaciones
 
@@ -432,6 +468,9 @@ CREATE TABLE regenmons (
   theme TEXT DEFAULT 'dark' CHECK (theme IN ('dark', 'light')),
   text_size TEXT DEFAULT 'base',
   
+  -- Actividad
+  activity_history JSONB DEFAULT '[]'::jsonb,
+  
   -- Timestamps
   created_at TIMESTAMPTZ DEFAULT now(),
   last_updated TIMESTAMPTZ DEFAULT now(),
@@ -505,6 +544,63 @@ function purify(currentState: RegenmonData): RegenmonData | Error {
 }
 ```
 
+## Sesión 3: Historial de Actividades (Bonus)
+
+### Storage (localStorage)
+```typescript
+// Clave: "reggie-adventure-history"
+interface ActivityEntry {
+  action: 'purify' | 'chat' | 'search_fragments';
+  fragmentChange: number;   // +15, -10, +3, etc.
+  timestamp: number;         // Date.now()
+}
+// Max 10 entradas. Al exceder, se eliminan las más antiguas (FIFO)
+```
+
+### Storage (Supabase)
+```sql
+-- Campo adicional en tabla regenmons:
+activity_history JSONB DEFAULT '[]'::jsonb
+-- Mismo formato que localStorage, max 10 entradas
+```
+
+### Funciones
+```typescript
+function addActivity(action: ActivityEntry['action'], fragmentChange: number): void {
+  const history = loadHistory(); // max 10
+  history.unshift({ action, fragmentChange, timestamp: Date.now() });
+  if (history.length > 10) history.pop();
+  saveHistory(history);
+}
+```
+
+### Cuándo registrar
+- **Purificar:** `addActivity('purify', -10)`
+- **Chat (si ganó fragmentos):** `addActivity('chat', fragmentsEarned)` (solo si > 0)
+- **Buscar Fragmentos:** `addActivity('search_fragments', 15)`
+
+---
+
+## Sesión 3: Buscar Fragmentos (Anti-frustración)
+
+### Lógica
+```typescript
+function searchFragments(currentState: RegenmonData): RegenmonData | null {
+  if (currentState.fragmentos > 0) return null; // Solo a balance 0
+  
+  return {
+    ...currentState,
+    fragmentos: 15, // Suficiente para 1 purificación + margen
+  };
+}
+```
+
+> **Regla:** Solo disponible cuando `fragmentos === 0`. No es un faucet infinito.
+> El jugador recibe 15 (suficiente para 1 purificación + 5 de margen), incentivando
+> que vuelva a conversar para ganar más a través de La Conexión.
+
+---
+
 ## Sesión 5: Endpoints Sociales — PENDIENTE
 
 > - `POST /api/social/register`
@@ -522,4 +618,23 @@ function purify(currentState: RegenmonData): RegenmonData | Error {
 - **Este archivo se actualiza** al llegar a cada sesión que agregue backend.
 - **Validar siempre** los datos al leer de localStorage (pueden estar corruptos).
 - **API keys NUNCA en el código.** Solo en `.env.local` o variables de Vercel.
+
+---
+
+## Referencias Cruzadas
+
+Este archivo define **cómo funciona por dentro**. Los otros documentos definen qué se ve, qué se construye y por qué.
+
+| Documento | Relación con BACKEND_STRUCTURE.md |
+|-----------|----------------------------------|
+| [LORE.md](./LORE.md) | El system prompt completo se construye desde LORE; la personalidad por tipo, los stats-como-lore, las reglas de diálogo |
+| [PRD.md](./PRD.md) | Cada feature del PRD tiene su implementación técnica aquí (F3.1→Privy, F3.14→Supabase, etc.) |
+| [APP_FLOW.md](./APP_FLOW.md) | Los flujos (login, purificar, chat, sync) definen el "cuándo"; este doc define el "cómo" técnico |
+| [FRONTEND_GUIDELINES.md](./FRONTEND_GUIDELINES.md) | Los componentes visuales consumen los datos y APIs definidos aquí |
+| [TECH_STACK.md](./TECH_STACK.md) | Las herramientas (Supabase, Privy, Gemini/OpenAI) con sus versiones exactas |
+| [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) | Las fases técnicas (33-35, 38, 43-44) implementan los schemas y APIs de aquí |
+| [model.md](./model.md) | Las decisiones arquitectónicas (Opción C híbrida, Privy sobre Auth0, stats AI-driven) se documentan allá |
+| [progress.txt](./progress.txt) | Trackea qué endpoints y schemas ya están implementados |
+
+> **Regla de precedencia narrativa:** El contenido del system prompt viene de [LORE.md](./LORE.md). Este documento define la *estructura* del prompt, no su *contenido*.
 

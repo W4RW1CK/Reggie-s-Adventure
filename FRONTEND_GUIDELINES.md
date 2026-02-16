@@ -1,9 +1,12 @@
 # 🎨 FRONTEND_GUIDELINES — Reggie's Adventure
 > **Versión actual:** v0.3 — La Conexión
-> **Última actualización:** 2026-02-15
+> **Última actualización:** 2026-02-16
+> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `EN PLANIFICACIÓN`
 >
 > 📜 **Lore visual:** Los colores por tipo, paisajes, y animaciones del Regenmon
 > reflejan su significado narrativo. Ver [LORE.md](./LORE.md) para contexto.
+> ⚙️ **Herramientas:** [TECH_STACK.md](./TECH_STACK.md) — NES.css, Tailwind v4, Press Start 2P
+> 🗺️ **Layouts por pantalla:** [APP_FLOW.md](./APP_FLOW.md) — estructura de cada pantalla
 
 ---
 
@@ -92,7 +95,7 @@ font-family: 'Press Start 2P', monospace;
 |------|-----------------|-------------|------------|-------------|
 | 🔮 Espíritu | **Esperanza** — cuánto cree en la regeneración | `#9b59b6` | `#4a235a` | `#2c2c2c` |
 | 💛 Pulso | **Energía vital** — fuerza para existir y actuar | `#f1c40f` | `#7d6608` | `#2c2c2c` |
-| 🍎 Esencia | **Nutrición digital** — datos puros que lo nutren | `#27ae60` | `#1a5c33` | `#2c2c2c` |
+| 🌱 Esencia | **Nutrición digital** — datos puros que lo nutren | `#27ae60` | `#1a5c33` | `#2c2c2c` |
 
 > ⚠️ **Cambio S3:** Esencia reemplaza Hambre. Color cambió de rojo a verde para reflejar que 100=bueno/nutrido.
 
@@ -103,6 +106,7 @@ font-family: 'Press Start 2P', monospace;
 | Fragmento icono | Cyan brillante | `#00e5ff` |
 | Fragmento texto | Cyan suave | `#80deea` |
 | Sin login (---) | Gris apagado | `#666666` |
+| Buscar Fragmentos btn | Cyan suave | `#4dd0e1` |
 
 ### Colores de UI
 
@@ -146,10 +150,10 @@ Escala: 4px base
 
 ```
 ┌─────────────────────────────────────┐
-│ 🎵  💠 100 Fragmentos   v0.3  │ ← Header (música + Fragmentos + versión)
+│ 💠 100 Fragmentos    mel@...  │ ← Header (Fragmentos + identidad)
 ├─────────────────────────────────────┤
 │                                     │
-│         [Paisaje de Fondo]          │ ← Background (adapta por tema Dark/Light)
+│         [Paisaje de Fondo]          │ ← Background (ver LORE.md → Los Paisajes)
 │                                     │
 │          ┌─────────────┐            │
 │          │  Regenmon    │            │ ← SVG centrado (reworked S3)
@@ -160,9 +164,9 @@ Escala: 4px base
 │                                     │
 │  🔮 Esperanza [==========] 80/100    │ ← Stats
 │  💛 Energía   [█████─────] 50/100    │
-│  🍎 Esencia  [███───────] 30/100    │
+│  🌱 Esencia  [███───────] 30/100    │
 │                                     │
-│  [🔮 Purificar (10💠)] [⚙️] [💬 Conversar]  │ ← Botones (S3)
+│  [🌀 Purificar (10💠)] [⚙️] [💬 Conversar]  │ ← Botones (S3)
 │                                     │
 └─────────────────────────────────────┘
 ```
@@ -181,6 +185,41 @@ Escala: 4px base
 
 ## Componentes
 
+### Estados Visuales del Regenmon (S3 — Reworked)
+
+> **24 sprites total:** 8 estados × 3 tipos (Rayo, Flama, Hielo).
+> La estética se mantiene Kirby-esque pero se integra mejor con el lore.
+
+**Lógica de selección de sprite:**
+```
+1. ¿Algún stat individual < 10?
+   ├── SÍ → Mostrar sprite del stat MÁS BAJO
+   │         Empate: Espíritu > Pulso > Esencia
+   └── NO → Usar promedio: (Espíritu + Pulso + Esencia) / 3
+```
+
+**Estados por promedio de stats:**
+
+| # | Estado | Promedio | Expresión visual |
+|---|--------|----------|-----------------|
+| 1 | 😄 Eufórico | ≥ 90 | Radiante, colores vibrantes, ojos brillantes, postura erguida |
+| 2 | 🙂 Contento | ≥ 70, < 90 | Feliz, colores base, expresión alegre |
+| 3 | 😐 Neutro | ≥ 30, < 70 | Neutral, colores normales, expresión tranquila |
+| 4 | 😟 Decaído | ≥ 10, < 30 | Triste, colores apagados, postura caída |
+| 5 | 😢 Crítico General | < 10 | Muy debilitado, colores desaturados, postura desplomada |
+
+**Estados por stat individual crítico (< 10, override promedio):**
+
+| # | Estado | Trigger | Expresión visual |
+|---|--------|---------|-----------------|
+| 6 | 🔮 Sin Esperanza | Espíritu < 10 (más bajo) | Mirada vacía, colores fríos, postura encogida — duda de todo |
+| 7 | 💛 Sin Energía | Pulso < 10 (más bajo) | Ojos caídos, desplomado, colores muy apagados — agotado |
+| 8 | 🌱 Sin Nutrición | Esencia < 10 (más bajo) | Aspecto marchito, colores pálidos — hambriento, debilitado |
+
+> **Prioridad:** Stat individual crítico SIEMPRE gana sobre el promedio.
+> Si múltiples stats están < 10, el sprite corresponde al stat con valor más bajo.
+> En empate exacto: Espíritu > Pulso > Esencia (la esperanza es lo más fundamental).
+
 ### Barras de Stats (NES.css)
 - Usar `<progress>` con estilos NES.css
 - Altura: `20px`
@@ -193,7 +232,7 @@ Escala: 4px base
 
 > **S3:** Los botones Entrenar/Alimentar/Descansar fueron reemplazados.
 
-**Layout:** `[🔮 Purificar (10💠)]  [⚙️]  [💬 Conversar]`
+**Layout:** `[🌀 Purificar (10💠)]  [⚙️]  [💬 Conversar]`
 
 | Botón | Estilo | Comportamiento |
 |-------|--------|----------------|
@@ -207,6 +246,70 @@ Escala: 4px base
 - Estados: normal / hover / active / disabled
 - Disabled: gris, cursor not-allowed, opacidad 0.5
 - **Se ocultan durante chat** (Purificar y ⚙️)
+
+### Identidad del Usuario en Header (S3)
+
+```css
+/* Texto discreto, alineado a la derecha */
+.user-identity {
+  font-size: 8px;
+  color: var(--text-secondary);
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Transición cuando Regenmon descubre el nombre */
+.user-identity--discovered {
+  animation: identity-reveal 1s ease;
+}
+
+@keyframes identity-reveal {
+  0% { opacity: 0; transform: translateY(-4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+```
+
+### Historial de Actividades (S3 — Bonus)
+
+```css
+/* Sección colapsable debajo de botones */
+.activity-history {
+  font-size: 8px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.activity-history--expanded {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Cada entrada */
+.activity-entry {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--border-nes);
+}
+
+.activity-entry__icon { width: 20px; }
+.activity-entry__change--positive { color: #4caf50; }
+.activity-entry__change--negative { color: #e74c3c; }
+.activity-entry__time { color: var(--text-secondary); }
+```
+
+| Acción | Icono | Ejemplo |
+|--------|-------|---------|
+| Purificó | 🌀 | `🌀  -10 💠  hace 5 min` |
+| Conversó | 💬 | `💬  +3 💠  hace 20 min` |
+| Buscó Fragmentos | 🔍 | `🔍  +15 💠  hace 1h` |
+
+- **Se oculta durante chat** (como Purificar y ⚙️)
+- **Toggle:** Título "📜 Historial" clickeable para expandir/colapsar
+- **Estilo:** NES container sutil, no compite con los stats ni el Regenmon
 
 ### Panel Settings (⚙️) (S3 — Nuevo)
 
@@ -323,7 +426,7 @@ Estilo: NES container (`nes-container is-dark`), posición fija o slide-in, fond
 
 ```css
 /* Modo compacto: solo emoji + número + mini barra */
-/* Ejemplo: 🔮 80 | 💛 50 | 🍎 30 */
+/* Ejemplo: 🔮 80 | 💛 50 | 🌱 30 */
 /* Se muestran en una sola fila horizontal */
 .stats-compact {
   display: flex;
@@ -437,3 +540,22 @@ Estilo: NES container (`nes-container is-dark`), posición fija o slide-in, fond
 - **Tema Dark (NES)** es el default. Light (GBC) activable en Settings
 - **Temas afectan:** backgrounds, bordes, colores de texto, UI containers. NO afectan colores de tipo ni stats
 - Este archivo se actualiza cuando se agreguen nuevos componentes o cambien colores
+
+---
+
+## Referencias Cruzadas
+
+Este archivo define **cómo se ve y se siente** el juego. Los otros documentos definen qué, por qué y con qué.
+
+| Documento | Relación con FRONTEND_GUIDELINES.md |
+|-----------|-------------------------------------|
+| [LORE.md](./LORE.md) | Los colores por tipo representan su esencia narrativa; los paisajes son zonas del mundo digital |
+| [PRD.md](./PRD.md) | Los features visuales (F1.8-F1.14, F3.10-F3.13) se implementan según estas guías |
+| [APP_FLOW.md](./APP_FLOW.md) | El layout de cada pantalla (P1-P6) sigue la estructura definida aquí |
+| [BACKEND_STRUCTURE.md](./BACKEND_STRUCTURE.md) | Los stats y sus colores aquí corresponden a los campos de datos definidos allá |
+| [TECH_STACK.md](./TECH_STACK.md) | NES.css, Tailwind v4, Press Start 2P — las herramientas que hacen posible esta estética |
+| [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) | Las fases visuales (40: backgrounds/sprites, 41: tema GBC, 42: header, 46: polish) implementan estas guías |
+| [model.md](./model.md) | Las decisiones de tema GBC, layout de botones, y chat UI se documentan allá |
+| [progress.txt](./progress.txt) | Trackea qué componentes visuales ya están implementados |
+
+> **Regla de precedencia visual:** Si hay conflicto entre este documento y [LORE.md](./LORE.md) en temas de significado de colores, paisajes o tono visual, **LORE.md gana**.

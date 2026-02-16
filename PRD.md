@@ -1,7 +1,11 @@
 # 📋 PRD — Reggie's Adventure
 > **Versión actual:** v0.3 — La Conexión
-> **Última actualización:** 2026-02-15
-> **Estado:** Sesión 3 — En Planificación
+> **Última actualización:** 2026-02-16
+> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `EN PLANIFICACIÓN`
+>
+> 📜 **Narrativa completa:** [LORE.md](./LORE.md) — biblia narrativa del universo
+> 🗺️ **Flujos de usuario:** [APP_FLOW.md](./APP_FLOW.md) — cómo navega el jugador
+> 🧠 **Decisiones de diseño:** [model.md](./model.md) — por qué cada feature existe
 
 ---
 
@@ -24,10 +28,10 @@ No es una app de mascota para niños. Es un juego con sustancia, tono retro 8-bi
 
 Al completar las 5 sesiones, el jugador tiene:
 - Un Regenmon único que refleja su personalidad y decisiones — un compañero vivo con memoria, emociones y lore propio (ver [LORE.md → Los Regenmon](./LORE.md#los-regenmon))
-- Un juego funcional desplegado en internet
+- Un juego funcional desplegado en internet (stack: [TECH_STACK.md](./TECH_STACK.md))
 - Interacciones con IA donde La Conexión humano-Regenmon se siente genuina (ver [LORE.md → La Conexión](./LORE.md#la-conexión))
-- Una reflexión sutil sobre el estado del mundo digital tejida en la experiencia
-- Conexión social con otros jugadores del bootcamp
+- Una reflexión sutil sobre el estado del mundo digital tejida en la experiencia (ver [LORE.md → El Origen](./LORE.md#el-origen))
+- Conexión social con otros jugadores del bootcamp (S5)
 
 ---
 
@@ -47,16 +51,16 @@ Al completar las 5 sesiones, el jugador tiene:
 | F1.7 | Transición | Texto "Tu Regenmon está despertando..." con fade |
 | F1.8 | Display: SVG del Regenmon | Criatura SVG modular con idle animation (rebote/respiración) |
 | F1.9 | Display: Paisaje de fondo | Pixel art que cambia según tipo Y estado emocional (cambios sutiles) |
-| F1.10 | Display: Barras de stats | 3 barras NES horizontales (Espíritu 🔮 / Pulso 💛 / Esencia 🍎) con valor visible (50/100) |
+| F1.10 | Display: Barras de stats | 3 barras NES horizontales (Espíritu 🔮 / Pulso 💛 / Esencia 🌱) con valor visible (50/100) |
 | F1.11 | Display: Botones de acción | Entrenar (+10 Pulso) / Alimentar (-10 Hambre) / Descansar (+10 Espíritu) con feedback "+10"/"-10" flotante | `→ S3: Reemplazados por Purificar/⚙️/Conversar`
 | F1.12 | Display: Fecha | "Día X de aventura" (cuenta días desde creación) |
 | F1.13 | Decaimiento de stats | Stats cambian en tiempo real. Tras 4-5h se nota baja leve. Calcula tiempo offline |
-| F1.14 | Estados visuales del Regenmon | Normal, eufórico, hambre crítica, pulso bajo, espíritu bajo, colapso total — cambios en expresión, postura, color |
+| F1.14 | Estados visuales del Regenmon | 8 estados por tipo: 5 por promedio de stats (Eufórico ≥90, Contento ≥70, Neutro ≥30, Decaído ≥10, Crítico <10) + 3 por stat individual crítico <10 (Sin Esperanza, Sin Energía, Sin Nutrición). Stat individual crítico override promedio; si múltiples críticos, el más bajo gana (empate: Espíritu > Pulso > Esencia). 24 sprites total (8×3 tipos) | `→ S3: Sistema reworked con promedio + críticos individuales`
 | F1.15 | Límites de stats | Rango 0-100. Botones se desactivan en el límite. Valores se redondean si exceden |
 | F1.16 | Cambio de nombre | ✏️ junto al nombre. 1 solo cambio permitido. Leyenda de advertencia. Desaparece tras uso |
 | F1.17 | Reiniciar | Botón discreto centrado abajo. Modal de confirmación retro. Borra todo y regresa a historia + creación |
 | F1.18 | Tutorial modal | Aparece cada entrada. Checkbox "No volver a mostrar". Estado en localStorage |
-| F1.19 | Música 8-bit | Melodía chiptune atmosférica. Toggle 🎵 esquina superior derecha. Estado guardado |
+| F1.19 | Música 8-bit | Melodía chiptune atmosférica. Toggle 🎵 esquina superior derecha. Estado guardado | `→ S3: Toggle migrado de header a panel ⚙️ en GameScreen`
 | F1.20 | Persistencia | Todos los datos en localStorage. Persiste al recargar |
 | F1.21 | Responsive | Portrait vertical en móvil. Layout adaptativo desktop/móvil |
 | F1.22 | Deploy | URL pública en Vercel |
@@ -99,7 +103,7 @@ Al completar las 5 sesiones, el jugador tiene:
 | F2.16 | Persistencia del chat | Max 50 mensajes en localStorage. Historial completo enviado a la IA. Reset borra todo |
 | F2.17 | Rate limiting | Frontend: cooldown 3s. Backend: 15 msgs/min. "Tu Regenmon necesita un respiro..." |
 | F2.18 | Manejo de errores | Botón "Reintentar" si la API falla |
-| F2.19 | Stats compactos durante chat | 🔮 Esperanza | 💛 Energía | 🍎 Necesidad (mini barras). Botones se ocultan |
+| F2.19 | Stats compactos durante chat | 🔮 Esperanza | 💛 Energía | 🌱 Esencia (mini barras). Botones se ocultan | `→ S3: "Necesidad" renombrado a "Esencia"`
 | F2.20 | Música durante chat | Volumen baja a 60% (fade 1.5s). Regresa a 100% al cerrar |
 | F2.21 | Chat desactivado en estado crítico | Si los 3 stats < 10: "Tu Regenmon está muy débil para hablar..." (la corrupción lo consume) |
 | F2.22 | Tutorial actualizado | TutorialModal incluye instrucciones del chat y La Conexión |
@@ -124,16 +128,16 @@ Al completar las 5 sesiones, el jugador tiene:
 | F3.1 | Auth con Privy | Login funcional: Google + Email + Passkey. Modal al presionar "Press Start" con opción "Continuar sin cuenta" |
 | F3.2 | Login tardío | Botón "Iniciar Sesión" en panel ⚙️ para quienes entraron en modo demo |
 | F3.3 | 💠 Fragmentos (moneda) | Balance visible en header. 100 iniciales. Ganar 0-5 por chat (IA decide). "💠 ---" si no logueado |
-| F3.4 | Stat: Hambre → Esencia 🍎 | Renombrar y invertir lógica: 100=bien alimentado, 0=hambriento. UI y backend actualizados |
+| F3.4 | Stat: Hambre → Esencia 🌱 | Renombrar y invertir lógica: 100=bien alimentado, 0=hambriento. UI y backend actualizados |
 | F3.5 | Stats AI-driven (todos) | Espíritu ±5, Pulso ±5, Esencia -1 a -4, Fragmentos 0-5 — todo decidido por la IA por mensaje |
 | F3.6 | Regeneración pasiva de Pulso | Pulso sube lentamente si el usuario no interactúa (descanso natural) |
 | F3.7 | Purificar (reemplaza Alimentar) | Cuesta 10 💠. Efecto: Esencia +30, Espíritu +5, Pulso +10. Feedback lore-appropriate |
-| F3.8 | Botones reworked | Nuevo layout: `[🔮 Purificar (10💠)] [⚙️] [💬 Conversar]`. Eliminar Entrenar/Descansar/Alimentar antiguo |
+| F3.8 | Botones reworked | Nuevo layout: `[🌀 Purificar (10💠)] [⚙️] [💬 Conversar]`. Eliminar Entrenar/Descansar/Alimentar antiguo |
 | F3.9 | Panel Settings (⚙️) | Música, Reset, Nombre, Login/Logout, Tamaño texto, Dark/Light mode |
 | F3.10 | Tema Light (GBC) | Paleta Game Boy Color pastel/vibrante. Toggle en Settings. Backgrounds y sprites adaptativos |
 | F3.11 | Tema Dark (NES) mantener | Refinar tema actual oscuro como modo default |
 | F3.12 | Backgrounds reconstruidos | Nuevos backgrounds que reflejen el lore actualizado y soporten ambos temas |
-| F3.13 | Sprites reworked | SVGs actualizados para mejor integración con el lore |
+| F3.13 | Sprites reworked | SVGs actualizados: 8 estados × 3 tipos = 24 sprites. Sistema basado en promedio de stats + override por stat individual crítico (<10). Ver FRONTEND_GUIDELINES.md |
 | F3.14 | Persistencia: Supabase | Migración localStorage → Supabase al hacer login. Multi-dispositivo |
 | F3.15 | Sync híbrido | Sin login: localStorage. Con login: localStorage + Supabase sincronizado |
 | F3.16 | API Response actualizado | Nuevos campos: `pulseChange`, `essenceChange`, `fragmentsEarned` |
@@ -141,6 +145,9 @@ Al completar las 5 sesiones, el jugador tiene:
 | F3.18 | Memorias (infraestructura) | Tipos, storage, hooks. Detección básica. Base para evolución S4 |
 | F3.19 | Evolución (infraestructura) | Storage de progreso, tipos. NO visual. Preparar para S4 |
 | F3.20 | Ajuste de texto | Agrandar/disminuir tamaño de texto sin romper UI |
+| F3.21 | Identidad del usuario (evolutiva) | Logueado: muestra email/método auth en header. Cuando el Regenmon descubre el nombre del jugador → reemplaza por el nombre. No logueado: nada |
+| F3.22 | Buscar Fragmentos (0💠) | Si balance = 0: aparece botón "🔍 Buscar Fragmentos". Da 15💠. Desaparece tras uso. Anti-frustración |
+| F3.23 | Historial de actividades (bonus) | Sección colapsable "📜 Historial". Últimas 10 acciones: qué, cuántos 💠, cuándo. Persiste al recargar |
 
 #### Fuera de Scope ❌ (Sesión 3)
 - Barra de evolución visible (S4)
@@ -228,6 +235,9 @@ US-37: Como jugador, quiero ajustar el tamaño del texto para mi comodidad.
 US-38: Como jugador, quiero que mi Regenmon descanse y recupere Pulso cuando no juego.
 US-39: Como jugador, quiero que la barra de Esencia funcione igual que las demás (100=bien, 0=mal).
 US-40: Como jugador, quiero acceder a mi Regenmon desde cualquier dispositivo si estoy logueado.
+US-41: Como jugador logueado, quiero ver mi email al inicio y que cambie a mi nombre cuando mi Regenmon lo descubra.
+US-42: Como jugador sin Fragmentos, quiero una forma de conseguir algunos para no quedarme atascado.
+US-43: Como jugador, quiero ver un historial de mis acciones recientes para entender qué he hecho.
 ```
 
 ## 6. Requisitos de Accesibilidad (Fix It Phase)
@@ -259,21 +269,28 @@ US-40: Como jugador, quiero acceder a mi Regenmon desde cualquier dispositivo si
 - [ ] Tema Light (GBC) y Dark (NES) con toggle (S3)
 - [ ] Stats completamente AI-driven (S3)
 - [ ] Purificar con costo de Fragmentos (S3)
+- [ ] Identidad evolutiva del usuario en header (S3)
+- [ ] Buscar Fragmentos cuando balance = 0 (S3)
+- [ ] Historial de actividades colapsable (S3 bonus)
 
 ---
 
-## Documentos Canónicos
+## Documentos Canónicos — El Ecosistema
 
-| Documento | Propósito |
-|-----------|----------|
-| **PRD.md** (este) | Qué se construye y por qué |
-| **LORE.md** | Biblia narrativa — personalidad, mundo, filosofía |
-| **APP_FLOW.md** | Cómo navega el usuario |
-| **FRONTEND_GUIDELINES.md** | Cómo se ve y se siente |
-| **BACKEND_STRUCTURE.md** | Cómo funciona por dentro |
-| **TECH_STACK.md** | Con qué se construye |
-| **IMPLEMENTATION_PLAN.md** | En qué orden se construye |
-| **model.md** | Decisiones de diseño acumuladas |
-| **progress.txt** | Estado actual del proyecto |
+Los 9 archivos canónicos forman un sistema interconectado. Cada uno tiene su propósito, pero todos se referencian mutuamente.
 
-> ⚠️ **Regla de precedencia narrativa:** Si hay conflicto entre documentos técnicos y LORE.md en temas de personalidad, diálogo o tono, **LORE.md gana**.
+| Documento | Propósito | Qué toma del PRD |
+|-----------|----------|------------------|
+| **PRD.md** (este) | Qué se construye y por qué | — |
+| [LORE.md](./LORE.md) | Biblia narrativa — personalidad, mundo, filosofía | Los features narrativos (chat, stats-como-lore, La Conexión) |
+| [APP_FLOW.md](./APP_FLOW.md) | Cómo navega el usuario | Las pantallas y flujos que implementan cada feature |
+| [FRONTEND_GUIDELINES.md](./FRONTEND_GUIDELINES.md) | Cómo se ve y se siente | Los criterios visuales de cada feature (layouts, colores, animaciones) |
+| [BACKEND_STRUCTURE.md](./BACKEND_STRUCTURE.md) | Cómo funciona por dentro | Los schemas y APIs que soportan cada feature |
+| [TECH_STACK.md](./TECH_STACK.md) | Con qué se construye | Las herramientas necesarias para cada feature por sesión |
+| [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) | En qué orden se construye | Las fases que implementan estos features uno por uno |
+| [model.md](./model.md) | Decisiones de diseño acumuladas | El "por qué" detrás de cada feature y cambio entre sesiones |
+| [progress.txt](./progress.txt) | Estado actual del proyecto | Qué features ya están implementados y cuáles faltan |
+
+> ⚠️ **Regla de precedencia narrativa:** Si hay conflicto entre documentos técnicos y [LORE.md](./LORE.md) en temas de personalidad, diálogo o tono, **LORE.md gana**.
+> 
+> 📐 **Regla de consistencia:** Al modificar un feature en este documento, verificar y actualizar los documentos afectados. Todos deben contar la misma historia.

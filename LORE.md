@@ -1,7 +1,7 @@
 # 📜 LORE — Reggie's Adventure
 > **Versión actual:** v0.3 — La Conexión
-> **Última actualización:** 2026-02-15
-> **Estado:** Sesión 3 — En Planificación
+> **Última actualización:** 2026-02-16
+> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `EN PLANIFICACIÓN`
 
 ---
 
@@ -152,7 +152,7 @@ El Pulso es la fuerza que mantiene al Regenmon activo. Hablar consume energía. 
 | 30-70 | Normal, funcional |
 | <30 | Cansado, respuestas cortas, economiza palabras |
 
-### 🍎 Esencia = Nutrición Digital
+### 🌱 Esencia = Nutrición Digital
 
 > ⚠️ **Cambio S3:** Antes "Hambre" (lógica invertida: 100=hambriento). Ahora **"Esencia"** (lógica normal: 100=bien alimentado, 0=hambriento).
 
@@ -162,11 +162,17 @@ Cada interacción consume Esencia (hablar requiere energía pura). La **Purifica
 
 | Nivel | Lo que siente |
 |-------|--------------|
-| >70 | Satisfecho, nutrido, no menciona necesidad |
-| 30-70 | Normal, siente hambre ocasionalmente |
-| <30 | Debilitado, menciona hambre, irritable, necesita purificación |
+| >70 | Satisfecho, nutrido, energía pura fluyendo |
+| 30-70 | Normal, siente que la energía disminuye gradualmente |
+| <30 | Debilitado, menciona necesidad de purificación, se siente marchito |
 
-### Estado crítico (todos los stats < 10)
+### Estados críticos individuales (cualquier stat < 10)
+Cuando un stat cae por debajo de 10, el Regenmon lo manifiesta de forma específica:
+- **🔮 Sin Esperanza (Espíritu < 10):** Mirada vacía, encogido. Ha perdido la fe en la regeneración.
+- **💛 Sin Energía (Pulso < 10):** Desplomado, apagado. No tiene fuerza para existir.
+- **🌱 Sin Nutrición (Esencia < 10):** Marchito, pálido. Los datos corruptos lo consumen.
+
+### Estado crítico general (promedio < 10)
 Cuando los tres stats están en niveles críticos, el Regenmon está al borde del colapso. No puede hablar. No puede conectar. La corrupción lo consume.
 
 ---
@@ -214,9 +220,12 @@ Los Fragmentos son la **moneda de la regeneración**. Con ellos, el Regenmon pue
 - **Purificar**: Restaurar la Esencia del Regenmon (limpiar datos corruptos)
 - (Futuro) Desbloquear memorias, evoluciones, y más
 
+### ¿Qué pasa cuando no quedan Fragmentos?
+Cuando el balance llega a cero, el Regenmon puede sentir restos dormidos de La Red Primordial — demasiado débiles para despertar solos, pero suficientes para seguir adelante. Una búsqueda intensa puede encontrar algunos, aunque son escasos. La verdadera fuente de Fragmentos siempre será La Conexión.
+
 ---
 
-## La Purificación 🔮
+## La Purificación 🌀
 
 > *(Nuevo en Sesión 3 — La Conexión)*
 
@@ -283,19 +292,21 @@ El nombre que el usuario le da al Regenmon sella La Conexión. Es el primer acto
 
 ## Referencias Cruzadas
 
-Este documento es la **biblia narrativa** del juego. Todo lo relacionado a personalidad, diálogo y ambiente debe ser consistente con lo aquí escrito.
+Este documento es la **biblia narrativa** del juego. Todo lo relacionado a personalidad, diálogo y ambiente debe ser consistente con lo aquí escrito. Los otros 8 documentos canónicos se alimentan de este.
 
-| Documento | Qué toma de LORE.md |
-|-----------|---------------------|
-| **PRD.md** | Descripción del producto, visión, features narrativos, Fragmentos, Purificación |
-| **APP_FLOW.md** | Flujos de login, chat, purificación, contexto de paisajes |
-| **FRONTEND_GUIDELINES.md** | Colores por tipo, animaciones de paisaje, chat bubbles, temas GBC/NES |
-| **BACKEND_STRUCTURE.md** | System prompt completo, stats AI-driven, Fragmentos API, Supabase schema |
-| **IMPLEMENTATION_PLAN.md** | Fases S3 (auth, economía, stats, UI, persistencia) |
-| **TECH_STACK.md** | Privy, Supabase, estructura de archivos S3 |
-| **model.md** | Resumen de todas las decisiones de diseño y lore |
-| **progress.txt** | Estado de completitud por sesión |
+| Documento | Qué toma de LORE.md | Secciones clave |
+|-----------|---------------------|-----------------|
+| [PRD.md](./PRD.md) | Descripción del producto, visión, features narrativos, Fragmentos, Purificación | §1 (Qué es), §3 (Visión), §4 (Features S3) |
+| [APP_FLOW.md](./APP_FLOW.md) | Textos de historia (P3), contexto de creación (P4), flujos de chat y purificación | P3 (Historia), P6 (Juego), Flujo Conversar |
+| [FRONTEND_GUIDELINES.md](./FRONTEND_GUIDELINES.md) | Colores por tipo (esencia narrativa), paisajes como zonas del mundo digital, temas GBC/NES | Paleta por tipo, Paisajes, Chat UI |
+| [BACKEND_STRUCTURE.md](./BACKEND_STRUCTURE.md) | System prompt completo (12 bloques), stats-como-lore, Fragmentos API, reactividad emocional | System Prompt, ChatResponse, Purificar |
+| [TECH_STACK.md](./TECH_STACK.md) | Los system prompts de `lib/ai/prompts.ts` se basan íntegramente en este doc | IA Conversacional, System Prompts |
+| [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) | Fases 17 (prompts con lore), 38 (chat AI-driven), 43 (memorias) consultan LORE directamente | Fases 17, 24, 29, 38, 43, 47 |
+| [model.md](./model.md) | Decisiones narrativas (tipos, stats=lore, tono, Fragmentos) se documentan allá con referencia aquí | Sección Lore, S3 Decisiones |
+| [progress.txt](./progress.txt) | Trackea completitud de features narrativos implementados | Sección Lore, Fases 17-25 |
 
 ### Regla de Oro
 > Si hay un conflicto entre este documento y cualquier otro, **LORE.md gana** en todo lo relacionado a narrativa, personalidad, tono y diálogo. Los otros documentos definen el *cómo*. Este define el *qué* y el *por qué*.
+>
+> 📐 **Consistencia bidireccional:** Cada documento canónico tiene su propia sección de "Referencias Cruzadas" que apunta de vuelta aquí. La red de conexiones es el sistema nervioso del proyecto.
 

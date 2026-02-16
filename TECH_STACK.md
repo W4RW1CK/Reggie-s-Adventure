@@ -1,6 +1,11 @@
 # ⚙️ TECH_STACK — Reggie's Adventure
 > **Versión actual:** v0.3 — La Conexión
-> **Última actualización:** 2026-02-15
+> **Última actualización:** 2026-02-16
+> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `EN PLANIFICACIÓN`
+>
+> 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — los system prompts de IA (`lib/ai/prompts.ts`) se basan íntegramente en LORE
+> 🛠️ **Implementación técnica:** [BACKEND_STRUCTURE.md](./BACKEND_STRUCTURE.md) — schemas y lógica que usan estas herramientas
+> 🔨 **Orden de instalación:** [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) — cuándo se instala cada dependencia
 
 ---
 
@@ -102,6 +107,7 @@ Clave: "reggie-adventure-chat"     → Historial de chat (max 50 mensajes)
 Clave: "reggie-adventure-player"   → Nombre del jugador (descubierto por IA)
 Clave: "reggie-adventure-fragments" → [NEW S3] Balance de Fragmentos 💠
 Clave: "reggie-adventure-memories"  → [NEW S3] Memorias del Regenmon
+Clave: "reggie-adventure-history"   → [NEW S3] Historial de actividades (max 10)
 ```
 
 ### Sesión 3+: Supabase (usuarios autenticados)
@@ -213,3 +219,22 @@ reggie-adventure/
 - **No cambiar versiones** sin actualizar este archivo
 - **Paquetes de sesiones futuras** se instalan SOLO al llegar a esa sesión
 - Este archivo se actualiza cada vez que se agrega una dependencia
+
+---
+
+## Referencias Cruzadas
+
+Este archivo define **con qué** se construye. Los otros documentos definen qué, cómo y por qué.
+
+| Documento | Relación con TECH_STACK.md |
+|-----------|---------------------------|
+| [PRD.md](./PRD.md) | Los features requieren las herramientas listadas aquí |
+| [LORE.md](./LORE.md) | Los system prompts de IA (Sesión 2+) se basan en LORE; la IA es herramienta central |
+| [BACKEND_STRUCTURE.md](./BACKEND_STRUCTURE.md) | Define schemas y lógica usando las herramientas de aquí (Supabase, Privy, IA providers) |
+| [FRONTEND_GUIDELINES.md](./FRONTEND_GUIDELINES.md) | Define estilos usando las herramientas de aquí (NES.css, Tailwind v4, Press Start 2P) |
+| [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) | Las fases de setup (Fase 1, 32) instalan dependencias listadas aquí |
+| [APP_FLOW.md](./APP_FLOW.md) | Los flujos de auth (Privy) y persistencia (Supabase) dependen de estas herramientas |
+| [model.md](./model.md) | Las decisiones de qué herramientas usar se documentan allá |
+| [progress.txt](./progress.txt) | Trackea qué herramientas ya fueron instaladas y configuradas |
+
+> **Regla:** Este archivo es la fuente de verdad para dependencias y versiones. Cualquier cambio se refleja aquí primero.

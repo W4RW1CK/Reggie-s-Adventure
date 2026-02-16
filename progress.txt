@@ -1,7 +1,15 @@
-# Progress — Reggie's Adventure
-# Última actualización: 2026-02-15
+# 📊 PROGRESS — Reggie's Adventure
+> **Versión actual:** v0.3 — La Conexión
+> **Última actualización:** 2026-02-16
+> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `EN PLANIFICACIÓN`
+>
+> 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — biblia narrativa del universo
+> 🔨 **Fases detalladas:** [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) — qué construir y en qué orden
+> 🧠 **Decisiones de diseño:** [model.md](./model.md) — por qué se construye así
 
-## ESTADO ACTUAL: SESIÓN 2 COMPLETADA (Fases 1-31) 🎉
+---
+
+## ESTADO ACTUAL: SESIÓN 2 `COMPLETADA` (Fases 1-31)
 
 ---
 
@@ -10,24 +18,26 @@
 ### Planificación (2026-02-12)
 - Documentación del bootcamp VibeCoding revisada (10 archivos)
 - Personalización definida:
-  - Tipos: Rayo / Flama / Hielo
-  - Stats: Espíritu / Pulso / Hambre
-  - Acciones: Entrenar / Alimentar / Descansar
-  - Moneda: Estrellas (Sesión 3+)
-  - Estética: NES 8-bit inspirado en Kirby's Adventure
+  - Tipos: Rayo / Flama / Hielo (ver [LORE.md → Los Regenmon](./LORE.md#los-regenmon))
+  - Stats: Espíritu / Pulso / Hambre `→ S3: Hambre renombrado a Esencia (lógica invertida)`
+  - Acciones: Entrenar / Alimentar / Descansar `→ S3: Reemplazados por Purificar/⚙️/Conversar`
+  - Moneda: Estrellas `→ S3: Renombrado a Fragmentos 💠` (ver [LORE.md → Los Fragmentos](./LORE.md#los-fragmentos-))
+  - Estética: NES 8-bit inspirado en Kirby's Adventure (ver [FRONTEND_GUIDELINES.md](./FRONTEND_GUIDELINES.md))
 - Interrogatorio de 54 preguntas completado
 - Plan maestro aprobado por el usuario
 
 ---
 
 ### Archivos Canónicos (2026-02-12)
-- PRD.md creado — spec completa con features, user stories, criterios
-- APP_FLOW.md creado — flujos, pantallas, decisiones, errores
-- TECH_STACK.md creado — paquetes con versiones, estructura de carpetas
-- FRONTEND_GUIDELINES.md creado — colores hex, fuentes, espaciado, animaciones
-- BACKEND_STRUCTURE.md creado — esquema localStorage, decaimiento, edge cases
-- IMPLEMENTATION_PLAN.md creado — 15 fases con pasos específicos
-- progress.txt creado — este archivo
+- [PRD.md](./PRD.md) creado — spec completa con features, user stories, criterios
+- [APP_FLOW.md](./APP_FLOW.md) creado — flujos, pantallas, decisiones, errores
+- [TECH_STACK.md](./TECH_STACK.md) creado — paquetes con versiones, estructura de carpetas
+- [FRONTEND_GUIDELINES.md](./FRONTEND_GUIDELINES.md) creado — colores hex, fuentes, espaciado, animaciones
+- [BACKEND_STRUCTURE.md](./BACKEND_STRUCTURE.md) creado — esquema localStorage, decaimiento, edge cases
+- [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) creado — 15 fases con pasos específicos
+- progress.txt creado — este archivo (tú estás aquí)
+- [LORE.md](./LORE.md) creado — biblia narrativa (Sesión 2)
+- [model.md](./model.md) creado — decisiones de diseño acumuladas
 
 ---
 
@@ -314,6 +324,34 @@
 
 ---
 
+---
+
+## Planificación Sesión 3 — La Conexión (2026-02-15/16)
+
+> **Nota S3:** Los stats, botones y economía cambiaron radicalmente.
+> S1/S2 usaban: Hambre (lógica invertida), Entrenar/Alimentar/Descansar, Estrellas.
+> S3 usa: **Esencia** (lógica normal 100=bien), **Purificar/⚙️/Conversar**, **Fragmentos 💠**.
+> Las fases de S1/S2 arriba son registro histórico y no se modifican.
+
+- [x] Interrogatorio de diseño completado (4 rondas, ~40 preguntas)
+- [x] Revisión de demo del bootcamp (regenmon-final.vercel.app)
+- [x] Revisión de docs del bootcamp (Docs/04. Sesiones/Sesion 3/)
+- [x] Decisiones clave tomadas:
+  - Moneda: Fragmentos 💠 (100 iniciales, 0-5 por chat)
+  - Hambre → Esencia 🌱 (lógica invertida: ahora 100=bien)
+  - Stats todos AI-driven (Espíritu ±5, Pulso ±5, Esencia -1 a -4, Fragmentos 0-5)
+  - Botones: Purificar (10💠) + ⚙️ Settings + 💬 Conversar + 🔍 Buscar Fragmentos (a 0💠)
+  - Identidad: nombre/email del usuario visible en header al estar logueado
+  - Auth: Privy (Google + Email + Passkey, credenciales propias)
+  - Persistencia: Híbrido localStorage → Supabase
+  - Temas: Dark (NES) + Light (Game Boy Color)
+  - Memorias: infraestructura S3, implementación S4
+- [x] Archivos canónicos actualizados: LORE, PRD, TECH_STACK, FRONTEND_GUIDELINES, BACKEND_STRUCTURE, APP_FLOW, model.md
+- [ ] IMPLEMENTATION_PLAN.md: Fases detalladas de S3 — PENDIENTE
+- [ ] Implementación de S3 — PENDIENTE
+
+---
+
 ## NOTAS
 
 - Sesión 1 completada y desplegada (v0.1.16) - 2026-02-13
@@ -321,3 +359,22 @@
 - Archivos canónicos son documentos vivos — se actualizan conforme avanza el proyecto
 - Dev server: `npm run dev` → http://localhost:3000
 - API keys: .env.local (Gemini dev) / Vercel env vars (OpenAI prod)
+
+---
+
+## Referencias Cruzadas
+
+Este archivo registra **el estado** del proyecto. Los otros documentos canónicos definen qué, cómo y por qué.
+
+| Documento | Relación con progress.txt |
+|-----------|--------------------------|
+| [PRD.md](./PRD.md) | Define los criterios de éxito que este archivo marca como completados |
+| [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) | Define las fases que este archivo trackea como ✅ completadas |
+| [model.md](./model.md) | Registra las decisiones de diseño detrás de cada fase completada |
+| [LORE.md](./LORE.md) | La narrativa que guía todas las decisiones de contenido |
+| [TECH_STACK.md](./TECH_STACK.md) | Las herramientas usadas en cada fase |
+| [APP_FLOW.md](./APP_FLOW.md) | Los flujos que se implementaron fase por fase |
+| [FRONTEND_GUIDELINES.md](./FRONTEND_GUIDELINES.md) | Las reglas visuales aplicadas en cada componente |
+| [BACKEND_STRUCTURE.md](./BACKEND_STRUCTURE.md) | La arquitectura técnica implementada |
+
+> **Regla:** Al completar una fase, actualizar este archivo Y los documentos que correspondan.

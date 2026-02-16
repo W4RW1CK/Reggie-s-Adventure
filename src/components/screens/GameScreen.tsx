@@ -14,6 +14,7 @@ import { STAT_MAX, STAT_MIN } from '@/lib/constants';
 import { ChatBox } from '../chat/ChatBox';
 import { useChat } from '@/hooks/useChat';
 import { useChiptuneAudio } from '@/hooks/useChiptuneAudio';
+import { ErrorBoundary } from '../ErrorBoundary';
 import classNames from 'classnames';
 
 interface GameScreenProps {
@@ -207,16 +208,18 @@ export default function GameScreen({
                 </div>
 
                 {/* Chat Overlay */}
-                <ChatBox
-                    isOpen={isChatOpen}
-                    onClose={toggleChat}
-                    messages={messages}
-                    onSendMessage={handleSendMessage}
-                    isLoading={isChatLoading}
-                    regenmonType={regenmon.type}
-                    regenmonName={regenmon.name}
-                    stats={regenmon.stats}
-                />
+                <ErrorBoundary>
+                    <ChatBox
+                        isOpen={isChatOpen}
+                        onClose={toggleChat}
+                        messages={messages}
+                        onSendMessage={handleSendMessage}
+                        isLoading={isChatLoading}
+                        regenmonType={regenmon.type}
+                        regenmonName={regenmon.name}
+                        stats={regenmon.stats}
+                    />
+                </ErrorBoundary>
 
             </div>
         </div>

@@ -13,6 +13,7 @@ export function useStatDecay({ stats, lastUpdated, onUpdateStats }: UseStatDecay
     const statsRef = useRef(stats);
     const lastUpdatedRef = useRef(lastUpdated);
     const onUpdateStatsRef = useRef(onUpdateStats);
+    const hasRunInitialDecay = useRef(false);
 
     useEffect(() => {
         statsRef.current = stats;
@@ -56,8 +57,9 @@ export function useStatDecay({ stats, lastUpdated, onUpdateStats }: UseStatDecay
 
     // 1. Initial Offline Decay (on mount/load)
     useEffect(() => {
-        // We need to wait for data to be loaded
-        if (!stats || !lastUpdated) return;
+        // We need to wait for data to be loaded and prevent multiple runs
+        if (!stats || !lastUpdated || hasRunInitialDecay.current) return;
+        hasRunInitialDecay.current = true;
 
         const currentStats = stats;
         const lastTime = lastUpdated;
@@ -72,8 +74,7 @@ export function useStatDecay({ stats, lastUpdated, onUpdateStats }: UseStatDecay
         ) {
             onUpdateStats(decayedStats);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []); // Run once on mount (conceptually), but guarded by stats availability
+    }, [stats, lastUpdated]); // React to data availability
 
     // 2. Active Interval Decay
     useEffect(() => {
@@ -82,7 +83,19 @@ export function useStatDecay({ stats, lastUpdated, onUpdateStats }: UseStatDecay
         const intervalId = setInterval(() => {
             if (!statsRef.current || !lastUpdatedRef.current) return;
 
-            const newStats = calculateDecay(statsRef.current, lastUpdatedRef.current);
+            // Inline calculateDecay logic here to avoid dependency
+            const now = Date.now();
+            const last = new Date(lastUpdatedRef.current).getTime();
+            const hoursElapsed = (now - last) / 3600000;
+            const decayAmount = Math.floor(hoursElapsed * DECAY_RATE_PER_HOUR);
+            
+            if (decayAmount <= 0) return;
+            
+            const newStats = {
+                espiritu: Math.max(STAT_MIN, Math.min(STAT_MAX, statsRef.current.espiritu - decayAmount)),
+                pulso: Math.max(STAT_MIN, Math.min(STAT_MAX, statsRef.current.pulso - decayAmount)),
+                hambre: Math.max(STAT_MIN, Math.min(STAT_MAX, statsRef.current.hambre + decayAmount)), // Hambre SUBE
+            };
 
             // If calculated stats differ from current, apply update
             if (
@@ -95,5 +108,5 @@ export function useStatDecay({ stats, lastUpdated, onUpdateStats }: UseStatDecay
         }, DECAY_INTERVAL_MS);
 
         return () => clearInterval(intervalId);
-    }, [stats, lastUpdated, calculateDecay]); // Re-create interval if base data changes (e.g. user action updates lastUpdated)
+    }, [stats, lastUpdated]); // Remove calculateDecay dependency
 }

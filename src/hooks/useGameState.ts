@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { RegenmonData, RegenmonStats, AppConfig } from '@/lib/types';
 import {
     loadRegenmon,
@@ -16,6 +16,7 @@ export function useGameState() {
     const [regenmon, setRegenmon] = useState<RegenmonData | null>(null);
     const [config, setConfig] = useState<AppConfig>({ musicEnabled: false, isFirstTime: true });
     const [loading, setLoading] = useState(true);
+    const pendingUpdatesRef = useRef<Partial<RegenmonStats>[]>([]);
 
     // Load initial data
     useEffect(() => {
@@ -31,17 +32,13 @@ export function useGameState() {
 
     // Wrapper to update stats state AND storage
     const handleUpdateStats = useCallback((newStats: RegenmonStats) => {
-        if (!regenmon) return;
-
-        const updatedRegenmon = {
-            ...regenmon,
-            stats: newStats,
-            lastUpdated: new Date().toISOString(),
-        };
-
-        setRegenmon(updatedRegenmon);
-        saveRegenmon(updatedRegenmon);
-    }, [regenmon]);
+        setRegenmon(current => {
+            if (!current) return null;
+            const updated = { ...current, stats: newStats, lastUpdated: new Date().toISOString() };
+            saveRegenmon(updated);
+            return updated;
+        });
+    }, []); // Remove regenmon dependency
 
     // Hook for decay
     useStatDecay({
@@ -70,42 +67,60 @@ export function useGameState() {
         saveConfigToStorage(newConfig);
     };
 
-    const updateStatsWithDeltas = (deltas: Partial<RegenmonStats>) => {
-        setRegenmon(prev => {
-            if (!prev) return null;
+    const updateStatsWithDeltas = useCallback((deltas: Partial<RegenmonStats>) => {
+        pendingUpdatesRef.current.push(deltas);
+        
+        // Debounce updates
+        const processUpdates = () => {
+            const allDeltas = pendingUpdatesRef.current;
+            pendingUpdatesRef.current = [];
+            
+            // Merge all pending deltas
+            const mergedDeltas = allDeltas.reduce((acc, delta) => {
+                Object.entries(delta).forEach(([key, value]) => {
+                    acc[key as keyof RegenmonStats] = (acc[key as keyof RegenmonStats] || 0) + value;
+                });
+                return acc;
+            }, {} as Partial<RegenmonStats>);
+            
+            setRegenmon(prev => {
+                if (!prev) return null;
 
-            const newStats = { ...prev.stats };
-            let hasChanges = false;
+                const newStats = { ...prev.stats };
+                let hasChanges = false;
 
-            (Object.entries(deltas) as [keyof RegenmonStats, number][]).forEach(([stat, amount]) => {
-                const currentVal = newStats[stat];
+                (Object.entries(mergedDeltas) as [keyof RegenmonStats, number][]).forEach(([stat, amount]) => {
+                    const currentVal = newStats[stat];
 
-                // Check limits based on delta direction
-                if (amount > 0 && currentVal >= STAT_MAX) return;
-                if (amount < 0 && currentVal <= STAT_MIN) return;
+                    // Check limits based on delta direction
+                    if (amount > 0 && currentVal >= STAT_MAX) return;
+                    if (amount < 0 && currentVal <= STAT_MIN) return;
 
-                const newVal = Math.max(STAT_MIN, Math.min(STAT_MAX, currentVal + amount));
+                    const newVal = Math.max(STAT_MIN, Math.min(STAT_MAX, currentVal + amount));
 
-                if (newVal !== currentVal) {
-                    newStats[stat] = newVal;
-                    hasChanges = true;
-                }
+                    if (newVal !== currentVal) {
+                        newStats[stat] = newVal;
+                        hasChanges = true;
+                    }
+                });
+
+                if (!hasChanges) return prev;
+
+                const updatedRegenmon = {
+                    ...prev,
+                    stats: newStats,
+                    lastUpdated: new Date().toISOString(),
+                };
+
+                // Side effect: save to storage
+                saveRegenmon(updatedRegenmon);
+
+                return updatedRegenmon;
             });
-
-            if (!hasChanges) return prev;
-
-            const updatedRegenmon = {
-                ...prev,
-                stats: newStats,
-                lastUpdated: new Date().toISOString(),
-            };
-
-            // Side effect: save to storage
-            saveRegenmon(updatedRegenmon);
-
-            return updatedRegenmon;
-        });
-    };
+        };
+        
+        setTimeout(processUpdates, 0); // Next tick
+    }, []);
 
     const toggleMusic = () => {
         const newConfig = { ...config, musicEnabled: !config.musicEnabled };

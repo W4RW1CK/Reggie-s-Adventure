@@ -1,10 +1,12 @@
 # 🔨 IMPLEMENTATION_PLAN — Reggie's Adventure
-> **Versión actual:** v0.2 — La Voz
-> **Última actualización:** 2026-02-15
-> **Estado:** Sesión 2 — Completada (Todas las fases)
+> **Versión actual:** v0.3 — La Conexión
+> **Última actualización:** 2026-02-16
+> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `EN PLANIFICACIÓN`
 >
-> 📜 **Narrativa:** Fases 17-28 implementan la capa conversacional cuya personalidad,
-> tono y contenido se definen en [LORE.md](./LORE.md).
+> 📜 **Narrativa:** [LORE.md](./LORE.md) — toda fase que toque personalidad, diálogo o tono debe consultarlo
+> 📋 **Features:** [PRD.md](./PRD.md) — cada fase implementa uno o más features del PRD
+> 🧠 **Decisiones:** [model.md](./model.md) — el "por qué" detrás de cada fase
+> 📊 **Progreso:** [progress.txt](./progress.txt) — las fases completadas se marcan allá
 
 ---
 
@@ -344,7 +346,8 @@
          Bloque 4 — ESTADO ACTUAL:
          - Espíritu (Esperanza) = [X]/100 — cuánto crees en la regeneración
          - Pulso (Energía vital) = [X]/100 — tu fuerza para existir
-         - Hambre (Necesidad) = [X]/100 — cuánto necesitas datos limpios
+         - Esencia (Nutrición) = [X]/100 — cuánta energía pura tienes `→ S3: era "Hambre (Necesidad)"`
+         - Fragmentos = [X] — restos de energía antigua `→ S3: nuevo`
 
          Bloque 5 — REGLAS:
          - Máximo 50 palabras, primera persona, español (adapta si cambian)
@@ -371,7 +374,7 @@
          Bloque 9 — REACTIVIDAD POR STATS (LORE.md → Stats y Lore):
          - Espíritu < 30: duda del futuro, ve lejos la regeneración
          - Pulso < 30: respuestas cortas, cansancio, economiza palabras
-         - Hambre > 70: irritable, menciona hambre indirectamente
+         - Esencia < 30: débil, menciona necesidad de purificación `→ S3: era "Hambre > 70"`
          - Todo crítico: frases mínimas, casi no puede hablar
 
          Bloque 10 — ESPERANZA BASADA EN ESPÍRITU (LORE.md → Espíritu):
@@ -492,8 +495,8 @@
       → Maneja cooldown (3s frontend)
       → Aplica stat changes:
         - spiritChange del AI → Espíritu (Esperanza ±5)
-        - pulse -2 fijo → Pulso (Energía vital)
-        - hunger +1 fijo → Hambre (Necesidad)
+        - pulse -2 fijo → Pulso (Energía vital) `→ S3: AI-driven ±5`
+        - hunger +1 fijo → Hambre (Necesidad) `→ S3: Esencia, AI-driven -1 a -4`
       → Guarda/carga historial en localStorage (max 50)
       → Detecta playerName en respuesta → guarda (parte de La Conexión)
       → Saludo automático (solo primera vez): usa personalidad del tipo
@@ -518,7 +521,7 @@
       → ChatBox aparece con fade in (sobre el paisaje del mundo digital)
       → Al cerrar: fade out, botones reaparecen con animación sutil
 22.3  Implementar stats compactos con nombres lore:
-      → Modo: 🔮 80 | 💛 50 | 🍎 30 (mini barras en fila horizontal)
+      → Modo: 🔮 80 | 💛 50 | 🌱 30 (mini barras en fila horizontal)
       → "Día X de aventura" visible pero discreto
 22.4  Cierres del chat:
       → Botón "✕ Cerrar"
@@ -553,8 +556,8 @@
 ```
 24.1  Conectar stat changes del chat con useGameState:
       → spiritChange (±5 del AI) → Espíritu (Esperanza: cuánto cree en la regeneración)
-      → pulse -2 fijo → Pulso (Energía vital: hablar consume energía, existir la drena)
-      → hunger +1 fijo → Hambre (Necesidad: necesita datos limpios para nutrirse)
+      → pulse -2 fijo → Pulso (Energía vital: hablar consume energía) `→ S3: AI-driven ±5`
+      → hunger +1 fijo → Hambre (Necesidad: necesita datos limpios) `→ S3: Esencia, AI-driven -1 a -4`
 24.2  Feedback flotante:
       → Mismo sistema existente (+X / -X flotante)
       → Mostrar cambios de los 3 stats con contexto
@@ -693,32 +696,543 @@
 
 ---
 
+## Sesión 3 — La Conexión
+
+> **Estrategia:** Implementar por capas: Setup → Datos → Auth → Economía → UI → Chat → Persistencia → Visual → Pulido.
+> Cada fase es un hito verificable. No avanzar sin verificar la anterior.
+>
+> 📜 **Referencia narrativa:** [LORE.md](./LORE.md) (Fragmentos, Purificación, Esencia, Memorias)
+> 📋 **Decisiones de diseño:** [model.md](./model.md) → Sección "Sesión 3"
+> 🎮 **Demo de referencia:** https://regenmon-final.vercel.app/
+> 🎮 **App actual (v0.2):** https://reggie-s-adventure.vercel.app/
+>
+> ⚠️ **Cambios mayores vs S2:**
+> - Hambre → **Esencia** (lógica invertida: 100=bien, 0=mal)
+> - Stats por chat: todos **AI-driven** (no más valores fijos)
+> - Botones: **Purificar/⚙️/Conversar** (Entrenar/Alimentar/Descansar eliminados)
+> - Moneda: **Fragmentos 💠** (reemplaza Estrellas)
+> - Auth: **Privy** (Google + Email + Passkey)
+> - Persistencia: **Supabase** (híbrido con localStorage)
+> - Temas: **Dark (NES)** + **Light (Game Boy Color)**
+
+### Fase 32: Setup — Dependencias y Variables de Entorno
+
+```
+32.1  Instalar dependencias de S3:
+      → pnpm add @privy-io/react-auth @supabase/supabase-js
+32.2  Crear cuenta propia en privy.io:
+      → Obtener App ID y App Secret
+      → Configurar login methods: Google, Email, Passkey
+32.3  Crear proyecto en supabase.com:
+      → Obtener Project URL y Anon Key
+      → Crear tabla "regenmons" según schema de BACKEND_STRUCTURE.md
+      → Crear index idx_regenmons_privy_user
+32.4  Actualizar .env.local:
+      → NEXT_PUBLIC_PRIVY_APP_ID=...
+      → PRIVY_APP_SECRET=...
+      → NEXT_PUBLIC_SUPABASE_URL=...
+      → NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+32.5  Configurar mismas variables en Vercel Environment Variables
+32.6  Actualizar .gitignore si es necesario
+32.7  Verificar: app corre sin errores con nuevas dependencias
+```
+
+### Fase 33: Datos — Renombrar Hambre → Esencia + Invertir Lógica
+
+```
+33.1  Actualizar src/lib/types.ts:
+      → Renombrar campo "hambre" a "esencia" en RegenmonData.stats
+      → Agregar campo "fragmentos: number" a RegenmonData
+      → Agregar campo "memories: Memory[]" a RegenmonData
+      → Agregar campo "theme: 'dark' | 'light'" a AppConfig
+      → Agregar campo "textSize: 'sm' | 'base' | 'lg'" a AppConfig
+      → Actualizar ChatResponse: agregar pulseChange, essenceChange, fragmentsEarned
+33.2  Actualizar src/lib/constants.ts:
+      → STAT_INITIAL_ESSENCE = 50 (reemplaza STAT_INITIAL_HUNGER)
+      → FRAGMENTS_INITIAL = 100
+      → FRAGMENTS_PURIFY_COST = 10
+      → PURIFY_ESSENCE_GAIN = 30
+      → PURIFY_SPIRIT_GAIN = 5
+      → PURIFY_PULSE_GAIN = 10
+      → CHAT_ESSENCE_CHANGE_MIN = -4
+      → CHAT_ESSENCE_CHANGE_MAX = -1
+      → CHAT_PULSE_CHANGE_MIN = -5
+      → CHAT_PULSE_CHANGE_MAX = 5
+      → CHAT_FRAGMENTS_MIN = 0
+      → CHAT_FRAGMENTS_MAX = 5
+      → PULSE_REGEN_RATE_PER_HOUR = 3 (nuevo: regen pasiva)
+      → Eliminar: CHAT_PULSE_CHANGE (-2 fijo), CHAT_HUNGER_CHANGE (+1 fijo)
+33.3  Actualizar src/lib/storage.ts:
+      → Renombrar funciones de hambre → esencia
+      → Agregar saveFragments(), loadFragments()
+      → Agregar saveMemories(), loadMemories() (ampliar Fase 26)
+      → Agregar saveTheme(), loadTheme()
+      → Agregar saveTextSize(), loadTextSize()
+      → Función de migración: si datos existentes tienen "hambre",
+        convertir a "esencia" con lógica invertida (esencia = 100 - hambre)
+33.4  Actualizar src/hooks/useGameState.ts:
+      → Usar "esencia" en lugar de "hambre"
+      → Agregar estado de fragmentos
+      → Agregar función purify() con validaciones
+33.5  Actualizar src/hooks/useStatDecay.ts:
+      → Esencia BAJA con el tiempo (100=bien → baja como los demás)
+      → Pulso: aplicar regen pasiva (PULSE_REGEN_RATE_PER_HOUR)
+        que contrarresta parcialmente el decaimiento
+      → Eliminar lógica antigua donde Hambre subía
+33.6  Verificar: datos se guardan/cargan correctamente
+      → Probar migración: abrir app con datos S2 → esencia se calcula bien
+      → Probar que Fragmentos inician en 100
+      → Probar decaimiento: Esencia baja, Pulso tiene regen pasiva
+```
+
+### Fase 34: Auth — Privy Integration
+
+```
+34.1  Crear src/hooks/useAuth.ts:
+      → Wrapper sobre Privy hooks
+      → Estado: isLoggedIn, privyUserId, login(), logout(), isReady
+      → login() abre modal de Privy
+      → logout() cierra sesión y limpia estado
+34.2  Crear src/components/auth/LoginButton.tsx:
+      → Componente que muestra botón de login o info del usuario
+      → Reutilizable en Settings y en el flujo de inicio
+34.3  Actualizar src/app/layout.tsx:
+      → Envolver la app con PrivyProvider
+      → Config: appId, loginMethods ['google', 'email', 'passkey']
+      → Appearance: theme 'dark'
+34.4  Actualizar flujo en useScreenManager.ts:
+      → Tras "Press Start":
+        Si ya logueado → directo a juego (o historia si 1ra vez)
+        Si no logueado → mostrar modal Privy con opción "Continuar sin cuenta"
+      → "Continuar sin cuenta" → modo demo (localStorage only)
+34.5  Verificar:
+      → Login con Google funciona
+      → Login con Email funciona
+      → "Continuar sin cuenta" lleva al flujo normal sin login
+      → Sesión persiste tras recargar (skip modal)
+      → Logout funciona desde Settings
+```
+
+### Fase 35: Persistencia — Supabase + Sync Híbrido
+
+```
+35.1  Crear src/lib/supabase.ts:
+      → Inicializar cliente Supabase
+      → getRegenmon(privyUserId): lee datos del usuario
+      → upsertRegenmon(privyUserId, data): crea o actualiza
+35.2  Crear src/lib/sync.ts:
+      → syncToSupabase(privyUserId, localData): escribe a Supabase (debounced 2s)
+      → syncFromSupabase(privyUserId): lee de Supabase → sobreescribe localStorage
+      → migrateLocalToSupabase(privyUserId): migración única al hacer login
+        (lee localStorage → crea row en Supabase → marca como migrado)
+35.3  Actualizar src/hooks/useGameState.ts:
+      → Si logueado: leer de Supabase al iniciar, sync cambios a Supabase (async)
+      → Si no logueado: solo localStorage (como antes)
+      → Al hacer login por primera vez: ejecutar migración
+35.4  Verificar:
+      → Modo demo: datos solo en localStorage
+      → Login: datos migran a Supabase
+      → Cambios se sincronizan a Supabase (verificar en dashboard)
+      → Abrir en otro dispositivo con misma cuenta → datos aparecen
+      → Conflicto: Supabase siempre gana
+```
+
+### Fase 36: Economía — Fragmentos 💠
+
+```
+36.1  Crear src/hooks/useFragments.ts:
+      → Estado: balance (number)
+      → addFragments(amount): suma al balance
+      → spendFragments(amount): resta si hay suficientes, retorna boolean
+      → canAfford(amount): boolean
+      → Sincroniza con localStorage y Supabase (si logueado)
+36.2  Crear src/components/ui/FragmentCounter.tsx:
+      → Muestra "💠 100 Fragmentos" si logueado
+      → Muestra "💠 --- Fragmentos" si no logueado
+      → Animación sutil cuando cambia el balance
+36.3  Integrar FragmentCounter en header de GameScreen
+36.4  Implementar botón "🔍 Buscar Fragmentos":
+      → Solo visible cuando fragmentos === 0
+      → Al presionar: otorga 15 💠, desaparece
+      → Feedback: "+15 💠" flotante + reacción lore del Regenmon
+      → Posición: debajo de botones principales (Purificar/⚙️/Conversar)
+      → Animación: partículas convergiendo (búsqueda)
+      → Sincroniza con localStorage y Supabase
+36.5  Verificar:
+      → Balance inicia en 100 al crear Regenmon
+      → Se muestra correctamente en header
+      → "---" cuando no hay login
+      → Balance se guarda/carga de localStorage/Supabase
+      → Botón "Buscar Fragmentos" aparece a 0, otorga 15, desaparece
+      → Botón NO aparece si tienes >0 Fragmentos
+```
+
+### Fase 37: Acción — Purificar (reemplaza Alimentar/Entrenar/Descansar)
+
+```
+37.1  Actualizar src/components/regenmon/ActionButtons.tsx:
+      → Eliminar botones Entrenar, Alimentar, Descansar
+      → Nuevo layout: [🌀 Purificar (10💠)]  [⚙️]  [💬 Conversar]
+      → Purificar: disabled si fragmentos < 10 o Esencia >= 100
+        Tooltip: "Necesitas 10 💠" o "Esencia al máximo"
+      → ⚙️: pequeño, solo icono, abre Settings
+      → Conversar: mantener lógica existente de toggle chat
+37.2  Implementar lógica de Purificar:
+      → Restar 10 Fragmentos
+      → Esencia +30 (clamp 100), Espíritu +5, Pulso +10
+      → Feedback flotante: "+30 🌱" con efecto visual
+      → Reacción del Regenmon: texto lore-appropriate contextual
+        (no "¡Ñam ñam!" — algo como "Los datos se sienten... más puros")
+37.3  Ocultar Purificar y ⚙️ durante chat (mantener comportamiento actual)
+37.4  Verificar:
+      → Purificar descuenta 10💠 y sube stats correctamente
+      → Botón se desactiva cuando no hay fondos o Esencia al max
+      → Feedback visual funciona
+      → Purificar y ⚙️ desaparecen al abrir chat
+```
+
+### Fase 38: Chat — Stats AI-Driven + Fragmentos
+
+```
+38.1  Actualizar src/lib/ai/prompts.ts:
+      → Bloque 4 (Estado Actual): Esencia en lugar de Hambre, agregar Fragmentos
+      → Bloque 9 (Reactividad): Esencia < 30 = debilitado (no Hambre > 70)
+      → Bloque 12 (Formato respuesta): Agregar pulseChange, essenceChange, fragmentsEarned
+      → Instrucción: essenceChange SIEMPRE negativo (-1 a -4)
+      → Instrucción: fragmentsEarned 0-5, más difícil al acercarse a 100
+      → Instrucción: pulseChange -5 a +5, conversaciones tranquilas = +, intensas = -
+38.2  Actualizar src/app/api/chat/route.ts:
+      → Parsear nuevos campos de la respuesta: pulseChange, essenceChange, fragmentsEarned
+      → Fallbacks: pulseChange=0, essenceChange=-1, fragmentsEarned=0
+      → Validar rangos: pulseChange [-5,+5], essenceChange [-4,-1], fragmentsEarned [0,5]
+38.3  Actualizar src/lib/ai/gemini.ts y openai.ts:
+      → Parsear los nuevos campos del JSON response
+      → Mantener backward compatibility (si campo falta, usar fallback)
+38.4  Actualizar src/hooks/useChat.ts:
+      → Aplicar todos los cambios de stats desde la respuesta IA:
+        Espíritu += spiritChange
+        Pulso += pulseChange (ya no -2 fijo)
+        Esencia += essenceChange (ya no +1 hambre fijo)
+        Fragmentos += fragmentsEarned
+      → Eliminar lógica de valores fijos de S2
+38.5  Actualizar feedback flotante:
+      → Mostrar cambios de los 4 valores (Espíritu, Pulso, Esencia, Fragmentos)
+      → "+3 💠" cuando gana fragmentos
+      → No mostrar "+0" (solo cambios no-cero)
+38.6  Verificar:
+      → Enviar mensaje → recibir respuesta con 4 campos de stats
+      → Espíritu y Pulso pueden subir o bajar
+      → Esencia siempre baja (-1 a -4)
+      → Fragmentos se ganan esporádicamente (0-5)
+      → Feedback flotante muestra cada cambio
+      → Stats se actualizan correctamente en la UI
+```
+
+### Fase 39: UI — Panel de Settings (⚙️)
+
+```
+39.1  Crear src/components/settings/SettingsPanel.tsx:
+      → Panel expandible (slide-in o modal)
+      → Estilo: NES container (nes-container is-dark/is-light)
+      → Opciones:
+        🎵 Música: Toggle on/off (migrar desde MusicToggle actual)
+        🔄 Reiniciar: Botón → modal de confirmación (migrar desde ResetButton)
+        📝 Cambiar nombre: Campo inline, validaciones 2-15 chars (migrar desde NameEditor)
+        🚪 Sesión: "Iniciar Sesión" (→ Privy) / "Cerrar Sesión"
+        🔤 Texto: A+ / A- para agrandar/disminuir (sin romper UI)
+        🌙/☀️ Tema: Toggle Dark (NES) / Light (GBC)
+39.2  Crear src/hooks/useTheme.ts:
+      → Estado: theme ('dark' | 'light'), textSize ('sm' | 'base' | 'lg')
+      → toggleTheme(): alterna Dark/Light
+      → setTextSize(size): cambia tamaño
+      → Persiste en localStorage (y Supabase si logueado)
+      → Aplica clase CSS al <html> o <body> para tema global
+39.3  Integrar SettingsPanel en GameScreen:
+      → Botón ⚙️ abre/cierra el panel
+      → Se oculta durante chat
+      → Cierre: botón ✕ o clic fuera
+39.4  Migrar MusicToggle del header al Settings:
+      → Remover toggle independiente del header
+      → Música se controla solo desde Settings
+39.5  Verificar:
+      → Todas las opciones funcionan
+      → Tema cambia correctamente (Dark ↔ Light)
+      → Tamaño de texto cambia sin romper UI
+      → Login/logout desde Settings funciona
+      → Reiniciar limpia todo (incluyendo Supabase si logueado)
+      → Cambio de nombre funciona (1 sola vez)
+```
+
+### Fase 40: Visual — Backgrounds y Sprites Reworked
+
+> **Primero la base visual.** Los nuevos assets definen la estética; los temas Dark/Light se derivan de ellos.
+> 📜 **Referencia obligatoria:** [LORE.md → Los Paisajes como Zonas del Mundo Digital](./LORE.md#los-paisajes-como-zonas-del-mundo-digital)
+> 🎨 **Colores por tipo:** [FRONTEND_GUIDELINES.md → Colores por Tipo](./FRONTEND_GUIDELINES.md)
+
+```
+40.1  Reconstruir src/components/game/GameBackground.tsx:
+      → Paisajes adaptados al lore actualizado (ver LORE.md → Los Paisajes):
+        ⚡ Llanura Eléctrica: Stats altos=cielo despejado, corrientes de luz / Stats bajos=tormentas, estática
+        🔥 Volcán Ardiente: Stats altos=volcán dormido, lava serena, cielo naranja / Stats bajos=erupciones, cielo rojo
+        ❄️ Montaña Nevada: Stats altos=nieve cristalina, aurora boreal / Stats bajos=ventisca ciega, hielo negro
+      → Diseñar con AMBOS temas en mente desde el inicio:
+        Dark: paisajes oscuros/nocturnos (NES)
+        Light: paisajes luminosos/pasteles (GBC)
+      → Mantener variaciones por estado emocional:
+        Stats altos → mundo regenerándose (cielo claro, corrientes de luz)
+        Stats bajos → corrupción visible (tormentas, erupciones, ventiscas)
+40.2  Rework src/components/regenmon/RegenmonSVG.tsx:
+      → 24 sprites total: 8 estados × 3 tipos (ver FRONTEND_GUIDELINES.md → Estados Visuales)
+      → Mantener estética Kirby-esque pero integrar mejor con el lore
+      → Los sprites deben funcionar en ambos temas (Dark NES + Light GBC)
+      → Estados por promedio: Eufórico(≥90), Contento(≥70), Neutro(≥30), Decaído(≥10), Crítico(<10)
+      → Estados críticos individuales: Sin Esperanza(🔮<10), Sin Energía(💛<10), Sin Nutrición(🌱<10)
+      → Lógica: stat individual <10 override promedio; múltiples críticos → el más bajo gana
+      → Empate: Espíritu > Pulso > Esencia
+      → Implementar getSpriteState() según BACKEND_STRUCTURE.md
+40.3  Verificar:
+      → Cada tipo tiene paisaje Dark y Light
+      → Paisajes cambian según stats
+      → Sprites se ven bien en ambos temas
+      → Transiciones de estado visuales son fluidas
+```
+
+### Fase 41: Visual — Tema Light (Game Boy Color)
+
+> **Ahora que los assets existen**, definir las variables CSS y aplicar el tema Light sobre la nueva estética.
+
+```
+41.1  Actualizar src/app/globals.css:
+      → Definir variables CSS para tema Light (GBC):
+        --bg-light: #f5f0e1, --bg-light-secondary: #e8dcc8
+        --surface-light: #d4c5a9, --text-primary-light: #2a2a2a
+        --border-gbc: #8b8370 (ver FRONTEND_GUIDELINES.md)
+      → Crear clases .theme-dark y .theme-light
+      → Aplicar variables según tema activo
+      → Los colores deben complementar los nuevos backgrounds de Fase 40
+41.2  Actualizar todos los componentes que usan colores hardcodeados:
+      → Reemplazar con variables CSS que responden al tema
+      → Stats, botones, modales, chat, headers
+41.3  Verificar:
+      → Toggle Dark/Light cambia toda la UI
+      → Contraste WCAG AA se mantiene en ambos temas
+      → Chat se ve bien en ambos temas
+      → Modales y Settings se adaptan al tema
+      → Los nuevos backgrounds (Fase 40) se integran con ambos temas
+```
+
+### Fase 42: Header — Reestructurar Layout Superior
+
+```
+42.1  Actualizar header de GameScreen:
+      → Nuevo layout: 💠 Balance de Fragmentos (izquierda)
+      → Identidad del usuario (derecha, discreto, EVOLUTIVA):
+        No logueado → no se muestra nada
+        Logueado + nombre NO descubierto → email/método auth truncado
+        Logueado + nombre descubierto → nombre del jugador (fade de transición)
+      → Remover 🎵 toggle de música del header (migrado a Settings)
+      → "v0.3 — La Conexión" solo si cabe sin saturar
+42.2  Crear src/components/ui/UserIdentity.tsx:
+      → Lógica: playerName ? playerName : privyUser.email (truncado)
+      → Animación identity-reveal al cambiar de email → nombre
+      → No renderiza nada si no logueado
+42.3  Integrar FragmentCounter.tsx + UserIdentity.tsx en header
+42.4  Verificar:
+      → Header no está saturado en mobile
+      → Fragmentos visibles y actualizados
+      → Se ve bien en ambos temas
+```
+
+### Fase 43: Memorias — Infraestructura (preparación S4)
+
+```
+43.1  Expandir sistema de memorias de Fase 26:
+      → Tipos de memoria: nombre, gustos, emociones, datos_personales, tema_frecuente
+      → Interface: { key: string, value: string, type: MemoryType, discoveredAt: number }
+      → Máximo razonable de memorias (50?)
+43.2  Actualizar system prompt (prompts.ts):
+      → Bloque 8 (Curiosidad y Memorias): enviar memorias existentes como contexto
+      → Instrucción: el Regenmon puede hacer referencia sutil a memorias pasadas
+      → Instrucción: las memorias influyen en el tono y personalización
+43.3  Agregar detección básica de memorias en useChat.ts:
+      → Si la IA detecta un dato (gusto, emoción, dato personal) → guardar como memoria
+      → Agregar campo "memories" al ChatResponse (array de {key, value} nuevos)
+      → NO mostrar en UI todavía (invisible al usuario en S3)
+43.4  Sync memorias con Supabase (campo JSONB en tabla regenmons)
+43.5  Verificar:
+      → Memorias se guardan cuando la IA detecta datos del usuario
+      → Memorias persisten entre sesiones
+      → El Regenmon hace referencia a memorias en conversaciones futuras
+      → No hay sección visible de memorias en UI (solo infraestructura)
+```
+
+### Fase 44: Evolución — Infraestructura (preparación S4)
+
+```
+44.1  Definir estructura de datos para evolución:
+      → Interface: { totalMemories: number, stage: number, threshold: number }
+      → Stages: 1 (base), 2 (al alcanzar X memorias), 3 (al alcanzar Y memorias)
+      → Thresholds: por definir en S4
+44.2  Agregar campos de evolución a RegenmonData y Supabase schema
+44.3  NO implementar lógica de evolución visual (queda para S4)
+44.4  Verificar: estructura almacena y lee correctamente
+```
+
+### Fase 45: Tutorial y Creación — Actualizar para S3
+
+```
+45.1  Actualizar TutorialModal.tsx:
+      → Agregar sección sobre Fragmentos 💠 y Purificar
+      → Actualizar instrucciones: Purificar en lugar de Alimentar/Entrenar/Descansar
+      → Mencionar Settings (⚙️) y sus opciones
+      → Mencionar temas Dark/Light
+45.2  Actualizar CreationScreen.tsx:
+      → Datos iniciales incluyen fragmentos: 100 y esencia: 50
+      → Guardar theme y textSize en AppConfig al crear
+45.3  Actualizar datos guardados al presionar "¡Despertar!":
+      → Agregar fragmentos: 100
+      → Usar esencia (no hambre)
+      → Agregar memories: []
+45.4  Verificar:
+      → Tutorial muestra info actualizada
+      → Nuevo Regenmon tiene 100 Fragmentos y 50 Esencia
+```
+
+### Fase 45b: Historial de Actividades (Bonus)
+
+```
+45b.1  Crear src/lib/activityHistory.ts:
+       → Interface ActivityEntry { action, fragmentChange, timestamp }
+       → addActivity(action, fragmentChange): guarda en localStorage (max 10, FIFO)
+       → loadHistory(): lee historial
+       → clearHistory(): limpia (llamada desde reset)
+       → Sync a Supabase si logueado (campo activity_history JSONB)
+45b.2  Crear src/components/ui/ActivityHistory.tsx:
+       → Sección colapsable "📜 Historial"
+       → Toggle: título clickeable para expandir/colapsar
+       → Cada entrada: icono + cambio 💠 + tiempo relativo
+         🌀 Purificó → "-10 💠" → "hace 5 min"
+         💬 Conversó → "+3 💠" → "hace 20 min"
+         🔍 Buscó Fragmentos → "+15 💠" → "hace 1h"
+       → Max 10 entradas visibles
+       → Estilo: NES container sutil
+45b.3  Integrar registro de actividades:
+       → En Purificar: addActivity('purify', -10)
+       → En Chat (si fragmentsEarned > 0): addActivity('chat', fragmentsEarned)
+       → En Buscar Fragmentos: addActivity('search_fragments', 15)
+45b.4  Integrar ActivityHistory en GameScreen:
+       → Posición: debajo de botones de acción
+       → Se oculta durante chat (como Purificar y ⚙️)
+       → Se limpia con Reset
+45b.5  Verificar:
+       → Historial se llena al hacer acciones
+       → Max 10 entradas (las viejas se eliminan)
+       → Persiste al recargar
+       → Se sincroniza con Supabase si logueado
+       → Se limpia con Reset
+       → Se oculta durante chat
+```
+
+### Fase 46: Responsive y Pulido S3
+
+```
+46.1  Mobile:
+      → Verificar que 3 botones (Purificar/⚙️/Conversar) caben en una fila
+        Si no caben → ajustar tamaños o layout
+      → Settings panel no tapa contenido crítico
+      → Fragmentos en header legibles en pantallas pequeñas
+      → Teclado virtual no tapa chat (mantener visualViewport)
+46.2  Desktop:
+      → Settings panel bien posicionado
+      → Tema GBC se ve premium en pantalla grande
+46.3  Transiciones:
+      → Toggle tema: transición suave (no flash)
+      → Settings: slide-in/out animado
+      → Fragmentos: animación sutil al cambiar balance
+46.4  Verificar: responsive en múltiples resoluciones para ambos temas
+```
+
+### Fase 47: Auditoría S3
+
+```
+47.1  Auditoría de accesibilidad:
+      → Contraste WCAG AA en AMBOS temas (Dark y Light)
+      → aria-labels en nuevos botones (Purificar, ⚙️ Settings)
+      → Settings panel: focus trap, tab order
+      → FragmentCounter: aria-live para cambios
+      → Tamaño de texto: verificar que A+/A- no rompe layout
+47.2  Auditoría de seguridad:
+      → Privy token no expuesto en frontend
+      → Supabase anon key: Row Level Security configurado
+      → API keys no en código
+      → Rate limiting sigue funcional
+47.3  Auditoría de lore (S3):
+      → Purificar: reacción del Regenmon es lore-appropriate
+      → Stats AI-driven: Esencia siempre baja, Fragmentos esporádicos
+      → Memorias: se detectan y usan en contexto
+      → El Regenmon nunca dice "corrupción", "spam" (reglas LORE.md)
+47.4  Auditoría de persistencia:
+      → Modo demo → login: migración funciona
+      → Multi-dispositivo: datos se sincronizan vía Supabase
+      → Conflicto localStorage vs Supabase: Supabase gana
+      → Logout → datos locales limpios
+47.5  Testing completo:
+      → Flujo completo: nuevo usuario → demo → login → jugar → purificar → chat
+      → Edge cases: sin Fragmentos, Esencia al max, stats críticos, API falla
+      → Ambos temas en mobile y desktop
+      → Migración de datos S2 → S3
+```
+
+### Fase 47b: Ajustes Pre-Deploy (si aplica)
+
+> **Fase deliberadamente abierta.** Después de la auditoría, si algo no se ve bien,
+> no se siente bien, o simplemente no convence — se corrige aquí antes de salir a producción.
+
+```
+47b.1  Revisión personal del usuario (w4rw1ck):
+       → Probar la app completa como jugador
+       → Identificar cualquier detalle visual, funcional o de UX que no convenza
+       → Listar ajustes necesarios
+47b.2  Aplicar correcciones identificadas
+47b.3  Verificar que los cambios no rompan nada existente
+47b.4  Re-verificar en mobile y desktop
+47b.5  ✅ Aprobación final del usuario → continuar a Fase 48
+```
+
+> **Nota:** Esta fase puede no ser necesaria. Si la auditoría (Fase 47) sale limpia
+> y todo se ve como debe, se salta directo a Fase 48. Existe como red de seguridad.
+
+### Fase 48: Cierre de Sesión 3
+
+```
+48.1  Actualizar documentación canónica con estado final:
+      → PRD: marcar features completados
+      → progress.txt: marcar todas las fases
+      → model.md: agregar diario de desarrollo S3
+48.2  Crear tag de versión v0.3
+48.3  Deploy a producción y verificación manual
+48.4  Verificar URL pública funcional con auth y persistencia
+```
+
+---
+
 ## Sesiones Futuras (estructura general)
-o
-### Sesión 3 — La Conexión
-```
-- Instalar Privy SDK + Supabase
-- Crear sistema de auth
-- Migrar localStorage → base de datos
-- Implementar sistema de ⭐ Estrellas (recurso de regeneración)
-- Crear endpoint /api/feed
-```
 
 ### Sesión 4 — La Evolución
 ```
-- Diseñar etapas de evolución por tipo (formas de la energía antigua)
-- Implementar sistema de memorias profundo (Fase 26 como base)
-- Implementar IA multimodal (fotos)
-- Crear sistema de misiones (actos de regeneración)
-- Crear sistema de scoring
+- Evolución visual por memorias acumuladas (mín. 3 etapas por tipo)
+- Entrenamiento: subir fotos de código → IA evalúa → score + Fragmentos + stats
+- Sistema de misiones completables con recompensas
+- Personalización IA profunda basada en memorias
+- Sección visible de "Memorias" en la UI
+- Barra de evolución visible (progreso hacia siguiente etapa)
 ```
 
 ### Sesión 5 — El Encuentro
 ```
-- Crear endpoints sociales
-- Implementar perfiles públicos (La Conexión se expande)
-- Crear feed de descubrimiento
-- Implementar interacciones entre Regenmons
+- Perfiles públicos (URL compartible por Regenmon)
+- Feed de descubrimiento (grid con otros Regenmons)
+- Interacciones sociales (saludar, regalar, jugar)
 ```
 
 ---
@@ -729,8 +1243,45 @@ o
 - **Seguir el orden de niveles.** Core → Completo → Excelente → Pulido final.
 - **Verificar al final de cada fase** antes de avanzar.
 - **Si algo falla**, resolver antes de continuar.
-- **Actualizar progress.txt** al completar cada fase.
-- **Consultar LORE.md** siempre que se toque personalidad, diálogo, stats o tono.
+- **Actualizar [progress.txt](./progress.txt)** al completar cada fase.
+- **Consultar [LORE.md](./LORE.md)** siempre que se toque personalidad, diálogo, stats o tono.
 - **Este archivo se actualiza** al planificar cada nueva sesión en detalle.
-- **API keys NUNCA en el código.** Solo .env.local o Vercel.
+- **API keys NUNCA en el código.** Solo .env.local o Vercel (ver [TECH_STACK.md → Variables de Entorno](./TECH_STACK.md)).
 - **El usuario maneja el deploy.** Solo auditoría rigurosa previa.
+
+---
+
+## Referencias Cruzadas
+
+Este archivo define **en qué orden** se construye todo. Cada fase toca múltiples documentos canónicos.
+
+| Documento | Relación con IMPLEMENTATION_PLAN.md |
+|-----------|-------------------------------------|
+| [PRD.md](./PRD.md) | Cada fase implementa uno o más features (F1.1, F2.1, F3.1, etc.) |
+| [LORE.md](./LORE.md) | Fases que tocan IA, chat, stats o UI narrativa deben consultarlo |
+| [APP_FLOW.md](./APP_FLOW.md) | Los flujos definen el comportamiento esperado que cada fase implementa |
+| [FRONTEND_GUIDELINES.md](./FRONTEND_GUIDELINES.md) | Cada fase visual (componentes, layouts, temas) sigue estas guías |
+| [BACKEND_STRUCTURE.md](./BACKEND_STRUCTURE.md) | Las fases técnicas (schemas, APIs, sync) implementan lo definido allá |
+| [TECH_STACK.md](./TECH_STACK.md) | Las fases de setup instalan dependencias con las versiones listadas allá |
+| [model.md](./model.md) | Las decisiones de diseño justifican por qué cada fase existe |
+| [progress.txt](./progress.txt) | Al completar una fase aquí, se marca como ✅ allá |
+
+### Mapa de fases → documentos
+
+| Fases | Documentos principales consultados |
+|-------|-------------------------------------|
+| 1-16 (S1) | [TECH_STACK](./TECH_STACK.md), [FRONTEND](./FRONTEND_GUIDELINES.md), [BACKEND](./BACKEND_STRUCTURE.md), [APP_FLOW](./APP_FLOW.md) |
+| 17-31 (S2) | [LORE](./LORE.md), [BACKEND](./BACKEND_STRUCTURE.md), [FRONTEND](./FRONTEND_GUIDELINES.md), [APP_FLOW](./APP_FLOW.md) |
+| 32 (Setup) | [TECH_STACK](./TECH_STACK.md) |
+| 33 (Datos) | [BACKEND](./BACKEND_STRUCTURE.md), [model.md](./model.md) |
+| 34 (Auth) | [BACKEND](./BACKEND_STRUCTURE.md), [APP_FLOW](./APP_FLOW.md) |
+| 35 (Persist) | [BACKEND](./BACKEND_STRUCTURE.md), [APP_FLOW](./APP_FLOW.md) |
+| 36-37 (Economía) | [LORE](./LORE.md), [BACKEND](./BACKEND_STRUCTURE.md), [FRONTEND](./FRONTEND_GUIDELINES.md) |
+| 38 (Chat AI) | [LORE](./LORE.md), [BACKEND](./BACKEND_STRUCTURE.md) |
+| 39-42 (UI) | [FRONTEND](./FRONTEND_GUIDELINES.md), [APP_FLOW](./APP_FLOW.md) |
+| 43-44 (Infra) | [BACKEND](./BACKEND_STRUCTURE.md), [LORE](./LORE.md) |
+| 45-46 (Polish) | [FRONTEND](./FRONTEND_GUIDELINES.md), [APP_FLOW](./APP_FLOW.md) |
+| 47 (Audit) | Todos los documentos |
+| 48 (Cierre) | [progress.txt](./progress.txt), [PRD.md](./PRD.md) |
+
+> **Regla:** Cada fase es un hito verificable. No avanzar sin verificar. No verificar sin consultar los documentos correspondientes.

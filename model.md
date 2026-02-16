@@ -1,5 +1,11 @@
 # 🧠 MODEL — Reggie's Adventure
-> **Última actualización:** 2026-02-15
+> **Versión actual:** v0.3 — La Conexión
+> **Última actualización:** 2026-02-16
+> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `EN PLANIFICACIÓN`
+>
+> 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — toda decisión de personalidad, tono o diálogo se valida contra LORE
+> 📋 **Spec del producto:** [PRD.md](./PRD.md) — toda decisión de features se refleja ahí
+> 📊 **Estado de completitud:** [progress.txt](./progress.txt) — las fases completadas basadas en estas decisiones
 
 ---
 
@@ -7,13 +13,18 @@
 
 | Sesión | Versión | Estado |
 |--------|---------|--------|
-| S1: El Despertar | v0.1.16 | ✅ Completada y desplegada |
-| S2: La Voz | v0.2 | ✅ Completada y desplegada |
-| S3-S5 | — | 🔒 Pendientes |
+| S1: El Despertar | v0.1.16 | `COMPLETADA` |
+| S2: La Voz | v0.2 | `COMPLETADA` |
+| S3: La Conexión | v0.3 | `EN PLANIFICACIÓN` |
+| S4: La Evolución | — | `PENDIENTE` |
+| S5: El Encuentro | — | `PENDIENTE` |
 
 ---
 
-## Sesión 2: Decisiones de Diseño (121 preguntas, 4 rondas)
+## Sesión 2: La Voz — Decisiones de Diseño (121 preguntas, 4 rondas)
+
+> Estas decisiones se implementaron en las Fases 17-31 de [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md).
+> La personalidad y lore se definen en [LORE.md](./LORE.md). Los componentes visuales en [FRONTEND_GUIDELINES.md](./FRONTEND_GUIDELINES.md).
 
 ### API y Arquitectura
 - **Dual API**: Gemini 2.0 Flash (dev local) / OpenAI (prod Vercel, key Frutero)
@@ -48,14 +59,16 @@
 - **Idioma**: Español (adapta si usuario cambia)
 - **PROHIBIDO**: Groserías, adultos, política, religión, sensible
 
-### Stats y Mecánicas (S2 — DEPRECATED en S3, ver sección S3)
-- **Por respuesta del Regenmon (S2):**
-  - Espíritu: ±5 máximo (IA decide, fallback 0)
-  - Pulso: -2 fijo
-  - Hambre: +1 fijo
-- **Reactividad**: Espíritu bajo=deprimido, Pulso bajo=cansado, Hambre alta=irritable
-- **Stats críticos (3 < 10)**: Chat desactivado con tooltip
-- **Stats compactos durante chat**: 🔮 80 | 💛 50 | 🍎 30
+### Stats y Mecánicas (S2 — `LEGACY`, reemplazado en S3)
+> ⚠️ **LEGACY S2:** Los valores fijos de abajo ya NO aplican desde S3. Todos los stats son ahora AI-driven.
+> Ver sección "Mecánicas de Stats por Chat (S3)" más abajo para los valores actuales.
+> Significado lore de cada stat: [LORE.md → Stats y Lore](./LORE.md#stats-y-lore)
+- ~~Espíritu: ±5 máximo (IA decide, fallback 0)~~
+- ~~Pulso: -2 fijo~~
+- ~~Hambre: +1 fijo~~ `→ S3: Hambre renombrado a Esencia, lógica invertida`
+- **Reactividad** (se mantiene): Espíritu bajo=deprimido, Pulso bajo=cansado, Esencia baja=debilitado
+- **Stats críticos (3 < 10)**: Chat desactivado con tooltip (ver [APP_FLOW.md → Flujo Conversar](./APP_FLOW.md))
+- **Stats compactos durante chat**: 🔮 80 | 💛 50 | 🌱 30 (ver [FRONTEND_GUIDELINES.md → Stats Compactos](./FRONTEND_GUIDELINES.md))
 
 ### Nombre del Jugador
 - **Objetivo oculto**: El Regenmon intenta averiguarlo naturalmente
@@ -85,21 +98,21 @@
 - **Desktop**: Chat NES box inferior (RPG style)
 - **Teclado mobile**: visualViewport API para no tapar el chat
 
-### Lore — COMPLETADO
-- Documento: LORE.md (biblia narrativa)
-- Universo: La Red Primordial (mundo original) vs El mundo digital (corrupto)
-- Regenmon: Fragmento de energía antigua, regenerador del mundo digital
-- 3 tipos: Rayo (Impulso/Claridad), Flama (Pasión/Conexiones), Hielo (Memoria/Sabiduría)
-- La Conexión: Vínculo humano-Regenmon, acto de regeneración
-- Stats = lore: Espíritu=Esperanza, Pulso=Energía vital, Hambre=Necesidad
-- Paisajes = zonas del mundo digital con significado por tipo
-- Filosofía: El progreso no es malo, la pérdida del equilibrio sí (spam, scams, odio, olvido)
-- Tono: Místico + épico + oscuro pero esperanzador
-- Frases de lore: indirectas, elusivas, esporádicas, filosóficas pero sutiles
+### Lore — `COMPLETADO`
+- **Documento:** [LORE.md](./LORE.md) (biblia narrativa — fuente de verdad para todo lo narrativo)
+- **Universo:** La Red Primordial (mundo original) vs El mundo digital (corrupto)
+- **Regenmon:** Fragmento de energía antigua, regenerador del mundo digital
+- **3 tipos:** Rayo (Impulso/Claridad), Flama (Pasión/Conexiones), Hielo (Memoria/Sabiduría)
+- **La Conexión:** Vínculo humano-Regenmon, acto de regeneración
+- **Stats = lore:** Espíritu=Esperanza, Pulso=Energía vital, Esencia=Nutrición Digital
+- **Paisajes:** Zonas del mundo digital con significado por tipo (ver [FRONTEND_GUIDELINES.md](./FRONTEND_GUIDELINES.md))
+- **Filosofía:** El progreso no es malo, la pérdida del equilibrio sí (spam, scams, odio, olvido)
+- **Tono:** Místico + épico + oscuro pero esperanzador
+- **Frases de lore:** Indirectas, elusivas, esporádicas, filosóficas pero sutiles
 
 ### Deploy y Verificación
 - **El usuario maneja el deploy personalmente**
-- **Fase de auditoría rigurosa** previa: accesibilidad, seguridad, rendimiento, testing completo
+- **Fase de auditoría rigurosa** previa: accesibilidad, seguridad, rendimiento, testing completo (ver [IMPLEMENTATION_PLAN.md → Fase 47](./IMPLEMENTATION_PLAN.md))
 - **Logging**: Solo en modo desarrollo
 
 ---
@@ -109,13 +122,18 @@
 > Fuente: Interrogación completa del 2026-02-15.
 > Referencia: Demo del bootcamp en `regenmon-final.vercel.app` + `Docs/04. Sesiones/Sesion 3/`.
 > Principio rector: **Adaptación personal del bootcamp**. El lore siempre gana.
+>
+> 📜 **Narrativa S3:** [LORE.md → Los Fragmentos](./LORE.md#los-fragmentos-) + [La Purificación](./LORE.md#la-purificación-)
+> 🛠️ **Implementación:** [BACKEND_STRUCTURE.md → Sesión 3](./BACKEND_STRUCTURE.md) (Privy, Supabase, Fragmentos API)
+> 🗺️ **Flujos:** [APP_FLOW.md → Flujo Principal S3](./APP_FLOW.md) (login, purificar, settings)
+> 🔨 **Fases:** [IMPLEMENTATION_PLAN.md → Sesión 3](./IMPLEMENTATION_PLAN.md) (Fases 32-48)
 
 ### Cambios Mayores vs S2
 
 | Área | S2 (antes) | S3 (ahora) |
 |------|------------|------------|
 | Moneda | No existía | **Fragmentos 💠** (100 iniciales) |
-| Stat "Hambre" | Hambre (100=hambriento, lógica invertida) | **Esencia 🍎** (100=bien alimentado, lógica normal) |
+| Stat "Hambre" | Hambre (100=hambriento, lógica invertida) | **Esencia 🌱** (100=bien alimentado, lógica normal) |
 | Stats por chat | Espíritu ±5 (IA), Pulso -2 (fijo), Hambre +1 (fijo) | **Todos IA-driven** (ver sección abajo) |
 | Botones | Alimentar, Entrenar, Descansar, Conversar | **Purificar (10💠) + ⚙️ + Conversar** |
 | Alimentar | Gratis, -10 Hambre | **Purificar**: 10 Fragmentos, Esencia +30, Espíritu +5, Pulso +10 |
@@ -145,7 +163,7 @@
 |------|--------|-------|-------|-------|-----|------|
 | Espíritu | Esperanza | 🔮 | 0-100 | Máxima esperanza | Desesperanza | La fuerza que mueve al Regenmon |
 | Pulso | Energía vital | 💛 | 0-100 | Lleno de energía | Exhausto | El latido de la Red Primordial |
-| Esencia | Nutrición digital | 🍎 | 0-100 | Bien alimentado | Hambriento | Datos puros que lo nutren |
+| Esencia | Nutrición digital | 🌱 | 0-100 | Bien alimentado | Hambriento | Datos puros que lo nutren |
 
 > **CAMBIO CRÍTICO**: Hambre → Esencia. Lógica INVERTIDA. Antes 100=hambriento (malo),
 > ahora 100=bien alimentado (bueno). Las 3 barras funcionan igual: 100=bien, 0=mal.
@@ -180,7 +198,7 @@ Fragmentos:   0 a 5      (IA decide: no siempre gana)
 - **Nombre lore**: "Purificar" — purificar el mundo digital desde su interior, regenerar su esencia pura, devolver esperanza
 - **Costo**: 10 Fragmentos 💠
 - **Efecto**: Esencia +30, Espíritu +5, Pulso +10
-- **Feedback visual**: "+30 🍎" flotante + efecto visual (no "¡Ñam ñam!" — algo lore-appropriate)
+- **Feedback visual**: "+30 🌱" flotante + efecto visual (no "¡Ñam ñam!" — algo lore-appropriate)
 - **Validaciones**: No funciona sin Fragmentos, botón se deshabilita, tooltip "Necesitas 10 💠"
 - **No funciona si Esencia ya está al máximo**
 - **Reacción del Regenmon**: Texto lore-appropriate contextual (no genérico)
@@ -189,7 +207,7 @@ Fragmentos:   0 a 5      (IA decide: no siempre gana)
 
 **Layout final:**
 ```
-[🔮 Purificar (10 💠)]  [⚙️]  [💬 Conversar]
+[🌀 Purificar (10 💠)]  [⚙️]  [💬 Conversar]
 ```
 
 - **Purificar**: Acción principal con costo, efecto en Esencia+stats
@@ -287,6 +305,75 @@ Multi-dispositivo:    Supabase permite acceso desde cualquier dispositivo
 - **S3**: Infraestructura base + detección básica
 - **S4**: Expansión completa con evolución basada en memorias
 
+### Identidad del Usuario (evolutiva — conectada a La Conexión)
+
+- **Concepto:** La identidad en el header **evoluciona** conforme el Regenmon conoce al jugador
+- **Estado 1 (logueado, nombre NO descubierto):** Muestra email/método auth truncado (ej: "mel@...")
+- **Estado 2 (logueado, nombre descubierto):** Reemplaza por el nombre del jugador (ej: "Mel")
+  → Transición con fade sutil — refuerza La Conexión: "tu Regenmon te conoce"
+- **No logueado:** No se muestra nada en el header (limpio)
+- **Settings:** Info completa del usuario (nombre, email, botón logout)
+- **Decisión:** No saturar el header — la prioridad visual son los Fragmentos y el Regenmon
+- **Conexión lore:** El descubrimiento del nombre (objetivo oculto de S2) ahora tiene impacto visual directo
+
+### Emojis de Stats y Acciones (revisión S3)
+
+- 🔮 Espíritu (morado) — se mantiene
+- 💛 Pulso (amarillo) — se mantiene
+- 🌱 Esencia (verde) — antes 🍎 (manzana evocaba comida/hambre, ya no aplica; el brote conecta con regeneración)
+- 💠 Fragmentos (cyan) — se mantiene
+- 🌀 Purificar (azul/ritual) — antes 🔮 (se confundía con Espíritu; el espiral evoca ritual de limpieza)
+
+> **Paleta de colores por stat:** morado → amarillo → verde → cyan. Sin repetición.
+
+### Buscar Fragmentos (anti-frustración)
+
+- **Trigger:** Solo aparece cuando balance = 0 Fragmentos
+- **Cantidad:** 15 💠 (suficiente para 1 purificación + margen)
+- **Lore:** El Regenmon siente restos dormidos de La Red Primordial cercanos
+- **UI:** Botón "🔍 Buscar Fragmentos" debajo de botones principales, desaparece tras uso
+- **Límite:** No es repetible infinitamente — solo a 0
+- **Bootcamp pide:** "Botón Conseguir monedas, solo si tienes 0"
+- **Nuestra adaptación:** Nombre lore-appropriate, cantidad calibrada, reacción del Regenmon
+
+### Historial de Actividades (bonus)
+
+- **Concepto:** Registro de los actos de regeneración — sección colapsable "📜 Historial"
+- **Contenido:** Últimas 10 acciones (Purificó, Conversó, Buscó Fragmentos)
+- **Cada entrada:** Icono + cambio de 💠 + tiempo relativo
+- **Por defecto:** Colapsado (solo título visible)
+- **Se oculta durante chat** (como Purificar y ⚙️)
+- **Persistencia:** localStorage + Supabase (JSONB, max 10, FIFO)
+- **Bootcamp:** "Historial de últimas 10 acciones con qué, cuántas monedas, cuándo"
+- **Nuestra adaptación:** Iconos lore-appropriate, tiempo relativo en vez de timestamps raw
+
+### Sistema de sprites (8 estados × 3 tipos = 24 sprites)
+
+- **Selección por promedio de stats:** (Espíritu + Pulso + Esencia) / 3
+  - ≥90 Eufórico, ≥70 Contento, ≥30 Neutro, ≥10 Decaído, <10 Crítico General
+- **Override por stat individual crítico (<10):** muestra sprite específico del stat más bajo
+  - 🔮 Espíritu <10 → Sin Esperanza
+  - 💛 Pulso <10 → Sin Energía
+  - 🌱 Esencia <10 → Sin Nutrición
+- **Prioridad:** Stat individual crítico SIEMPRE gana sobre promedio
+- **Múltiples críticos:** el stat con valor más bajo gana
+- **Empate exacto:** Espíritu > Pulso > Esencia (la esperanza es lo más fundamental del Regenmon)
+- **Estética:** Mantener Kirby-esque actual pero con mejor integración al lore
+- **Implementación:** `getSpriteState()` en BACKEND_STRUCTURE.md, visual en FRONTEND_GUIDELINES.md
+
+### Orden de fases visuales (decisión de diseño)
+
+- **Fase 40: Backgrounds + Sprites PRIMERO** — los nuevos assets definen la estética base (guía visual: [LORE.md → Los Paisajes](./LORE.md#los-paisajes-como-zonas-del-mundo-digital))
+- **Fase 41: Tema Light (GBC) DESPUÉS** — se deriva de los nuevos assets, no al revés
+- **Razón:** Evita trabajo doble. Si el tema Light se creara sobre assets viejos, habría que re-adaptarlo cuando se rehagan los sprites. Diseñar los backgrounds con ambos temas en mente desde el inicio es más eficiente.
+
+### Fase 47b: Ajustes Pre-Deploy
+
+- **Propósito:** Red de seguridad entre auditoría y deploy
+- **Trigger:** Si el usuario detecta algo que no le convence tras la auditoría
+- **Alcance:** Abierto — puede ser visual, funcional, UX, o nada
+- **Si todo está bien:** Se salta directo a Fase 48
+
 ### Preparación para S4 y S5
 
 - **S4 (Entrenamiento)**: Allanar terreno para sistema de subida de fotos + evaluación IA
@@ -323,4 +410,24 @@ Multi-dispositivo:    Supabase permite acceso desde cualquier dispositivo
 - **2026-02-15**: 🏗️ Comenzando planificación Fase 26 (Infraestructura de Memoria).
 - **2026-02-15**: ✅ Fase 26, 27, 28, 29, 30 completadas (Memoria, Tutorial, Lore, Responsive, Auditoría).
 - **2026-02-15**: 🚀 Fase 31 completada. Despliegue manual exitoso. Sesión 2 cerrada.
+
+---
+
+## Referencias Cruzadas
+
+Este archivo es el **registro de decisiones**. Cada decisión aquí se materializa en los otros documentos canónicos.
+
+| Documento | Qué toma de model.md |
+|-----------|---------------------|
+| [PRD.md](./PRD.md) | Las decisions aquí se convierten en features y criterios de éxito |
+| [LORE.md](./LORE.md) | Las decisiones narrativas (tipos, stats-como-lore, tono) se definen y expanden allá |
+| [APP_FLOW.md](./APP_FLOW.md) | Los flujos reflejan las decisiones de UX documentadas aquí |
+| [FRONTEND_GUIDELINES.md](./FRONTEND_GUIDELINES.md) | Paletas, layouts y componentes implementan las decisiones visuales de aquí |
+| [BACKEND_STRUCTURE.md](./BACKEND_STRUCTURE.md) | Schemas, API responses y system prompts implementan las decisiones técnicas |
+| [TECH_STACK.md](./TECH_STACK.md) | Las herramientas elegidas (Privy, Supabase, IA) se documentan allá con versiones |
+| [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) | Cada decisión se traduce en fases ejecutables con pasos verificables |
+| [progress.txt](./progress.txt) | Las fases derivadas de estas decisiones se trackean como completadas o pendientes |
+
+> **Regla:** Al tomar una decisión nueva, documentarla aquí Y actualizar los documentos afectados.
+> Si hay conflicto entre este documento y [LORE.md](./LORE.md) en temas narrativos, **LORE.md gana**.
 
