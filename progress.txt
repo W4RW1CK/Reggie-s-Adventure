@@ -417,17 +417,39 @@
 - [ ] 39.4: Migrar MusicToggle al Settings
 - [ ] 39.5: Verificación
 
-### Fases 40-48: PENDIENTES
-- [ ] 40: Backgrounds + Sprites reworked (8×3=24 sprites)
-- [ ] 41: Tema Light (Game Boy Color)
-- [ ] 42: Header — Reestructurar layout superior
-- [ ] 43: Memorias — Infraestructura (preparación S4)
-- [ ] 44: Evolución — Infraestructura (preparación S4)
+### Fase 40: Visual — Backgrounds y Sprites Reworked (EN REVIEW)
+- [x] 40.1: GameBackground reworked (18 paletas: 3 tipos × 3 moods × 2 temas)
+- [x] 40.2: RegenmonSVG reworked (8 estados × 3 tipos = 24 sprites)
+- [x] 40.3: getSpriteState() lógica implementada
+- [ ] **PENDIENTE: Review visual por w4rw1ck** (preview page en /preview)
+- Commit: `1e48d99` (WIP — awaiting review)
+
+### Fase 42: Header — Reestructurar Layout (2026-02-17)
+- [x] 42.1: UserIdentity componente (evolving: nada → email → nombre)
+- [x] 42.2: LoginButton removido del header (ahora en Settings)
+- [x] 42.3: Layout limpio: Fragmentos (izq) + UserIdentity (der)
+- [x] Commit: `ba287ce`
+
+### Fase 44: Evolución — Infraestructura (2026-02-17)
+- [x] 44.1: EvolutionData interface (stage, totalMemories, threshold)
+- [x] 44.2: Agregado a RegenmonData + storage migration + Supabase sync
+- [x] 44.3: Auto-sync totalMemories con memories.length
+- [x] 44.4: NO visual (pura data para S4)
+- [x] Commit: `ba287ce`
+
+### Fase 45b: Historial de Actividades (2026-02-17)
+- [x] 45b.1: activityHistory.ts (addActivity, loadHistory, clearHistory, max 10 FIFO)
+- [x] 45b.2: ActivityHistory.tsx colapsable (📜 Historial)
+- [x] 45b.3: Registra purify, chat, search_fragments con cambio de 💠
+- [x] 45b.4: Integrado en GameScreen (oculto durante chat, limpiado en reset)
+- [x] Commit: `ba287ce`
+
+### Fases pendientes
+- [ ] 41: Tema Light (Game Boy Color) — espera review de Phase 40
 - [ ] 45: Tutorial y Creación — Actualizar para S3
-- [ ] 45b: Historial de Actividades (bonus)
 - [ ] 46: Responsive y pulido S3
-- [ ] 47: Auditoría S3
-- [ ] 47b: Ajustes Pre-Deploy (si aplica)
+- [ ] 47: Auditoría S3 (w4rw1ck)
+- [ ] 47b: Ajustes Pre-Deploy (si aplica, w4rw1ck)
 - [ ] 48: Cierre de Sesión 3
 
 ---
