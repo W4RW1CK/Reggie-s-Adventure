@@ -320,8 +320,8 @@ function Decorations({ state, type }: { state: SpriteState; type: RegenmonType }
 // ── Rayo body shape ──
 function RayoBody({ state }: { state: SpriteState }) {
     const c = TYPE_COLORS.rayo;
-    const shrinkSmall = state === 'no_nutrition'; const shrinkTiny = state === 'critical';
-    const transform = shrinkTiny ? 'translate(17,17) scale(0.65)' : shrinkSmall ? 'translate(10,10) scale(0.8)' : undefined;
+    const shrinkCritical = state === 'critical'; const shrinkNutrition = state === 'no_nutrition'; const shrinkTiny = false;
+    const transform = shrinkCritical ? 'translate(10,10) scale(0.8)' : shrinkNutrition ? 'translate(5,5) scale(0.9)' : undefined;
 
     return (
         <g transform={transform}>
@@ -352,8 +352,8 @@ function RayoBody({ state }: { state: SpriteState }) {
 // ── Flama body shape ──
 function FlamaBody({ state }: { state: SpriteState }) {
     const c = TYPE_COLORS.flama;
-    const shrinkSmall = state === 'no_nutrition'; const shrinkTiny = state === 'critical';
-    const transform = shrinkTiny ? 'translate(17,17) scale(0.65)' : shrinkSmall ? 'translate(10,10) scale(0.8)' : undefined;
+    const shrinkCritical = state === 'critical'; const shrinkNutrition = state === 'no_nutrition'; const shrinkTiny = false;
+    const transform = shrinkCritical ? 'translate(10,10) scale(0.8)' : shrinkNutrition ? 'translate(5,5) scale(0.9)' : undefined;
 
     return (
         <g transform={transform}>
@@ -386,8 +386,8 @@ function FlamaBody({ state }: { state: SpriteState }) {
 // ── Hielo body shape ──
 function HieloBody({ state }: { state: SpriteState }) {
     const c = TYPE_COLORS.hielo;
-    const shrinkSmall = state === 'no_nutrition'; const shrinkTiny = state === 'critical';
-    const transform = shrinkTiny ? 'translate(17,17) scale(0.65)' : shrinkSmall ? 'translate(10,10) scale(0.8)' : undefined;
+    const shrinkCritical = state === 'critical'; const shrinkNutrition = state === 'no_nutrition'; const shrinkTiny = false;
+    const transform = shrinkCritical ? 'translate(10,10) scale(0.8)' : shrinkNutrition ? 'translate(5,5) scale(0.9)' : undefined;
 
     return (
         <g transform={transform}>
