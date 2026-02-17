@@ -426,7 +426,7 @@ export default function RegenmonSVG({ type, size = 120, className = '', stats }:
     // CSS filter fallback for states where SVG filters may not render
     const getCssFilter = (s: SpriteState): string => {
         switch (s) {
-            case 'critical': return 'sepia(1) hue-rotate(30deg) saturate(0.8) brightness(0.75) opacity(0.8)';
+            case 'critical': return 'sepia(1) hue-rotate(30deg) saturate(0.8) brightness(0.9) opacity(0.85)';
             case 'no_hope': return 'sepia(1) hue-rotate(230deg) saturate(2) brightness(0.75)';
             case 'no_energy': return 'sepia(0.8) hue-rotate(10deg) brightness(0.8)';
             case 'no_nutrition': return 'hue-rotate(90deg) saturate(0.6) brightness(0.7)';
