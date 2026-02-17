@@ -417,7 +417,21 @@ function HieloBody({ state }: { state: SpriteState }) {
 export default function RegenmonSVG({ type, size = 120, className = '', stats }: RegenmonSVGProps) {
     const state = stats ? getSpriteState(stats) : 'neutral';
     const animClass = getAnimationClass(state);
-    const filter = getGroupFilter(state, type);
+    const svgFilter = getGroupFilter(state, type);
+
+    // CSS filter fallback for states where SVG filters may not render
+    const getCssFilter = (s: SpriteState): string => {
+        switch (s) {
+            case 'critical': return 'grayscale(1) brightness(0.5) opacity(0.6)';
+            case 'no_hope': return 'hue-rotate(260deg) saturate(1.5) brightness(0.7)';
+            case 'no_energy': return 'sepia(0.8) hue-rotate(10deg) brightness(0.8)';
+            case 'no_nutrition': return 'hue-rotate(90deg) saturate(0.6) brightness(0.7)';
+            case 'sad': return 'saturate(0.5) brightness(0.85)';
+            default: return 'none';
+        }
+    };
+
+    const cssFilter = getCssFilter(state);
 
     const BodyComponent = type === 'rayo' ? RayoBody : type === 'flama' ? FlamaBody : HieloBody;
 
@@ -428,11 +442,11 @@ export default function RegenmonSVG({ type, size = 120, className = '', stats }:
             viewBox="0 0 100 100"
             className={`regenmon-svg ${animClass} ${className}`}
             xmlns="http://www.w3.org/2000/svg"
-            style={{ overflow: 'visible' }}
+            style={{ overflow: 'visible', filter: cssFilter !== 'none' ? cssFilter : undefined }}
         >
             <SpriteFilters state={state} type={type} />
             <Decorations state={state} type={type} />
-            <g filter={filter || undefined}>
+            <g filter={svgFilter || undefined}>
                 <BodyComponent state={state} />
                 <Eyes state={state} />
                 <Mouth state={state} />
