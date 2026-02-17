@@ -1,7 +1,7 @@
 # 📊 PROGRESS — Reggie's Adventure
 > **Versión actual:** v0.3 — La Conexión
-> **Última actualización:** 2026-02-16
-> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `EN PLANIFICACIÓN`
+> **Última actualización:** 2026-02-17
+> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `EN PROGRESO`
 >
 > 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — biblia narrativa del universo
 > 🔨 **Fases detalladas:** [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) — qué construir y en qué orden
@@ -347,8 +347,88 @@
   - Temas: Dark (NES) + Light (Game Boy Color)
   - Memorias: infraestructura S3, implementación S4
 - [x] Archivos canónicos actualizados: LORE, PRD, TECH_STACK, FRONTEND_GUIDELINES, BACKEND_STRUCTURE, APP_FLOW, model.md
-- [ ] IMPLEMENTATION_PLAN.md: Fases detalladas de S3 — PENDIENTE
-- [ ] Implementación de S3 — PENDIENTE
+- [x] IMPLEMENTATION_PLAN.md: Fases 32-48 definidas
+- [ ] Implementación de S3 — EN PROGRESO
+
+---
+
+## Implementación Sesión 3 — La Conexión (2026-02-17/17)
+
+### Pre-S3: Auditoría y Bugfixes (2026-02-17)
+- [x] Full code audit: 12 issues found (2 critical, 3 high, 4 medium, 2 low, 1 info)
+- [x] All 12 bugfixes applied: race conditions, stale history, storage errors, memory leaks, error recovery
+- [x] Build + TypeScript verification passed
+- [x] Commit: `0204400`
+
+### Fase 32: Setup — Privy + Supabase Providers (2026-02-17)
+- [x] 32.1: PrivyProviderWrapper con config (Google/Email/Passkey/GitHub/Discord)
+- [x] 32.2: AppProviders wrapper (Privy + future providers)
+- [x] 32.3: Supabase client singleton (`src/lib/supabase.ts`)
+- [x] 32.4: `.env.example` con todas las variables necesarias
+- [x] 32.5: layout.tsx integra AppProviders
+- [x] Commit: `f5caf14`
+
+### Fase 33: Datos — Hambre→Esencia + Fragmentos (2026-02-17)
+- [x] 33.1: types.ts actualizado (Esencia reemplaza Hambre, Fragmentos añadido)
+- [x] 33.2: constants.ts actualizado (valores iniciales, costos)
+- [x] 33.3: storage.ts con migración automática localStorage (hambre→esencia invertida)
+- [x] 33.4: useGameState.ts actualizado (Esencia + Fragmentos)
+- [x] 33.5: useStatDecay.ts ajustado (Esencia baja en vez de Hambre subir)
+- [x] 33.6: Todos los componentes UI actualizados (GameScreen, RegenmonSVG, ActionButtons, ChatBox, prompts)
+- [x] Commit: `6cd1189`
+
+### Fase 34: Auth — Privy Login Flow (2026-02-17)
+- [x] 34.1: useAuth hook creado (isLoggedIn, login, logout, user info)
+- [x] 34.2: AuthScreen creado ("Iniciar Sesión" / "Continuar sin cuenta")
+- [x] 34.3: LoginButton componente para header
+- [x] 34.4: Integrado en screen flow (post-PressStart → AuthScreen → Historia)
+- [x] Commit: `645537f`
+
+### Fase 35: Persistencia — Supabase Hybrid Sync (2026-02-17)
+- [x] 35.1: useSupabaseSync hook (auto-sync cuando logueado)
+- [x] 35.2: Migración automática localStorage → Supabase en primer login
+- [x] 35.3: Debounced sync (2s) para evitar spam de writes
+- [x] 35.4: Fallback a localStorage cuando no logueado
+- [x] Commit: `5b4b83d`
+
+### Fase 36-37: Economía — Fragmentos 💠 + Purificar 🌀 (2026-02-17)
+- [x] 36.1: FragmentCounter componente (💠 100 / 💠 --- cuando no logueado)
+- [x] 36.2: FragmentCounter integrado en header del GameScreen
+- [x] 36.3: Botón "🔍 Buscar Fragmentos" (solo a 0💠, da 15💠)
+- [x] 37.1: ActionButtons reescrito: `[🌀 Purificar (10💠)] [⚙️] [💬 Conversar]`
+- [x] 37.2: Purificar: gasta 10💠, da Esencia+30/Espíritu+5/Pulso+10
+- [x] 37.3: Botón ⚙️ placeholder (→ Panel Settings en Fase 39)
+- [x] 37.4: Botones viejos (Entrenar/Comer/Dormir) ELIMINADOS
+- [x] 37.5: Fragmentos iniciales corregido: 0 → 100
+- [x] Commit: `9e87816`
+
+### Fase 38: Chat — Stats AI-Driven + Fragmentos (2026-02-17)
+- [x] 38.1: Prompt actualizado con pulso en JSON response format
+- [x] 38.2: useChat usa valores IA con fallbacks (no más constantes fijas)
+- [x] 38.3: Clamping server-side + client-side (espíritu ±5, pulso ±5, esencia -4 a -1, fragmentos 0-5)
+- [x] 38.4: Feedback flotante muestra todos los cambios no-cero (🔮💛🌱💠)
+- [x] 38.5: Constantes CHAT_PULSE_CHANGE y CHAT_ESENCIA_COST ya no se usan
+- [x] Commit: `5779a2a`
+
+### Fase 39: UI — Panel de Settings (⚙️) (EN PROGRESO)
+- [ ] 39.1: SettingsPanel componente (slide-in/modal, NES styling)
+- [ ] 39.2: useTheme hook (dark/light toggle, text size, localStorage persist)
+- [ ] 39.3: Integración en GameScreen (⚙️ abre panel)
+- [ ] 39.4: Migrar MusicToggle al Settings
+- [ ] 39.5: Verificación
+
+### Fases 40-48: PENDIENTES
+- [ ] 40: Backgrounds + Sprites reworked (8×3=24 sprites)
+- [ ] 41: Tema Light (Game Boy Color)
+- [ ] 42: Header — Reestructurar layout superior
+- [ ] 43: Memorias — Infraestructura (preparación S4)
+- [ ] 44: Evolución — Infraestructura (preparación S4)
+- [ ] 45: Tutorial y Creación — Actualizar para S3
+- [ ] 45b: Historial de Actividades (bonus)
+- [ ] 46: Responsive y pulido S3
+- [ ] 47: Auditoría S3
+- [ ] 47b: Ajustes Pre-Deploy (si aplica)
+- [ ] 48: Cierre de Sesión 3
 
 ---
 

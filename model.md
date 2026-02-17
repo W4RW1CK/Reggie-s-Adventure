@@ -1,7 +1,7 @@
 # 🧠 MODEL — Reggie's Adventure
 > **Versión actual:** v0.3 — La Conexión
-> **Última actualización:** 2026-02-16
-> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `EN PLANIFICACIÓN`
+> **Última actualización:** 2026-02-17
+> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `EN PROGRESO`
 >
 > 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — toda decisión de personalidad, tono o diálogo se valida contra LORE
 > 📋 **Spec del producto:** [PRD.md](./PRD.md) — toda decisión de features se refleja ahí
@@ -15,7 +15,7 @@
 |--------|---------|--------|
 | S1: El Despertar | v0.1.16 | `COMPLETADA` |
 | S2: La Voz | v0.2 | `COMPLETADA` |
-| S3: La Conexión | v0.3 | `EN PLANIFICACIÓN` |
+| S3: La Conexión | v0.3 | `EN PROGRESO` (Fases 32-38 ✅, 39 en curso) |
 | S4: La Evolución | — | `PENDIENTE` |
 | S5: El Encuentro | — | `PENDIENTE` |
 
@@ -435,17 +435,23 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 
 ## Log de Implementación Sesión 3
 
-### Análisis Inicial (2026-02-16)
+### Análisis Inicial (2026-02-17)
 - **Estado Actual:** Sesión 2 completada (v0.2). Fase 32 (Setup) parcialmente ejecutada por el usuario.
-- **Verificación Fase 32:**
-  - `PrivyProviderWrapper`, `AppProviders`, `supabase.ts` existen.
-  - `layout.tsx` integra `AppProviders`.
-  - Dependencias instaladas (`@privy-io/react-auth`, `@supabase/supabase-js`).
-  - **Pendiente:** Validar `.env.local` con claves reales (Privy App ID, Supabase URL/Key).
-- **Plan de Acción Inmediato:**
-  1.  **Fase 33 (Datos):** Actualizar tipos y lógica de stats (Hambre → Esencia). *Critical* para que el resto funcione.
-  2.  **Fase 34-35 (Auth/Persistencia):** Integrar UI de login y conectar con Supabase.
-  3.  **Fase 36-38 (Economía/Chat):** Implementar Fragmentos y la nueva lógica de stats en chat.
+- **Migración Hambre→Esencia**: localStorage migration automática invierte el valor (hambre 80 → esencia 20).
 
-> **Nota Crítica:** La transición de Hambre a Esencia invierte la lógica (100=Bueno). Esto requiere una migración cuidadosa de datos existentes en localStorage para no "matar" a los Regenmons existentes (convertir Hambre 80 -> Esencia 20, por ejemplo, o reiniciar a 50).
+### Implementación Core (2026-02-17)
+- **Fases 32-38 completadas** en secuencia rápida (audit → setup → data → auth → sync → economy → chat)
+- **Pre-S3 audit**: 12 issues found and fixed before starting S3 implementation
+- **Team workflow**: Dumbleclaw (planner+auditor+subagents) + w4rw1ck (tester+reviewer) + Gemini (backup coder)
+- **Commit format**: `[Phase XX] Title` + bullet list + `Build: ✅ | Audit: ✅ | Verify: ✅`
+- **WIP commits**: Gemini drafts pushed as `WIP:` prefix, cleaned up by Dumbleclaw before final commit
+
+### Decisiones de Implementación (2026-02-17)
+- **Privy login methods**: 5 total (Google + Email + Passkey + GitHub + Discord) — más que el mínimo del bootcamp
+- **Supabase table**: Single `regenmons` table with all data as JSONB columns, indexed by `privy_user_id`
+- **Phase 33 scope creep**: Gemini coded ~50% of the data migration, Dumbleclaw subagent fixed remaining 7 files + 3 bugs
+- **Stats clamping**: Both server-side (route.ts) and client-side (provider adapters) for safety
+- **Floating feedback**: Auto-dismiss after 3s, shows all non-zero changes with emoji indicators
+- **FragmentCounter**: Shows "💠 ---" when not logged in (preserves mystery/incentive to login)
+- **Purificar disabled states**: When fragmentos < 10 OR esencia >= 100 (no wasted purifications)
 
