@@ -4,19 +4,18 @@ interface TutorialModalProps {
     onDismiss: (dontShowAgain: boolean) => void;
 }
 
+const TOTAL_STEPS = 3;
+
 export default function TutorialModal({ onDismiss }: TutorialModalProps) {
     const [dontShowAgain, setDontShowAgain] = useState(false);
-    const [step, setStep] = useState(0); // 0: Intro/Stats, 1: Chat/Connection
+    const [step, setStep] = useState(0);
 
-    // Keyboard: Enter/Space = next or dismiss
     const handleKeyDown = useCallback((e: KeyboardEvent) => {
         if (e.key === 'Enter' || e.key === ' ') {
-            // Don't trigger if user is interacting with the checkbox
             if ((e.target as HTMLElement)?.tagName === 'INPUT') return;
             e.preventDefault();
-
-            if (step === 0) {
-                setStep(1);
+            if (step < TOTAL_STEPS - 1) {
+                setStep(s => s + 1);
             } else {
                 onDismiss(dontShowAgain);
             }
@@ -28,14 +27,17 @@ export default function TutorialModal({ onDismiss }: TutorialModalProps) {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [handleKeyDown]);
 
-    // Click on backdrop (outside modal) = dismiss
     const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (e.target === e.currentTarget) {
-            // Optional: maybe don't dismiss on backdrop to force reading? 
-            // keeping it for usability but maybe check step?
             onDismiss(dontShowAgain);
         }
     };
+
+    const titles = [
+        "GUÍA DE LA CONEXIÓN",
+        "ACCIONES DEL VÍNCULO",
+        "HERRAMIENTAS ARCANAS",
+    ];
 
     return (
         <div
@@ -47,12 +49,12 @@ export default function TutorialModal({ onDismiss }: TutorialModalProps) {
         >
             <div className="nes-container is-dark with-title max-w-md w-full animate-slideUp">
                 <p id="tutorial-title" className="title text-[#f1c40f]">
-                    {step === 0 ? "GUÍA DE LA CONEXIÓN" : "TU ERES SU VOZ"}
+                    {titles[step]}
                 </p>
 
                 <div className="flex flex-col gap-4 text-xs sm:text-sm h-[320px] overflow-y-auto custom-scrollbar">
 
-                    {/* STEP 0: INTRO & STATS */}
+                    {/* STEP 0: STATS & FRAGMENTOS */}
                     {step === 0 && (
                         <div className="animate-fadeIn">
                             <p className="mb-4">
@@ -64,7 +66,7 @@ export default function TutorialModal({ onDismiss }: TutorialModalProps) {
                                     <span className="text-xl">🔮</span>
                                     <div>
                                         <span className="text-[#9b59b6] font-bold">ESPÍRITU — Esperanza</span>
-                                        <p className="text-[10px] opacity-90">Cuánto cree en la regeneración. Descansa para recuperar la fe.</p>
+                                        <p className="text-[10px] opacity-90">Cuánto cree en la regeneración. Se restaura al Purificar.</p>
                                     </div>
                                 </div>
 
@@ -72,30 +74,34 @@ export default function TutorialModal({ onDismiss }: TutorialModalProps) {
                                     <span className="text-xl">💛</span>
                                     <div>
                                         <span className="text-[#f1c40f] font-bold">PULSO — Energía vital</span>
-                                        <p className="text-[10px] opacity-90">Su fuerza para existir. Entrenar la consume, comer y dormir la restauran.</p>
+                                        <p className="text-[10px] opacity-90">Su fuerza para existir. Conversar la consume, Purificar la restaura.</p>
                                     </div>
                                 </div>
 
                                 <div className="flex items-center gap-3">
-                                    <span className="text-xl">🍖</span>
+                                    <span className="text-xl">✨</span>
                                     <div>
-                                        <span className="text-[#e74c3c] font-bold">HAMBRE — Necesidad</span>
-                                        <p className="text-[10px] opacity-90">Necesita datos limpios. Si llega a 100, la corrupción lo alcanza.</p>
+                                        <span className="text-[#2ecc71] font-bold">ESENCIA — Vitalidad</span>
+                                        <p className="text-[10px] opacity-90">La energía primordial que lo mantiene vivo. Purificar la restaura.</p>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div className="bg-gray-800 p-2 text-[10px] border-4 border-gray-600 mt-2">
-                                <span className="text-yellow-400">⚡ OJO:</span> El mundo digital se degrada incluso cuando no estás. ¡Vuelve pronto!
+                                <div className="flex items-center gap-3">
+                                    <span className="text-xl">💠</span>
+                                    <div>
+                                        <span className="text-[#3498db] font-bold">FRAGMENTOS — Moneda arcana</span>
+                                        <p className="text-[10px] opacity-90">Restos de datos puros. Los ganas al conversar y los gastas para Purificar.</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     )}
 
-                    {/* STEP 1: CHAT & CONNECTION */}
+                    {/* STEP 1: CHAT, PURIFICAR, BUSCAR */}
                     {step === 1 && (
                         <div className="animate-fadeIn">
                             <p className="mb-4">
-                                Has establecido una conexión directa. Ahora puedes <span className="text-[#2ecc71] font-bold">hablar</span> con tu Regenmon.
+                                Has establecido una conexión directa. Ahora puedes <span className="text-[#2ecc71] font-bold">hablar</span> y <span className="text-[#9b59b6] font-bold">purificar</span>.
                             </p>
 
                             <div className="grid grid-cols-1 gap-4 my-2">
@@ -104,7 +110,27 @@ export default function TutorialModal({ onDismiss }: TutorialModalProps) {
                                     <div>
                                         <span className="text-[#2ecc71] font-bold">EL VÍNCULO</span>
                                         <p className="text-[10px] opacity-90">
-                                            Cada palabra cuenta. Hablar le da <strong>Esperanza (+Espíritu)</strong>, pero requiere esfuerzo <strong>(-Pulso)</strong>.
+                                            Cada palabra cuenta. Hablar le da <strong>Esperanza (+Espíritu)</strong> y te otorga <strong>Fragmentos 💠</strong>, pero requiere esfuerzo <strong>(-Pulso)</strong>.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-start gap-3">
+                                    <span className="text-2xl">🌀</span>
+                                    <div>
+                                        <span className="text-[#9b59b6] font-bold">PURIFICAR</span>
+                                        <p className="text-[10px] opacity-90">
+                                            Canaliza 10💠 para limpiar los datos corruptos. Restaura <strong>Esencia, Espíritu y Pulso</strong> de golpe. Úsalo sabiamente.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-start gap-3">
+                                    <span className="text-2xl">🔍</span>
+                                    <div>
+                                        <span className="text-[#e67e22] font-bold">BUSCAR FRAGMENTOS</span>
+                                        <p className="text-[10px] opacity-90">
+                                            ¿Sin Fragmentos? Busca entre los restos digitales. Un último recurso cuando tus reservas llegan a cero.
                                         </p>
                                     </div>
                                 </div>
@@ -114,7 +140,38 @@ export default function TutorialModal({ onDismiss }: TutorialModalProps) {
                                     <div>
                                         <span className="text-[#3498db] font-bold">MEMORIA</span>
                                         <p className="text-[10px] opacity-90">
-                                            Tu Regenmon aprende de ti. Recordará tu nombre y los fragmentos de verdad que compartas.
+                                            Tu Regenmon aprende de ti. Cada conversación deja huellas que lo hacen evolucionar.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* STEP 2: TOOLS & SETTINGS */}
+                    {step === 2 && (
+                        <div className="animate-fadeIn">
+                            <p className="mb-4">
+                                El mundo digital te ofrece herramientas para gestionar la conexión.
+                            </p>
+
+                            <div className="grid grid-cols-1 gap-4 my-2">
+                                <div className="flex items-start gap-3">
+                                    <span className="text-2xl">⚙️</span>
+                                    <div>
+                                        <span className="text-[#95a5a6] font-bold">CONFIGURACIÓN</span>
+                                        <p className="text-[10px] opacity-90">
+                                            Abre el panel de ajustes para cambiar el tema visual, activar la música, ajustar el tamaño del texto, renombrar a tu Regenmon o vincular tu cuenta.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-start gap-3">
+                                    <span className="text-2xl">📜</span>
+                                    <div>
+                                        <span className="text-[#f39c12] font-bold">HISTORIAL</span>
+                                        <p className="text-[10px] opacity-90">
+                                            Un registro arcano de todo lo que ha sucedido: purificaciones, búsquedas, conversaciones. La memoria del mundo.
                                         </p>
                                     </div>
                                 </div>
@@ -122,16 +179,16 @@ export default function TutorialModal({ onDismiss }: TutorialModalProps) {
                                 <div className="flex items-start gap-3">
                                     <span className="text-2xl">🎵</span>
                                     <div>
-                                        <span className="text-[#e74c3c] font-bold">LA VOZ</span>
+                                        <span className="text-[#e74c3c] font-bold">LA VOZ DEL MUNDO</span>
                                         <p className="text-[10px] opacity-90">
-                                            Al conversar, el ruido del mundo baja (la música se atenúa) para que puedan escucharse.
+                                            Al conversar, el ruido del mundo baja para que puedan escucharse. La música se atenúa durante el vínculo.
                                         </p>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="bg-gray-800 p-2 text-[10px] border-4 border-gray-600 mt-4 text-center italic text-gray-400">
-                                "Lo que regeneramos juntos, no se borra jamás."
+                                &ldquo;Lo que regeneramos juntos, no se borra jamás.&rdquo;
                             </div>
                         </div>
                     )}
@@ -151,18 +208,18 @@ export default function TutorialModal({ onDismiss }: TutorialModalProps) {
                     </label>
 
                     <div className="flex gap-2">
-                        {step === 1 && (
+                        {step > 0 && (
                             <button
-                                onClick={() => setStep(0)}
+                                onClick={() => setStep(s => s - 1)}
                                 className="nes-btn w-1/3 text-xs"
                             >
                                 ◀
                             </button>
                         )}
 
-                        {step === 0 ? (
+                        {step < TOTAL_STEPS - 1 ? (
                             <button
-                                onClick={() => setStep(1)}
+                                onClick={() => setStep(s => s + 1)}
                                 className="nes-btn is-primary flex-1 animate-pulse"
                                 autoFocus
                             >
