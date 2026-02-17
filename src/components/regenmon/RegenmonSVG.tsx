@@ -319,7 +319,7 @@ function Decorations({ state, type }: { state: SpriteState; type: RegenmonType }
 // ── Rayo body shape ──
 function RayoBody({ state }: { state: SpriteState }) {
     const c = TYPE_COLORS.rayo;
-    const shrink = state === 'no_nutrition';
+    const shrink = state === 'no_nutrition' || state === 'critical';
     const transform = shrink ? 'translate(10,10) scale(0.8)' : undefined;
 
     return (
@@ -351,7 +351,7 @@ function RayoBody({ state }: { state: SpriteState }) {
 // ── Flama body shape ──
 function FlamaBody({ state }: { state: SpriteState }) {
     const c = TYPE_COLORS.flama;
-    const shrink = state === 'no_nutrition';
+    const shrink = state === 'no_nutrition' || state === 'critical';
     const transform = shrink ? 'translate(10,10) scale(0.8)' : undefined;
 
     return (
@@ -385,7 +385,7 @@ function FlamaBody({ state }: { state: SpriteState }) {
 // ── Hielo body shape ──
 function HieloBody({ state }: { state: SpriteState }) {
     const c = TYPE_COLORS.hielo;
-    const shrink = state === 'no_nutrition';
+    const shrink = state === 'no_nutrition' || state === 'critical';
     const transform = shrink ? 'translate(10,10) scale(0.8)' : undefined;
 
     return (
