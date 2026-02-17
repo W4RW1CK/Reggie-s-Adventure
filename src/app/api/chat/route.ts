@@ -74,6 +74,15 @@ export async function POST(req: NextRequest) {
             console.log('------------------');
         }
 
+        // 7. Clamp statsChange values
+        if (response.statsChange) {
+            const s = response.statsChange;
+            s.espiritu = Math.max(-5, Math.min(5, s.espiritu ?? 0));
+            s.pulso = Math.max(-5, Math.min(5, s.pulso ?? 0));
+            s.esencia = Math.max(-4, Math.min(-1, s.esencia ?? -1));
+            s.fragmentos = Math.max(0, Math.min(5, s.fragmentos ?? 0));
+        }
+
         return NextResponse.json(response);
 
     } catch (error: any) {

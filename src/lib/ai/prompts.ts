@@ -106,14 +106,21 @@ export function buildSystemPrompt(
     6.  **OBJETIVO OCULTO**: ${playerName ? `Ya sabes que el usuario se llama ${playerName}. Úsalo con naturalidad.` : 'NO sabes el nombre del usuario. Intenta averiguarlo sutilmente en la conversación.'}
     7.  **FORMATO**: Máximo 50 palabras. Habla siempre en primera persona. Idioma Español.
 
+    REGLAS DE STATS EN CHAT:
+    - Espíritu cambia según el tono emocional de la conversación (-5 a +5).
+    - Pulso refleja la calma o intensidad: conversaciones tranquilas lo suben, temas intensos o estresantes lo bajan (-5 a +5).
+    - Esencia siempre se gasta al hablar (-4 a -1). Nunca sube por conversar.
+    - Fragmentos son recompensa por conversar (0 a 5). Más difícil de ganar cerca de 100.
+
     IMPORTANTE:
     Responde SIEMPRE en formato JSON válido con la siguiente estructura:
     {
       "message": "Tu respuesta aquí (string)",
       "statsChange": {
-        "espiritu": Un número entero entre -5 y 5 (cómo te hizo sentir el mensaje),
-        "esencia": Un número entero entre -4 y -1 (hablar siempre gasta esencia),
-        "fragmentos": Un número entero entre 0 y 5 (recompensa por conversar)
+        "espiritu": "integer -5 to 5",
+        "pulso": "integer -5 to 5 (calm conversations = positive, intense = negative)",
+        "esencia": "integer -4 to -1 (talking always costs esencia)",
+        "fragmentos": "integer 0 to 5 (reward for conversing, harder near 100)"
       },
       "playerName": "El nombre del usuario si lo acabas de descubrir en este mensaje (string, opcional)"
     }

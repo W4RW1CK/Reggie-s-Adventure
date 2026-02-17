@@ -15,8 +15,6 @@ import {
 import {
     CHAT_COOLDOWN_MS,
     CHAT_SPIRIT_MAX_CHANGE,
-    CHAT_PULSE_CHANGE,
-    CHAT_ESENCIA_COST,
     CHAT_MAX_MESSAGES,
     CHAT_CRITICAL_THRESHOLD
 } from '@/lib/constants';
@@ -31,6 +29,7 @@ export function useChat({ regenmon, updateStatAction }: UseChatProps) {
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [lastMessageTime, setLastMessageTime] = useState(0);
+    const [lastStatsChange, setLastStatsChange] = useState<Partial<import('@/lib/types').RegenmonStats> | null>(null);
 
     // Load history on mount
     useEffect(() => {
@@ -111,12 +110,18 @@ export function useChat({ regenmon, updateStatAction }: UseChatProps) {
             setMessages(finalHistory);
             saveChatHistory(finalHistory);
 
-            // 5. Update Stats
-            updateStatAction({
-                ...(data.statsChange || {}),
-                pulso: CHAT_PULSE_CHANGE,
-                esencia: CHAT_ESENCIA_COST
-            });
+            // 5. Update Stats (AI-driven)
+            const changes = data.statsChange || {};
+            const finalChanges = {
+                espiritu: changes.espiritu ?? 0,
+                pulso: changes.pulso ?? 0,
+                esencia: changes.esencia ?? -1,
+                fragmentos: changes.fragmentos ?? 0
+            };
+            updateStatAction(finalChanges);
+            setLastStatsChange(finalChanges);
+            // Auto-clear after 3 seconds
+            setTimeout(() => setLastStatsChange(null), 3000);
 
             // 6. Handle Name Discovery
             if (data.playerName && !playerData) {
@@ -150,6 +155,7 @@ export function useChat({ regenmon, updateStatAction }: UseChatProps) {
         toggleChat,
         messages,
         sendMessage,
-        isLoading
+        isLoading,
+        lastStatsChange
     };
 }

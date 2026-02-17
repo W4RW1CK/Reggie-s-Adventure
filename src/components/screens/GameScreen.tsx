@@ -112,7 +112,8 @@ export default function GameScreen({
         toggleChat,
         messages,
         sendMessage,
-        isLoading: isChatLoading
+        isLoading: isChatLoading,
+        lastStatsChange
     } = useChat({
         regenmon,
         updateStatAction: onUpdateStats
@@ -167,6 +168,21 @@ export default function GameScreen({
                             size={regenmonSize}
                         />
                     </div>
+
+                    {/* Floating stat change feedback */}
+                    {lastStatsChange && (() => {
+                        const items: string[] = [];
+                        const sc = lastStatsChange as Record<string, number | undefined>;
+                        if (sc.espiritu && sc.espiritu !== 0) items.push(`${sc.espiritu > 0 ? '+' : ''}${sc.espiritu} 🔮`);
+                        if (sc.pulso && sc.pulso !== 0) items.push(`${sc.pulso > 0 ? '+' : ''}${sc.pulso} 💛`);
+                        if (sc.esencia && sc.esencia !== 0) items.push(`${sc.esencia > 0 ? '+' : ''}${sc.esencia} 🌱`);
+                        if (sc.fragmentos && sc.fragmentos !== 0) items.push(`+${sc.fragmentos} 💠`);
+                        return items.length > 0 ? (
+                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 animate-bounce text-white text-sm font-bold bg-black/70 px-3 py-1 rounded whitespace-nowrap z-20">
+                                {items.join('  ')}
+                            </div>
+                        ) : null;
+                    })()}
 
                     <div className="mt-1 sm:mt-2 text-center bg-black/50 border-4 border-white/20 px-4 py-2 inline-block">
                         <NameEditor
