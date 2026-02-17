@@ -173,11 +173,18 @@ function Eyes({ state }: { state: SpriteState }) {
         case 'critical':
             return (
                 <>
-                    {/* X eyes — collapsed, shutting down */}
-                    <line x1="31" y1="40" x2="41" y2="50" stroke="#666" strokeWidth="2.5" opacity="0.6" />
-                    <line x1="41" y1="40" x2="31" y2="50" stroke="#666" strokeWidth="2.5" opacity="0.6" />
-                    <line x1="59" y1="40" x2="69" y2="50" stroke="#666" strokeWidth="2.5" opacity="0.6" />
-                    <line x1="69" y1="40" x2="59" y2="50" stroke="#666" strokeWidth="2.5" opacity="0.6" />
+                    {/* Sad closed eyes with tear */}
+                    <line x1="30" y1="45" x2="42" y2="45" stroke="#666" strokeWidth="2" opacity="0.5" />
+                    <line x1="58" y1="45" x2="70" y2="45" stroke="#666" strokeWidth="2" opacity="0.5" />
+                    {/* Tear drops */}
+                    <ellipse cx="36" cy="50" rx="1.5" ry="2.5" fill="#88aacc" opacity="0.5">
+                        <animate attributeName="cy" values="50;56;50" dur="2s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0.5;0.1;0.5" dur="2s" repeatCount="indefinite" />
+                    </ellipse>
+                    <ellipse cx="64" cy="51" rx="1.5" ry="2.5" fill="#88aacc" opacity="0.4">
+                        <animate attributeName="cy" values="51;57;51" dur="2.3s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0.4;0.1;0.4" dur="2.3s" repeatCount="indefinite" />
+                    </ellipse>
                 </>
             );
         case 'no_hope':
