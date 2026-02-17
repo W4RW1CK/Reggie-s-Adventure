@@ -52,7 +52,8 @@ export function useGameState() {
         const newData: RegenmonData = {
             name,
             type,
-            stats: { espiritu: STAT_INITIAL, pulso: STAT_INITIAL, hambre: STAT_INITIAL },
+            stats: { espiritu: STAT_INITIAL, pulso: STAT_INITIAL, esencia: 100, fragmentos: 0 },
+            theme: 'dark',
             createdAt: new Date().toISOString(),
             lastUpdated: new Date().toISOString(),
             nameChangeUsed: false,
@@ -69,12 +70,12 @@ export function useGameState() {
 
     const updateStatsWithDeltas = useCallback((deltas: Partial<RegenmonStats>) => {
         pendingUpdatesRef.current.push(deltas);
-        
+
         // Debounce updates
         const processUpdates = () => {
             const allDeltas = pendingUpdatesRef.current;
             pendingUpdatesRef.current = [];
-            
+
             // Merge all pending deltas
             const mergedDeltas = allDeltas.reduce((acc, delta) => {
                 Object.entries(delta).forEach(([key, value]) => {
@@ -82,7 +83,7 @@ export function useGameState() {
                 });
                 return acc;
             }, {} as Partial<RegenmonStats>);
-            
+
             setRegenmon(prev => {
                 if (!prev) return null;
 
@@ -118,7 +119,7 @@ export function useGameState() {
                 return updatedRegenmon;
             });
         };
-        
+
         setTimeout(processUpdates, 0); // Next tick
     }, []);
 

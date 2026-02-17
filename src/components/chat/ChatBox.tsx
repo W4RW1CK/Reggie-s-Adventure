@@ -74,7 +74,7 @@ export function ChatBox({
                     <div className="flex justify-center gap-4 text-[8px] text-[#a0a0a0] border-b border-[#4a4a4a] pb-2 font-['Press_Start_2P']">
                         <span>🔮 {stats.espiritu.toFixed(0)}</span>
                         <span>💛 {stats.pulso.toFixed(0)}</span>
-                        <span>🍎 {stats.hambre.toFixed(0)}</span>
+                        <span>🌱 {stats.esencia.toFixed(0)}</span>
                     </div>
 
                     {/* Messages Area */}

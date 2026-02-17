@@ -8,7 +8,7 @@ interface RegenmonSVGProps {
     stats?: {
         espiritu: number;
         pulso: number;
-        hambre: number;
+        esencia: number;
     };
 }
 
@@ -18,11 +18,11 @@ export default function RegenmonSVG({ type, size = 120, className = '', stats }:
     const getState = (): RegenmonState => {
         if (!stats) return 'normal';
 
-        const { espiritu, pulso, hambre } = stats;
+        const { espiritu, pulso, esencia } = stats;
 
         // Priority order matters!
         if (pulso <= 10) return 'weak';
-        if (hambre >= 90) return 'angry'; // Critical hunger = angry/stressed
+        if (esencia <= 10) return 'angry'; // Critical low esencia = angry/stressed
         if (espiritu <= 10) return 'sad';
         if (espiritu >= 80 || pulso >= 80) return 'happy';
 

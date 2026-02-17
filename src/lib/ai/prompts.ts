@@ -7,12 +7,12 @@ export function buildSystemPrompt(
     daysAlive: number,
     playerName?: string
 ): string {
-    const { espiritu, pulso, hambre } = stats;
+    const { espiritu, pulso, esencia } = stats;
 
     const spiritLevel = espiritu > 70 ? 'high' : espiritu < 30 ? 'low' : 'medium';
     const pulseLevel = pulso > 70 ? 'high' : pulso < 30 ? 'low' : 'medium';
-    const hungerLevel = hambre > 70 ? 'high' : hambre < 30 ? 'low' : 'medium';
-    const isCritical = espiritu < 10 && pulso < 10 && hambre < 10;
+    const hungerLevel = esencia < 30 ? 'high' : esencia > 70 ? 'low' : 'medium';
+    const isCritical = espiritu < 10 || pulso < 10 || esencia < 10;
 
     let personalityBlock = '';
     let themeBlock = '';
@@ -69,7 +69,7 @@ export function buildSystemPrompt(
     } else {
         if (spiritLevel === 'low') stateReactivity += '- Espíritu bajo (Esperanza): Dudas del futuro. Ves lejos la regeneración. "...a veces me pregunto cuánto falta..."\n';
         if (pulseLevel === 'low') stateReactivity += '- Pulso bajo (Energía): Estás cansado. Respuestas cortas. Economizas palabras.\n';
-        if (hungerLevel === 'high') stateReactivity += '- Hambre alta (Necesidad): Estás irritable. Mencionas tu hambre indirectamente.\n';
+        if (hungerLevel === 'high') stateReactivity += '- Esencia baja (Vitalidad): Estás débil y necesitado. Mencionas tu falta de energía indirectamente.\n';
     }
 
     const prompt = `
@@ -90,7 +90,7 @@ export function buildSystemPrompt(
     ESTADO ACTUAL:
     - Espíritu (Esperanza): ${espiritu}/100. ${spiritLevel === 'high' ? 'Crees firmemente en la regeneración.' : spiritLevel === 'low' ? 'Tu fe flaquea.' : 'Tienes días buenos y malos.'}
     - Pulso (Energía): ${pulso}/100.
-    - Hambre (Necesidad): ${hambre}/100.
+    - Esencia (Vitalidad): ${esencia}/100.
     ${stateReactivity}
 
     TEMA RECURRENTE: ${themeBlock}
@@ -110,7 +110,11 @@ export function buildSystemPrompt(
     Responde SIEMPRE en formato JSON válido con la siguiente estructura:
     {
       "message": "Tu respuesta aquí (string)",
-      "spiritChange": Un número entero entre -5 y 5 que refleje cómo te hizo sentir el mensaje del usuario (0 si es neutral),
+      "statsChange": {
+        "espiritu": Un número entero entre -5 y 5 (cómo te hizo sentir el mensaje),
+        "esencia": Un número entero entre -4 y -1 (hablar siempre gasta esencia),
+        "fragmentos": Un número entero entre 0 y 5 (recompensa por conversar)
+      },
       "playerName": "El nombre del usuario si lo acabas de descubrir en este mensaje (string, opcional)"
     }
     Si el usuario te dice su nombre, inclúyelo en el campo "playerName". Si ya lo sabías, no es necesario repetirlo ahí.

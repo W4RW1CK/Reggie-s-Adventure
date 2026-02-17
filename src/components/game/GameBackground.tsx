@@ -12,10 +12,10 @@ type Mood = 'good' | 'neutral' | 'bad';
 export default function GameBackground({ type, stats }: GameBackgroundProps) {
     // Determine overall mood based on stats
     const getMood = (): Mood => {
-        const { espiritu, pulso, hambre } = stats;
+        const { espiritu, pulso, esencia } = stats;
 
         // "Bad" conditions
-        if (pulso <= 20 || espiritu <= 20 || hambre >= 80) return 'bad';
+        if (pulso <= 20 || espiritu <= 20 || esencia <= 20) return 'bad';
 
         // "Good" conditions
         if (pulso >= 80 || espiritu >= 80) return 'good';

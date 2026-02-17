@@ -42,7 +42,7 @@ export function createGeminiProvider(apiKey: string): AIProvider {
                     // Fallback
                     return {
                         message: responseText.slice(0, 200), // Limit length just in case
-                        spiritChange: 0,
+                        statsChange: { espiritu: 0 },
                     };
                 }
 

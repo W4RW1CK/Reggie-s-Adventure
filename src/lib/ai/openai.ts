@@ -32,7 +32,7 @@ export function createOpenAIProvider(apiKey: string): AIProvider {
                     console.error('Failed to parse OpenAI JSON response:', responseText, e);
                     return {
                         message: responseText.slice(0, 200),
-                        spiritChange: 0,
+                        statsChange: { espiritu: 0, esencia: -1, fragmentos: 1 },
                     };
                 }
 

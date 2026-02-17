@@ -3,7 +3,8 @@ export type RegenmonType = 'rayo' | 'flama' | 'hielo';
 export interface RegenmonStats {
     espiritu: number; // 🔮 Espíritu — moral/voluntad (0-100)
     pulso: number;    // 💛 Pulso — energía vital (0-100)
-    hambre: number;   // 🍎 Hambre — necesidad de alimento (0-100)
+    esencia: number;  // 🌱 Esencia — nutrición/vitalidad (0-100, 100=Bien)
+    fragmentos: number; // 💠 Moneda del juego
 }
 
 export interface RegenmonData {
@@ -13,6 +14,9 @@ export interface RegenmonData {
 
     // Stats
     stats: RegenmonStats;
+
+    // Visuals
+    theme: 'dark' | 'light';      // Tema visual
 
     // Timestamps
     createdAt: string;         // ISO 8601
@@ -48,7 +52,7 @@ export interface ChatRequest {
 
 export interface ChatResponse {
     message: string;           // Respuesta del Regenmon (≤50 palabras)
-    spiritChange: number;      // -5 a +5 (cambio en Espíritu)
+    statsChange: Partial<RegenmonStats>; // Cambios en stats
     playerName?: string;       // Si descubrió el nombre del jugador
 }
 

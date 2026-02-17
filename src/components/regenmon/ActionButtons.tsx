@@ -21,7 +21,7 @@ export default function ActionButtons({ onAction, stats, isSleeping = false }: A
                 label="COMER"
                 icon="🍖"
                 onClick={() => onAction('feed')}
-                disabled={isSleeping || stats.hambre <= 0}
+                disabled={isSleeping || stats.esencia <= 0}
                 color="is-success"
             />
             <ActionButton

@@ -16,7 +16,7 @@ import {
     CHAT_COOLDOWN_MS,
     CHAT_SPIRIT_MAX_CHANGE,
     CHAT_PULSE_CHANGE,
-    CHAT_HUNGER_CHANGE,
+    CHAT_ESENCIA_COST,
     CHAT_MAX_MESSAGES,
     CHAT_CRITICAL_THRESHOLD
 } from '@/lib/constants';
@@ -50,10 +50,10 @@ export function useChat({ regenmon, updateStatAction }: UseChatProps) {
         if (now - lastMessageTime < CHAT_COOLDOWN_MS) return;
 
         // Critical state check
-        const { espiritu, pulso, hambre } = regenmon.stats;
+        const { espiritu, pulso, esencia } = regenmon.stats;
         if (espiritu < CHAT_CRITICAL_THRESHOLD ||
             pulso < CHAT_CRITICAL_THRESHOLD ||
-            hambre < CHAT_CRITICAL_THRESHOLD) {
+            esencia < CHAT_CRITICAL_THRESHOLD) {
             // Should be handled by UI disabling, but safety check
             return;
         }
@@ -113,9 +113,9 @@ export function useChat({ regenmon, updateStatAction }: UseChatProps) {
 
             // 5. Update Stats
             updateStatAction({
-                espiritu: data.spiritChange,
+                ...(data.statsChange || {}),
                 pulso: CHAT_PULSE_CHANGE,
-                hambre: CHAT_HUNGER_CHANGE
+                esencia: CHAT_ESENCIA_COST
             });
 
             // 6. Handle Name Discovery

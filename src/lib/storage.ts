@@ -36,7 +36,31 @@ export function saveRegenmon(data: RegenmonData): void {
 }
 
 export function loadRegenmon(): RegenmonData | null {
-    return getStorageItem<RegenmonData | null>(STORAGE_KEYS.DATA, null);
+    const data = getStorageItem<any | null>(STORAGE_KEYS.DATA, null);
+    if (!data) return null;
+    return migrateData(data);
+}
+
+// Migration Logic
+function migrateData(data: any): RegenmonData {
+    // 1. Convert Hambre -> Esencia (if needed)
+    if (typeof data.stats.hambre === 'number' && typeof data.stats.esencia === 'undefined') {
+        console.log('Migrating Hambre -> Esencia');
+        data.stats.esencia = Math.max(0, 100 - data.stats.hambre); // Invert logic
+        delete data.stats.hambre;
+    }
+
+    // 2. Initialize Fragmentos (if needed)
+    if (typeof data.stats.fragmentos === 'undefined') {
+        data.stats.fragmentos = 0;
+    }
+
+    // 3. Initialize Theme (if needed)
+    if (typeof data.theme === 'undefined') {
+        data.theme = 'dark';
+    }
+
+    return data as RegenmonData;
 }
 
 export function updateStats(newStats: Partial<RegenmonStats>): RegenmonData | null {

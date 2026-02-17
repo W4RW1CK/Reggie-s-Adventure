@@ -57,7 +57,11 @@ export function createMockProvider(): AIProvider {
 
             return {
                 message,
-                spiritChange,
+                statsChange: {
+                    espiritu: spiritChange,
+                    esencia: -2,
+                    fragmentos: Math.floor(Math.random() * 6), // 0-5
+                },
                 playerName
             };
         }

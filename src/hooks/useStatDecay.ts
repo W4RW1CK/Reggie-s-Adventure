@@ -51,7 +51,8 @@ export function useStatDecay({ stats, lastUpdated, onUpdateStats }: UseStatDecay
         return {
             espiritu: Math.max(STAT_MIN, Math.min(STAT_MAX, currentStats.espiritu - decayAmount)),
             pulso: Math.max(STAT_MIN, Math.min(STAT_MAX, currentStats.pulso - decayAmount)),
-            hambre: Math.max(STAT_MIN, Math.min(STAT_MAX, currentStats.hambre + decayAmount)), // Hambre SUBE
+            esencia: Math.max(STAT_MIN, Math.min(STAT_MAX, currentStats.esencia - decayAmount)), // Esencia BAJA
+            fragmentos: currentStats.fragmentos, // No cambia por decay
         };
     }, []);
 
@@ -70,7 +71,7 @@ export function useStatDecay({ stats, lastUpdated, onUpdateStats }: UseStatDecay
         if (
             decayedStats.espiritu !== currentStats.espiritu ||
             decayedStats.pulso !== currentStats.pulso ||
-            decayedStats.hambre !== currentStats.hambre
+            decayedStats.esencia !== currentStats.esencia
         ) {
             onUpdateStats(decayedStats);
         }
@@ -88,20 +89,21 @@ export function useStatDecay({ stats, lastUpdated, onUpdateStats }: UseStatDecay
             const last = new Date(lastUpdatedRef.current).getTime();
             const hoursElapsed = (now - last) / 3600000;
             const decayAmount = Math.floor(hoursElapsed * DECAY_RATE_PER_HOUR);
-            
+
             if (decayAmount <= 0) return;
-            
+
             const newStats = {
                 espiritu: Math.max(STAT_MIN, Math.min(STAT_MAX, statsRef.current.espiritu - decayAmount)),
                 pulso: Math.max(STAT_MIN, Math.min(STAT_MAX, statsRef.current.pulso - decayAmount)),
-                hambre: Math.max(STAT_MIN, Math.min(STAT_MAX, statsRef.current.hambre + decayAmount)), // Hambre SUBE
+                esencia: Math.max(STAT_MIN, Math.min(STAT_MAX, statsRef.current.esencia - decayAmount)), // Esencia BAJA
+                fragmentos: statsRef.current.fragmentos,
             };
 
             // If calculated stats differ from current, apply update
             if (
                 newStats.espiritu !== statsRef.current.espiritu ||
                 newStats.pulso !== statsRef.current.pulso ||
-                newStats.hambre !== statsRef.current.hambre
+                newStats.esencia !== statsRef.current.esencia
             ) {
                 onUpdateStatsRef.current(newStats);
             }

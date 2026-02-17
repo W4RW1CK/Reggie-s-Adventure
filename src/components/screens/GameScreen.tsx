@@ -71,7 +71,7 @@ export default function GameScreen({
                 onUpdateStats({ pulso: 10 });
                 break;
             case 'feed':
-                onUpdateStats({ hambre: -10 });
+                onUpdateStats({ esencia: 10 });
                 break;
             case 'sleep':
                 onUpdateStats({ espiritu: 10 });
@@ -169,11 +169,11 @@ export default function GameScreen({
                                 icon="💛"
                             />
                             <StatBar
-                                label="Hambre"
-                                subtitle="Necesidad"
-                                value={regenmon.stats.hambre}
-                                color="var(--color-stat-hambre-full)"
-                                icon="🍖"
+                                label="Esencia"
+                                subtitle="Vitalidad"
+                                value={regenmon.stats.esencia}
+                                color="var(--color-stat-esencia-full)"
+                                icon="🌱"
                             />
                         </div>
 

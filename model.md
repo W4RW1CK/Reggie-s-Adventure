@@ -431,3 +431,21 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 > **Regla:** Al tomar una decisión nueva, documentarla aquí Y actualizar los documentos afectados.
 > Si hay conflicto entre este documento y [LORE.md](./LORE.md) en temas narrativos, **LORE.md gana**.
 
+---
+
+## Log de Implementación Sesión 3
+
+### Análisis Inicial (2026-02-16)
+- **Estado Actual:** Sesión 2 completada (v0.2). Fase 32 (Setup) parcialmente ejecutada por el usuario.
+- **Verificación Fase 32:**
+  - `PrivyProviderWrapper`, `AppProviders`, `supabase.ts` existen.
+  - `layout.tsx` integra `AppProviders`.
+  - Dependencias instaladas (`@privy-io/react-auth`, `@supabase/supabase-js`).
+  - **Pendiente:** Validar `.env.local` con claves reales (Privy App ID, Supabase URL/Key).
+- **Plan de Acción Inmediato:**
+  1.  **Fase 33 (Datos):** Actualizar tipos y lógica de stats (Hambre → Esencia). *Critical* para que el resto funcione.
+  2.  **Fase 34-35 (Auth/Persistencia):** Integrar UI de login y conectar con Supabase.
+  3.  **Fase 36-38 (Economía/Chat):** Implementar Fragmentos y la nueva lógica de stats en chat.
+
+> **Nota Crítica:** La transición de Hambre a Esencia invierte la lógica (100=Bueno). Esto requiere una migración cuidadosa de datos existentes en localStorage para no "matar" a los Regenmons existentes (convertir Hambre 80 -> Esencia 20, por ejemplo, o reiniciar a 50).
+
