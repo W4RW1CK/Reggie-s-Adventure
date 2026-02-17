@@ -19,6 +19,12 @@ export type SpriteState = 'euphoric' | 'happy' | 'neutral' | 'sad' | 'critical' 
 export function getSpriteState(stats: { espiritu: number; pulso: number; esencia: number }): SpriteState {
     const { espiritu, pulso, esencia } = stats;
 
+    const avg = (espiritu + pulso + esencia) / 3;
+
+    // If ALL three stats are critical (<10), it's a full collapse — not individual
+    if (avg < 10) return 'critical';
+
+    // Individual stat overrides (only when ONE or TWO are critical, not all three)
     const criticals = [
         { stat: 'espiritu', value: espiritu, state: 'no_hope' as SpriteState },
         { stat: 'pulso', value: pulso, state: 'no_energy' as SpriteState },
@@ -30,12 +36,10 @@ export function getSpriteState(stats: { espiritu: number; pulso: number; esencia
         return criticals[0].state;
     }
 
-    const avg = (espiritu + pulso + esencia) / 3;
     if (avg >= 90) return 'euphoric';
     if (avg >= 70) return 'happy';
     if (avg >= 30) return 'neutral';
-    if (avg >= 10) return 'sad';
-    return 'critical';
+    return 'sad';
 }
 
 // ── Color palettes per type ──
