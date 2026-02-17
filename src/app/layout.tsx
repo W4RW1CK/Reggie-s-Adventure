@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Press_Start_2P } from "next/font/google";
 import "./globals.css";
+import { AppProviders } from "@/components/providers/AppProviders";
 
 const pressStart2P = Press_Start_2P({
   weight: "400",
@@ -21,7 +22,9 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${pressStart2P.variable} antialiased`} suppressHydrationWarning>
-        {children}
+        <AppProviders>
+          {children}
+        </AppProviders>
       </body>
     </html>
   );
