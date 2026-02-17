@@ -99,7 +99,7 @@ export default function SettingsPanel({
     <div className="fixed inset-0 z-50 flex justify-end animate-fadeIn" style={{ backgroundColor: 'var(--theme-modal-overlay)' }}>
       <div
         ref={panelRef}
-        className="w-full max-w-sm h-full overflow-y-auto border-l-4 p-0 animate-slideInRight"
+        className="settings-panel w-full max-w-sm h-full overflow-y-auto border-l-4 p-0 animate-slideInRight"
         style={{ backgroundColor: 'var(--theme-panel-bg)', borderColor: 'var(--theme-border-subtle)' }}
         role="dialog"
         aria-modal="true"

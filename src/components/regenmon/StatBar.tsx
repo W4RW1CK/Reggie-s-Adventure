@@ -14,7 +14,7 @@ export default function StatBar({ label, subtitle, value, max = 100, color, icon
 
     return (
         <div className="w-full mb-2 flex flex-col">
-            <div className="flex justify-between items-end mb-1 text-xs text-white px-1">
+            <div className="flex justify-between items-end mb-1 text-xs px-1" style={{ color: 'var(--theme-text)' }}>
                 <span className="flex items-center gap-2">
                     <span className="text-lg">{icon}</span>
                     <span className="uppercase tracking-wider">{label}</span>
@@ -25,7 +25,8 @@ export default function StatBar({ label, subtitle, value, max = 100, color, icon
 
             {/* NES-style container for the bar */}
             <div
-                className="w-full h-6 bg-[#212529] border-4 border-white relative"
+                className="w-full h-6 border-4 relative"
+                style={{ backgroundColor: 'var(--theme-stat-bar-bg)', borderColor: 'var(--theme-border)' }}
                 role="progressbar"
                 aria-label={`${label}: ${Math.round(value)} de ${max}`}
                 aria-valuenow={Math.round(value)}

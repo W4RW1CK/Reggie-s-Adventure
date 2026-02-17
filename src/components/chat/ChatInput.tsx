@@ -30,7 +30,7 @@ export function ChatInput({ value, onChange, onSend, isLoading, disabled, placeh
                 <textarea
                     className={classNames(
                         "nes-textarea w-full h-[80px] text-[10px] resize-none p-2 font-['Press_Start_2P'] leading-relaxed",
-                        "bg-[#0a0a1a] text-white border-2 border-[#4a4a4a] outline-none",
+                        "border-2 outline-none",
                         "focus:border-[#f5c542]"
                     )}
                     placeholder={placeholder || "¿Qué le quieres decir?"}
@@ -40,6 +40,7 @@ export function ChatInput({ value, onChange, onSend, isLoading, disabled, placeh
                     disabled={disabled || isLoading}
                     maxLength={CHAT_MAX_CHARS}
                     aria-label="Mensaje para tu Regenmon"
+                    style={{ backgroundColor: 'var(--theme-input-bg)', color: 'var(--theme-input-text)', borderColor: 'var(--theme-border)' }}
                 />
                 <span className={classNames(
                     "absolute bottom-2 right-2 text-[8px]",

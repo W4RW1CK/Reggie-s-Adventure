@@ -120,11 +120,11 @@ export function ChatBox({
                     width: 8px;
                 }
                 .scrollbar-nes::-webkit-scrollbar-track {
-                    background: #2c2c2c; 
+                    background: var(--theme-stat-bar-bg); 
                 }
                 .scrollbar-nes::-webkit-scrollbar-thumb {
-                    background: #4a4a4a; 
-                    border: 2px solid #2c2c2c;
+                    background: var(--theme-border); 
+                    border: 2px solid var(--theme-stat-bar-bg);
                 }
             `}</style>
         </div>

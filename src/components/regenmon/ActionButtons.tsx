@@ -35,7 +35,7 @@ export default function ActionButtons({
     return (
         <div className="w-full flex flex-col gap-2">
             {/* Main action buttons row */}
-            <div className="grid grid-cols-3 gap-2">
+            <div className="action-buttons-row grid grid-cols-3 gap-2">
                 {/* Purificar Button */}
                 <button
                     type="button"
