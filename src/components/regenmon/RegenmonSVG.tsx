@@ -60,7 +60,10 @@ function SpriteFilters({ state, type }: { state: SpriteState; type: RegenmonType
             <filter id={`grayscale-${id}`}>
                 <feColorMatrix type="saturate" values="0" />
                 <feComponentTransfer>
-                    <feFuncA type="linear" slope="0.5" />
+                    <feFuncR type="linear" slope="0.4" intercept="0.1" />
+                    <feFuncG type="linear" slope="0.4" intercept="0.1" />
+                    <feFuncB type="linear" slope="0.4" intercept="0.1" />
+                    <feFuncA type="linear" slope="0.6" />
                 </feComponentTransfer>
             </filter>
             <filter id={`no-hope-${id}`}>
@@ -170,10 +173,11 @@ function Eyes({ state }: { state: SpriteState }) {
         case 'critical':
             return (
                 <>
-                    <line x1="32" y1="43" x2="40" y2="47" stroke="#555" strokeWidth="2" opacity="0.4" />
-                    <line x1="60" y1="47" x2="68" y2="43" stroke="#555" strokeWidth="2" opacity="0.4" />
-                    <circle cx="36" cy="48" r="2" fill="#444" opacity="0.3" />
-                    <circle cx="64" cy="48" r="2" fill="#444" opacity="0.3" />
+                    {/* X eyes — collapsed, shutting down */}
+                    <line x1="31" y1="40" x2="41" y2="50" stroke="#666" strokeWidth="2.5" opacity="0.6" />
+                    <line x1="41" y1="40" x2="31" y2="50" stroke="#666" strokeWidth="2.5" opacity="0.6" />
+                    <line x1="59" y1="40" x2="69" y2="50" stroke="#666" strokeWidth="2.5" opacity="0.6" />
+                    <line x1="69" y1="40" x2="59" y2="50" stroke="#666" strokeWidth="2.5" opacity="0.6" />
                 </>
             );
         case 'no_hope':
@@ -231,7 +235,7 @@ function Mouth({ state }: { state: SpriteState }) {
         case 'sad':
             return <path d="M43 63 Q50 58 57 63" stroke="black" strokeWidth="1.5" fill="none" opacity="0.4" />;
         case 'critical':
-            return <line x1="45" y1="62" x2="55" y2="62" stroke="#555" strokeWidth="1" opacity="0.3" />;
+            return <path d="M43 62 L46 60 L50 63 L54 60 L57 62" stroke="#666" strokeWidth="1.5" fill="none" opacity="0.4" />;
         case 'no_hope':
             return <path d="M42 60 Q50 68 58 60" stroke="#6633aa" strokeWidth="2" fill="none" opacity="0.6" />;
         case 'no_energy':
@@ -276,25 +280,6 @@ function Decorations({ state, type }: { state: SpriteState; type: RegenmonType }
                 <rect x="0" y="0" width="100" height="100" fill="none" opacity="0">
                     <animate attributeName="opacity" values="0;0.05;0" dur="0.3s" repeatCount="indefinite" />
                 </rect>
-            </>
-        );
-    }
-
-    if (state === 'no_hope') {
-        return (
-            <>
-                {/* Falling fading particles — stars dying out */}
-                {[
-                    { cx: 20, delay: '0s', dur: '3s' },
-                    { cx: 45, delay: '1s', dur: '2.5s' },
-                    { cx: 70, delay: '0.5s', dur: '3.2s' },
-                    { cx: 85, delay: '1.5s', dur: '2.8s' },
-                ].map((p, i) => (
-                    <circle key={i} cx={p.cx} r="1.5" fill="#9966cc" opacity="0">
-                        <animate attributeName="cy" values="10;95" dur={p.dur} begin={p.delay} repeatCount="indefinite" />
-                        <animate attributeName="opacity" values="0.6;0" dur={p.dur} begin={p.delay} repeatCount="indefinite" />
-                    </circle>
-                ))}
             </>
         );
     }
