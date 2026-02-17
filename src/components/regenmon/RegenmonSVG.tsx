@@ -273,6 +273,22 @@ function Decorations({ state, type }: { state: SpriteState; type: RegenmonType }
         );
     }
 
+    if (state === 'happy') {
+        return (
+            <>
+                {/* Subtle floating sparkles — content but not overwhelming */}
+                <circle cx="22" cy="28" r="1.2" fill={colors.accent} opacity="0">
+                    <animate attributeName="opacity" values="0;0.5;0" dur="3s" repeatCount="indefinite" />
+                    <animate attributeName="cy" values="28;22;28" dur="3s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="78" cy="32" r="1" fill={colors.accent} opacity="0">
+                    <animate attributeName="opacity" values="0;0.4;0" dur="3.5s" begin="1s" repeatCount="indefinite" />
+                    <animate attributeName="cy" values="32;26;32" dur="3.5s" begin="1s" repeatCount="indefinite" />
+                </circle>
+            </>
+        );
+    }
+
     if (state === 'critical') {
         return (
             <>
