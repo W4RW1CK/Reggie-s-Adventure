@@ -94,6 +94,7 @@ export function useGameState({ privyUserId, isLoggedIn }: UseGameStateProps) {
             lastUpdated: new Date().toISOString(),
             nameChangeUsed: false,
             tutorialDismissed: false,
+            memories: [],
         };
         setRegenmon(newData);
         

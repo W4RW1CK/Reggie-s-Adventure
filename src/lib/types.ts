@@ -25,6 +25,9 @@ export interface RegenmonData {
     // Flags
     nameChangeUsed: boolean;   // ¿Ya usó su único cambio de nombre?
     tutorialDismissed: boolean; // ¿Ya descartó el tutorial?
+
+    // Memories
+    memories: RegenmonMemory[]; // Memorias del Regenmon sobre el usuario
 }
 
 export interface AppConfig {
@@ -48,12 +51,14 @@ export interface ChatRequest {
         daysAlive: number;      // Días desde la creación
     };
     playerName?: string;      // Nombre del jugador (si ya se descubrió)
+    memories?: RegenmonMemory[]; // Memorias existentes del Regenmon
 }
 
 export interface ChatResponse {
     message: string;           // Respuesta del Regenmon (≤50 palabras)
     statsChange: Partial<RegenmonStats>; // Cambios en stats
     playerName?: string;       // Si descubrió el nombre del jugador
+    memories?: Array<{key: string, value: string, type: string}>; // Memorias descubiertas
 }
 
 export interface PlayerData {
@@ -61,8 +66,11 @@ export interface PlayerData {
     discoveredAt: number;  // Timestamp de descubrimiento
 }
 
+export type MemoryType = 'nombre' | 'gustos' | 'emociones' | 'datos_personales' | 'tema_frecuente';
+
 export interface RegenmonMemory {
     key: string;           // Identificador único (ej: "likes_pizza")
     value: string;         // Dato recordado (ej: "El usuario ama la pizza")
+    type: MemoryType;      // Categoría de memoria
     discoveredAt: number;  // Timestamp
 }

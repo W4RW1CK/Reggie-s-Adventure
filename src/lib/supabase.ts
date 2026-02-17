@@ -50,6 +50,7 @@ function fromSupabaseFormat(data: SupabaseRegenmon): RegenmonData {
     lastUpdated: data.last_updated,
     nameChangeUsed: data.name_change_used,
     tutorialDismissed: data.tutorial_dismissed,
+    memories: data.memories || [],
   };
 }
 

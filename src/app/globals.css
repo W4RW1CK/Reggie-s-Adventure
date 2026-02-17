@@ -1782,6 +1782,58 @@ body {
     transition: none !important;
   }
 }
+/* =============================================
+   THEME SYSTEM (Phase 39)
+   ============================================= */
+
+/* Dark theme (default NES) */
+.theme-dark {
+  --theme-bg: #1a1a2e;
+  --theme-surface: #0f3460;
+  --theme-text: #e8e8e8;
+  --theme-border: #4a4a4a;
+}
+
+/* Light theme (Game Boy Color) */
+.theme-light {
+  --theme-bg: #e0f0e0;
+  --theme-surface: #c8e8b0;
+  --theme-text: #2a3a2a;
+  --theme-border: #5a7a5a;
+}
+
+.theme-light body,
+.theme-light .game-screen {
+  background-color: var(--theme-bg);
+  color: var(--theme-text);
+}
+
+.theme-light .nes-container.is-dark {
+  background-color: var(--theme-surface);
+  color: var(--theme-text);
+  border-color: var(--theme-border);
+}
+
+.theme-light .bg-black\/50,
+.theme-light .bg-black\/60 {
+  background-color: rgba(200, 232, 176, 0.7);
+}
+
+/* Text sizes */
+html.text-sm .game-screen { font-size: 12px; }
+html.text-base .game-screen { font-size: 14px; }
+html.text-lg .game-screen { font-size: 18px; }
+
+/* Settings panel slide-in */
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.3s ease-out;
+}
+
 /* Chat Animations */
 @keyframes typing-bounce {
   0%, 80%, 100% { transform: translateY(0); }

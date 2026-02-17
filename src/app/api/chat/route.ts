@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
 
         // 2. Parse Request
         body = await req.json() as ChatRequest;
-        const { message, history, regenmon, playerName } = body;
+        const { message, history, regenmon, playerName, memories } = body;
 
         if (!message || !regenmon) {
             return NextResponse.json(
@@ -56,7 +56,8 @@ export async function POST(req: NextRequest) {
             regenmon.type,
             regenmon.stats,
             regenmon.daysAlive,
-            playerName
+            playerName,
+            memories
         );
 
         // 4. Get AI Provider (Gemini or OpenAI)

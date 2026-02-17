@@ -10,7 +10,9 @@ import {
     saveChatHistory,
     loadChatHistory,
     savePlayerData,
-    loadPlayerData
+    loadPlayerData,
+    loadMemories,
+    saveMemories
 } from '@/lib/storage';
 import {
     CHAT_COOLDOWN_MS,
@@ -74,16 +76,18 @@ export function useChat({ regenmon, updateStatAction }: UseChatProps) {
         try {
             // 2. Prepare Request
             const playerData = loadPlayerData();
+            const currentMemories = loadMemories();
             const request: ChatRequest = {
                 message: text,
-                history: updatedHistory.slice(-10), // Send updated history including current message
+                history: updatedHistory.slice(-10),
                 regenmon: {
                     name: regenmon.name,
                     type: regenmon.type,
                     stats: regenmon.stats,
                     daysAlive: Math.floor((now - new Date(regenmon.createdAt).getTime()) / (1000 * 60 * 60 * 24))
                 },
-                playerName: playerData?.name
+                playerName: playerData?.name,
+                memories: currentMemories
             };
 
             // 3. Call API
@@ -129,6 +133,27 @@ export function useChat({ regenmon, updateStatAction }: UseChatProps) {
                     name: data.playerName,
                     discoveredAt: Date.now()
                 });
+            }
+
+            // 7. Handle Memories
+            if (data.memories && data.memories.length > 0) {
+                const existing = loadMemories();
+                const merged = [...existing];
+                for (const newMem of data.memories) {
+                    const idx = merged.findIndex(m => m.key === newMem.key);
+                    const memoryEntry = {
+                        key: newMem.key,
+                        value: newMem.value,
+                        type: newMem.type as import('@/lib/types').MemoryType,
+                        discoveredAt: Date.now()
+                    };
+                    if (idx >= 0) {
+                        merged[idx] = memoryEntry;
+                    } else {
+                        merged.push(memoryEntry);
+                    }
+                }
+                saveMemories(merged);
             }
 
         } catch (error) {

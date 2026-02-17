@@ -60,6 +60,11 @@ function migrateData(data: any): RegenmonData {
         data.theme = 'dark';
     }
 
+    // 4. Initialize Memories (if needed)
+    if (!Array.isArray(data.memories)) {
+        data.memories = [];
+    }
+
     return data as RegenmonData;
 }
 
@@ -145,21 +150,29 @@ export function clearPlayerData(): void {
 
 // --- Memories CRUD ---
 
+const MAX_MEMORIES = 50;
+
+export function saveMemories(memories: RegenmonMemory[]): void {
+    // FIFO: keep only the last MAX_MEMORIES
+    const trimmed = memories.slice(-MAX_MEMORIES);
+    setStorageItem(STORAGE_KEYS.MEMORIES, trimmed);
+}
+
 export function saveMemory(key: string, value: string): void {
     const memories = loadMemories();
     const newMemory: RegenmonMemory = {
         key,
         value,
+        type: 'datos_personales',
         discoveredAt: Date.now(),
     };
 
-    // Filter out existing memory with same key if it exists (update)
     const updatedMemories = [
         ...memories.filter(m => m.key !== key),
         newMemory
     ];
 
-    setStorageItem(STORAGE_KEYS.MEMORIES, updatedMemories);
+    saveMemories(updatedMemories);
 }
 
 export function loadMemories(): RegenmonMemory[] {

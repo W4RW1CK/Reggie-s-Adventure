@@ -1,11 +1,12 @@
-import { RegenmonType, RegenmonStats } from '../types';
+import { RegenmonType, RegenmonStats, RegenmonMemory } from '../types';
 
 export function buildSystemPrompt(
     name: string,
     type: RegenmonType,
     stats: RegenmonStats,
     daysAlive: number,
-    playerName?: string
+    playerName?: string,
+    memories?: RegenmonMemory[]
 ): string {
     const { espiritu, pulso, esencia } = stats;
 
@@ -93,6 +94,10 @@ export function buildSystemPrompt(
     - Esencia (Vitalidad): ${esencia}/100.
     ${stateReactivity}
 
+    MEMORIAS GUARDADAS:
+    ${memories && memories.length > 0 ? memories.map(m => `- ${m.type}: ${m.value}`).join('\n    ') : '(Ninguna aún)'}
+    Puedes hacer referencia sutil a estas memorias. No las repitas textualmente.
+
     TEMA RECURRENTE: ${themeBlock}
     TU DOLOR: ${painBlock}
     EMOJIS PERMITIDOS: ${emojisBlock}
@@ -122,9 +127,11 @@ export function buildSystemPrompt(
         "esencia": "integer -4 to -1 (talking always costs esencia)",
         "fragmentos": "integer 0 to 5 (reward for conversing, harder near 100)"
       },
-      "playerName": "El nombre del usuario si lo acabas de descubrir en este mensaje (string, opcional)"
+      "playerName": "El nombre del usuario si lo acabas de descubrir en este mensaje (string, opcional)",
+      "memories": [{"key": "color_favorito", "value": "azul", "type": "gustos"}]
     }
     Si el usuario te dice su nombre, inclúyelo en el campo "playerName". Si ya lo sabías, no es necesario repetirlo ahí.
+    Si el usuario revela información personal (nombre, gustos, emociones, datos personales, temas frecuentes), inclúyela en el array "memories" con key, value, y type (nombre|gustos|emociones|datos_personales|tema_frecuente). Si no hay info nueva, envía array vacío o omítelo.
   `;
 
     return prompt;

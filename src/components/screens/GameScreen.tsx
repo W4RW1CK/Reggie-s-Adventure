@@ -5,11 +5,12 @@ import RegenmonSVG from '@/components/regenmon/RegenmonSVG';
 import StatBar from '@/components/regenmon/StatBar';
 import ActionButtons from '../regenmon/ActionButtons';
 import NameEditor from '../ui/NameEditor';
-import ResetButton from '../ui/ResetButton';
 import TutorialModal from '../ui/TutorialModal';
-import MusicToggle from '../ui/MusicToggle';
 import FragmentCounter from '../ui/FragmentCounter';
+import SettingsPanel from '../settings/SettingsPanel';
 import { LoginButton } from '../auth/LoginButton';
+import { useTheme } from '@/hooks/useTheme';
+import { useAuth } from '@/hooks/useAuth';
 import { useState, useEffect, useMemo } from 'react';
 import { RegenmonData } from '@/lib/types';
 import { STAT_MAX, STAT_MIN, PURIFY_COST, SEARCH_FRAGMENTS_REWARD } from '@/lib/constants';
@@ -43,6 +44,8 @@ export default function GameScreen({
     const [showTutorial, setShowTutorial] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 480);
+    const { theme, textSize, toggleTheme, setTextSize } = useTheme();
+    const { login, logout } = useAuth();
 
     // Track window size for responsive SVG
     useEffect(() => {
@@ -95,8 +98,6 @@ export default function GameScreen({
 
     const handleSettings = () => {
         setShowSettings(true);
-        // Settings modal will be implemented later (placeholder for now)
-        alert('⚙️ Configuración (próximamente)');
     };
 
     const handleTutorialDismiss = (dontShowAgain: boolean) => {
@@ -155,7 +156,6 @@ export default function GameScreen({
                     </div>
                     <div className="flex gap-2 items-start">
                         {isLoggedIn && <LoginButton className="text-xs" />}
-                        <MusicToggle musicEnabled={musicEnabled} onToggle={onToggleMusic} />
                     </div>
                 </div>
 
@@ -236,10 +236,24 @@ export default function GameScreen({
                         </div>
 
 
-                        {/* Footer: Reset */}
-                        <div className="flex justify-center mt-1 sm:mt-2">
-                            <ResetButton onReset={onReset} />
-                        </div>
+                        {/* Settings Panel */}
+                        <SettingsPanel
+                            isOpen={showSettings}
+                            onClose={() => setShowSettings(false)}
+                            musicEnabled={musicEnabled}
+                            onToggleMusic={onToggleMusic}
+                            theme={theme}
+                            onToggleTheme={toggleTheme}
+                            textSize={textSize}
+                            onSetTextSize={setTextSize}
+                            regenmonName={regenmon.name}
+                            onUpdateName={onUpdateName}
+                            canRename={!regenmon.nameChangeUsed}
+                            isLoggedIn={isLoggedIn}
+                            onLogin={login}
+                            onLogout={logout}
+                            onReset={onReset}
+                        />
                     </div>
                 </div>
 
