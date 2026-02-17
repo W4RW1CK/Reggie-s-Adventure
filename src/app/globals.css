@@ -1071,6 +1071,17 @@ body {
   animation: droop 4s ease-in-out infinite;
 }
 
+/* No Hope — lost sway */
+@keyframes sway-lost {
+  0%, 100% { transform: translateX(0) rotate(0deg); opacity: 0.7; }
+  25% { transform: translateX(-4px) rotate(-2deg); opacity: 0.6; }
+  75% { transform: translateX(4px) rotate(2deg); opacity: 0.6; }
+}
+
+.animate-sway-lost {
+  animation: sway-lost 4s ease-in-out infinite;
+}
+
 /* Weak Pulse */
 @keyframes pulse-slow {
 

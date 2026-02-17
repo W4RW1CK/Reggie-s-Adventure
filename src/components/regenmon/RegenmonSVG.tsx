@@ -65,10 +65,10 @@ function SpriteFilters({ state, type }: { state: SpriteState; type: RegenmonType
             </filter>
             <filter id={`no-hope-${id}`}>
                 <feColorMatrix type="matrix" values="
-                    0.5 0.1 0.2 0 0.1
-                    0.2 0.1 0.3 0 0.0
-                    0.3 0.2 0.5 0 0.15
-                    0   0   0   1 0" />
+                    0.3 0.1 0.4 0 0.15
+                    0.1 0.05 0.3 0 0.05
+                    0.3 0.15 0.7 0 0.2
+                    0   0   0   0.85 0" />
             </filter>
             <filter id={`no-energy-${id}`}>
                 <feColorMatrix type="matrix" values="
@@ -117,7 +117,7 @@ function getAnimationClass(state: SpriteState): string {
         case 'neutral': return 'animate-float-idle';
         case 'sad': return 'animate-droop';
         case 'critical': return 'animate-flicker';
-        case 'no_hope': return 'animate-droop';
+        case 'no_hope': return 'animate-sway-lost';
         case 'no_energy': return 'animate-pulse-slow';
         case 'no_nutrition': return 'animate-pulse-slow';
         default: return 'animate-float-idle';
@@ -179,11 +179,21 @@ function Eyes({ state }: { state: SpriteState }) {
         case 'no_hope':
             return (
                 <>
-                    {/* Empty hollow eyes */}
-                    <circle cx="36" cy="45" r="6" fill="none" stroke="#444" strokeWidth="2" opacity="0.6" />
-                    <circle cx="64" cy="45" r="6" fill="none" stroke="#444" strokeWidth="2" opacity="0.6" />
-                    <circle cx="36" cy="45" r="1.5" fill="#555" opacity="0.3" />
-                    <circle cx="64" cy="45" r="1.5" fill="#555" opacity="0.3" />
+                    {/* Wide open eyes with spiral void — existential emptiness */}
+                    <circle cx="36" cy="44" r="7" fill="#1a0a2e" opacity="0.8" />
+                    <circle cx="64" cy="44" r="7" fill="#1a0a2e" opacity="0.8" />
+                    {/* Spiral inside eyes */}
+                    <path d="M36 44 Q38 41 40 44 Q38 47 36 44" stroke="#8844aa" strokeWidth="0.8" fill="none" opacity="0.6">
+                        <animate attributeName="opacity" values="0.6;0.2;0.6" dur="3s" repeatCount="indefinite" />
+                    </path>
+                    <path d="M64 44 Q66 41 68 44 Q66 47 64 44" stroke="#8844aa" strokeWidth="0.8" fill="none" opacity="0.6">
+                        <animate attributeName="opacity" values="0.6;0.2;0.6" dur="3s" repeatCount="indefinite" />
+                    </path>
+                    {/* Tear drop */}
+                    <ellipse cx="28" cy="52" rx="2" ry="3" fill="#9966cc" opacity="0.5">
+                        <animate attributeName="cy" values="52;58;52" dur="2.5s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0.5;0.1;0.5" dur="2.5s" repeatCount="indefinite" />
+                    </ellipse>
                 </>
             );
         case 'no_energy':
@@ -223,7 +233,7 @@ function Mouth({ state }: { state: SpriteState }) {
         case 'critical':
             return <line x1="45" y1="62" x2="55" y2="62" stroke="#555" strokeWidth="1" opacity="0.3" />;
         case 'no_hope':
-            return <line x1="44" y1="62" x2="56" y2="62" stroke="#555" strokeWidth="1.5" opacity="0.4" />;
+            return <path d="M42 60 Q50 68 58 60" stroke="#6633aa" strokeWidth="2" fill="none" opacity="0.6" />;
         case 'no_energy':
             return <path d="M44 61 Q50 64 56 61" stroke="black" strokeWidth="1" fill="none" opacity="0.3" />;
         case 'no_nutrition':
@@ -266,6 +276,25 @@ function Decorations({ state, type }: { state: SpriteState; type: RegenmonType }
                 <rect x="0" y="0" width="100" height="100" fill="none" opacity="0">
                     <animate attributeName="opacity" values="0;0.05;0" dur="0.3s" repeatCount="indefinite" />
                 </rect>
+            </>
+        );
+    }
+
+    if (state === 'no_hope') {
+        return (
+            <>
+                {/* Falling fading particles — stars dying out */}
+                {[
+                    { cx: 20, delay: '0s', dur: '3s' },
+                    { cx: 45, delay: '1s', dur: '2.5s' },
+                    { cx: 70, delay: '0.5s', dur: '3.2s' },
+                    { cx: 85, delay: '1.5s', dur: '2.8s' },
+                ].map((p, i) => (
+                    <circle key={i} cx={p.cx} r="1.5" fill="#9966cc" opacity="0">
+                        <animate attributeName="cy" values="10;95" dur={p.dur} begin={p.delay} repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0.6;0" dur={p.dur} begin={p.delay} repeatCount="indefinite" />
+                    </circle>
+                ))}
             </>
         );
     }
