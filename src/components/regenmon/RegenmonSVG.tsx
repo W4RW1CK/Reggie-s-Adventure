@@ -427,7 +427,7 @@ export default function RegenmonSVG({ type, size = 120, className = '', stats }:
     const getCssFilter = (s: SpriteState): string => {
         switch (s) {
             case 'critical': return 'grayscale(1) brightness(0.5) opacity(0.6)';
-            case 'no_hope': return 'hue-rotate(290deg) saturate(1.8) brightness(0.75)';
+            case 'no_hope': return 'sepia(1) hue-rotate(230deg) saturate(2) brightness(0.75)';
             case 'no_energy': return 'sepia(0.8) hue-rotate(10deg) brightness(0.8)';
             case 'no_nutrition': return 'hue-rotate(90deg) saturate(0.6) brightness(0.7)';
             case 'sad': return 'saturate(0.5) brightness(0.85)';
