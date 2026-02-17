@@ -15,6 +15,8 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { RegenmonType } from '@/lib/types';
 
 export default function Home() {
+  const { isLoggedIn, isReady: isAuthReady, privyUserId } = useAuth();
+
   const {
     regenmon,
     config,
@@ -25,9 +27,7 @@ export default function Home() {
     markIntroSeen,
     updateRegenmonName,
     dismissTutorial,
-  } = useGameState();
-
-  const { isLoggedIn, isReady: isAuthReady } = useAuth();
+  } = useGameState({ privyUserId: privyUserId || undefined, isLoggedIn });
 
   const { 
     currentScreen, 
