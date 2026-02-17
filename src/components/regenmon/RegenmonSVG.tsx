@@ -166,8 +166,9 @@ function Eyes({ state }: { state: SpriteState }) {
         case 'sad':
             return (
                 <>
-                    <line x1="30" y1="42" x2="40" y2="46" stroke="black" strokeWidth="2" opacity="0.5" />
-                    <line x1="60" y1="46" x2="70" y2="42" stroke="black" strokeWidth="2" opacity="0.5" />
+                    {/* Worried eyebrows — raised inward */}
+                    <line x1="30" y1="44" x2="40" y2="40" stroke="black" strokeWidth="2" opacity="0.5" />
+                    <line x1="60" y1="40" x2="70" y2="44" stroke="black" strokeWidth="2" opacity="0.5" />
                     <circle cx="36" cy="48" r="4" fill="black" opacity="0.5" />
                     <circle cx="64" cy="48" r="4" fill="black" opacity="0.5" />
                 </>
