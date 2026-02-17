@@ -8,6 +8,7 @@ import NameEditor from '../ui/NameEditor';
 import ResetButton from '../ui/ResetButton';
 import TutorialModal from '../ui/TutorialModal';
 import MusicToggle from '../ui/MusicToggle';
+import { LoginButton } from '../auth/LoginButton';
 import { useState, useEffect, useMemo } from 'react';
 import { RegenmonData } from '@/lib/types';
 import { STAT_MAX, STAT_MIN } from '@/lib/constants';
@@ -25,6 +26,7 @@ interface GameScreenProps {
     onUpdateName: (newName: string) => void;
     onDismissTutorial: () => void;
     onReset: () => void;
+    isLoggedIn?: boolean;
 }
 
 export default function GameScreen({
@@ -35,6 +37,7 @@ export default function GameScreen({
     onUpdateName,
     onDismissTutorial,
     onReset,
+    isLoggedIn = false,
 }: GameScreenProps) {
     const [showTutorial, setShowTutorial] = useState(false);
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 480);
@@ -127,7 +130,10 @@ export default function GameScreen({
                     <div className="flex flex-col">
                         <span className="game-screen__day-label bg-black/50 px-2 py-1 inline-block">Día {daysAlive} de aventura</span>
                     </div>
-                    <MusicToggle musicEnabled={musicEnabled} onToggle={onToggleMusic} />
+                    <div className="flex gap-2 items-start">
+                        {isLoggedIn && <LoginButton className="text-xs" />}
+                        <MusicToggle musicEnabled={musicEnabled} onToggle={onToggleMusic} />
+                    </div>
                 </div>
 
                 {/* Center: Regenmon */}

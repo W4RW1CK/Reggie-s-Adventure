@@ -2,12 +2,15 @@
 
 import { useGameState } from '@/hooks/useGameState';
 import { useScreenManager } from '@/hooks/useScreenManager';
+import { useAuth } from '@/hooks/useAuth';
 import LoadingScreen from '@/components/screens/LoadingScreen';
 import TitleScreen from '@/components/screens/TitleScreen';
+import AuthScreen from '@/components/screens/AuthScreen';
 import StoryScreen from '@/components/screens/StoryScreen';
 import CreationScreen from '@/components/screens/CreationScreen';
 import TransitionScreen from '@/components/screens/TransitionScreen';
 import GameScreen from '@/components/screens/GameScreen';
+import { LoginButton } from '@/components/auth/LoginButton';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { RegenmonType } from '@/lib/types';
 
@@ -24,9 +27,19 @@ export default function Home() {
     dismissTutorial,
   } = useGameState();
 
-  const { currentScreen, navigateTo, handleStartGame } = useScreenManager({
+  const { isLoggedIn, isReady: isAuthReady } = useAuth();
+
+  const { 
+    currentScreen, 
+    navigateTo, 
+    handleStartGame, 
+    handleAuthLogin, 
+    handleContinueWithoutAccount 
+  } = useScreenManager({
     regenmon,
     config,
+    isLoggedIn,
+    isAuthReady,
   });
 
 
@@ -39,6 +52,13 @@ export default function Home() {
 
         {currentScreen === 'TITLE' && (
           <TitleScreen onStart={handleStartGame} />
+        )}
+
+        {currentScreen === 'AUTH' && (
+          <AuthScreen 
+            onLogin={handleAuthLogin}
+            onContinueWithoutAccount={handleContinueWithoutAccount}
+          />
         )}
 
         {currentScreen === 'STORY' && (
@@ -74,6 +94,7 @@ export default function Home() {
                 resetGame();
                 navigateTo('TITLE');
               }}
+              isLoggedIn={isLoggedIn}
             />
           </ErrorBoundary>
         )}
