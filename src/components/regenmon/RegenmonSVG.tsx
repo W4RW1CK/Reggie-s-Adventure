@@ -237,7 +237,7 @@ function Mouth({ state }: { state: SpriteState }) {
         case 'critical':
             return <path d="M43 62 L46 60 L50 63 L54 60 L57 62" stroke="#666" strokeWidth="1.5" fill="none" opacity="0.4" />;
         case 'no_hope':
-            return <path d="M42 60 Q50 68 58 60" stroke="#6633aa" strokeWidth="2" fill="none" opacity="0.6" />;
+            return <path d="M42 64 Q50 56 58 64" stroke="#6633aa" strokeWidth="2" fill="none" opacity="0.7" />;
         case 'no_energy':
             return <path d="M44 61 Q50 64 56 61" stroke="black" strokeWidth="1" fill="none" opacity="0.3" />;
         case 'no_nutrition':
@@ -319,8 +319,8 @@ function Decorations({ state, type }: { state: SpriteState; type: RegenmonType }
 // ── Rayo body shape ──
 function RayoBody({ state }: { state: SpriteState }) {
     const c = TYPE_COLORS.rayo;
-    const shrink = state === 'no_nutrition' || state === 'critical';
-    const transform = shrink ? 'translate(10,10) scale(0.8)' : undefined;
+    const shrinkSmall = state === 'no_nutrition'; const shrinkTiny = state === 'critical';
+    const transform = shrinkTiny ? 'translate(17,17) scale(0.65)' : shrinkSmall ? 'translate(10,10) scale(0.8)' : undefined;
 
     return (
         <g transform={transform}>
@@ -351,8 +351,8 @@ function RayoBody({ state }: { state: SpriteState }) {
 // ── Flama body shape ──
 function FlamaBody({ state }: { state: SpriteState }) {
     const c = TYPE_COLORS.flama;
-    const shrink = state === 'no_nutrition' || state === 'critical';
-    const transform = shrink ? 'translate(10,10) scale(0.8)' : undefined;
+    const shrinkSmall = state === 'no_nutrition'; const shrinkTiny = state === 'critical';
+    const transform = shrinkTiny ? 'translate(17,17) scale(0.65)' : shrinkSmall ? 'translate(10,10) scale(0.8)' : undefined;
 
     return (
         <g transform={transform}>
@@ -385,8 +385,8 @@ function FlamaBody({ state }: { state: SpriteState }) {
 // ── Hielo body shape ──
 function HieloBody({ state }: { state: SpriteState }) {
     const c = TYPE_COLORS.hielo;
-    const shrink = state === 'no_nutrition' || state === 'critical';
-    const transform = shrink ? 'translate(10,10) scale(0.8)' : undefined;
+    const shrinkSmall = state === 'no_nutrition'; const shrinkTiny = state === 'critical';
+    const transform = shrinkTiny ? 'translate(17,17) scale(0.65)' : shrinkSmall ? 'translate(10,10) scale(0.8)' : undefined;
 
     return (
         <g transform={transform}>
