@@ -1101,6 +1101,15 @@ body {
   animation: pulse-slow 3s ease-in-out infinite;
 }
 
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.animate-flicker {
+  animation: flicker 0.3s infinite;
+}
+
 /* Angry Shake */
 @keyframes shake-fast {
   0% {
@@ -1880,4 +1889,158 @@ html.text-lg .game-screen { font-size: 18px; }
 @keyframes typing-bounce {
   0%, 80%, 100% { transform: translateY(0); }
   40% { transform: translateY(-6px); }
+}
+
+/* =============================================
+   PHASE 46: RESPONSIVE & POLISH (S3)
+   ============================================= */
+
+/* --- Theme transitions (no flash on toggle) --- */
+.theme-dark,
+.theme-light {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.theme-dark *,
+.theme-light * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Exclude animations/transforms from blanket transition */
+.theme-dark .animate-float-idle,
+.theme-dark .animate-bounce-subtle,
+.theme-dark .animate-droop,
+.theme-dark .animate-shake-fast,
+.theme-dark .animate-pulse-slow,
+.theme-dark .animate-sway-lost,
+.theme-light .animate-float-idle,
+.theme-light .animate-bounce-subtle,
+.theme-light .animate-droop,
+.theme-light .animate-shake-fast,
+.theme-light .animate-pulse-slow,
+.theme-light .animate-sway-lost,
+.loading-screen__progress-bar,
+.story-screen__particle,
+.game-background *,
+.title-screen__creature,
+.title-screen__sparkle {
+  transition: none !important;
+}
+
+/* --- Fragment counter pulse animation --- */
+@keyframes fragment-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+.fragment-counter--pulse {
+  animation: fragment-pulse 0.4s ease-out;
+}
+
+/* --- Stat bar smooth width --- */
+.stat-bar-fill {
+  transition: width 0.5s ease-out;
+}
+
+/* --- Settings panel slide-out --- */
+@keyframes slideOutRight {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+
+.animate-slideOutRight {
+  animation: slideOutRight 0.25s ease-in forwards;
+}
+
+/* --- Prevent horizontal overflow globally --- */
+html, body {
+  overflow-x: hidden;
+}
+
+.game-container {
+  overflow-x: hidden;
+}
+
+/* --- Mobile: < 480px polish --- */
+@media (max-width: 479px) {
+  /* Action buttons: tighter on very small screens */
+  .action-buttons-row {
+    gap: 4px !important;
+  }
+
+  .action-buttons-row .nes-btn {
+    font-size: 9px !important;
+    padding: 4px 2px !important;
+    min-height: 44px !important;
+  }
+
+  .action-buttons-row .nes-btn .text-xl {
+    font-size: 16px !important;
+  }
+
+  /* Fragment counter compact */
+  .fragment-counter {
+    padding: 2px 8px !important;
+    font-size: 11px;
+  }
+
+  .fragment-counter .text-lg {
+    font-size: 14px !important;
+  }
+
+  .fragment-counter .text-sm {
+    font-size: 11px !important;
+  }
+
+  /* Settings panel: full-width on mobile */
+  .settings-panel {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* Activity history compact */
+  .nes-container.activity-history {
+    padding: 4px 8px !important;
+  }
+
+  /* NES containers padding */
+  .nes-container {
+    padding: 8px !important;
+  }
+
+  .nes-container.with-title {
+    padding-top: 16px !important;
+  }
+
+  /* Touch targets */
+  button, [role="button"], a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Except tiny inline elements */
+  .inline-btn-small {
+    min-height: auto;
+    min-width: auto;
+  }
+}
+
+/* --- Desktop: > 768px polish --- */
+@media (min-width: 769px) {
+  .game-container {
+    max-width: 768px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* Light theme premium feel on desktop */
+  .theme-light .game-container {
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Settings panel: right side, capped width */
+  .settings-panel {
+    max-width: 380px;
+  }
 }

@@ -42,79 +42,35 @@ export function getSpriteState(stats: { espiritu: number; pulso: number; esencia
     return 'sad';
 }
 
-// ── Color palettes per type ──
-const TYPE_COLORS = {
-    rayo: { primary: '#f5c542', secondary: '#d4a017', accent: '#fff7a1', dark: '#8a6d00' },
-    flama: { primary: '#e74c3c', secondary: '#c0392b', accent: '#f39c12', dark: '#7a1a0e' },
-    hielo: { primary: '#3498db', secondary: '#2980b9', accent: '#a8e6ff', dark: '#1a4a6e' },
+// ── Face viewBox per type ──
+const FACE_VIEWBOX: Record<RegenmonType, string> = {
+    rayo: '0 0 150 150',
+    flama: '-4 -30 150 150',
+    hielo: '-7 3 150 150',
 };
 
-// ── SVG filter definitions ──
-function SpriteFilters({ state, type }: { state: SpriteState; type: RegenmonType }) {
-    const id = `${type}-${state}`;
-    return (
-        <defs>
-            <filter id={`glow-${id}`}>
-                <feGaussianBlur stdDeviation="3" result="blur" />
-                <feMerge>
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="SourceGraphic" />
-                </feMerge>
-            </filter>
-            <filter id={`grayscale-${id}`}>
-                <feColorMatrix type="matrix" values="
-                    0.2 0.2 0.2 0 0.05
-                    0.2 0.2 0.2 0 0.05
-                    0.2 0.2 0.2 0 0.05
-                    0   0   0   0.5 0" />
-            </filter>
-            <filter id={`no-hope-${id}`}>
-                <feColorMatrix type="matrix" values="
-                    0.3 0.1 0.4 0 0.15
-                    0.1 0.05 0.3 0 0.05
-                    0.3 0.15 0.7 0 0.2
-                    0   0   0   0.85 0" />
-            </filter>
-            <filter id={`no-energy-${id}`}>
-                <feColorMatrix type="matrix" values="
-                    0.6 0.3 0.1 0 0.1
-                    0.5 0.5 0.1 0 0.05
-                    0.1 0.1 0.2 0 0
-                    0   0   0   1 0" />
-            </filter>
-            <filter id={`no-nutrition-${id}`}>
-                <feColorMatrix type="matrix" values="
-                    0.3 0.2 0.1 0 0
-                    0.2 0.5 0.2 0 0.1
-                    0.1 0.3 0.3 0 0.05
-                    0   0   0   1 0" />
-            </filter>
-            <filter id={`sad-${id}`}>
-                <feColorMatrix type="saturate" values="0.5" />
-            </filter>
-            <radialGradient id={`euphoric-glow-${id}`} cx="50%" cy="50%" r="60%">
-                <stop offset="0%" stopColor={TYPE_COLORS[type].accent} stopOpacity="0.6" />
-                <stop offset="100%" stopColor={TYPE_COLORS[type].primary} stopOpacity="0" />
-            </radialGradient>
-        </defs>
-    );
+function isNegativeState(s: SpriteState): boolean {
+    return ['sad', 'critical', 'no_hope', 'no_energy', 'no_nutrition'].includes(s);
 }
 
-// ── Filter for group based on state ──
-function getGroupFilter(state: SpriteState, type: RegenmonType): string {
-    const id = `${type}-${state}`;
+function isSevereState(s: SpriteState): boolean {
+    return ['critical', 'no_hope', 'no_energy', 'no_nutrition'].includes(s);
+}
+
+// ── CSS filters per state ──
+function getImgFilter(state: SpriteState): string {
     switch (state) {
-        case 'critical': return `url(#grayscale-${id})`;
-        case 'no_hope': return `url(#no-hope-${id})`;
-        case 'no_energy': return `url(#no-energy-${id})`;
-        case 'no_nutrition': return `url(#no-nutrition-${id})`;
-        case 'sad': return `url(#sad-${id})`;
-        case 'euphoric': return `url(#glow-${id})`;
-        default: return '';
+        case 'euphoric': return 'brightness(1.15) saturate(1.3)';
+        case 'sad': return 'saturate(0.4) brightness(0.7)';
+        case 'critical': return 'grayscale(0.9) brightness(0.4) contrast(1.2)';
+        case 'no_hope': return 'sepia(1) hue-rotate(230deg) saturate(2.5) brightness(0.55)';
+        case 'no_energy': return 'sepia(0.8) hue-rotate(10deg) brightness(0.65) saturate(0.6)';
+        case 'no_nutrition': return 'sepia(0.6) saturate(0.3) brightness(0.7) opacity(0.75)';
+        default: return 'none';
     }
 }
 
-// ── Animation class ──
+// ── Animation class per state ──
 function getAnimationClass(state: SpriteState): string {
     switch (state) {
         case 'euphoric': return 'animate-bounce-subtle';
@@ -129,333 +85,319 @@ function getAnimationClass(state: SpriteState): string {
     }
 }
 
-// ── Eyes per state ──
-function Eyes({ state }: { state: SpriteState }) {
-    switch (state) {
-        case 'euphoric':
-            return (
+// ── Face Overlay ──
+function FaceOverlay({ state, viewBox }: { state: SpriteState; viewBox: string }) {
+    return (
+        <svg width="100%" height="100%" viewBox={viewBox} xmlns="http://www.w3.org/2000/svg" style={{ overflow: 'visible' }}>
+            {state === 'euphoric' && (
                 <>
-                    {/* Big sparkly eyes */}
-                    <circle cx="36" cy="44" r="7" fill="black" opacity="0.8" />
-                    <circle cx="64" cy="44" r="7" fill="black" opacity="0.8" />
-                    <circle cx="38" cy="41" r="3" fill="white" />
-                    <circle cx="66" cy="41" r="3" fill="white" />
-                    <circle cx="34" cy="46" r="1.5" fill="white" opacity="0.7" />
-                    <circle cx="62" cy="46" r="1.5" fill="white" opacity="0.7" />
-                    {/* Star sparkles */}
-                    <text x="28" y="38" fontSize="6" fill="#fff7a1" opacity="0.9">✦</text>
-                    <text x="68" y="38" fontSize="6" fill="#fff7a1" opacity="0.9">✦</text>
+                    <circle cx="55" cy="62" r="12" fill="white" opacity="0.25"/>
+                    <circle cx="95" cy="62" r="12" fill="white" opacity="0.25"/>
+                    <circle cx="55" cy="62" r="8" fill="#1a1a2e" opacity="0.9"/>
+                    <circle cx="95" cy="62" r="8" fill="#1a1a2e" opacity="0.9"/>
+                    <circle cx="58" cy="59" r="3.5" fill="white"/>
+                    <circle cx="98" cy="59" r="3.5" fill="white"/>
+                    <circle cx="52" cy="65" r="2" fill="white" opacity="0.8"/>
+                    <circle cx="92" cy="65" r="2" fill="white" opacity="0.8"/>
+                    <text x="40" y="54" fontSize="9" fill="white" opacity="0.9">✦</text>
+                    <text x="101" y="54" fontSize="9" fill="white" opacity="0.9">✦</text>
+                    <path d="M58 80 Q75 94 92 80" stroke="white" strokeWidth="3.5" fill="none" opacity="0.2"/>
+                    <path d="M58 80 Q75 94 92 80" stroke="#1a1a2e" strokeWidth="2.5" fill="none" opacity="0.85"/>
                 </>
-            );
-        case 'happy':
-            return (
+            )}
+            {state === 'happy' && (
                 <>
-                    <path d="M30 45 Q35 39 40 45" stroke="black" strokeWidth="3" fill="none" opacity="0.8" />
-                    <path d="M60 45 Q65 39 70 45" stroke="black" strokeWidth="3" fill="none" opacity="0.8" />
+                    <circle cx="55" cy="63" r="10" fill="white" opacity="0.2"/>
+                    <circle cx="95" cy="63" r="10" fill="white" opacity="0.2"/>
+                    <path d="M47 65 Q55 57 63 65" stroke="white" strokeWidth="4" fill="none" opacity="0.25"/>
+                    <path d="M47 65 Q55 57 63 65" stroke="#1a1a2e" strokeWidth="3" fill="none" opacity="0.85"/>
+                    <path d="M87 65 Q95 57 103 65" stroke="white" strokeWidth="4" fill="none" opacity="0.25"/>
+                    <path d="M87 65 Q95 57 103 65" stroke="#1a1a2e" strokeWidth="3" fill="none" opacity="0.85"/>
+                    <path d="M62 81 Q75 89 88 81" stroke="white" strokeWidth="3.5" fill="none" opacity="0.2"/>
+                    <path d="M62 81 Q75 89 88 81" stroke="#1a1a2e" strokeWidth="2" fill="none" opacity="0.75"/>
                 </>
-            );
-        case 'neutral':
-            return (
+            )}
+            {state === 'neutral' && (
                 <>
-                    <circle cx="36" cy="45" r="5" fill="black" opacity="0.7" />
-                    <circle cx="64" cy="45" r="5" fill="black" opacity="0.7" />
-                    <circle cx="38" cy="43" r="1.5" fill="white" />
-                    <circle cx="66" cy="43" r="1.5" fill="white" />
+                    <circle cx="55" cy="63" r="10" fill="white" opacity="0.2"/>
+                    <circle cx="95" cy="63" r="10" fill="white" opacity="0.2"/>
+                    <circle cx="55" cy="63" r="6.5" fill="white" opacity="0.3"/>
+                    <circle cx="55" cy="63" r="6" fill="#1a1a2e" opacity="0.85"/>
+                    <circle cx="58" cy="61" r="2.2" fill="white"/>
+                    <circle cx="95" cy="63" r="6.5" fill="white" opacity="0.3"/>
+                    <circle cx="95" cy="63" r="6" fill="#1a1a2e" opacity="0.85"/>
+                    <circle cx="98" cy="61" r="2.2" fill="white"/>
+                    <circle cx="75" cy="83" r="3.5" fill="white" opacity="0.2"/>
+                    <circle cx="75" cy="83" r="3" fill="#1a1a2e" opacity="0.6"/>
                 </>
-            );
-        case 'sad':
-            return (
+            )}
+            {state === 'sad' && (
                 <>
-                    {/* Worried eyebrows — raised inward */}
-                    <line x1="30" y1="44" x2="40" y2="40" stroke="black" strokeWidth="2" opacity="0.5" />
-                    <line x1="60" y1="40" x2="70" y2="44" stroke="black" strokeWidth="2" opacity="0.5" />
-                    <circle cx="36" cy="48" r="4" fill="black" opacity="0.5" />
-                    <circle cx="64" cy="48" r="4" fill="black" opacity="0.5" />
+                    <line x1="45" y1="58" x2="63" y2="54" stroke="white" strokeWidth="2.5" opacity="0.7"/>
+                    <line x1="87" y1="54" x2="105" y2="58" stroke="white" strokeWidth="2.5" opacity="0.7"/>
+                    <circle cx="55" cy="67" r="7" fill="white" opacity="0.8"/>
+                    <circle cx="55" cy="67" r="4" fill="#333" opacity="0.9"/>
+                    <circle cx="95" cy="67" r="7" fill="white" opacity="0.8"/>
+                    <circle cx="95" cy="67" r="4" fill="#333" opacity="0.9"/>
+                    <path d="M62 87 Q75 81 88 87" stroke="white" strokeWidth="2.5" fill="none" opacity="0.75"/>
                 </>
-            );
-        case 'critical':
-            return (
+            )}
+            {state === 'critical' && (
                 <>
-                    {/* Tiny dim dots — barely alive */}
-                    <circle cx="36" cy="45" r="2.5" fill="#555" opacity="0.4" />
-                    <circle cx="64" cy="45" r="2.5" fill="#555" opacity="0.4" />
-                    {/* Tear drop from left eye */}
-                    <ellipse cx="36" cy="50" rx="1.5" ry="2.5" fill="#88aacc" opacity="0.5">
-                        <animate attributeName="cy" values="50;56;50" dur="2s" repeatCount="indefinite" />
-                        <animate attributeName="opacity" values="0.5;0.1;0.5" dur="2s" repeatCount="indefinite" />
+                    <line x1="48" y1="57" x2="62" y2="71" stroke="white" strokeWidth="3" opacity="0.9"/>
+                    <line x1="62" y1="57" x2="48" y2="71" stroke="white" strokeWidth="3" opacity="0.9"/>
+                    <line x1="88" y1="57" x2="102" y2="71" stroke="white" strokeWidth="3" opacity="0.9"/>
+                    <line x1="102" y1="57" x2="88" y2="71" stroke="white" strokeWidth="3" opacity="0.9"/>
+                    <path d="M58 85 L66 82 L75 86 L84 82 L92 85" stroke="white" strokeWidth="2.5" fill="none" opacity="0.8"/>
+                    <ellipse cx="55" cy="76" rx="2.5" ry="4" fill="#aaddff" opacity="0.8">
+                        <animate attributeName="cy" values="76;84;76" dur="2s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" values="0.8;0.2;0.8" dur="2s" repeatCount="indefinite"/>
                     </ellipse>
                 </>
-            );
-        case 'no_hope':
-            return (
+            )}
+            {state === 'no_hope' && (
                 <>
-                    {/* Wide open eyes with spiral void — existential emptiness */}
-                    <circle cx="36" cy="44" r="7" fill="#1a0a2e" opacity="0.8" />
-                    <circle cx="64" cy="44" r="7" fill="#1a0a2e" opacity="0.8" />
-                    {/* Spiral inside eyes */}
-                    <path d="M36 44 Q38 41 40 44 Q38 47 36 44" stroke="#8844aa" strokeWidth="0.8" fill="none" opacity="0.6">
-                        <animate attributeName="opacity" values="0.6;0.2;0.6" dur="3s" repeatCount="indefinite" />
+                    <circle cx="55" cy="63" r="8" fill="#0a0020" opacity="0.95"/>
+                    <circle cx="95" cy="63" r="8" fill="#0a0020" opacity="0.95"/>
+                    <path d="M55 63 Q58 58 62 63 Q58 68 55 63" stroke="#cc88ff" strokeWidth="1.5" fill="none" opacity="0.85">
+                        <animate attributeName="opacity" values="0.85;0.3;0.85" dur="3s" repeatCount="indefinite"/>
                     </path>
-                    <path d="M64 44 Q66 41 68 44 Q66 47 64 44" stroke="#8844aa" strokeWidth="0.8" fill="none" opacity="0.6">
-                        <animate attributeName="opacity" values="0.6;0.2;0.6" dur="3s" repeatCount="indefinite" />
+                    <path d="M95 63 Q98 58 102 63 Q98 68 95 63" stroke="#cc88ff" strokeWidth="1.5" fill="none" opacity="0.85">
+                        <animate attributeName="opacity" values="0.85;0.3;0.85" dur="3s" repeatCount="indefinite"/>
                     </path>
-                    {/* No tear — emptiness, not sadness */}
-                </>
-            );
-        case 'no_energy':
-            return (
-                <>
-                    {/* Half-closed droopy eyes */}
-                    <ellipse cx="36" cy="47" rx="5" ry="3" fill="black" opacity="0.4" />
-                    <ellipse cx="64" cy="47" rx="5" ry="3" fill="black" opacity="0.4" />
-                    <line x1="31" y1="45" x2="41" y2="45" stroke="black" strokeWidth="2" opacity="0.5" />
-                    <line x1="59" y1="45" x2="69" y2="45" stroke="black" strokeWidth="2" opacity="0.5" />
-                </>
-            );
-        case 'no_nutrition':
-            return (
-                <>
-                    {/* Sunken small eyes */}
-                    <circle cx="36" cy="46" r="3" fill="black" opacity="0.4" />
-                    <circle cx="64" cy="46" r="3" fill="black" opacity="0.4" />
-                    <path d="M30 42 Q36 40 42 42" stroke="#555" strokeWidth="1" fill="none" opacity="0.4" />
-                    <path d="M58 42 Q64 40 70 42" stroke="#555" strokeWidth="1" fill="none" opacity="0.4" />
-                </>
-            );
-    }
-}
-
-// ── Mouth per state ──
-function Mouth({ state }: { state: SpriteState }) {
-    switch (state) {
-        case 'euphoric':
-            return <path d="M40 58 Q50 68 60 58" stroke="black" strokeWidth="2" fill="none" opacity="0.7" />;
-        case 'happy':
-            return <path d="M43 59 Q50 65 57 59" stroke="black" strokeWidth="2" fill="none" opacity="0.6" />;
-        case 'neutral':
-            return <circle cx="50" cy="60" r="2" fill="black" opacity="0.5" />;
-        case 'sad':
-            return <path d="M43 63 Q50 58 57 63" stroke="black" strokeWidth="1.5" fill="none" opacity="0.4" />;
-        case 'critical':
-            return <path d="M43 62 L46 60 L50 63 L54 60 L57 62" stroke="#666" strokeWidth="1.5" fill="none" opacity="0.4" />;
-        case 'no_hope':
-            return <path d="M42 64 Q50 56 58 64" stroke="#6633aa" strokeWidth="2" fill="none" opacity="0.7" />;
-        case 'no_energy':
-            return <path d="M44 61 Q50 64 56 61" stroke="black" strokeWidth="1" fill="none" opacity="0.3" />;
-        case 'no_nutrition':
-            return <path d="M45 63 Q50 59 55 63" stroke="#555" strokeWidth="1" fill="none" opacity="0.4" />;
-    }
-}
-
-// ── Decorations (sparkles, effects) ──
-function Decorations({ state, type }: { state: SpriteState; type: RegenmonType }) {
-    const colors = TYPE_COLORS[type];
-    const id = `${type}-${state}`;
-
-    if (state === 'euphoric') {
-        return (
-            <>
-                <circle cx="50" cy="50" r="48" fill={`url(#euphoric-glow-${id})`} />
-                {/* Floating sparkle particles */}
-                <circle cx="18" cy="20" r="2" fill={colors.accent} opacity="0.8">
-                    <animate attributeName="opacity" values="0.8;0.2;0.8" dur="1.5s" repeatCount="indefinite" />
-                    <animate attributeName="cy" values="20;15;20" dur="2s" repeatCount="indefinite" />
-                </circle>
-                <circle cx="82" cy="25" r="1.5" fill={colors.accent} opacity="0.6">
-                    <animate attributeName="opacity" values="0.6;0.1;0.6" dur="1.8s" repeatCount="indefinite" />
-                    <animate attributeName="cy" values="25;18;25" dur="2.2s" repeatCount="indefinite" />
-                </circle>
-                <circle cx="75" cy="80" r="1.5" fill="white" opacity="0.5">
-                    <animate attributeName="opacity" values="0.5;0.1;0.5" dur="2s" repeatCount="indefinite" />
-                </circle>
-                <circle cx="25" cy="78" r="2" fill={colors.accent} opacity="0.7">
-                    <animate attributeName="opacity" values="0.7;0.2;0.7" dur="1.6s" repeatCount="indefinite" />
-                </circle>
-            </>
-        );
-    }
-
-    if (state === 'happy') {
-        return (
-            <>
-                {/* Subtle floating sparkles — content but not overwhelming */}
-                <circle cx="22" cy="28" r="1.2" fill={colors.accent} opacity="0">
-                    <animate attributeName="opacity" values="0;0.5;0" dur="3s" repeatCount="indefinite" />
-                    <animate attributeName="cy" values="28;22;28" dur="3s" repeatCount="indefinite" />
-                </circle>
-                <circle cx="78" cy="32" r="1" fill={colors.accent} opacity="0">
-                    <animate attributeName="opacity" values="0;0.4;0" dur="3.5s" begin="1s" repeatCount="indefinite" />
-                    <animate attributeName="cy" values="32;26;32" dur="3.5s" begin="1s" repeatCount="indefinite" />
-                </circle>
-            </>
-        );
-    }
-
-    if (state === 'critical') {
-        return (
-            <>
-                {/* Flickering opacity on the whole thing is handled via CSS class */}
-                <rect x="0" y="0" width="100" height="100" fill="none" opacity="0">
-                    <animate attributeName="opacity" values="0;0.05;0" dur="0.3s" repeatCount="indefinite" />
-                </rect>
-            </>
-        );
-    }
-
-    if (state === 'no_energy') {
-        return (
-            <>
-                {/* Slow breathing pulse ring */}
-                <ellipse cx="50" cy="55" rx="30" ry="25" fill="none" stroke={colors.primary} strokeWidth="0.5" opacity="0.2">
-                    <animate attributeName="rx" values="30;33;30" dur="3s" repeatCount="indefinite" />
-                    <animate attributeName="ry" values="25;28;25" dur="3s" repeatCount="indefinite" />
-                    <animate attributeName="opacity" values="0.2;0.05;0.2" dur="3s" repeatCount="indefinite" />
-                </ellipse>
-            </>
-        );
-    }
-
-    return null;
-}
-
-// ── Rayo body shape ──
-function RayoBody({ state }: { state: SpriteState }) {
-    const c = TYPE_COLORS.rayo;
-    const shrinkCritical = state === 'critical'; const shrinkNutrition = state === 'no_nutrition'; const shrinkTiny = false;
-    const transform = shrinkCritical ? 'translate(10,10) scale(0.8)' : shrinkNutrition ? 'translate(5,5) scale(0.9)' : undefined;
-
-    return (
-        <g transform={transform}>
-            {/* Main jagged electric body */}
-            <path
-                d="M40 10 L55 40 L85 40 L60 60 L75 90 L45 70 L25 100 L35 60 L5 50 L35 35 Z"
-                fill={c.primary}
-                stroke={c.secondary}
-                strokeWidth="3"
-            />
-            {/* Inner highlight */}
-            <path
-                d="M42 20 L52 40 L70 42 L58 58 L68 80 L47 68 L34 88 L40 58 L18 52 L38 38 Z"
-                fill={c.accent}
-                opacity="0.25"
-            />
-            {/* Cheek blush */}
-            {(state === 'euphoric' || state === 'happy') && (
-                <>
-                    <ellipse cx="26" cy="55" rx="5" ry="3" fill="#ffaaaa" opacity="0.4" />
-                    <ellipse cx="74" cy="55" rx="5" ry="3" fill="#ffaaaa" opacity="0.4" />
+                    <path d="M63 87 Q75 78 87 87" stroke="#cc88ff" strokeWidth="3" fill="none" opacity="0.9"/>
                 </>
             )}
-        </g>
+            {state === 'no_energy' && (
+                <>
+                    <ellipse cx="55" cy="67" rx="8" ry="5" fill="white" opacity="0.7"/>
+                    <ellipse cx="95" cy="67" rx="8" ry="5" fill="white" opacity="0.7"/>
+                    <line x1="46" y1="64" x2="64" y2="64" stroke="white" strokeWidth="3" opacity="0.9"/>
+                    <rect x="46" y="58" width="18" height="7" fill="white" opacity="0.15" rx="2"/>
+                    <line x1="86" y1="64" x2="104" y2="64" stroke="white" strokeWidth="3" opacity="0.9"/>
+                    <rect x="86" y="58" width="18" height="7" fill="white" opacity="0.15" rx="2"/>
+                    <circle cx="55" cy="66" r="2" fill="#333" opacity="0.6"/>
+                    <circle cx="95" cy="66" r="2" fill="#333" opacity="0.6"/>
+                    <path d="M66 84 Q75 89 84 84" stroke="white" strokeWidth="2" fill="none" opacity="0.65"/>
+                </>
+            )}
+            {state === 'no_nutrition' && (
+                <>
+                    <circle cx="55" cy="66" r="6" fill="white" opacity="0.65"/>
+                    <circle cx="55" cy="66" r="3.5" fill="#333" opacity="0.8"/>
+                    <circle cx="95" cy="66" r="6" fill="white" opacity="0.65"/>
+                    <circle cx="95" cy="66" r="3.5" fill="#333" opacity="0.8"/>
+                    <path d="M47 59 Q55 55 63 59" stroke="white" strokeWidth="2" fill="none" opacity="0.6"/>
+                    <path d="M87 59 Q95 55 103 59" stroke="white" strokeWidth="2" fill="none" opacity="0.6"/>
+                    <path d="M64 87 Q75 82 86 87" stroke="white" strokeWidth="2" fill="none" opacity="0.7"/>
+                </>
+            )}
+        </svg>
     );
 }
 
-// ── Flama body shape ──
-function FlamaBody({ state }: { state: SpriteState }) {
-    const c = TYPE_COLORS.flama;
-    const shrinkCritical = state === 'critical'; const shrinkNutrition = state === 'no_nutrition'; const shrinkTiny = false;
-    const transform = shrinkCritical ? 'translate(10,10) scale(0.8)' : shrinkNutrition ? 'translate(5,5) scale(0.9)' : undefined;
-
+// ── Rayo Effects (electric sparks) ──
+function RayoEffects({ state }: { state: SpriteState }) {
+    if (isSevereState(state)) {
+        return (
+            <svg width="100%" height="100%" viewBox="0 0 150 150" style={{ overflow: 'visible' }}>
+                <circle cx="10" cy="55" r="1.5" fill="#ffffff" opacity="0.08">
+                    <animate attributeName="opacity" values="0.08;0;0.08" dur="4s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        );
+    }
+    if (state === 'sad') {
+        return (
+            <svg width="100%" height="100%" viewBox="0 0 150 150" style={{ overflow: 'visible' }}>
+                <circle cx="10" cy="55" r="2" fill="#ffffff" opacity="0.15">
+                    <animate attributeName="opacity" values="0.15;0.05;0.15" dur="3s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="140" cy="50" r="1.5" fill="#ffff66" opacity="0.1">
+                    <animate attributeName="opacity" values="0.1;0.03;0.1" dur="3.5s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        );
+    }
     return (
-        <g transform={transform}>
-            {/* Outer flame */}
-            <path
-                d="M50 5 Q75 25 85 50 Q90 80 50 95 Q10 80 15 50 Q25 25 50 5 Z"
-                fill={c.primary}
-                stroke={c.secondary}
-                strokeWidth="3"
-            />
-            {/* Inner flame core */}
-            <path
-                d="M50 20 Q65 35 70 55 Q75 75 50 82 Q25 75 30 55 Q35 35 50 20 Z"
-                fill={c.accent}
-                opacity="0.7"
-            />
-            {/* Bright center */}
-            <ellipse cx="50" cy="55" rx="12" ry="15" fill="#ffe0b2" opacity="0.3" />
-            {/* Cheek blush */}
-            {(state === 'euphoric' || state === 'happy') && (
-                <>
-                    <ellipse cx="30" cy="58" rx="5" ry="3" fill="#ff8a80" opacity="0.5" />
-                    <ellipse cx="70" cy="58" rx="5" ry="3" fill="#ff8a80" opacity="0.5" />
-                </>
-            )}
-        </g>
+        <svg width="100%" height="100%" viewBox="0 0 150 150" style={{ overflow: 'visible' }}>
+            <path d="M8 40 L14 32 L6 26 L16 20" stroke="#ffffff" strokeWidth="2" fill="none" opacity="0.85">
+                <animate attributeName="opacity" values="0.85;0.2;0.85" dur="1.2s" repeatCount="indefinite"/>
+            </path>
+            <path d="M142 35 L148 28 L140 22 L150 16" stroke="#ffff66" strokeWidth="1.8" fill="none" opacity="0.75">
+                <animate attributeName="opacity" values="0.75;0.1;0.75" dur="1.5s" repeatCount="indefinite"/>
+            </path>
+            <circle cx="10" cy="55" r="3" fill="#ffffff" opacity="0.9">
+                <animate attributeName="opacity" values="0.9;0.2;0.9" dur="1s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="140" cy="50" r="2.5" fill="#ffff66" opacity="0.8">
+                <animate attributeName="opacity" values="0.8;0.1;0.8" dur="1.3s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="75" cy="5" r="2.5" fill="#ffffff" opacity="0.7">
+                <animate attributeName="opacity" values="0.7;0;0.7" dur="1.8s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="15" cy="85" r="2" fill="#00e5ff" opacity="0.7">
+                <animate attributeName="opacity" values="0.7;0.1;0.7" dur="2s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="135" cy="82" r="2" fill="#ffff66" opacity="0.65">
+                <animate attributeName="opacity" values="0.65;0.05;0.65" dur="1.7s" repeatCount="indefinite"/>
+            </circle>
+            <path d="M5 70 L12 65" stroke="#00e5ff" strokeWidth="1.5" fill="none" opacity="0.6">
+                <animate attributeName="opacity" values="0.6;0;0.6" dur="2.2s" repeatCount="indefinite"/>
+            </path>
+            <path d="M145 68 L138 63" stroke="#ffffff" strokeWidth="1.5" fill="none" opacity="0.55">
+                <animate attributeName="opacity" values="0.55;0;0.55" dur="2.5s" repeatCount="indefinite"/>
+            </path>
+        </svg>
     );
 }
 
-// ── Hielo body shape ──
-function HieloBody({ state }: { state: SpriteState }) {
-    const c = TYPE_COLORS.hielo;
-    const shrinkCritical = state === 'critical'; const shrinkNutrition = state === 'no_nutrition'; const shrinkTiny = false;
-    const transform = shrinkCritical ? 'translate(10,10) scale(0.8)' : shrinkNutrition ? 'translate(5,5) scale(0.9)' : undefined;
-
+// ── Flama Effects (fire embers) ──
+function FlamaEffects({ state }: { state: SpriteState }) {
+    if (isSevereState(state)) {
+        return (
+            <svg width="100%" height="100%" viewBox="0 0 150 150">
+                <circle cx="25" cy="55" r="1.5" fill="#ff8c42" opacity="0.08">
+                    <animate attributeName="opacity" values="0.08;0;0.08" dur="4s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        );
+    }
+    if (state === 'sad') {
+        return (
+            <svg width="100%" height="100%" viewBox="0 0 150 150">
+                <circle cx="25" cy="55" r="2" fill="#ff8c42" opacity="0.1">
+                    <animate attributeName="cy" values="55;45;55" dur="4s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0.1;0.03;0.1" dur="4s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="125" cy="50" r="1.5" fill="#ffaa33" opacity="0.08">
+                    <animate attributeName="cy" values="50;42;50" dur="4.5s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0.08;0.02;0.08" dur="4.5s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        );
+    }
     return (
-        <g transform={transform}>
-            {/* Crystalline hexagon */}
-            <path
-                d="M50 8 L87 28 L87 72 L50 92 L13 72 L13 28 Z"
-                fill={c.primary}
-                stroke={c.secondary}
-                strokeWidth="3"
-            />
-            {/* Inner facet */}
-            <path
-                d="M50 18 L77 33 L77 67 L50 82 L23 67 L23 33 Z"
-                fill={c.accent}
-                opacity="0.2"
-            />
-            {/* Crystal shine line */}
-            <line x1="30" y1="25" x2="50" y2="18" stroke="white" strokeWidth="1" opacity="0.4" />
-            <line x1="50" y1="18" x2="70" y2="25" stroke="white" strokeWidth="0.5" opacity="0.3" />
-            {/* Cheek blush */}
-            {(state === 'euphoric' || state === 'happy') && (
-                <>
-                    <ellipse cx="30" cy="55" rx="5" ry="3" fill="#b3e5fc" opacity="0.5" />
-                    <ellipse cx="70" cy="55" rx="5" ry="3" fill="#b3e5fc" opacity="0.5" />
-                </>
-            )}
-        </g>
+        <svg width="100%" height="100%" viewBox="0 0 150 150">
+            <circle cx="25" cy="55" r="3" fill="#ff8c42" opacity="0.7">
+                <animate attributeName="cy" values="55;35;20" dur="2s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.7;0.3;0" dur="2s" repeatCount="indefinite"/>
+                <animate attributeName="r" values="3;2;0.5" dur="2s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="125" cy="50" r="2.5" fill="#ffaa33" opacity="0.6">
+                <animate attributeName="cy" values="50;30;15" dur="2.3s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.6;0.25;0" dur="2.3s" repeatCount="indefinite"/>
+                <animate attributeName="r" values="2.5;1.5;0.3" dur="2.3s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="30" cy="40" r="2" fill="#ff6622" opacity="0.5">
+                <animate attributeName="cy" values="40;22;10" dur="1.8s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.5;0.2;0" dur="1.8s" repeatCount="indefinite"/>
+                <animate attributeName="r" values="2;1.2;0.3" dur="1.8s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="120" cy="42" r="2" fill="#ffcc44" opacity="0.5">
+                <animate attributeName="cy" values="42;25;12" dur="2.1s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.5;0.2;0" dur="2.1s" repeatCount="indefinite"/>
+                <animate attributeName="r" values="2;1;0.2" dur="2.1s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="75" cy="18" r="2" fill="#ff7733" opacity="0.4">
+                <animate attributeName="cy" values="18;5;-5" dur="2.5s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.4;0.15;0" dur="2.5s" repeatCount="indefinite"/>
+            </circle>
+            <path d="M35 48 Q32 40 28 35" stroke="#ff8844" strokeWidth="1.2" fill="none" opacity="0.5">
+                <animate attributeName="opacity" values="0.5;0.1;0.5" dur="1.5s" repeatCount="indefinite"/>
+            </path>
+            <path d="M115 45 Q118 38 122 32" stroke="#ffaa55" strokeWidth="1.2" fill="none" opacity="0.45">
+                <animate attributeName="opacity" values="0.45;0.1;0.45" dur="1.8s" repeatCount="indefinite"/>
+            </path>
+        </svg>
+    );
+}
+
+// ── Hielo Effects (ice crystals) ──
+function HieloEffects({ state }: { state: SpriteState }) {
+    if (isSevereState(state)) {
+        return (
+            <svg width="100%" height="100%" viewBox="-7 3 150 150">
+                <circle cx="22" cy="40" r="1.5" fill="#a8e6ff" opacity="0.08">
+                    <animate attributeName="opacity" values="0.08;0;0.08" dur="4s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        );
+    }
+    if (state === 'sad') {
+        return (
+            <svg width="100%" height="100%" viewBox="-7 3 150 150">
+                <circle cx="22" cy="40" r="2" fill="#a8e6ff" opacity="0.15">
+                    <animate attributeName="opacity" values="0.15;0.03;0.15" dur="3.5s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="128" cy="35" r="1.5" fill="#c0f0ff" opacity="0.1">
+                    <animate attributeName="opacity" values="0.1;0.02;0.1" dur="4s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        );
+    }
+    return (
+        <svg width="100%" height="100%" viewBox="-7 3 150 150">
+            <circle cx="22" cy="40" r="2.5" fill="#a8e6ff" opacity="0.6">
+                <animate attributeName="opacity" values="0.6;0.1;0.6" dur="2.5s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="128" cy="35" r="2" fill="#c0f0ff" opacity="0.5">
+                <animate attributeName="opacity" values="0.5;0.1;0.5" dur="3s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="75" cy="15" r="1.8" fill="white" opacity="0.4">
+                <animate attributeName="opacity" values="0.4;0;0.4" dur="2.8s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="30" cy="25" r="1.5" fill="#a8e6ff" opacity="0.45">
+                <animate attributeName="opacity" values="0.45;0.05;0.45" dur="3.2s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="120" cy="28" r="1.8" fill="#c0f0ff" opacity="0.4">
+                <animate attributeName="opacity" values="0.4;0.05;0.4" dur="2.7s" repeatCount="indefinite"/>
+            </circle>
+            <path d="M25 50 L22 45 L28 47" stroke="#a8e6ff" strokeWidth="0.8" fill="none" opacity="0.35">
+                <animate attributeName="opacity" values="0.35;0;0.35" dur="3s" repeatCount="indefinite"/>
+            </path>
+            <path d="M125 48 L128 43 L122 45" stroke="#c0f0ff" strokeWidth="0.8" fill="none" opacity="0.3">
+                <animate attributeName="opacity" values="0.3;0;0.3" dur="3.5s" repeatCount="indefinite"/>
+            </path>
+        </svg>
     );
 }
 
 export default function RegenmonSVG({ type, size = 120, className = '', stats }: RegenmonSVGProps) {
     const state = stats ? getSpriteState(stats) : 'neutral';
     const animClass = getAnimationClass(state);
-    const svgFilter = getGroupFilter(state, type);
-
-    // CSS filter fallback for states where SVG filters may not render
-    const getCssFilter = (s: SpriteState): string => {
-        switch (s) {
-            case 'critical': return 'sepia(1) hue-rotate(30deg) saturate(0.8) brightness(0.9) opacity(0.85)';
-            case 'no_hope': return 'sepia(1) hue-rotate(230deg) saturate(2) brightness(0.75)';
-            case 'no_energy': return 'sepia(0.8) hue-rotate(10deg) brightness(0.8)';
-            case 'no_nutrition': return 'sepia(0.6) saturate(0.3) brightness(0.9) opacity(0.8)';
-            case 'sad': return 'saturate(0.5) brightness(0.85)';
-            default: return 'none';
-        }
-    };
-
-    const cssFilter = getCssFilter(state);
-
-    const BodyComponent = type === 'rayo' ? RayoBody : type === 'flama' ? FlamaBody : HieloBody;
+    const imgFilter = getImgFilter(state);
 
     return (
-        <svg
-            width={size}
-            height={size}
-            viewBox="0 0 100 100"
-            className={`regenmon-svg ${animClass} ${className}`}
-            xmlns="http://www.w3.org/2000/svg"
-            style={{ overflow: 'visible', filter: cssFilter !== 'none' ? cssFilter : undefined }}
+        <div
+            className={`regenmon-sprite ${animClass} ${className}`}
+            style={{
+                width: size,
+                height: size,
+                position: 'relative',
+            }}
         >
-            <SpriteFilters state={state} type={type} />
-            <Decorations state={state} type={type} />
-            <g filter={svgFilter || undefined}>
-                <BodyComponent state={state} />
-                <Eyes state={state} />
-                <Mouth state={state} />
-            </g>
-        </svg>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+                src={`/sprites/${type}-base.png`}
+                alt={type}
+                width={size}
+                height={size}
+                style={{
+                    width: '100%',
+                    height: '100%',
+                    imageRendering: 'pixelated',
+                    filter: imgFilter !== 'none' ? imgFilter : undefined,
+                }}
+            />
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+                {type === 'rayo' && <RayoEffects state={state} />}
+                {type === 'flama' && <FlamaEffects state={state} />}
+                {type === 'hielo' && <HieloEffects state={state} />}
+            </div>
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+                <FaceOverlay state={state} viewBox={FACE_VIEWBOX[type]} />
+            </div>
+        </div>
     );
 }
