@@ -25,7 +25,7 @@ const STATES: { name: string; stats: Omit<RegenmonStats, 'fragmentos'> & { fragm
 
 export default function PreviewPage() {
   return (
-    <div style={{ background: '#111', color: 'white', padding: '20px', fontFamily: '"Press Start 2P", monospace', fontSize: '10px' }}>
+    <div style={{ background: '#111', color: 'white', padding: '20px', fontFamily: '"Press Start 2P", monospace', fontSize: '10px', minHeight: '100vh', overflow: 'auto', position: 'fixed', inset: 0, zIndex: 9999, overflowY: 'scroll' }}>
       <h1 style={{ fontSize: '16px', marginBottom: '30px', textAlign: 'center' }}>
         🎨 Sprite & Background Preview — Phase 40
       </h1>
