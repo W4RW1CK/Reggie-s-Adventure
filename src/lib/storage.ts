@@ -65,6 +65,16 @@ function migrateData(data: any): RegenmonData {
         data.memories = [];
     }
 
+    // 5. Initialize Evolution (if needed)
+    if (!data.evolution) {
+        data.evolution = { totalMemories: 0, stage: 1, threshold: 10 };
+    }
+
+    // 6. Sync evolution.totalMemories with actual memories count
+    if (Array.isArray(data.memories)) {
+        data.evolution.totalMemories = data.memories.length;
+    }
+
     return data as RegenmonData;
 }
 

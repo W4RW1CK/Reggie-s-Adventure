@@ -3,6 +3,8 @@
 import { useGameState } from '@/hooks/useGameState';
 import { useScreenManager } from '@/hooks/useScreenManager';
 import { useAuth } from '@/hooks/useAuth';
+import { loadPlayerData } from '@/lib/storage';
+import { useState, useEffect } from 'react';
 import LoadingScreen from '@/components/screens/LoadingScreen';
 import TitleScreen from '@/components/screens/TitleScreen';
 import AuthScreen from '@/components/screens/AuthScreen';
@@ -15,7 +17,13 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { RegenmonType } from '@/lib/types';
 
 export default function Home() {
-  const { isLoggedIn, isReady: isAuthReady, privyUserId } = useAuth();
+  const { isLoggedIn, isReady: isAuthReady, privyUserId, user } = useAuth();
+
+  const [playerName, setPlayerName] = useState<string | undefined>();
+  useEffect(() => {
+    const pd = loadPlayerData();
+    setPlayerName(pd?.name);
+  }, []);
 
   const {
     regenmon,
@@ -95,6 +103,8 @@ export default function Home() {
                 navigateTo('TITLE');
               }}
               isLoggedIn={isLoggedIn}
+              email={user?.email}
+              playerName={playerName}
             />
           </ErrorBoundary>
         )}

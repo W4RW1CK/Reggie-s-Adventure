@@ -1,3 +1,9 @@
+export interface EvolutionData {
+    totalMemories: number;
+    stage: number;      // 1 = base, 2 = intermediate, 3 = advanced
+    threshold: number;  // memories needed for next stage
+}
+
 export type RegenmonType = 'rayo' | 'flama' | 'hielo';
 
 export interface RegenmonStats {
@@ -28,6 +34,9 @@ export interface RegenmonData {
 
     // Memories
     memories: RegenmonMemory[]; // Memorias del Regenmon sobre el usuario
+
+    // Evolution
+    evolution: EvolutionData;
 }
 
 export interface AppConfig {

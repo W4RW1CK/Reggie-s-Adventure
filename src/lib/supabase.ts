@@ -29,6 +29,7 @@ interface SupabaseRegenmon {
   theme: string;
   text_size: string;
   activity_history: any[];
+  evolution: any;
   created_at: string;
   last_updated: string;
   updated_at: string;
@@ -51,6 +52,7 @@ function fromSupabaseFormat(data: SupabaseRegenmon): RegenmonData {
     nameChangeUsed: data.name_change_used,
     tutorialDismissed: data.tutorial_dismissed,
     memories: data.memories || [],
+    evolution: data.evolution || { totalMemories: 0, stage: 1, threshold: 10 },
   };
 }
 
@@ -76,6 +78,7 @@ function toSupabaseFormat(privyUserId: string, data: RegenmonData): Partial<Supa
     player_name: null, // Default
     chat_greeted: false, // Default
     activity_history: [], // Default
+    evolution: data.evolution || { totalMemories: 0, stage: 1, threshold: 10 },
   };
 }
 

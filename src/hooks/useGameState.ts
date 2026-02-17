@@ -95,6 +95,7 @@ export function useGameState({ privyUserId, isLoggedIn }: UseGameStateProps) {
             nameChangeUsed: false,
             tutorialDismissed: false,
             memories: [],
+            evolution: { totalMemories: 0, stage: 1, threshold: 10 },
         };
         setRegenmon(newData);
         

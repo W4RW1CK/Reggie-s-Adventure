@@ -8,7 +8,9 @@ import NameEditor from '../ui/NameEditor';
 import TutorialModal from '../ui/TutorialModal';
 import FragmentCounter from '../ui/FragmentCounter';
 import SettingsPanel from '../settings/SettingsPanel';
-import { LoginButton } from '../auth/LoginButton';
+import UserIdentity from '../ui/UserIdentity';
+import ActivityHistory from '../ui/ActivityHistory';
+import { addActivity, loadHistory, clearHistory, ActivityEntry } from '@/lib/activityHistory';
 import { useTheme } from '@/hooks/useTheme';
 import { useAuth } from '@/hooks/useAuth';
 import { useState, useEffect, useMemo } from 'react';
@@ -29,6 +31,8 @@ interface GameScreenProps {
     onDismissTutorial: () => void;
     onReset: () => void;
     isLoggedIn?: boolean;
+    email?: string;
+    playerName?: string;
 }
 
 export default function GameScreen({
@@ -40,9 +44,17 @@ export default function GameScreen({
     onDismissTutorial,
     onReset,
     isLoggedIn = false,
+    email,
+    playerName,
 }: GameScreenProps) {
     const [showTutorial, setShowTutorial] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
+    const [activityEntries, setActivityEntries] = useState<ActivityEntry[]>([]);
+
+    // Load activity history on mount
+    useEffect(() => {
+        setActivityEntries(loadHistory());
+    }, []);
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 480);
     const { theme, textSize, toggleTheme, setTextSize } = useTheme();
     const { login, logout } = useAuth();
@@ -85,6 +97,8 @@ export default function GameScreen({
             espiritu: 5,
             pulso: 10
         });
+        addActivity('purify', -PURIFY_COST);
+        setActivityEntries(loadHistory());
     };
 
     const handleSearchFragments = () => {
@@ -94,6 +108,8 @@ export default function GameScreen({
         
         // Give 15 fragmentos
         onUpdateStats({ fragmentos: SEARCH_FRAGMENTS_REWARD });
+        addActivity('search_fragments', SEARCH_FRAGMENTS_REWARD);
+        setActivityEntries(loadHistory());
     };
 
     const handleSettings = () => {
@@ -119,6 +135,18 @@ export default function GameScreen({
         regenmon,
         updateStatAction: onUpdateStats
     });
+
+    // Log chat activity when stats change from chat
+    useEffect(() => {
+        if (lastStatsChange && isChatOpen) {
+            const sc = lastStatsChange as Record<string, number | undefined>;
+            const fragChange = sc.fragmentos ?? 0;
+            if (fragChange !== 0) {
+                addActivity('chat', fragChange);
+                setActivityEntries(loadHistory());
+            }
+        }
+    }, [lastStatsChange, isChatOpen]);
 
     const handleSendMessage = (text: string) => {
         sendMessage(text);
@@ -155,7 +183,7 @@ export default function GameScreen({
                         <span className="game-screen__day-label bg-black/50 px-2 py-1 inline-block">Día {daysAlive} de aventura</span>
                     </div>
                     <div className="flex gap-2 items-start">
-                        {isLoggedIn && <LoginButton className="text-xs" />}
+                        <UserIdentity isLoggedIn={isLoggedIn} email={email} playerName={playerName} />
                     </div>
                 </div>
 
@@ -236,6 +264,9 @@ export default function GameScreen({
                         </div>
 
 
+                        {/* Activity History */}
+                        <ActivityHistory entries={activityEntries} isVisible={!isChatOpen} />
+
                         {/* Settings Panel */}
                         <SettingsPanel
                             isOpen={showSettings}
@@ -252,7 +283,7 @@ export default function GameScreen({
                             isLoggedIn={isLoggedIn}
                             onLogin={login}
                             onLogout={logout}
-                            onReset={onReset}
+                            onReset={() => { clearHistory(); setActivityEntries([]); onReset(); }}
                         />
                     </div>
                 </div>
