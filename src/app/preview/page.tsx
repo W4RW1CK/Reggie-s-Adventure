@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import RegenmonSVG from '@/components/regenmon/RegenmonSVG';
 import GameBackground from '@/components/game/GameBackground';
 import { RegenmonType, RegenmonStats } from '@/lib/types';
@@ -44,8 +45,8 @@ export default function PreviewPage() {
         
         {/* State rows */}
         {STATES.map(state => (
-          <>
-            <div key={state.name} style={{ display: 'flex', alignItems: 'center', padding: '4px', background: '#1a1a2e', borderRadius: '4px', fontSize: '8px' }}>
+          <React.Fragment key={state.name}>
+            <div style={{ display: 'flex', alignItems: 'center', padding: '4px', background: '#1a1a2e', borderRadius: '4px', fontSize: '8px' }}>
               {state.name}
             </div>
             {TYPES.map(type => (
@@ -65,7 +66,7 @@ export default function PreviewPage() {
                 />
               </div>
             ))}
-          </>
+          </React.Fragment>
         ))}
       </div>
 
