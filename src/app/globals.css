@@ -1802,32 +1802,63 @@ body {
   --theme-bg: #1a1a2e;
   --theme-surface: #0f3460;
   --theme-text: #e8e8e8;
+  --theme-text-secondary: #a0a0a0;
   --theme-border: #4a4a4a;
+  --theme-overlay: rgba(0, 0, 0, 0.6);
+  --theme-overlay-light: rgba(0, 0, 0, 0.5);
+  --theme-border-subtle: rgba(255, 255, 255, 0.25);
+  --theme-border-faint: rgba(255, 255, 255, 0.2);
+  --theme-panel-bg: #1a1a2e;
+  --theme-chat-bg: rgba(0, 0, 0, 0.9);
+  --theme-chat-header: #ea5514;
+  --theme-modal-overlay: rgba(0, 0, 0, 0.7);
+  --theme-input-bg: #000;
+  --theme-input-text: #fff;
+  --theme-muted: #777;
+  --theme-stat-bar-bg: #2c2c2c;
 }
 
 /* Light theme (Game Boy Color) */
 .theme-light {
-  --theme-bg: #e0f0e0;
-  --theme-surface: #c8e8b0;
-  --theme-text: #2a3a2a;
-  --theme-border: #5a7a5a;
+  --theme-bg: #f5f0e1;
+  --theme-surface: #d4c5a9;
+  --theme-text: #2a2a2a;
+  --theme-text-secondary: #5a5a4a;
+  --theme-border: #8b8370;
+  --theme-overlay: rgba(212, 197, 169, 0.85);
+  --theme-overlay-light: rgba(232, 220, 200, 0.8);
+  --theme-border-subtle: rgba(139, 131, 112, 0.5);
+  --theme-border-faint: rgba(139, 131, 112, 0.3);
+  --theme-panel-bg: #e8dcc8;
+  --theme-chat-bg: rgba(245, 240, 225, 0.95);
+  --theme-chat-header: #b8860b;
+  --theme-modal-overlay: rgba(42, 42, 42, 0.5);
+  --theme-input-bg: #f5f0e1;
+  --theme-input-text: #2a2a2a;
+  --theme-muted: #8b8370;
+  --theme-stat-bar-bg: #c8b99a;
 }
 
+/* Light theme body overrides */
 .theme-light body,
 .theme-light .game-screen {
   background-color: var(--theme-bg);
   color: var(--theme-text);
 }
 
+/* Light NES containers: use is-light styling */
 .theme-light .nes-container.is-dark {
   background-color: var(--theme-surface);
   color: var(--theme-text);
   border-color: var(--theme-border);
 }
 
-.theme-light .bg-black\/50,
-.theme-light .bg-black\/60 {
-  background-color: rgba(200, 232, 176, 0.7);
+/* Light theme scrollbar */
+.theme-light ::-webkit-scrollbar-track {
+  background: #e8dcc8;
+}
+.theme-light ::-webkit-scrollbar-thumb {
+  background: #8b8370;
 }
 
 /* Text sizes */

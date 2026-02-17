@@ -162,7 +162,7 @@ export default function GameScreen({
     return (
         <div className="game-screen w-full h-screen relative overflow-hidden flex flex-col">
             {/* Background Layer */}
-            <GameBackground type={regenmon.type} stats={regenmon.stats} />
+            <GameBackground type={regenmon.type} stats={regenmon.stats} theme={theme} />
 
             {/* Tutorial Modal */}
             {showTutorial && (
@@ -173,14 +173,14 @@ export default function GameScreen({
             <div className="game-screen__content relative z-10 w-full h-full flex flex-col items-center justify-between">
 
                 {/* Top HUD: Info */}
-                <div className="game-screen__header w-full px-3 sm:px-4 pt-3 sm:pt-4 flex justify-between items-start text-white">
+                <div className="game-screen__header w-full px-3 sm:px-4 pt-3 sm:pt-4 flex justify-between items-start" style={{ color: 'var(--theme-text)' }}>
                     <div className="flex flex-col gap-2">
                         {/* Fragment Counter */}
                         <FragmentCounter 
                             fragmentos={regenmon.stats.fragmentos} 
                             isLoggedIn={isLoggedIn} 
                         />
-                        <span className="game-screen__day-label bg-black/50 px-2 py-1 inline-block">Día {daysAlive} de aventura</span>
+                        <span className="game-screen__day-label px-2 py-1 inline-block" style={{ backgroundColor: 'var(--theme-overlay-light)' }}>Día {daysAlive} de aventura</span>
                     </div>
                     <div className="flex gap-2 items-start">
                         <UserIdentity isLoggedIn={isLoggedIn} email={email} playerName={playerName} />
@@ -206,13 +206,13 @@ export default function GameScreen({
                         if (sc.esencia && sc.esencia !== 0) items.push(`${sc.esencia > 0 ? '+' : ''}${sc.esencia} 🌱`);
                         if (sc.fragmentos && sc.fragmentos !== 0) items.push(`+${sc.fragmentos} 💠`);
                         return items.length > 0 ? (
-                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 animate-bounce text-white text-sm font-bold bg-black/70 px-3 py-1 rounded whitespace-nowrap z-20">
+                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 animate-bounce text-sm font-bold px-3 py-1 rounded whitespace-nowrap z-20" style={{ color: 'var(--theme-text)', backgroundColor: 'var(--theme-overlay)' }}>
                                 {items.join('  ')}
                             </div>
                         ) : null;
                     })()}
 
-                    <div className="mt-1 sm:mt-2 text-center bg-black/50 border-4 border-white/20 px-4 py-2 inline-block">
+                    <div className="mt-1 sm:mt-2 text-center border-4 px-4 py-2 inline-block" style={{ backgroundColor: 'var(--theme-overlay-light)', borderColor: 'var(--theme-border-faint)' }}>
                         <NameEditor
                             currentName={regenmon.name}
                             onSave={onUpdateName}
@@ -223,7 +223,7 @@ export default function GameScreen({
 
                 {/* Bottom UI: Stats & Actions — inside an NES-style container */}
                 <div className="game-screen__bottom-ui w-full px-3 sm:px-4 pb-3 sm:pb-4">
-                    <div className="bg-black/60 border-4 border-white/25 p-3 sm:p-4 flex flex-col gap-2 sm:gap-3">
+                    <div className="border-4 p-3 sm:p-4 flex flex-col gap-2 sm:gap-3" style={{ backgroundColor: 'var(--theme-overlay)', borderColor: 'var(--theme-border-subtle)' }}>
                         {/* Stats Grid */}
                         <div className="grid grid-cols-1 gap-0.5 sm:gap-1">
                             <StatBar

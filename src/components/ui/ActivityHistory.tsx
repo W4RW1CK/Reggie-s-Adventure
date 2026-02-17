@@ -23,8 +23,8 @@ export default function ActivityHistory({ entries, isVisible }: ActivityHistoryP
     <div className="nes-container is-dark" style={{ padding: '0.5rem 0.75rem', marginTop: '0.5rem' }}>
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full text-left text-xs sm:text-sm text-white flex justify-between items-center"
-        style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'white' }}
+        className="w-full text-left text-xs sm:text-sm flex justify-between items-center"
+        style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--theme-text)' }}
       >
         <span>📜 Historial</span>
         <span>{expanded ? '▲' : '▼'}</span>
@@ -36,11 +36,11 @@ export default function ActivityHistory({ entries, isVisible }: ActivityHistoryP
             const cfg = ACTION_CONFIG[entry.action];
             const sign = entry.fragmentChange >= 0 ? '+' : '';
             return (
-              <div key={i} className="flex justify-between items-center text-xs text-white/80">
+              <div key={i} className="flex justify-between items-center text-xs" style={{ color: 'var(--theme-text)' }}>
                 <span>
                   {cfg.icon} {cfg.label} → {sign}{entry.fragmentChange} 💠
                 </span>
-                <span className="text-white/50">{timeAgo(entry.timestamp)}</span>
+                <span style={{ color: 'var(--theme-text-secondary)' }}>{timeAgo(entry.timestamp)}</span>
               </div>
             );
           })}

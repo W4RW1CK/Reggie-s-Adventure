@@ -24,8 +24,8 @@ export default function UserIdentity({ isLoggedIn, email, playerName }: UserIden
 
   return (
     <span
-      className="text-white/70 text-xs bg-black/40 px-2 py-1 inline-block transition-opacity duration-700"
-      style={{ fontFamily: 'var(--font-press-start, monospace)', fontSize: '0.6rem' }}
+      className="text-xs px-2 py-1 inline-block transition-opacity duration-700"
+      style={{ color: 'var(--theme-text-secondary, rgba(255,255,255,0.7))', backgroundColor: 'var(--theme-overlay-light)', fontFamily: 'var(--font-press-start, monospace)', fontSize: '0.6rem' }}
       key={playerName ? 'player' : 'email'}
     >
       {displayName}

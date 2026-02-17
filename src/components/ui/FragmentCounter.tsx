@@ -14,9 +14,9 @@ export default function FragmentCounter({
   const displayValue = isLoggedIn ? fragmentos : '---';
   
   return (
-    <div className={`fragment-counter bg-black/60 border-2 border-white/25 px-3 py-1 inline-flex items-center gap-1 ${className}`}>
+    <div className={`fragment-counter border-2 px-3 py-1 inline-flex items-center gap-1 ${className}`} style={{ backgroundColor: 'var(--theme-overlay)', borderColor: 'var(--theme-border-subtle)' }}>
       <span className="text-lg">💠</span>
-      <span className="font-mono text-sm text-white">
+      <span className="font-mono text-sm" style={{ color: 'var(--theme-text)' }}>
         {displayValue} Fragmentos
       </span>
     </div>

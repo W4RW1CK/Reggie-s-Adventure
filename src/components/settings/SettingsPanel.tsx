@@ -93,13 +93,14 @@ export default function SettingsPanel({
 
   if (!isOpen) return null;
 
-  const containerClass = theme === 'dark' ? 'nes-container is-dark with-title' : 'nes-container with-title';
+  const containerClass = theme === 'dark' ? 'nes-container is-dark with-title' : 'nes-container is-light with-title';
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-black/60 animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex justify-end animate-fadeIn" style={{ backgroundColor: 'var(--theme-modal-overlay)' }}>
       <div
         ref={panelRef}
-        className="w-full max-w-sm h-full overflow-y-auto bg-[#1a1a2e] border-l-4 border-white/30 p-0 animate-slideInRight"
+        className="w-full max-w-sm h-full overflow-y-auto border-l-4 p-0 animate-slideInRight"
+        style={{ backgroundColor: 'var(--theme-panel-bg)', borderColor: 'var(--theme-border-subtle)' }}
         role="dialog"
         aria-modal="true"
         aria-label="Configuración"
@@ -110,9 +111,9 @@ export default function SettingsPanel({
           {/* Close button */}
           <button
             onClick={onClose}
-            className="absolute top-2 right-3 text-white text-lg hover:text-red-400 transition-colors z-10"
+            className="absolute top-2 right-3 text-lg hover:text-red-400 transition-colors z-10"
             aria-label="Cerrar configuración"
-            style={{ position: 'absolute', top: '8px', right: '12px' }}
+            style={{ position: 'absolute', top: '8px', right: '12px', color: 'var(--theme-text)' }}
           >
             ✕
           </button>
@@ -212,7 +213,7 @@ export default function SettingsPanel({
             </div>
 
             {/* Reset */}
-            <div className="flex flex-col gap-1 mt-2 pt-2 border-t border-white/20">
+            <div className="flex flex-col gap-1 mt-2 pt-2" style={{ borderTop: '1px solid var(--theme-border-faint)' }}>
               <span className="text-xs">🔄 Reiniciar</span>
               {showResetConfirm ? (
                 <div className="flex flex-col gap-2 animate-fadeIn">
