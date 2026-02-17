@@ -421,8 +421,11 @@
 - [x] 40.1: GameBackground reworked (18 paletas: 3 tipos × 3 moods × 2 temas)
 - [x] 40.2: RegenmonSVG reworked (8 estados × 3 tipos = 24 sprites)
 - [x] 40.3: getSpriteState() lógica implementada
-- [ ] **PENDIENTE: Review visual por w4rw1ck** (preview page en /preview)
-- Commit: `1e48d99` (WIP — awaiting review)
+- [x] **Review visual por w4rw1ck** — APROBADO ✅
+- Ajustes post-review: Critical=café enfermizo 0.8x, Sin Esperanza=púrpura, Sin Nutrición=pálido 0.9x, Decaído=preocupado
+- Bugfix: getSpriteState() — critical era inalcanzable (avg<10 check antes de individuales)
+- Bugfix: SVG filters no renderizaban → migrado a CSS filters
+- Commits: `1e48d99` → `61b3e03`
 
 ### Fase 42: Header — Reestructurar Layout (2026-02-17)
 - [x] 42.1: UserIdentity componente (evolving: nada → email → nombre)
