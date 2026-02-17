@@ -196,11 +196,7 @@ function Eyes({ state }: { state: SpriteState }) {
                     <path d="M64 44 Q66 41 68 44 Q66 47 64 44" stroke="#8844aa" strokeWidth="0.8" fill="none" opacity="0.6">
                         <animate attributeName="opacity" values="0.6;0.2;0.6" dur="3s" repeatCount="indefinite" />
                     </path>
-                    {/* Tear drop */}
-                    <ellipse cx="28" cy="52" rx="2" ry="3" fill="#9966cc" opacity="0.5">
-                        <animate attributeName="cy" values="52;58;52" dur="2.5s" repeatCount="indefinite" />
-                        <animate attributeName="opacity" values="0.5;0.1;0.5" dur="2.5s" repeatCount="indefinite" />
-                    </ellipse>
+                    {/* No tear — emptiness, not sadness */}
                 </>
             );
         case 'no_energy':
