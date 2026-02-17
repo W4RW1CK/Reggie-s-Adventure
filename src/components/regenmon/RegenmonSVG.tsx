@@ -58,13 +58,11 @@ function SpriteFilters({ state, type }: { state: SpriteState; type: RegenmonType
                 </feMerge>
             </filter>
             <filter id={`grayscale-${id}`}>
-                <feColorMatrix type="saturate" values="0" />
-                <feComponentTransfer>
-                    <feFuncR type="linear" slope="0.4" intercept="0.1" />
-                    <feFuncG type="linear" slope="0.4" intercept="0.1" />
-                    <feFuncB type="linear" slope="0.4" intercept="0.1" />
-                    <feFuncA type="linear" slope="0.6" />
-                </feComponentTransfer>
+                <feColorMatrix type="matrix" values="
+                    0.2 0.2 0.2 0 0.05
+                    0.2 0.2 0.2 0 0.05
+                    0.2 0.2 0.2 0 0.05
+                    0   0   0   0.5 0" />
             </filter>
             <filter id={`no-hope-${id}`}>
                 <feColorMatrix type="matrix" values="
