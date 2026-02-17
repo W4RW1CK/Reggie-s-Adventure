@@ -88,7 +88,7 @@ export function useGameState({ privyUserId, isLoggedIn }: UseGameStateProps) {
         const newData: RegenmonData = {
             name,
             type,
-            stats: { espiritu: STAT_INITIAL, pulso: STAT_INITIAL, esencia: 100, fragmentos: 0 },
+            stats: { espiritu: STAT_INITIAL, pulso: STAT_INITIAL, esencia: 100, fragmentos: 100 },
             theme: 'dark',
             createdAt: new Date().toISOString(),
             lastUpdated: new Date().toISOString(),

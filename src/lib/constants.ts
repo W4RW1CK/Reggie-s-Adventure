@@ -21,7 +21,7 @@ export const INITIAL_STATS: RegenmonStats = {
     espiritu: STAT_INITIAL,
     pulso: STAT_INITIAL,
     esencia: 100, // Empieza lleno
-    fragmentos: 100,
+    fragmentos: 100, // Inicia con 100 Fragmentos
 };
 
 // Economía

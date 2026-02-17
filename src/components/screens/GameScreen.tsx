@@ -8,10 +8,11 @@ import NameEditor from '../ui/NameEditor';
 import ResetButton from '../ui/ResetButton';
 import TutorialModal from '../ui/TutorialModal';
 import MusicToggle from '../ui/MusicToggle';
+import FragmentCounter from '../ui/FragmentCounter';
 import { LoginButton } from '../auth/LoginButton';
 import { useState, useEffect, useMemo } from 'react';
 import { RegenmonData } from '@/lib/types';
-import { STAT_MAX, STAT_MIN } from '@/lib/constants';
+import { STAT_MAX, STAT_MIN, PURIFY_COST, SEARCH_FRAGMENTS_REWARD } from '@/lib/constants';
 import { ChatBox } from '../chat/ChatBox';
 import { useChat } from '@/hooks/useChat';
 import { useChiptuneAudio } from '@/hooks/useChiptuneAudio';
@@ -40,6 +41,7 @@ export default function GameScreen({
     isLoggedIn = false,
 }: GameScreenProps) {
     const [showTutorial, setShowTutorial] = useState(false);
+    const [showSettings, setShowSettings] = useState(false);
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 480);
 
     // Track window size for responsive SVG
@@ -68,18 +70,33 @@ export default function GameScreen({
         (Date.now() - new Date(regenmon.createdAt).getTime()) / (1000 * 60 * 60 * 24)
     ) + 1;
 
-    const handleAction = (action: 'train' | 'feed' | 'sleep') => {
-        switch (action) {
-            case 'train':
-                onUpdateStats({ pulso: 10 });
-                break;
-            case 'feed':
-                onUpdateStats({ esencia: 10 });
-                break;
-            case 'sleep':
-                onUpdateStats({ espiritu: 10 });
-                break;
+    const handlePurify = () => {
+        if (regenmon.stats.fragmentos < PURIFY_COST || regenmon.stats.esencia >= 100) {
+            return;
         }
+        
+        // Spend 10 fragmentos and give: Esencia +30 (clamp to 100), Espíritu +5, Pulso +10
+        onUpdateStats({ 
+            fragmentos: -PURIFY_COST,
+            esencia: 30,
+            espiritu: 5,
+            pulso: 10
+        });
+    };
+
+    const handleSearchFragments = () => {
+        if (regenmon.stats.fragmentos > 0) {
+            return;
+        }
+        
+        // Give 15 fragmentos
+        onUpdateStats({ fragmentos: SEARCH_FRAGMENTS_REWARD });
+    };
+
+    const handleSettings = () => {
+        setShowSettings(true);
+        // Settings modal will be implemented later (placeholder for now)
+        alert('⚙️ Configuración (próximamente)');
     };
 
     const handleTutorialDismiss = (dontShowAgain: boolean) => {
@@ -127,7 +144,12 @@ export default function GameScreen({
 
                 {/* Top HUD: Info */}
                 <div className="game-screen__header w-full px-3 sm:px-4 pt-3 sm:pt-4 flex justify-between items-start text-white">
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-2">
+                        {/* Fragment Counter */}
+                        <FragmentCounter 
+                            fragmentos={regenmon.stats.fragmentos} 
+                            isLoggedIn={isLoggedIn} 
+                        />
                         <span className="game-screen__day-label bg-black/50 px-2 py-1 inline-block">Día {daysAlive} de aventura</span>
                     </div>
                     <div className="flex gap-2 items-start">
@@ -186,8 +208,14 @@ export default function GameScreen({
                         {/* Actions */}
                         <div className="mt-1 sm:mt-2">
                             <ActionButtons
-                                onAction={handleAction}
+                                onPurify={handlePurify}
+                                onSettings={handleSettings}
+                                onChat={toggleChat}
+                                onSearchFragments={handleSearchFragments}
                                 stats={regenmon.stats}
+                                fragmentos={regenmon.stats.fragmentos}
+                                showSearchFragments={regenmon.stats.fragmentos === 0}
+                                isChatOpen={isChatOpen}
                             />
                         </div>
 
@@ -197,20 +225,6 @@ export default function GameScreen({
                             <ResetButton onReset={onReset} />
                         </div>
                     </div>
-
-                    {/* Chat Button (Session 2) */}
-                    {!isChatOpen && (
-                        <div className="mt-2">
-                            <button
-                                type="button"
-                                className="nes-btn w-full is-success"
-                                onClick={toggleChat}
-                                aria-label="Abrir chat con tu Regenmon"
-                            >
-                                💬 Conversar
-                            </button>
-                        </div>
-                    )}
                 </div>
 
                 {/* Chat Overlay */}
