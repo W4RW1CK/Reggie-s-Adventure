@@ -232,8 +232,8 @@ body {
 
 /* NES-style progress bar */
 .loading-screen__progress-container {
-  width: 200px;
-  height: 16px;
+  width: clamp(160px, 40vw, 280px);
+  height: clamp(12px, 2.5vh, 20px);
   border: 4px solid #e8e8e8;
   background-color: #1a1a2e;
   padding: 2px;
@@ -867,7 +867,7 @@ body {
 .creation-screen__carousel {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: clamp(12px, 3vw, 32px);
   margin-bottom: 40px;
   z-index: 72;
   width: 100%;
@@ -900,8 +900,8 @@ body {
 }
 
 .creation-screen__svg-container {
-  width: 180px;
-  height: 180px;
+  width: clamp(120px, 25vw, 200px);
+  height: clamp(120px, 25vw, 200px);
   border: 4px solid #fff;
   background-color: rgba(0, 0, 0, 0.3);
   display: flex;
@@ -954,7 +954,7 @@ body {
 .creation-screen__input {
   font-family: var(--font-press-start-2p);
   font-size: clamp(12px, 2.5vw, 18px);
-  padding: 12px;
+  padding: clamp(8px, 2vh, 16px);
   text-align: center;
   width: 100%;
   border: 4px solid #4a4a4a;
@@ -983,7 +983,7 @@ body {
 .creation-screen__submit-btn {
   font-family: var(--font-press-start-2p);
   font-size: clamp(12px, 2.5vw, 18px);
-  padding: 16px 32px;
+  padding: clamp(10px, 2.5vh, 20px) clamp(20px, 5vw, 40px);
   background-color: #27ae60;
   color: #fff;
   border: 4px solid #2ecc71;
@@ -2537,7 +2537,7 @@ html, body {
   }
 }
 
-/* === Settings panel: Responsive text === */
+/* === Settings panel: Responsive text + containers === */
 .settings-body .text-xs,
 .settings-body span.text-xs {
   font-size: clamp(10px, 2vw, 16px) !important;
@@ -2555,11 +2555,36 @@ html, body {
   font-size: clamp(9px, 1.8vw, 14px) !important;
   padding: clamp(4px, 1vh, 10px) clamp(8px, 2vw, 16px) !important;
   min-height: clamp(32px, 6vh, 52px) !important;
+  border-width: clamp(2px, 0.4vw, 4px) !important;
 }
 
 .settings-body .nes-input {
   font-size: clamp(11px, 2.2vw, 16px) !important;
   height: clamp(32px, 5vh, 44px) !important;
+  border-width: clamp(2px, 0.4vw, 4px) !important;
+  padding: clamp(4px, 1vh, 8px) clamp(6px, 1.5vw, 12px) !important;
+}
+
+/* Settings panel container borders + spacing */
+.settings-panel {
+  border-width: clamp(2px, 0.4vw, 4px) !important;
+}
+
+.settings-header {
+  border-bottom-width: clamp(2px, 0.4vw, 4px) !important;
+}
+
+/* Settings rows gap */
+.settings-body .flex.items-center.justify-between {
+  gap: clamp(8px, 2vw, 16px);
+}
+
+.settings-body .flex.items-center.gap-2 {
+  gap: clamp(4px, 1vw, 10px) !important;
+}
+
+.settings-body .flex.gap-2 {
+  gap: clamp(4px, 1vw, 10px) !important;
 }
 
 /* === Settings panel: Mobile + Tablet fullscreen === */
@@ -2571,7 +2596,7 @@ html, body {
   }
 }
 
-/* === Tutorial modal: Responsive text === */
+/* === Tutorial modal: Responsive text + containers === */
 .fixed[role="dialog"] .text-xs,
 .fixed[role="dialog"] .text-sm {
   font-size: clamp(10px, 2vw, 16px) !important;
@@ -2596,6 +2621,39 @@ html, body {
 .fixed[role="dialog"] .nes-btn {
   font-size: clamp(10px, 2vw, 16px) !important;
   min-height: clamp(36px, 6vh, 52px) !important;
+  border-width: clamp(2px, 0.4vw, 4px) !important;
+  padding: clamp(6px, 1.2vh, 12px) clamp(10px, 2vw, 20px) !important;
+}
+
+.fixed[role="dialog"] .nes-container {
+  padding: clamp(12px, 3vw, 28px) !important;
+  border-width: clamp(2px, 0.5vw, 4px) !important;
+}
+
+.fixed[role="dialog"] .nes-container.with-title {
+  padding-top: clamp(16px, 4vh, 32px) !important;
+}
+
+.fixed[role="dialog"] .nes-container .title {
+  font-size: clamp(10px, 2vw, 16px) !important;
+}
+
+.fixed[role="dialog"] .flex.items-center.gap-3,
+.fixed[role="dialog"] .flex.items-start.gap-3 {
+  gap: clamp(6px, 1.5vw, 14px) !important;
+}
+
+.fixed[role="dialog"] .grid.gap-2,
+.fixed[role="dialog"] .grid.gap-4 {
+  gap: clamp(6px, 1.5vh, 16px) !important;
+}
+
+.fixed[role="dialog"] .flex.gap-2 {
+  gap: clamp(4px, 1vw, 10px) !important;
+}
+
+.fixed[role="dialog"] p {
+  margin-bottom: clamp(4px, 1vh, 12px);
 }
 
 /* === Settings panel: Landscape phone compact === */
