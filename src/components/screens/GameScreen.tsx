@@ -51,6 +51,7 @@ export default function GameScreen({
     const [showSettings, setShowSettings] = useState(false);
     const [showHistory, setShowHistory] = useState(false);
     const [activityEntries, setActivityEntries] = useState<ActivityEntry[]>([]);
+    const [toast, setToast] = useState<{ text: string; type: 'loading' | 'success' | 'error' } | null>(null);
 
     // Load activity history on mount
     useEffect(() => {
@@ -92,24 +93,35 @@ export default function GameScreen({
     const allStatsFull = regenmon.stats.esencia >= 100 && regenmon.stats.espiritu >= 100 && regenmon.stats.pulso >= 100;
     const canPurifyBtn = regenmon.stats.fragmentos >= PURIFY_COST && !allStatsFull;
 
+    const showToast = (text: string, type: 'loading' | 'success' | 'error') => {
+        setToast({ text, type });
+        if (type !== 'loading') {
+            setTimeout(() => setToast(null), 2000);
+        }
+    };
+
     const handlePurify = () => {
         if (regenmon.stats.fragmentos < PURIFY_COST) {
+            showToast('❌ No tienes suficientes fragmentos', 'error');
             return;
         }
-        // Allow purify if ANY stat can benefit (not just esencia)
         if (regenmon.stats.esencia >= 100 && regenmon.stats.espiritu >= 100 && regenmon.stats.pulso >= 100) {
+            showToast('✨ ¡Ya estás al máximo!', 'error');
             return;
         }
         
-        // Spend 10 fragmentos and give: Esencia +30 (clamp to 100), Espíritu +5, Pulso +10
-        onUpdateStats({ 
-            fragmentos: -PURIFY_COST,
-            esencia: 30,
-            espiritu: 5,
-            pulso: 10
-        });
-        addActivity('purify', -PURIFY_COST);
-        setActivityEntries(loadHistory());
+        showToast('🔮 Purificando…', 'loading');
+        setTimeout(() => {
+            onUpdateStats({ 
+                fragmentos: -PURIFY_COST,
+                esencia: 30,
+                espiritu: 5,
+                pulso: 10
+            });
+            addActivity('purify', -PURIFY_COST);
+            setActivityEntries(loadHistory());
+            showToast('✨ ¡Me siento renovado! Energía restaurada.', 'success');
+        }, 600);
     };
 
     const handleSearchFragments = () => {
@@ -117,10 +129,13 @@ export default function GameScreen({
             return;
         }
         
-        // Give 15 fragmentos
-        onUpdateStats({ fragmentos: SEARCH_FRAGMENTS_REWARD });
-        addActivity('search_fragments', SEARCH_FRAGMENTS_REWARD);
-        setActivityEntries(loadHistory());
+        showToast('🔍 Buscando fragmentos…', 'loading');
+        setTimeout(() => {
+            onUpdateStats({ fragmentos: SEARCH_FRAGMENTS_REWARD });
+            addActivity('search_fragments', SEARCH_FRAGMENTS_REWARD);
+            setActivityEntries(loadHistory());
+            showToast(`💎 ¡Encontraste ${SEARCH_FRAGMENTS_REWARD} fragmentos!`, 'success');
+        }, 800);
     };
 
     const handleSettings = () => {
@@ -208,10 +223,17 @@ export default function GameScreen({
                             </div>
                             <span className="hud-stat-val">{Math.round(regenmon.stats.esencia)}</span>
                         </div>
-                        <div className="hud-fragments">💎 {regenmon.stats.fragmentos}</div>
+                        <div className="hud-fragments">💎 {isLoggedIn ? regenmon.stats.fragmentos : '---'}</div>
                     </div>
                     <button className="hud-config-btn" onClick={handleSettings}>⚙️</button>
                 </div>
+
+                {/* === TOAST FEEDBACK === */}
+                {toast && (
+                    <div className={`hud-toast ${toast.type === 'loading' ? 'hud-toast--loading' : toast.type === 'success' ? 'hud-toast--success' : 'hud-toast--error'}`}>
+                        {toast.text}
+                    </div>
+                )}
 
                 {/* === CENTER: Sprite === */}
                 <div className="hud-sprite-area flex-1 flex flex-col items-center justify-center">
