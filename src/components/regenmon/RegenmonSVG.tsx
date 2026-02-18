@@ -374,6 +374,7 @@ export default function RegenmonSVG({ type, size = 120, className = '', stats }:
             style={{
                 width: size,
                 height: size,
+                aspectRatio: '1 / 1',
                 position: 'relative',
             }}
         >
@@ -386,6 +387,7 @@ export default function RegenmonSVG({ type, size = 120, className = '', stats }:
                 style={{
                     width: '100%',
                     height: '100%',
+                    objectFit: 'contain',
                     imageRendering: 'pixelated',
                     filter: imgFilter !== 'none' ? imgFilter : undefined,
                 }}

@@ -67,9 +67,12 @@ export default function GameScreen({
     }, []);
 
     const regenmonSize = useMemo(() => {
-        if (windowWidth < 480) return 130;
-        if (windowWidth < 768) return 160;
-        return 180;
+        // Use the smaller of width/height to keep sprite square and proportional
+        const vh = typeof window !== 'undefined' ? window.innerHeight : 800;
+        const vw = typeof window !== 'undefined' ? window.innerWidth : 480;
+        const minDim = Math.min(vw, vh);
+        // Sprite = ~30% of smaller dimension, clamped between 100-200px
+        return Math.max(100, Math.min(200, Math.round(minDim * 0.3)));
     }, [windowWidth]);
 
     // Effect to check if tutorial should be shown
