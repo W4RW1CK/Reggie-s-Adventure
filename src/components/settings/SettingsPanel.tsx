@@ -105,7 +105,7 @@ export default function SettingsPanel({
         aria-modal="true"
         aria-label="Configuración"
       >
-        <div className={`${containerClass} m-2 mx-auto`}>
+        <div className={`${containerClass}`} style={{ margin: '8px auto' }}>
           <p className="title">⚙️ Configuración</p>
 
           {/* Close button */}
