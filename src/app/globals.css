@@ -736,10 +736,10 @@ body {
   /* Inner spacing border */
   padding: 24px;
   min-height: 220px;
-  height: 220px;
+  max-height: 60vh;
   display: flex;
   align-items: flex-start;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .story-screen__text {
@@ -2018,6 +2018,48 @@ body {
 }
 .theme-light .creation-screen__svg-container {
   background-color: var(--theme-overlay-light);
+}
+
+/* Light theme: Story Screen */
+.theme-light .story-screen {
+  background-color: var(--theme-bg);
+}
+.theme-light .story-screen__dialog {
+  background-color: var(--theme-surface);
+  border-color: var(--theme-border);
+}
+.theme-light .story-screen__text {
+  color: var(--theme-text);
+}
+.theme-light .story-screen__cursor {
+  color: #b8860b;
+}
+.theme-light .story-screen__continue-btn {
+  background-color: var(--theme-surface);
+  color: var(--theme-text);
+  border-color: var(--theme-border);
+}
+.theme-light .story-screen__continue-btn:hover {
+  background-color: #b8860b;
+  color: #fff;
+}
+.theme-light .story-screen__scanlines {
+  opacity: 0.03;
+}
+.theme-light .story-screen__particle {
+  background-color: rgba(139, 131, 112, 0.2);
+}
+
+/* Light theme: Transition Screen */
+.theme-light .transition-screen {
+  background-color: var(--theme-bg);
+}
+.theme-light .transition-screen__text {
+  color: var(--theme-text);
+  text-shadow: 0 0 10px rgba(139, 131, 112, 0.3);
+}
+.theme-light .transition-screen__scanlines {
+  opacity: 0.03;
 }
 
 /* Light theme stat bar overrides */
