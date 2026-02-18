@@ -53,7 +53,7 @@
   }
 
   .day-section {
-    font-size: 0.5rem;
+    font-size: clamp(0.45rem, 1.4vw, 0.75rem);
     color: #93c5fd;
     white-space: nowrap;
     padding: 1vh 1.2vw;
@@ -75,9 +75,9 @@
     display: flex;
     align-items: center;
     gap: 0.6vw;
-    font-size: 0.5rem;
+    font-size: clamp(0.45rem, 1.4vw, 0.75rem);
   }
-  .stat-icon { font-size: 0.75rem; }
+  .stat-icon { font-size: clamp(0.65rem, 2vw, 1rem); }
   .stat-bar-bg {
     flex: 1;
     min-width: 4vw;
@@ -91,13 +91,13 @@
   .bar-espiritu { background: #e879f9; }
   .bar-pulso { background: #facc15; }
   .bar-esencia { background: #34d399; }
-  .stat-val { font-size: 0.45rem; color: #aaa; min-width: 2.5vw; text-align: right; }
+  .stat-val { font-size: clamp(0.4rem, 1.2vw, 0.65rem); color: #aaa; min-width: 2.5vw; text-align: right; }
 
   .fragments {
     display: flex;
     align-items: center;
     gap: 0.5vw;
-    font-size: 0.55rem;
+    font-size: clamp(0.45rem, 1.4vw, 0.75rem);
     color: #93c5fd;
     margin-left: 1vw;
     flex-shrink: 0;
@@ -105,7 +105,7 @@
 
   .config-btn {
     font-family: 'Press Start 2P', cursive;
-    font-size: 0.5rem;
+    font-size: clamp(0.45rem, 1.4vw, 0.75rem);
     padding: 1vh 1.2vw;
     background: rgba(255,255,255,0.1);
     border: 2px solid rgba(255,255,255,0.3);
@@ -166,14 +166,18 @@
 
   .action-btn {
     font-family: 'Press Start 2P', cursive;
-    font-size: 0.6rem;
-    padding: 1.5vh 3vw;
+    font-size: clamp(0.5rem, 1.8vw, 0.9rem);
+    padding: 1.8vh 3vw;
     border: 2px solid;
     cursor: pointer;
     transition: all 0.15s;
     flex: 1;
-    max-width: 25vw;
+    max-width: 35vw;
     text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.4;
   }
   .action-btn:hover { transform: scale(1.05); }
   .action-btn:active { transform: scale(0.95); }
