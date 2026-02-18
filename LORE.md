@@ -310,3 +310,142 @@ Este documento es la **biblia narrativa** del juego. Todo lo relacionado a perso
 >
 > 📐 **Consistencia bidireccional:** Cada documento canónico tiene su propia sección de "Referencias Cruzadas" que apunta de vuelta aquí. La red de conexiones es el sistema nervioso del proyecto.
 
+
+---
+
+## 🎨 Estética Visual
+
+### Visión General
+
+**Retro-futurista cypherpunk + medieval arcano.**
+
+*"Code is new magic complementing old magic."*
+
+No es Hollywood hacker (pantallas verdes Matrix). Es **cultura real de hackspace** — terminales, cables, hardware abierto, soldering stations — mezclada con **misticismo medieval** — runas, grimoires, sellos arcanos. La tecnología es la nueva magia, y la magia vieja sigue viva.
+
+### Pixel Art
+
+- Todos los sprites son **pixel art PNG** (no SVGs simples)
+- Generados con Gemini, estilo retro 8-bit/16-bit
+- **Sin rostro** en los sprites base — las expresiones se manejan con overlays SVG separados
+- Los efectos (partículas, brillo) se atenúan cuando el Regenmon está en estados negativos
+- **Transparencia como indicador de salud** — a menor vitalidad, más translúcido se ve el sprite
+
+### Sprites por Tipo
+
+| Tipo | Sprite | Descripción |
+|------|--------|-------------|
+| ⚡ Rayo | Globo de plasma cyan | Esfera eléctrica pulsante, partículas de energía |
+| 🔥 Flama | Lágrima de fuego (teardrop) | Llama viva con brasas flotantes |
+| ❄️ Hielo | Cristal geométrico | Estructura cristalina facetada, escarcha |
+
+### Escenarios por Tipo
+
+#### ⚡ Rayo
+- **Dark:** Fondo digital oscuro con circuitos luminosos cyan/azul eléctrico. Líneas de datos como corrientes. Nodos de energía pulsando. Ambiente: sala de servidores antigua, mística.
+- **Light:** Circuitos suaves sobre fondo claro, tonos sky blue y silver. Ríos luminosos translúcidos.
+
+#### 🔥 Flama
+- **Dark:** Caverna digital incandescente. Brasas flotando, grietas luminosas naranja/roja. Cristal fundido. Ambiente: forja arcana subterránea.
+- **Light:** Tonos melocotón, coral, dorado. Brasas como luciérnagas. Calidez sin agresividad.
+
+#### ❄️ Hielo
+- **Dark:** Biblioteca digital congelada. Estantes de datos con escarcha cristalina. Copos de conocimiento flotando. Luz azul/violeta. Ambiente: archivo antiguo en hielo eterno.
+- **Light:** Tonos lavanda, mint, blanco cristalino. Cristales refractando luz suave. Serenidad invernal.
+
+### Tipografía
+
+- **Press Start 2P** — fuente principal del juego (Google Fonts)
+- Todos los tamaños usan `clamp()` con viewport units para responsividad
+- Excepto el texto de Story Screen (typewriter) que mantiene tamaño fijo
+
+### Paleta de Colores
+
+**Dark Theme (default):**
+- Fondos oscuros con acentos de color por tipo
+- Rayo: cyans y azules eléctricos
+- Flama: naranjas, rojos y dorados
+- Hielo: violetas, azules fríos y blancos
+- HUD: overlays semi-transparentes, bordes sutiles
+
+**Light Theme:**
+- Fondos cálidos/neutros
+- Colores de tipo más suaves y translúcidos
+- HUD: fondos claros con bordes más definidos
+
+### Framework CSS
+
+- **NES.css** para componentes retro (botones, contenedores, diálogos)
+- **Tailwind** para layout y utilidades
+- **CSS Variables** para theming (dark/light)
+- Nota: `NES.css with-title` pone el título en `top: -1.8rem` → se clipea en mobile. Usar custom headers.
+
+---
+
+## 🕹️ Interfaz (HUD)
+
+### Layout
+
+```
+┌──────────────────────────────────┐
+│  Día N  │ 🔮 ██ │ 💛 ██ │ ✨ ██ │ 💎 N │ 🧠 N │ ⚙️  │  ← TOP BAR
+├──────────────────────────────────┤
+│                                  │
+│           [SPRITE]               │  ← CENTER (flex-1)
+│        +5 🔮  -1 ✨              │  ← Floating delta (fade-up)
+│          「Nombre」               │
+│          email/player            │
+│                                  │
+├──────────────────────────────────┤
+│  🔮 PURIFICAR  │  💬 CONVERSAR  │ 📜 │  ← BOTTOM BAR
+└──────────────────────────────────┘
+```
+
+### Top Bar
+- **Día N** — días desde la creación (El Despertar)
+- **Stats** — 🔮 Espíritu, 💛 Pulso, ✨ Esencia (barras con valor numérico)
+- **💎 Fragmentos** — moneda de regeneración (muestra `---` si no logueado)
+- **🧠 Memorias** — contador de memorias guardadas (solo si logueado y >0)
+- **⚙️ Config** — abre panel de ajustes
+
+### Center
+- Sprite del Regenmon con animación float
+- Nombre editable (una vez, sella La Conexión)
+- Identidad del usuario (email/nombre)
+- **Floating Delta** — texto que sube y se desvanece al cambiar stats (ej: `-10 💎`, `+5 🔮  -1 ✨`)
+
+### Bottom Bar
+- **🔮 PURIFICAR** — gasta fragmentos, restaura stats (ver §La Purificación)
+- **💬 CONVERSAR** — abre/cierra chat overlay (La Conexión activa)
+- **🔍 BUSCAR** — aparece solo con 0 fragmentos (restos dormidos de La Red)
+- **📜 Historial** — toggle a la derecha (right-handed users), con glow activo
+
+### Toast System
+- **Loading** (amarillo): "🔮 Purificando…", "🔍 Buscando fragmentos…"
+- **Success** (verde): "✨ ¡Me siento renovado!", "💎 ¡Encontraste 15 fragmentos!"
+- **Error** (rojo): "❌ No tienes suficientes fragmentos"
+- Delay: 600-800ms para loading → success/error
+
+### Settings Panel
+- Fullscreen en mobile/tablet (<1280px)
+- Side panel en desktop (≥1280px)
+- Custom header (no NES with-title hack)
+- Opciones: música, tema, tamaño texto, nombre, login/logout, reset
+
+---
+
+## 🎵 Audio
+
+- **Chiptune** generado por tipo de Regenmon
+- Volumen se reduce a 60% cuando el chat está abierto
+- Toggle de música en settings
+
+---
+
+## 🔄 Acciones del Juego
+
+| Acción | Costo | Efecto | Condición |
+|--------|-------|--------|-----------|
+| Purificar | 10 💎 | +30 Esencia, +5 Espíritu, +10 Pulso | Requiere ≥10 fragmentos, stats no al máximo |
+| Buscar Fragmentos | Gratis | +15 💎 | Solo aparece con 0 fragmentos |
+| Conversar | Esencia (-1 a -4) | Stats variables + 0-5 💎 | Cooldown 3s, máx 280 chars |
