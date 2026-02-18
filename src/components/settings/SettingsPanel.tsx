@@ -95,32 +95,31 @@ export default function SettingsPanel({
 
   if (!isOpen) return null;
 
-  const containerClass = theme === 'dark' ? 'nes-container is-dark with-title' : 'nes-container is-light with-title';
-
   return (
     <div className="fixed inset-0 z-50 flex justify-end animate-fadeIn" style={{ backgroundColor: 'var(--theme-modal-overlay)', zIndex: 100 }}>
       <div
         ref={panelRef}
-        className="settings-panel w-full h-full overflow-y-auto p-0 animate-fadeIn md:animate-slideInRight md:max-w-sm md:border-l-4"
+        className="settings-panel w-full h-full overflow-y-auto p-0 md:max-w-sm md:border-l-4"
         style={{ backgroundColor: 'var(--theme-panel-bg)', borderColor: 'var(--theme-border-subtle)' }}
         role="dialog"
         aria-modal="true"
         aria-label="Configuración"
       >
-        <div className={`${containerClass}`} style={{ margin: '0', border: 'none' }}>
-          <p className="title">⚙️ Configuración</p>
-
-          {/* Close button */}
+        {/* Header: Title + Close */}
+        <div className="flex items-center justify-between px-4 py-3 border-b-4" style={{ borderColor: 'var(--theme-border-subtle)' }}>
+          <span className="text-sm" style={{ color: 'var(--theme-text)' }}>⚙️ Configuración</span>
           <button
             onClick={onClose}
-            className="hover:text-red-400 transition-colors z-10"
+            className="hover:text-red-400 transition-colors"
             aria-label="Cerrar configuración"
-            style={{ position: 'absolute', top: '4px', right: '12px', color: 'var(--theme-text)', fontSize: '24px', padding: '12px', lineHeight: 1 }}
+            style={{ color: 'var(--theme-text)', fontSize: '20px', padding: '4px 8px', lineHeight: 1 }}
           >
             ✕
           </button>
+        </div>
 
-          <div className="flex flex-col gap-4 mt-2">
+        {/* Settings content */}
+        <div className="px-4 py-3 flex flex-col gap-4" style={{ color: 'var(--theme-text)' }}>
 
             {/* Music */}
             <div className="flex items-center justify-between">
@@ -236,7 +235,6 @@ export default function SettingsPanel({
             </div>
 
           </div>
-        </div>
       </div>
     </div>
   );
