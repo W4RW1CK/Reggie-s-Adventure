@@ -1101,6 +1101,18 @@ body {
   animation: pulse-slow 3s ease-in-out infinite;
 }
 
+/* ── Background sparkle particles (good mood only) ── */
+@keyframes sparkle-float {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translateY(-60px) scale(0.5); opacity: 0; }
+}
+@keyframes sparkle-twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
 @keyframes flicker {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.3; }
