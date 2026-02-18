@@ -37,7 +37,7 @@
     background: radial-gradient(circle at 50% 70%, rgba(0,200,255,0.08) 0%, transparent 50%);
   }
 
-  /* === TOP BAR: Stats === */
+  /* === TOP BAR === */
   .top-bar {
     position: absolute;
     top: 0; left: 0; right: 0;
@@ -45,18 +45,18 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
-    padding: 10px 16px;
+    gap: 2.5vw;
+    padding: 1.8vh 2.5vw;
     background: rgba(0,0,0,0.6);
     backdrop-filter: blur(4px);
     border-bottom: 2px solid rgba(255,255,255,0.1);
   }
 
   .day-section {
-    font-size: 0.45rem;
+    font-size: clamp(0.4rem, 1vw, 0.55rem);
     color: #93c5fd;
     white-space: nowrap;
-    padding: 4px 8px;
+    padding: 1vh 1.2vw;
     background: rgba(255,255,255,0.08);
     border: 1px solid rgba(255,255,255,0.15);
     flex-shrink: 0;
@@ -64,27 +64,24 @@
 
   .stats-row {
     display: flex;
-    gap: 16px;
+    gap: 2vw;
     align-items: center;
     justify-content: center;
     flex: 1;
   }
 
   .stat {
+    flex: 1;
     display: flex;
     align-items: center;
-    gap: 4px;
-    font-size: 0.5rem;
+    gap: 0.6vw;
+    font-size: clamp(0.4rem, 1vw, 0.55rem);
   }
-  .stat-icon { font-size: 0.7rem; }
-  .stat {
-    flex: 1;
-    gap: 6px;
-  }
+  .stat-icon { font-size: clamp(0.6rem, 1.5vw, 0.85rem); }
   .stat-bar-bg {
     flex: 1;
-    min-width: 40px;
-    height: 14px;
+    min-width: 4vw;
+    height: 2.5vh;
     border-radius: 2px;
     background: rgba(255,255,255,0.15);
     border: 1px solid rgba(255,255,255,0.3);
@@ -94,26 +91,28 @@
   .bar-espiritu { background: #e879f9; }
   .bar-pulso { background: #facc15; }
   .bar-esencia { background: #34d399; }
-  .stat-val { font-size: 0.45rem; color: #aaa; min-width: 35px; }
+  .stat-val { font-size: clamp(0.35rem, 0.9vw, 0.5rem); color: #aaa; min-width: 2.5vw; text-align: right; }
 
   .fragments {
     display: flex;
     align-items: center;
-    gap: 4px;
-    font-size: 0.55rem;
+    gap: 0.5vw;
+    font-size: clamp(0.45rem, 1.1vw, 0.6rem);
     color: #93c5fd;
-    margin-left: 8px;
+    margin-left: 1vw;
+    flex-shrink: 0;
   }
 
   .config-btn {
     font-family: 'Press Start 2P', cursive;
-    font-size: 0.5rem;
-    padding: 6px 10px;
+    font-size: clamp(0.4rem, 1vw, 0.55rem);
+    padding: 1vh 1.2vw;
     background: rgba(255,255,255,0.1);
     border: 2px solid rgba(255,255,255,0.3);
     color: #fff;
     cursor: pointer;
     white-space: nowrap;
+    flex-shrink: 0;
   }
   .config-btn:hover { background: rgba(255,255,255,0.2); }
 
@@ -126,40 +125,40 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    gap: 8px;
+    gap: 1vh;
   }
   .sprite-placeholder {
-    width: 180px;
-    height: 180px;
+    width: min(25vw, 25vh);
+    height: min(25vw, 25vh);
     border: 3px dashed rgba(0,200,255,0.4);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 4rem;
+    font-size: clamp(2.5rem, 8vw, 5rem);
     animation: float 3s ease-in-out infinite;
     background: radial-gradient(circle, rgba(0,200,255,0.1) 0%, transparent 70%);
   }
   .sprite-name {
-    font-size: 0.8rem;
+    font-size: clamp(0.6rem, 1.5vw, 1rem);
     text-shadow: 0 0 10px rgba(0,200,255,0.5);
   }
-  .sprite-edit { font-size: 0.5rem; color: #888; }
+  .sprite-edit { font-size: clamp(0.4rem, 1vw, 0.6rem); color: #888; }
 
   @keyframes float {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    50% { transform: translateY(-1.5vh); }
   }
 
-  /* === BOTTOM BAR: Buttons === */
+  /* === BOTTOM BAR === */
   .bottom-bar {
     position: absolute;
     bottom: 0; left: 0; right: 0;
     z-index: 10;
     display: flex;
     justify-content: center;
-    gap: 8px;
-    padding: 10px 12px;
+    gap: 2vw;
+    padding: 1.8vh 2.5vw;
     background: rgba(0,0,0,0.6);
     backdrop-filter: blur(4px);
     border-top: 2px solid rgba(255,255,255,0.1);
@@ -167,53 +166,34 @@
 
   .action-btn {
     font-family: 'Press Start 2P', cursive;
-    font-size: 0.55rem;
-    padding: 10px 16px;
+    font-size: clamp(0.45rem, 1.2vw, 0.65rem);
+    padding: 1.5vh 3vw;
     border: 2px solid;
     cursor: pointer;
     transition: all 0.15s;
     flex: 1;
-    max-width: 180px;
+    max-width: 25vw;
     text-align: center;
   }
   .action-btn:hover { transform: scale(1.05); }
   .action-btn:active { transform: scale(0.95); }
 
   .btn-purificar { background: #3b82f6; border-color: #60a5fa; color: #fff; }
-  .btn-config { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: #fff; }
   .btn-conversar { background: #84cc16; border-color: #a3e635; color: #1a1a1a; }
-
-  /* Day counter - now in top bar */
 
   /* === RESPONSIVE: Portrait phone === */
   @media (max-width: 480px) and (orientation: portrait) {
-    .day-section { font-size: 0.4rem; padding: 3px 5px; }
-    .stats-row { gap: 6px; }
-    .stat-bar-bg { min-width: 25px; }
     .stat-val { display: none; }
-    .fragments { margin-left: 4px; font-size: 0.5rem; }
-    .config-btn { font-size: 0.45rem; padding: 4px 6px; }
-    .sprite-placeholder { width: 140px; height: 140px; font-size: 3rem; }
-    .action-btn { font-size: 0.45rem; padding: 8px 10px; }
+    .fragments { margin-left: 0; }
   }
 
   /* === RESPONSIVE: Landscape phone === */
   @media (max-height: 500px) and (orientation: landscape) {
-    .top-bar { padding: 4px 10px; }
-    .stat-bar-bg { min-width: 30px; height: 6px; }
-    .stat { font-size: 0.4rem; }
-    .sprite-placeholder { width: 120px; height: 120px; font-size: 2.5rem; }
-    .bottom-bar { padding: 6px 10px; }
-    .action-btn { font-size: 0.45rem; padding: 6px 12px; }
-    .day-section { font-size: 0.4rem; padding: 2px 4px; }
-  }
-
-  /* === RESPONSIVE: Tablet === */
-  @media (min-width: 768px) {
-    .stat-bar-bg { min-width: 60px; height: 10px; }
-    .stat { font-size: 0.55rem; }
-    .sprite-placeholder { width: 220px; height: 220px; font-size: 5rem; }
-    .action-btn { font-size: 0.6rem; padding: 12px 24px; }
+    .top-bar { padding: 0.8vh 2vw; }
+    .stat-bar-bg { height: 2vh; }
+    .bottom-bar { padding: 1vh 2vw; }
+    .action-btn { padding: 1vh 2.5vw; }
+    .day-section { padding: 0.6vh 1vw; }
   }
 
   /* Stars */
@@ -233,7 +213,6 @@
 </head>
 <body>
 <div class="game-screen">
-  <!-- Background -->
   <div class="bg"></div>
   <div class="stars" id="stars"></div>
 
@@ -276,7 +255,6 @@
 </div>
 
 <script>
-  // Generate stars
   const container = document.getElementById('stars');
   for (let i = 0; i < 50; i++) {
     const star = document.createElement('div');
