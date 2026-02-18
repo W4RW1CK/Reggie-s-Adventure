@@ -53,6 +53,16 @@
 
 > **Nota:** Privy maneja la autenticación y devuelve un user ID único. Supabase almacena los datos del juego vinculados a ese user ID. Credenciales propias (no del bootcamp).
 
+## Asset Generation & Visual Techniques (Sesión 3)
+
+| Herramienta/Técnica | Propósito |
+|---------------------|-----------|
+| **Gemini** (image generation) | Generate pixel art sprites (PNG) and backgrounds (PNG) |
+| `CSS custom properties` (`var(--theme-*)`) | Theming system — dark (NES) / light (Game Boy Color) via class toggle |
+| `image-rendering: pixelated` | Crisp pixel art scaling at any resolution |
+| CSS `filter: brightness() saturate()` | Mood-based background modulation without extra assets |
+| SVG animated overlays | Face expressions on sprites, streaks/particles on backgrounds |
+
 ## Sesiones Futuras (no instalar todavía)
 
 | Paquete | Versión | Sesión | Propósito |
@@ -138,7 +148,9 @@ Esquema detallado en [BACKEND_STRUCTURE.md](./BACKEND_STRUCTURE.md).
 ```
 reggie-adventure/
 ├── public/
-│   └── audio/              # Música 8-bit
+│   ├── audio/              # Música 8-bit
+│   ├── sprites/            # [NEW S3] Pixel art PNG sprites (Gemini-generated)
+│   └── backgrounds/        # [NEW S3] Pixel art PNG backgrounds (Gemini-generated)
 ├── src/
 │   ├── app/
 │   │   ├── api/

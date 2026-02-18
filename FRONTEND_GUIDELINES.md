@@ -526,6 +526,44 @@ Estilo: NES container (`nes-container is-dark`), posición fija o slide-in, fond
 
 ---
 
+## Pixel Art Sprite System (S3 — Phase 40)
+
+### PNG Base + SVG Face Overlay
+- **Body**: Gemini-generated pixel art PNGs in `public/sprites/` (rayo-base.png, flama-base.png, hielo-base.png)
+- **Face**: SVG overlays on top of PNG base for dynamic expressions
+- **Face viewBox per type**: Rayo `0 0 150 150`, Flama `-4 -30 150 150`, Hielo `-7 3 150 150`
+- **Expression logic**: Dark expressions for positive states (euphoric, happy, neutral), bright/white for negative states (sad, critical, no_hope, no_energy, no_nutrition)
+- **Particle effects**: Type-specific particles around sprite — electric sparks (Rayo), fire particles (Flama), ice crystals (Hielo)
+- **Scaling**: `image-rendering: pixelated` for crisp pixel art at any size
+
+### Background System (PNG + CSS Filters)
+- **Assets**: 6 pixel art PNGs in `public/backgrounds/` (Gemini-generated)
+  - 3 dark variants: twilight, dusk, night (one per type)
+  - 3 light variants: midday, golden hour, dawn (one per type)
+- **Mood modulation via CSS filters** (no separate images per mood):
+  - Good mood: `filter: brightness(1.1) saturate(1.15)`
+  - Neutral mood: no filter (base image)
+  - Bad mood: `filter: brightness(0.75) saturate(0.55)`
+- **Transitions**: 1.5s CSS transitions between mood states
+- **Scaling**: `image-rendering: pixelated`, `background-size: cover`
+
+### Animated Streaks & Sparkles (Good Mood Only)
+- SVG animated streaks appear ONLY when mood is good:
+  - ⚡ Rayo: Electric bolts
+  - 🔥 Flama: Heat shimmer
+  - ❄️ Hielo: Aurora borealis
+- Sparkle particles with type-specific colors on good mood
+- Disappear on neutral/bad mood — visual reward for keeping stats high
+
+### Theme System (CSS Custom Properties)
+- All colors reference `var(--theme-*)` CSS custom properties
+- `.theme-light` class on root element overrides all variables
+- Components are theme-agnostic — they just use variables
+- Game Boy Color warm palette for light theme: `#f5f0e1` (bg), `#d4c5a9` (surface), `#2a2a2a` (text)
+- Toggle in Settings panel; persisted in localStorage via `useTheme` hook
+
+---
+
 ## Reglas Generales
 
 - **Todo texto en Press Start 2P** — sin excepciones

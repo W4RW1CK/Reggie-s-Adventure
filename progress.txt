@@ -410,22 +410,46 @@
 - [x] 38.5: Constantes CHAT_PULSE_CHANGE y CHAT_ESENCIA_COST ya no se usan
 - [x] Commit: `5779a2a`
 
-### Fase 39: UI — Panel de Settings (⚙️) (EN PROGRESO)
-- [ ] 39.1: SettingsPanel componente (slide-in/modal, NES styling)
-- [ ] 39.2: useTheme hook (dark/light toggle, text size, localStorage persist)
-- [ ] 39.3: Integración en GameScreen (⚙️ abre panel)
-- [ ] 39.4: Migrar MusicToggle al Settings
-- [ ] 39.5: Verificación
+### Fase 39: UI — Panel de Settings (⚙️) (2026-02-17)
+- [x] 39.1: SettingsPanel componente (slide-in modal, NES styling)
+- [x] 39.2: useTheme hook (dark/light toggle, localStorage persist)
+- [x] 39.3: Integración en GameScreen (⚙️ abre panel)
+- [x] 39.4: Migrar MusicToggle al Settings
+- [x] 39.5: Login/Logout button en Settings
+- [x] Commit: `5332df1`
 
-### Fase 40: Visual — Backgrounds y Sprites Reworked (EN REVIEW)
-- [x] 40.1: GameBackground reworked (18 paletas: 3 tipos × 3 moods × 2 temas)
-- [x] 40.2: RegenmonSVG reworked (8 estados × 3 tipos = 24 sprites)
-- [x] 40.3: getSpriteState() lógica implementada
-- [x] **Review visual por w4rw1ck** — APROBADO ✅
-- Ajustes post-review: Critical=café enfermizo 0.8x, Sin Esperanza=púrpura, Sin Nutrición=pálido 0.9x, Decaído=preocupado
-- Bugfix: getSpriteState() — critical era inalcanzable (avg<10 check antes de individuales)
-- Bugfix: SVG filters no renderizaban → migrado a CSS filters
-- Commits: `1e48d99` → `61b3e03`
+### Fase 40: Visual — COMPLETE Rewrite (2026-02-17/18)
+
+**Sprites (commit `c32760f`):**
+- [x] 40.1: SVG body shapes replaced with pixel art PNG sprites (Gemini-generated)
+- [x] 40.2: 3 base PNGs: rayo-base.png, flama-base.png, hielo-base.png in public/sprites/
+- [x] 40.3: SVG face overlays (expressions) on top of PNG base
+- [x] 40.4: Type-specific particle effects: electric (Rayo), fire (Flama), ice crystals (Hielo)
+- [x] 40.5: Face viewBox per type: Rayo `0 0 150 150`, Flama `-4 -30 150 150`, Hielo `-7 3 150 150`
+- [x] 40.6: 8 sprite states: euphoric, happy, neutral, sad, critical, no_hope, no_energy, no_nutrition
+- [x] 40.7: Dark expressions for positive states, bright/white for negative states
+
+**Backgrounds (commit `1ea9efb`):**
+- [x] 40.8: SVG-drawn backgrounds replaced with 6 pixel art PNGs (Gemini-generated)
+- [x] 40.9: 3 dark (twilight/dusk/night) + 3 light (midday/golden hour/dawn) in public/backgrounds/
+- [x] 40.10: CSS mood filters: good=brightness(1.1)+saturate(1.15), neutral=base, bad=brightness(0.75)+saturate(0.55)
+- [x] 40.11: SVG animated streaks on good mood only (electric bolts/heat shimmer/aurora borealis)
+- [x] 40.12: Sparkle particles on good mood with type-specific colors
+- [x] 40.13: image-rendering: pixelated for crisp scaling
+- [x] 40.14: 1.5s CSS transitions between mood states
+
+**Previous review/bugfixes (commits `1e48d99` → `61b3e03`):**
+- [x] Review visual por w4rw1ck — APROBADO ✅
+- [x] Bugfix: getSpriteState() — critical era inalcanzable
+- [x] Bugfix: SVG filters no renderizaban → migrado a CSS filters
+
+### Fase 41: Visual — Light Theme (Game Boy Color) (2026-02-18)
+- [x] 41.1: All hardcoded colors replaced with CSS custom properties `var(--theme-*)`
+- [x] 41.2: .theme-light class overrides for all components
+- [x] 41.3: ChatBubble, ChatInput, ChatBox, TypingIndicator, StatBar migrated
+- [x] 41.4: LoadingScreen, TitleScreen, CreationScreen light variants
+- [x] 41.5: Game Boy Color warm palette: #f5f0e1, #d4c5a9, #2a2a2a
+- [x] Commit: `155e7be`
 
 ### Fase 42: Header — Reestructurar Layout (2026-02-17)
 - [x] 42.1: UserIdentity componente (evolving: nada → email → nombre)
@@ -440,6 +464,10 @@
 - [x] 44.4: NO visual (pura data para S4)
 - [x] Commit: `ba287ce`
 
+### Fase 45: Tutorial — Actualizar para S3 (2026-02-18)
+- [x] 45.1: Tutorial updated for S3 (Esencia, Fragmentos, Purificar)
+- [x] Commit: `5b2bc18`
+
 ### Fase 45b: Historial de Actividades (2026-02-17)
 - [x] 45b.1: activityHistory.ts (addActivity, loadHistory, clearHistory, max 10 FIFO)
 - [x] 45b.2: ActivityHistory.tsx colapsable (📜 Historial)
@@ -447,10 +475,13 @@
 - [x] 45b.4: Integrado en GameScreen (oculto durante chat, limpiado en reset)
 - [x] Commit: `ba287ce`
 
+### Fase 46: Responsive + Polish (2026-02-18)
+- [x] 46.1: Mobile responsive layout
+- [x] 46.2: Desktop polish
+- [x] 46.3: CSS transitions
+- [x] 46.4: Fragment counter pulse animation
+
 ### Fases pendientes
-- [ ] 41: Tema Light (Game Boy Color) — espera review de Phase 40
-- [ ] 45: Tutorial y Creación — Actualizar para S3
-- [ ] 46: Responsive y pulido S3
 - [ ] 47: Auditoría S3 (w4rw1ck)
 - [ ] 47b: Ajustes Pre-Deploy (si aplica, w4rw1ck)
 - [ ] 48: Cierre de Sesión 3

@@ -446,6 +446,22 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 - **Commit format**: `[Phase XX] Title` + bullet list + `Build: ✅ | Audit: ✅ | Verify: ✅`
 - **WIP commits**: Gemini drafts pushed as `WIP:` prefix, cleaned up by Dumbleclaw before final commit
 
+### Fases 39-46 (2026-02-17/18)
+- **Phase 39**: SettingsPanel as slide-in modal with NES styling. useTheme hook for dark/light toggle with localStorage persistence. MusicToggle migrated from header to Settings. Login/Logout button added to Settings.
+- **Phase 40 — Visual COMPLETE rewrite**: Two major sub-phases:
+  - **Sprites**: SVG body shapes completely replaced with Gemini-generated pixel art PNG sprites (rayo-base.png, flama-base.png, hielo-base.png in public/sprites/). SVG face overlays remain on top of PNG base for expressions. Type-specific particle effects added (electric sparks for Rayo, fire particles for Flama, ice crystals for Hielo). Face viewBox tuned per type for proper alignment. 8 sprite states with dark expressions for positive states and bright/white for negative states.
+  - **Backgrounds**: SVG-drawn backgrounds replaced with 6 Gemini-generated pixel art PNGs (3 dark + 3 light variants in public/backgrounds/). CSS mood filters applied: good=brightness(1.1)+saturate(1.15), neutral=base, bad=brightness(0.75)+saturate(0.55). SVG animated streaks on good mood only (type-specific: electric bolts, heat shimmer, aurora borealis). Sparkle particles on good mood with type-specific colors. image-rendering: pixelated for crisp scaling. 1.5s CSS transitions between mood states.
+- **Phase 41 — Light Theme (Game Boy Color)**: All hardcoded colors replaced with CSS custom properties `var(--theme-*)`. `.theme-light` class overrides for all components (ChatBubble, ChatInput, ChatBox, TypingIndicator, StatBar, LoadingScreen, TitleScreen, CreationScreen). Game Boy Color warm palette: #f5f0e1 (bg), #d4c5a9 (surface), #2a2a2a (text).
+- **Phase 45**: Tutorial updated for S3 terminology (Esencia, Fragmentos, Purificar).
+- **Phase 46**: Mobile responsive layout, desktop polish, CSS transitions, fragment counter pulse animation.
+
+### Design Decisions (Phases 39-46)
+- **Pixel Art PNG + SVG Overlay System**: Hybrid approach — Gemini generates the pixel art body as PNG, SVG overlays handle facial expressions. This allows rich pixel art bodies while keeping expressions dynamically changeable without regenerating images.
+- **CSS Mood Filters**: Instead of separate background images per mood, CSS filters (brightness/saturate) transform the same base image. Reduces asset count from 18 (3 types × 3 moods × 2 themes) to 6 (3 types × 2 themes).
+- **Background Streaks/Particles (Good Mood Only)**: SVG animated streaks and sparkle particles only appear when mood is good. Type-specific: electric bolts (Rayo), heat shimmer (Flama), aurora borealis (Hielo). Creates visual reward for keeping stats high without cluttering bad-mood states.
+- **Light Theme via CSS Custom Properties**: Instead of duplicating component styles, all colors reference `var(--theme-*)` variables. `.theme-light` class on root overrides all variables at once. Clean separation of concerns — components don't know about themes.
+- **Face ViewBox Per Type**: Each type needs different face positioning on its PNG sprite. Rayo: `0 0 150 150`, Flama: `-4 -30 150 150`, Hielo: `-7 3 150 150`. Tuned manually for each Gemini-generated sprite.
+
 ### Decisiones de Implementación (2026-02-17)
 - **Privy login methods**: 5 total (Google + Email + Passkey + GitHub + Discord) — más que el mínimo del bootcamp
 - **Supabase table**: Single `regenmons` table with all data as JSONB columns, indexed by `privy_user_id`

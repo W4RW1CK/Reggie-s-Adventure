@@ -963,38 +963,29 @@
       → Cambio de nombre funciona (1 sola vez)
 ```
 
-### Fase 40: Visual — Backgrounds y Sprites Reworked
+### Fase 40: Visual — COMPLETE Rewrite (Sprites + Backgrounds)
 
-> **Primero la base visual.** Los nuevos assets definen la estética; los temas Dark/Light se derivan de ellos.
-> 📜 **Referencia obligatoria:** [LORE.md → Los Paisajes como Zonas del Mundo Digital](./LORE.md#los-paisajes-como-zonas-del-mundo-digital)
-> 🎨 **Colores por tipo:** [FRONTEND_GUIDELINES.md → Colores por Tipo](./FRONTEND_GUIDELINES.md)
+> **Implementación real:** Rewrite completo en dos sub-fases. Assets generados por Gemini.
+> 📜 **Referencia:** [LORE.md → Los Paisajes](./LORE.md#los-paisajes-como-zonas-del-mundo-digital)
 
 ```
-40.1  Reconstruir src/components/game/GameBackground.tsx:
-      → Paisajes adaptados al lore actualizado (ver LORE.md → Los Paisajes):
-        ⚡ Llanura Eléctrica: Stats altos=cielo despejado, corrientes de luz / Stats bajos=tormentas, estática
-        🔥 Volcán Ardiente: Stats altos=volcán dormido, lava serena, cielo naranja / Stats bajos=erupciones, cielo rojo
-        ❄️ Montaña Nevada: Stats altos=nieve cristalina, aurora boreal / Stats bajos=ventisca ciega, hielo negro
-      → Diseñar con AMBOS temas en mente desde el inicio:
-        Dark: paisajes oscuros/nocturnos (NES)
-        Light: paisajes luminosos/pasteles (GBC)
-      → Mantener variaciones por estado emocional:
-        Stats altos → mundo regenerándose (cielo claro, corrientes de luz)
-        Stats bajos → corrupción visible (tormentas, erupciones, ventiscas)
-40.2  Rework src/components/regenmon/RegenmonSVG.tsx:
-      → 24 sprites total: 8 estados × 3 tipos (ver FRONTEND_GUIDELINES.md → Estados Visuales)
-      → Mantener estética Kirby-esque pero integrar mejor con el lore
-      → Los sprites deben funcionar en ambos temas (Dark NES + Light GBC)
-      → Estados por promedio: Eufórico(≥90), Contento(≥70), Neutro(≥30), Decaído(≥10), Crítico(<10)
-      → Estados críticos individuales: Sin Esperanza(🔮<10), Sin Energía(💛<10), Sin Nutrición(🌱<10)
-      → Lógica: stat individual <10 override promedio; múltiples críticos → el más bajo gana
-      → Empate: Espíritu > Pulso > Esencia
-      → Implementar getSpriteState() según BACKEND_STRUCTURE.md
-40.3  Verificar:
-      → Cada tipo tiene paisaje Dark y Light
-      → Paisajes cambian según stats
-      → Sprites se ven bien en ambos temas
-      → Transiciones de estado visuales son fluidas
+SPRITES (commit c32760f):
+40.1  SVG body shapes replaced with pixel art PNG sprites (Gemini-generated)
+40.2  3 base PNGs in public/sprites/: rayo-base.png, flama-base.png, hielo-base.png
+40.3  SVG face overlays (expressions) remain on top of PNG base
+40.4  Type-specific particle effects: electric (Rayo), fire (Flama), ice crystals (Hielo)
+40.5  Face viewBox per type: Rayo 0 0 150 150, Flama -4 -30 150 150, Hielo -7 3 150 150
+40.6  8 sprite states: euphoric, happy, neutral, sad, critical, no_hope, no_energy, no_nutrition
+40.7  Dark expressions for positive states, bright/white for negative states
+
+BACKGROUNDS (commit 1ea9efb):
+40.8  SVG-drawn backgrounds replaced with 6 pixel art PNGs (Gemini-generated)
+40.9  3 dark (twilight/dusk/night) + 3 light (midday/golden hour/dawn) in public/backgrounds/
+40.10 CSS mood filters: good=brightness(1.1)+saturate(1.15), neutral=base, bad=brightness(0.75)+saturate(0.55)
+40.11 SVG animated streaks on good mood only (electric bolts, heat shimmer, aurora borealis)
+40.12 Sparkle particles on good mood with type-specific colors
+40.13 image-rendering: pixelated for crisp scaling
+40.14 1.5s CSS transitions between mood states
 ```
 
 ### Fase 41: Visual — Tema Light (Game Boy Color)
