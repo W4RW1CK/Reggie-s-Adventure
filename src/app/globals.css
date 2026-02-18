@@ -1731,6 +1731,8 @@ body {
 .game-screen {
   -webkit-user-select: none;
   user-select: none;
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
 .game-screen input,
@@ -2159,13 +2161,19 @@ html.text-lg .game-screen { font-size: 18px; }
   animation: slideOutRight 0.25s ease-in forwards;
 }
 
-/* --- Prevent horizontal overflow globally --- */
+/* --- Prevent ALL overflow globally --- */
 html, body {
-  overflow-x: hidden;
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+  height: 100% !important;
+  overscroll-behavior: none !important;
 }
 
 .game-container {
-  overflow-x: hidden;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 
 /* --- Mobile: < 480px polish --- */
