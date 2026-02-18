@@ -129,7 +129,7 @@ body {
 }
 
 .loading-screen__star {
-  font-size: 12px;
+  font-size: clamp(12px, 2.5vw, 18px);
   color: #f5c542;
   animation: star-twinkle 1.5s ease-in-out infinite;
 }
@@ -140,7 +140,7 @@ body {
 
 .loading-screen__star--2 {
   animation-delay: 0.5s;
-  font-size: 16px;
+  font-size: clamp(16px, 3vw, 24px);
   color: #ffffff;
 }
 
@@ -170,7 +170,7 @@ body {
 
 .loading-screen__logo-top {
   font-family: var(--font-press-start-2p);
-  font-size: 28px;
+  font-size: clamp(20px, 5vw, 36px);
   color: #f5c542;
   text-shadow:
     3px 3px 0px #d4a017,
@@ -181,7 +181,7 @@ body {
 
 .loading-screen__logo-bottom {
   font-family: var(--font-press-start-2p);
-  font-size: 20px;
+  font-size: clamp(14px, 4vw, 28px);
   color: #e8e8e8;
   text-shadow:
     2px 2px 0px #4a4a4a,
@@ -223,7 +223,7 @@ body {
 /* Loading text */
 .loading-screen__loading-text {
   font-family: var(--font-press-start-2p);
-  font-size: 10px;
+  font-size: clamp(10px, 2vw, 16px);
   color: #a0a0a0;
   letter-spacing: 2px;
   min-width: 140px;
@@ -287,7 +287,7 @@ body {
 /* Version text */
 .loading-screen__version {
   font-family: var(--font-press-start-2p);
-  font-size: 8px;
+  font-size: clamp(8px, 1.5vw, 12px);
   color: #888888;
   letter-spacing: 1px;
   margin-top: 16px;
@@ -421,7 +421,7 @@ body {
 }
 
 .title-screen__sparkle {
-  font-size: 10px;
+  font-size: clamp(10px, 2vw, 16px);
   color: #f5c542;
   animation: sparkle-pulse 2s ease-in-out infinite;
 }
@@ -434,19 +434,19 @@ body {
 .title-screen__sparkle--2 {
   animation-delay: 0.4s;
   color: #e8e8e8;
-  font-size: 8px;
+  font-size: clamp(8px, 1.5vw, 14px);
 }
 
 .title-screen__sparkle--3 {
   animation-delay: 0.8s;
   color: #3498db;
-  font-size: 14px;
+  font-size: clamp(14px, 2.5vw, 20px);
 }
 
 .title-screen__sparkle--4 {
   animation-delay: 1.2s;
   color: #e8e8e8;
-  font-size: 8px;
+  font-size: clamp(8px, 1.5vw, 14px);
 }
 
 .title-screen__sparkle--5 {
@@ -476,7 +476,7 @@ body {
 
 .title-screen__title-main {
   font-family: var(--font-press-start-2p);
-  font-size: 36px;
+  font-size: clamp(22px, 6vw, 44px);
   color: #f5c542;
   text-shadow:
     4px 4px 0px #d4a017,
@@ -487,7 +487,7 @@ body {
 
 .title-screen__title-sub {
   font-family: var(--font-press-start-2p);
-  font-size: 24px;
+  font-size: clamp(16px, 4.5vw, 32px);
   color: #ffffff;
   text-shadow:
     3px 3px 0px #4a4a4a,
@@ -531,7 +531,7 @@ body {
 /* Version */
 .title-screen__version {
   font-family: var(--font-press-start-2p);
-  font-size: 8px;
+  font-size: clamp(8px, 1.5vw, 12px);
   color: #888888;
   letter-spacing: 1px;
 }
@@ -539,7 +539,7 @@ body {
 /* Press Start - NES blinking */
 .title-screen__press-start {
   font-family: var(--font-press-start-2p);
-  font-size: 14px;
+  font-size: clamp(12px, 2.5vw, 20px);
   color: #ffffff;
   letter-spacing: 3px;
   margin-top: 32px;
@@ -559,7 +559,7 @@ body {
 /* Input hint */
 .title-screen__hint {
   font-family: var(--font-press-start-2p);
-  font-size: 7px;
+  font-size: clamp(7px, 1.3vw, 11px);
   color: #777777;
   letter-spacing: 1px;
 }
@@ -569,7 +569,7 @@ body {
   position: absolute;
   bottom: 24px;
   font-family: var(--font-press-start-2p);
-  font-size: 7px;
+  font-size: clamp(7px, 1.3vw, 11px);
   color: #777777;
   letter-spacing: 1px;
   z-index: 10;
@@ -855,7 +855,7 @@ body {
 
 .creation-screen__title {
   font-family: var(--font-press-start-2p);
-  font-size: 24px;
+  font-size: clamp(18px, 4.5vw, 32px);
   color: #fff;
   text-align: center;
   margin-bottom: 32px;
@@ -878,7 +878,7 @@ body {
 .creation-screen__arrow {
   font-family: var(--font-press-start-2p);
   color: #fff;
-  font-size: 24px;
+  font-size: clamp(20px, 4vw, 32px);
   background: none;
   border: none;
   cursor: pointer;
@@ -920,14 +920,14 @@ body {
 
 .creation-screen__type-label {
   font-family: var(--font-press-start-2p);
-  font-size: 16px;
+  font-size: clamp(14px, 3vw, 22px);
   margin-bottom: 8px;
   text-transform: uppercase;
 }
 
 .creation-screen__type-desc {
   font-family: var(--font-press-start-2p);
-  font-size: 10px;
+  font-size: clamp(9px, 1.8vw, 14px);
   color: #ccc;
   line-height: 1.4;
 }
@@ -947,13 +947,13 @@ body {
 
 .creation-screen__label {
   font-family: var(--font-press-start-2p);
-  font-size: 12px;
+  font-size: clamp(11px, 2.2vw, 16px);
   color: #fff;
 }
 
 .creation-screen__input {
   font-family: var(--font-press-start-2p);
-  font-size: 14px;
+  font-size: clamp(12px, 2.5vw, 18px);
   padding: 12px;
   text-align: center;
   width: 100%;
@@ -974,7 +974,7 @@ body {
 
 .creation-screen__error {
   font-family: var(--font-press-start-2p);
-  font-size: 8px;
+  font-size: clamp(8px, 1.5vw, 12px);
   color: #e74c3c;
   margin-top: 4px;
 }
@@ -982,7 +982,7 @@ body {
 /* Submit Button */
 .creation-screen__submit-btn {
   font-family: var(--font-press-start-2p);
-  font-size: 14px;
+  font-size: clamp(12px, 2.5vw, 18px);
   padding: 16px 32px;
   background-color: #27ae60;
   color: #fff;
@@ -1226,7 +1226,7 @@ body {
 }
 
 .transition-screen__icon {
-  font-size: 48px;
+  font-size: clamp(36px, 8vw, 60px);
   animation: pulse-slow 2s infinite ease-in-out;
   filter: blur(1px);
 }
@@ -1234,7 +1234,7 @@ body {
 .transition-screen__text {
   font-family: var(--font-press-start-2p);
   color: #fff;
-  font-size: 14px;
+  font-size: clamp(12px, 2.5vw, 20px);
   text-align: center;
   line-height: 1.8;
   letter-spacing: 2px;
