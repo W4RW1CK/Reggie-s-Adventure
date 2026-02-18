@@ -41,14 +41,15 @@ export default function TutorialModal({ onDismiss }: TutorialModalProps) {
 
     return (
         <div
-            className="fixed inset-0 z-40 flex items-center justify-center backdrop-blur-sm animate-fadeIn p-4"
+            className="fixed inset-0 z-40 flex items-start sm:items-center justify-center backdrop-blur-sm animate-fadeIn overflow-y-auto"
+            style={{ padding: 'clamp(8px, 2vw, 16px)' }}
             style={{ backgroundColor: 'var(--theme-modal-overlay)' }}
             role="dialog"
             aria-modal="true"
             aria-labelledby="tutorial-title"
             onClick={handleBackdropClick}
         >
-            <div className="nes-container is-dark with-title max-w-lg w-full animate-slideUp">
+            <div className="nes-container is-dark with-title max-w-lg w-full animate-slideUp my-auto">
                 <p id="tutorial-title" className="title text-[#f1c40f]">
                     {titles[step]}
                 </p>

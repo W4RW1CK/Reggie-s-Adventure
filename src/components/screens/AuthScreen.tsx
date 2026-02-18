@@ -19,11 +19,11 @@ export default function AuthScreen({
   };
 
   return (
-    <div className="auth-screen min-h-screen flex items-center justify-center p-4 bg-gradient-to-b from-gray-900 to-black">
-      <div className="nes-container is-dark max-w-md w-full">
-        <div className="text-center mb-6">
-          <h1 className="text-xl mb-4 text-white">🌟 ¡La Conexión!</h1>
-          <p className="text-sm text-gray-300 mb-6 leading-relaxed">
+    <div className="auth-screen fixed inset-0 flex items-center justify-center overflow-y-auto bg-gradient-to-b from-gray-900 to-black" style={{ padding: 'clamp(8px, 2vw, 16px)', zIndex: 75 }}>
+      <div className="nes-container is-dark max-w-md w-full my-auto">
+        <div className="text-center" style={{ marginBottom: 'clamp(12px, 3vh, 24px)' }}>
+          <h1 className="text-white" style={{ fontSize: 'clamp(14px, 3.5vw, 22px)', marginBottom: 'clamp(8px, 2vh, 16px)' }}>🌟 ¡La Conexión!</h1>
+          <p className="text-gray-300 leading-relaxed" style={{ fontSize: 'clamp(10px, 2vw, 14px)', marginBottom: 'clamp(12px, 3vh, 24px)' }}>
             Para sincronizar tu aventura entre dispositivos, inicia sesión. 
             O continúa sin cuenta para jugar solo en este navegador.
           </p>
