@@ -13,7 +13,7 @@ export default function FragmentCounter({
   isLoggedIn = true, 
   className = '' 
 }: FragmentCounterProps) {
-  const displayValue = isLoggedIn ? fragmentos : '---';
+  const displayValue = fragmentos ?? 0;
   const prevRef = useRef(fragmentos);
   const [pulse, setPulse] = useState(false);
 

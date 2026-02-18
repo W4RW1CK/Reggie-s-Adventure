@@ -96,10 +96,10 @@ export default function SettingsPanel({
   const containerClass = theme === 'dark' ? 'nes-container is-dark with-title' : 'nes-container is-light with-title';
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end animate-fadeIn" style={{ backgroundColor: 'var(--theme-modal-overlay)' }}>
+    <div className="fixed inset-0 z-50 flex justify-center sm:justify-end animate-fadeIn" style={{ backgroundColor: 'var(--theme-modal-overlay)' }}>
       <div
         ref={panelRef}
-        className="settings-panel w-full max-w-sm h-full overflow-y-auto border-l-4 p-0 animate-slideInRight"
+        className="settings-panel w-full max-w-[90vw] sm:max-w-sm h-full overflow-y-auto sm:border-l-4 p-0 animate-slideInRight"
         style={{ backgroundColor: 'var(--theme-panel-bg)', borderColor: 'var(--theme-border-subtle)' }}
         role="dialog"
         aria-modal="true"
@@ -111,9 +111,9 @@ export default function SettingsPanel({
           {/* Close button */}
           <button
             onClick={onClose}
-            className="absolute top-2 right-3 text-lg hover:text-red-400 transition-colors z-10"
+            className="absolute text-lg hover:text-red-400 transition-colors z-10"
             aria-label="Cerrar configuración"
-            style={{ position: 'absolute', top: '8px', right: '12px', color: 'var(--theme-text)' }}
+            style={{ position: 'absolute', top: '-10px', right: '8px', color: 'var(--theme-text)', fontSize: '18px', padding: '8px' }}
           >
             ✕
           </button>

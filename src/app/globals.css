@@ -726,9 +726,11 @@ body {
   border: 2px solid #000;
   /* Inner spacing border */
   padding: 24px;
-  min-height: 200px;
+  min-height: 220px;
+  height: 220px;
   display: flex;
   align-items: flex-start;
+  overflow: hidden;
 }
 
 .story-screen__text {
@@ -885,7 +887,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  width: 220px;
+  width: 280px;
 }
 
 .creation-screen__svg-container {
@@ -902,8 +904,8 @@ body {
 
 .creation-screen__info {
   text-align: center;
-  height: 60px;
-  /* Fixed height to prevent jumpiness */
+  min-height: 100px;
+  /* Enough space for longest description + lore title */
 }
 
 .creation-screen__type-label {
@@ -1492,7 +1494,8 @@ body {
 }
 
 .game-screen__bottom-ui {
-  max-width: 480px;
+  max-width: 100%;
+  width: 100%;
 }
 
 /* --- Mobile: < 480px --- */
@@ -1617,7 +1620,7 @@ body {
   }
 
   .game-screen__bottom-ui {
-    max-width: 440px;
+    max-width: 100%;
     margin: 0 auto;
   }
 
@@ -1674,16 +1677,15 @@ body {
   }
 
   .game-screen__bottom-ui {
-    max-width: 500px;
+    max-width: 700px;
     margin: 0 auto;
     padding-bottom: 32px;
   }
 
-  /* Move regenmon slightly up to center better in the large space */
+  /* Regenmon bigger on desktop */
   .game-screen__regenmon-area {
-    margin-top: -4vh;
-    transform: scale(1.2);
-    /* Make it bigger on desktop */
+    margin-top: -2vh;
+    transform: scale(1.3);
   }
 
   .game-screen__regenmon-wrapper {
@@ -1693,6 +1695,17 @@ body {
   .nes-btn {
     min-height: 60px;
     font-size: 14px !important;
+  }
+}
+
+/* --- Large Desktop: > 1200px --- */
+@media (min-width: 1201px) {
+  .game-screen__bottom-ui {
+    max-width: 800px;
+  }
+
+  .game-screen__regenmon-area {
+    transform: scale(1.5);
   }
 }
 
@@ -2169,18 +2182,84 @@ html, body {
 /* --- Desktop: > 768px polish --- */
 @media (min-width: 769px) {
   .game-container {
-    max-width: 768px;
-    margin: 0 auto;
+    max-width: 100%;
+    margin: 0;
     position: relative;
   }
 
   /* Light theme premium feel on desktop */
   .theme-light .game-container {
-    box-shadow: 0 0 60px rgba(0, 0, 0, 0.1);
+    box-shadow: none;
   }
 
-  /* Settings panel: right side, capped width */
+  /* Settings panel: centered, capped width */
   .settings-panel {
-    max-width: 380px;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+}
+
+/* --- Landscape mobile/tablet: compact layout --- */
+@media (orientation: landscape) and (max-height: 500px) {
+  .game-screen__regenmon-area {
+    margin-top: 0 !important;
+    transform: scale(0.7) !important;
+    flex: 0 0 auto !important;
+  }
+
+  .game-screen__regenmon-wrapper {
+    margin-bottom: 0 !important;
+  }
+
+  .game-screen__bottom-ui {
+    padding-bottom: 4px !important;
+    overflow-y: auto;
+    max-height: 45vh;
+  }
+
+  .game-screen__bottom-ui .border-4 {
+    padding: 4px 8px !important;
+    gap: 2px !important;
+  }
+
+  .game-screen__header {
+    padding-top: 4px !important;
+  }
+
+  .game-screen__day-label {
+    font-size: 8px !important;
+  }
+
+  /* Compact stat bars in landscape */
+  .game-screen__bottom-ui .grid {
+    gap: 0 !important;
+  }
+
+  /* Smaller buttons */
+  .action-buttons-row .nes-btn {
+    min-height: 36px !important;
+    padding: 2px 4px !important;
+    font-size: 9px !important;
+  }
+
+  /* Hide activity history in landscape to save space */
+  .activity-history {
+    display: none !important;
+  }
+
+  /* Name box compact */
+  .game-screen__regenmon-area + div .border-4 {
+    padding: 2px 8px !important;
+  }
+}
+
+/* --- Tablet landscape: more space --- */
+@media (orientation: landscape) and (min-height: 501px) and (max-height: 900px) {
+  .game-screen__regenmon-area {
+    transform: scale(1.0) !important;
+  }
+
+  .game-screen__bottom-ui {
+    max-width: 600px;
   }
 }

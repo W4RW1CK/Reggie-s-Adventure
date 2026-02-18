@@ -41,6 +41,7 @@ export default function Home() {
     currentScreen, 
     navigateTo, 
     handleStartGame, 
+    handleStoryComplete,
     handleAuthLogin, 
     handleContinueWithoutAccount 
   } = useScreenManager({
@@ -72,7 +73,7 @@ export default function Home() {
         {currentScreen === 'STORY' && (
           <StoryScreen onContinue={() => {
             markIntroSeen();
-            navigateTo('CREATION');
+            handleStoryComplete();
           }} />
         )}
 

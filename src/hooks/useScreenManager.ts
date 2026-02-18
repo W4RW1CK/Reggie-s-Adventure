@@ -28,26 +28,35 @@ export function useScreenManager({
             return;
         }
 
-        // If already logged in, skip auth screen
-        if (isLoggedIn) {
-            if (config.isFirstTime) {
-                navigateTo('STORY');
-            } else if (regenmon) {
+        // Always show story first if first time
+        if (config.isFirstTime) {
+            navigateTo('STORY');
+        } else if (isLoggedIn) {
+            if (regenmon) {
                 navigateTo('GAME');
             } else {
                 navigateTo('CREATION');
             }
         } else {
-            // Not logged in, show auth choice screen
+            // Not logged in, returning user — show auth choice
             navigateTo('AUTH');
+        }
+    };
+
+    const handleStoryComplete = () => {
+        // Story done — now auth if not logged in, otherwise creation/game
+        if (!isLoggedIn) {
+            navigateTo('AUTH');
+        } else if (regenmon) {
+            navigateTo('GAME');
+        } else {
+            navigateTo('CREATION');
         }
     };
 
     const handleAuthLogin = () => {
         // After login, proceed with normal flow
-        if (config.isFirstTime) {
-            navigateTo('STORY');
-        } else if (regenmon) {
+        if (regenmon) {
             navigateTo('GAME');
         } else {
             navigateTo('CREATION');
@@ -56,9 +65,7 @@ export function useScreenManager({
 
     const handleContinueWithoutAccount = () => {
         // Proceed with normal flow in demo mode
-        if (config.isFirstTime) {
-            navigateTo('STORY');
-        } else if (regenmon) {
+        if (regenmon) {
             navigateTo('GAME');
         } else {
             navigateTo('CREATION');
@@ -69,6 +76,7 @@ export function useScreenManager({
         currentScreen,
         navigateTo,
         handleStartGame,
+        handleStoryComplete,
         handleAuthLogin,
         handleContinueWithoutAccount,
     };
