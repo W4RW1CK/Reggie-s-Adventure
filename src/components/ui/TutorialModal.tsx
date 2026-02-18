@@ -54,7 +54,7 @@ export default function TutorialModal({ onDismiss }: TutorialModalProps) {
                     {titles[step]}
                 </p>
 
-                <div className="flex flex-col gap-4 text-xs sm:text-sm overflow-y-auto custom-scrollbar" style={{ maxHeight: '55vh' }}>
+                <div className="flex flex-col gap-4 text-xs sm:text-sm overflow-y-auto custom-scrollbar" style={{ maxHeight: '55vh', overflowWrap: 'break-word', wordBreak: 'break-word' }}>
 
                     {/* STEP 0: STATS & FRAGMENTOS */}
                     {step === 0 && (
