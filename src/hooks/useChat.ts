@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
     ChatMessage,
     ChatRequest,
@@ -32,12 +32,14 @@ export function useChat({ regenmon, updateStatAction }: UseChatProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [lastMessageTime, setLastMessageTime] = useState(0);
     const [lastStatsChange, setLastStatsChange] = useState<Partial<import('@/lib/types').RegenmonStats> | null>(null);
+    const [memoryCount, setMemoryCount] = useState(0);
 
-    // Load history on mount
+    // Load history + memory count on mount
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const history = loadChatHistory();
             setMessages(history);
+            setMemoryCount(loadMemories().length);
         }
     }, []);
 
@@ -154,6 +156,7 @@ export function useChat({ regenmon, updateStatAction }: UseChatProps) {
                     }
                 }
                 saveMemories(merged);
+                setMemoryCount(merged.length);
             }
 
         } catch (error) {
@@ -181,6 +184,7 @@ export function useChat({ regenmon, updateStatAction }: UseChatProps) {
         messages,
         sendMessage,
         isLoading,
-        lastStatsChange
+        lastStatsChange,
+        memoryCount
     };
 }

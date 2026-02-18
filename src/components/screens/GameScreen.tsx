@@ -10,7 +10,7 @@ import ActivityHistory from '../ui/ActivityHistory';
 import { addActivity, loadHistory, clearHistory, ActivityEntry } from '@/lib/activityHistory';
 import { useTheme } from '@/hooks/useTheme';
 import { useAuth } from '@/hooks/useAuth';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { RegenmonData } from '@/lib/types';
 import { PURIFY_COST, SEARCH_FRAGMENTS_REWARD } from '@/lib/constants';
 import { ChatBox } from '../chat/ChatBox';
@@ -48,6 +48,7 @@ export default function GameScreen({
     const [showHistory, setShowHistory] = useState(false);
     const [activityEntries, setActivityEntries] = useState<ActivityEntry[]>([]);
     const [toast, setToast] = useState<{ text: string; type: 'loading' | 'success' | 'error' } | null>(null);
+    const [floatingDelta, setFloatingDelta] = useState<string | null>(null);
 
     // Load activity history on mount
     useEffect(() => {
@@ -89,6 +90,11 @@ export default function GameScreen({
     const allStatsFull = regenmon.stats.esencia >= 100 && regenmon.stats.espiritu >= 100 && regenmon.stats.pulso >= 100;
     const canPurifyBtn = regenmon.stats.fragmentos >= PURIFY_COST && !allStatsFull;
 
+    const showFloatingDelta = useCallback((text: string) => {
+        setFloatingDelta(text);
+        setTimeout(() => setFloatingDelta(null), 1500);
+    }, []);
+
     const showToast = (text: string, type: 'loading' | 'success' | 'error') => {
         setToast({ text, type });
         if (type !== 'loading') {
@@ -117,6 +123,7 @@ export default function GameScreen({
             addActivity('purify', -PURIFY_COST);
             setActivityEntries(loadHistory());
             showToast('✨ ¡Me siento renovado! Energía restaurada.', 'success');
+            showFloatingDelta(`-${PURIFY_COST} 💎`);
         }, 600);
     };
 
@@ -131,6 +138,7 @@ export default function GameScreen({
             addActivity('search_fragments', SEARCH_FRAGMENTS_REWARD);
             setActivityEntries(loadHistory());
             showToast(`💎 ¡Encontraste ${SEARCH_FRAGMENTS_REWARD} fragmentos!`, 'success');
+            showFloatingDelta(`+${SEARCH_FRAGMENTS_REWARD} 💎`);
         }, 800);
     };
 
@@ -152,13 +160,14 @@ export default function GameScreen({
         messages,
         sendMessage,
         isLoading: isChatLoading,
-        lastStatsChange
+        lastStatsChange,
+        memoryCount
     } = useChat({
         regenmon,
         updateStatAction: onUpdateStats
     });
 
-    // Log chat activity when stats change from chat
+    // Log chat activity + show floating delta when stats change from chat
     useEffect(() => {
         if (lastStatsChange && isChatOpen) {
             const sc = lastStatsChange as Record<string, number | undefined>;
@@ -167,8 +176,15 @@ export default function GameScreen({
                 addActivity('chat', fragChange);
                 setActivityEntries(loadHistory());
             }
+            // Build floating delta text from all changes
+            const parts: string[] = [];
+            if (sc.espiritu && sc.espiritu !== 0) parts.push(`${sc.espiritu > 0 ? '+' : ''}${sc.espiritu} 🔮`);
+            if (sc.pulso && sc.pulso !== 0) parts.push(`${sc.pulso > 0 ? '+' : ''}${sc.pulso} 💛`);
+            if (sc.esencia && sc.esencia !== 0) parts.push(`${sc.esencia > 0 ? '+' : ''}${sc.esencia} ✨`);
+            if (sc.fragmentos && sc.fragmentos !== 0) parts.push(`${sc.fragmentos > 0 ? '+' : ''}${sc.fragmentos} 💎`);
+            if (parts.length > 0) showFloatingDelta(parts.join('  '));
         }
-    }, [lastStatsChange, isChatOpen]);
+    }, [lastStatsChange, isChatOpen, showFloatingDelta]);
 
     const handleSendMessage = (text: string) => {
         sendMessage(text);
@@ -220,6 +236,9 @@ export default function GameScreen({
                             <span className="hud-stat-val">{Math.round(regenmon.stats.esencia)}</span>
                         </div>
                         <div className="hud-fragments">💎 {isLoggedIn ? regenmon.stats.fragmentos : '---'}</div>
+                        {isLoggedIn && memoryCount > 0 && (
+                            <div className="hud-memories">🧠 {memoryCount}</div>
+                        )}
                     </div>
                     <button className="hud-config-btn" onClick={handleSettings}>⚙️</button>
                 </div>
@@ -241,20 +260,12 @@ export default function GameScreen({
                         />
                     </div>
 
-                    {/* Floating stat change feedback */}
-                    {lastStatsChange && (() => {
-                        const items: string[] = [];
-                        const sc = lastStatsChange as Record<string, number | undefined>;
-                        if (sc.espiritu && sc.espiritu !== 0) items.push(`${sc.espiritu > 0 ? '+' : ''}${sc.espiritu} 🔮`);
-                        if (sc.pulso && sc.pulso !== 0) items.push(`${sc.pulso > 0 ? '+' : ''}${sc.pulso} 💛`);
-                        if (sc.esencia && sc.esencia !== 0) items.push(`${sc.esencia > 0 ? '+' : ''}${sc.esencia} 🌱`);
-                        if (sc.fragmentos && sc.fragmentos !== 0) items.push(`+${sc.fragmentos} 💠`);
-                        return items.length > 0 ? (
-                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 animate-bounce text-sm font-bold px-3 py-1 rounded whitespace-nowrap z-20" style={{ color: 'var(--theme-text)', backgroundColor: 'var(--theme-overlay)' }}>
-                                {items.join('  ')}
-                            </div>
-                        ) : null;
-                    })()}
+                    {/* Floating stat change delta */}
+                    {floatingDelta && (
+                        <div className="hud-floating-delta">
+                            {floatingDelta}
+                        </div>
+                    )}
 
                     <div className="mt-1 sm:mt-2 text-center">
                         <NameEditor

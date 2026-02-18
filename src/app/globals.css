@@ -2546,6 +2546,41 @@ html, body {
   flex-shrink: 0;
 }
 
+.hud-memories {
+  display: flex;
+  align-items: center;
+  gap: 0.5vw;
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(0.4rem, 1.2vw, 0.65rem);
+  color: #c4b5fd;
+  margin-left: 1vw;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+/* Floating stat delta (fade-up animation) */
+@keyframes float-up-fade {
+  0% { opacity: 1; transform: translate(-50%, 0); }
+  70% { opacity: 1; transform: translate(-50%, -30px); }
+  100% { opacity: 0; transform: translate(-50%, -50px); }
+}
+
+.hud-floating-delta {
+  position: absolute;
+  top: -1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(0.5rem, 1.5vw, 0.75rem);
+  font-weight: bold;
+  color: #fde68a;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.8), 0 0 12px rgba(253, 224, 71, 0.4);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 20;
+  animation: float-up-fade 1.5s ease-out forwards;
+}
+
 .hud-config-btn {
   font-family: var(--font-press-start-2p);
   font-size: clamp(0.45rem, 1.4vw, 0.75rem);
@@ -2917,6 +2952,15 @@ html, body {
 
 .theme-light .hud-fragments {
   color: #5a5a4a;
+}
+
+.theme-light .hud-memories {
+  color: #6b5b8a;
+}
+
+.theme-light .hud-floating-delta {
+  color: #92400e;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.8), 0 0 12px rgba(146, 64, 14, 0.3);
 }
 
 .theme-light .hud-config-btn {
