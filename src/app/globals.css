@@ -2168,6 +2168,16 @@ html, body {
   width: 100% !important;
   height: 100% !important;
   overscroll-behavior: none !important;
+  touch-action: none !important;
+}
+
+/* Re-enable touch on interactive elements */
+button, a, input, textarea, select, .settings-panel, .nes-btn, [role="dialog"] {
+  touch-action: manipulation !important;
+}
+
+.overflow-y-auto {
+  touch-action: pan-y !important;
 }
 
 .game-container {

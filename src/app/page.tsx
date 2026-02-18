@@ -53,7 +53,7 @@ export default function Home() {
 
 
   return (
-    <main className="min-h-screen w-full overflow-hidden bg-black text-white font-mono">
+    <main className="h-screen w-screen overflow-hidden bg-black text-white font-mono" style={{ maxWidth: '100vw', maxHeight: '100vh' }}>
       <div className="game-container">
         {currentScreen === 'LOADING' && (
           <LoadingScreen onComplete={() => navigateTo('TITLE')} />
