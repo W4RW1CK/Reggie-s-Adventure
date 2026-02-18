@@ -2286,3 +2286,270 @@ html, body {
     max-width: 600px;
   }
 }
+
+/* =============================================
+   HUD LAYOUT (Approved Preview)
+   ============================================= */
+
+.hud-top-bar {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2.5vw;
+  padding: 1.8vh 2.5vw;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.hud-day-section {
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(0.45rem, 1.4vw, 0.75rem);
+  color: #93c5fd;
+  white-space: nowrap;
+  padding: 1vh 1.2vw;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  flex-shrink: 0;
+}
+
+.hud-stats-row {
+  display: flex;
+  gap: 2vw;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.hud-stat {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.6vw;
+  font-size: clamp(0.45rem, 1.4vw, 0.75rem);
+}
+
+.hud-stat-icon {
+  font-size: clamp(0.65rem, 2vw, 1rem);
+}
+
+.hud-stat-bar-bg {
+  flex: 1;
+  min-width: 4vw;
+  height: 2.5vh;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+}
+
+.hud-stat-bar {
+  height: 100%;
+  transition: width 0.3s;
+}
+
+.hud-stat-val {
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(0.4rem, 1.2vw, 0.65rem);
+  color: #aaa;
+  min-width: 2.5vw;
+  text-align: right;
+}
+
+.hud-fragments {
+  display: flex;
+  align-items: center;
+  gap: 0.5vw;
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(0.45rem, 1.4vw, 0.75rem);
+  color: #93c5fd;
+  margin-left: 1vw;
+  flex-shrink: 0;
+}
+
+.hud-config-btn {
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(0.45rem, 1.4vw, 0.75rem);
+  padding: 1vh 1.2vw;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.hud-config-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* === HUD Sprite Area === */
+.hud-sprite-area {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1vh;
+}
+
+/* === HUD Bottom Bar === */
+.hud-bottom-bar {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  gap: 2vw;
+  padding: 1.8vh 2.5vw;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  border-top: 2px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.hud-action-btn {
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(0.5rem, 1.8vw, 0.9rem);
+  padding: 1.8vh 3vw;
+  border: 2px solid;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex: 1;
+  max-width: 35vw;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.hud-action-btn:hover {
+  transform: scale(1.05);
+}
+
+.hud-action-btn:active {
+  transform: scale(0.95);
+}
+
+.hud-btn-purificar {
+  background: #3b82f6;
+  border-color: #60a5fa;
+  color: #fff;
+}
+
+.hud-btn-conversar {
+  background: #84cc16;
+  border-color: #a3e635;
+  color: #1a1a1a;
+}
+
+.hud-btn-close {
+  background: #ef4444;
+  border-color: #f87171;
+  color: #fff;
+}
+
+.hud-btn-search {
+  background: #eab308;
+  border-color: #facc15;
+  color: #1a1a1a;
+}
+
+.hud-btn-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.hud-btn-disabled:hover {
+  transform: none;
+}
+
+/* Activity overlay (floating above bottom bar) */
+.hud-activity-overlay {
+  position: absolute;
+  bottom: 8vh;
+  left: 2.5vw;
+  right: 2.5vw;
+  z-index: 8;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* === HUD Responsive: Small screens === */
+@media (max-width: 480px) {
+  .hud-stat-bar-bg {
+    display: none;
+  }
+
+  .hud-stat-val {
+    display: inline;
+    min-width: auto;
+  }
+
+  .hud-fragments {
+    margin-left: 0;
+  }
+}
+
+/* === HUD Responsive: Landscape phone === */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hud-top-bar {
+    padding: 0.8vh 2vw;
+  }
+
+  .hud-stat-bar-bg {
+    height: 2vh;
+  }
+
+  .hud-bottom-bar {
+    padding: 1vh 2vw;
+  }
+
+  .hud-action-btn {
+    padding: 1vh 2.5vw;
+  }
+
+  .hud-day-section {
+    padding: 0.6vh 1vw;
+  }
+}
+
+/* === HUD Light Theme === */
+.theme-light .hud-top-bar {
+  background: rgba(212, 197, 169, 0.85);
+  border-bottom-color: rgba(139, 131, 112, 0.3);
+}
+
+.theme-light .hud-bottom-bar {
+  background: rgba(212, 197, 169, 0.85);
+  border-top-color: rgba(139, 131, 112, 0.3);
+}
+
+.theme-light .hud-day-section {
+  color: #5a5a4a;
+  background: rgba(139, 131, 112, 0.15);
+  border-color: rgba(139, 131, 112, 0.3);
+}
+
+.theme-light .hud-stat-val {
+  color: #5a5a4a;
+}
+
+.theme-light .hud-fragments {
+  color: #5a5a4a;
+}
+
+.theme-light .hud-config-btn {
+  color: #2a2a2a;
+  background: rgba(139, 131, 112, 0.15);
+  border-color: rgba(139, 131, 112, 0.4);
+}
+
+.theme-light .hud-stat-bar-bg {
+  background: rgba(139, 131, 112, 0.25);
+  border-color: rgba(139, 131, 112, 0.4);
+}

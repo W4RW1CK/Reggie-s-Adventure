@@ -85,6 +85,9 @@ export default function GameScreen({
         (Date.now() - new Date(regenmon.createdAt).getTime()) / (1000 * 60 * 60 * 24)
     ) + 1;
 
+    const allStatsFull = regenmon.stats.esencia >= 100 && regenmon.stats.espiritu >= 100 && regenmon.stats.pulso >= 100;
+    const canPurifyBtn = regenmon.stats.fragmentos >= PURIFY_COST && !allStatsFull;
+
     const handlePurify = () => {
         if (regenmon.stats.fragmentos < PURIFY_COST) {
             return;
@@ -174,25 +177,40 @@ export default function GameScreen({
             )}
 
             {/* Main Content Layer */}
-            <div className="game-screen__content relative z-10 w-full h-full flex flex-col items-center justify-between">
+            <div className="game-screen__content relative z-10 w-full h-full flex flex-col">
 
-                {/* Top HUD: Info */}
-                <div className="game-screen__header w-full px-3 sm:px-4 pt-3 sm:pt-4 flex justify-between items-start" style={{ color: 'var(--theme-text)' }}>
-                    <div className="flex flex-col gap-2">
-                        {/* Fragment Counter */}
-                        <FragmentCounter 
-                            fragmentos={regenmon.stats.fragmentos} 
-                            isLoggedIn={isLoggedIn} 
-                        />
-                        <span className="game-screen__day-label px-2 py-1 inline-block" style={{ backgroundColor: 'var(--theme-overlay-light)' }}>Día {daysAlive} de aventura</span>
+                {/* === TOP BAR (HUD) === */}
+                <div className="hud-top-bar">
+                    <div className="hud-day-section">Día {daysAlive}</div>
+                    <div className="hud-stats-row">
+                        <div className="hud-stat">
+                            <span className="hud-stat-icon">🔮</span>
+                            <div className="hud-stat-bar-bg">
+                                <div className="hud-stat-bar" style={{ width: `${Math.min(regenmon.stats.espiritu, 100)}%`, backgroundColor: 'var(--color-stat-espiritu-full)' }} />
+                            </div>
+                            <span className="hud-stat-val">{Math.round(regenmon.stats.espiritu)}</span>
+                        </div>
+                        <div className="hud-stat">
+                            <span className="hud-stat-icon">💛</span>
+                            <div className="hud-stat-bar-bg">
+                                <div className="hud-stat-bar" style={{ width: `${Math.min(regenmon.stats.pulso, 100)}%`, backgroundColor: 'var(--color-stat-pulso-full)' }} />
+                            </div>
+                            <span className="hud-stat-val">{Math.round(regenmon.stats.pulso)}</span>
+                        </div>
+                        <div className="hud-stat">
+                            <span className="hud-stat-icon">✨</span>
+                            <div className="hud-stat-bar-bg">
+                                <div className="hud-stat-bar" style={{ width: `${Math.min(regenmon.stats.esencia, 100)}%`, backgroundColor: 'var(--color-stat-esencia-full)' }} />
+                            </div>
+                            <span className="hud-stat-val">{Math.round(regenmon.stats.esencia)}</span>
+                        </div>
+                        <div className="hud-fragments">💎 {regenmon.stats.fragmentos}</div>
                     </div>
-                    <div className="flex gap-2 items-start">
-                        <UserIdentity isLoggedIn={isLoggedIn} email={email} playerName={playerName} />
-                    </div>
+                    <button className="hud-config-btn" onClick={handleSettings}>⚙️</button>
                 </div>
 
-                {/* Center: Regenmon */}
-                <div className="game-screen__regenmon-area flex-1 flex flex-col items-center justify-center">
+                {/* === CENTER: Sprite === */}
+                <div className="hud-sprite-area flex-1 flex flex-col items-center justify-center">
                     <div className="relative animate-float game-screen__regenmon-wrapper">
                         <RegenmonSVG
                             type={regenmon.type}
@@ -216,81 +234,70 @@ export default function GameScreen({
                         ) : null;
                     })()}
 
-                    <div className="mt-1 sm:mt-2 text-center border-4 px-4 py-2 inline-block" style={{ backgroundColor: 'var(--theme-overlay-light)', borderColor: 'var(--theme-border-faint)' }}>
+                    <div className="mt-1 sm:mt-2 text-center">
                         <NameEditor
                             currentName={regenmon.name}
                             onSave={onUpdateName}
                             canRename={!regenmon.nameChangeUsed}
                         />
                     </div>
-                </div>
 
-                {/* Bottom UI: Stats & Actions — inside an NES-style container */}
-                <div className="game-screen__bottom-ui w-full px-3 sm:px-4 pb-3 sm:pb-4">
-                    <div className="border-4 p-3 sm:p-4 flex flex-col gap-2 sm:gap-3" style={{ backgroundColor: 'var(--theme-overlay)', borderColor: 'var(--theme-border-subtle)' }}>
-                        {/* Stats Grid */}
-                        <div className="grid grid-cols-1 gap-0.5 sm:gap-1">
-                            <StatBar
-                                label="Espíritu"
-                                subtitle="Esperanza"
-                                value={regenmon.stats.espiritu}
-                                color="var(--color-stat-espiritu-full)"
-                                icon="🔮"
-                            />
-                            <StatBar
-                                label="Pulso"
-                                subtitle="Energía vital"
-                                value={regenmon.stats.pulso}
-                                color="var(--color-stat-pulso-full)"
-                                icon="💛"
-                            />
-                            <StatBar
-                                label="Esencia"
-                                subtitle="Vitalidad"
-                                value={regenmon.stats.esencia}
-                                color="var(--color-stat-esencia-full)"
-                                icon="🌱"
-                            />
-                        </div>
-
-                        {/* Actions */}
-                        <div className="mt-1 sm:mt-2">
-                            <ActionButtons
-                                onPurify={handlePurify}
-                                onSettings={handleSettings}
-                                onChat={toggleChat}
-                                onSearchFragments={handleSearchFragments}
-                                stats={regenmon.stats}
-                                fragmentos={regenmon.stats.fragmentos}
-                                showSearchFragments={regenmon.stats.fragmentos === 0}
-                                isChatOpen={isChatOpen}
-                            />
-                        </div>
-
-
-                        {/* Activity History */}
-                        <ActivityHistory entries={activityEntries} isVisible={!isChatOpen} />
-
-                        {/* Settings Panel */}
-                        <SettingsPanel
-                            isOpen={showSettings}
-                            onClose={() => setShowSettings(false)}
-                            musicEnabled={musicEnabled}
-                            onToggleMusic={onToggleMusic}
-                            theme={theme}
-                            onToggleTheme={toggleTheme}
-                            textSize={textSize}
-                            onSetTextSize={setTextSize}
-                            regenmonName={regenmon.name}
-                            onUpdateName={onUpdateName}
-                            canRename={!regenmon.nameChangeUsed}
-                            isLoggedIn={isLoggedIn}
-                            onLogin={login}
-                            onLogout={logout}
-                            onReset={() => { clearHistory(); setActivityEntries([]); onReset(); }}
-                        />
+                    {/* User Identity (small, below name) */}
+                    <div className="mt-1 opacity-70">
+                        <UserIdentity isLoggedIn={isLoggedIn} email={email} playerName={playerName} />
                     </div>
                 </div>
+
+                {/* === BOTTOM BAR (HUD) === */}
+                <div className="hud-bottom-bar">
+                    <button
+                        className={`hud-action-btn hud-btn-purificar ${!canPurifyBtn ? 'hud-btn-disabled' : ''}`}
+                        onClick={handlePurify}
+                        disabled={!canPurifyBtn}
+                    >
+                        🔮 PURIFICAR ({PURIFY_COST}💎)
+                    </button>
+                    <button
+                        className={`hud-action-btn ${isChatOpen ? 'hud-btn-close' : 'hud-btn-conversar'}`}
+                        onClick={toggleChat}
+                    >
+                        {isChatOpen ? '✕ CERRAR' : '💬 CONVERSAR'}
+                    </button>
+                    {regenmon.stats.fragmentos === 0 && (
+                        <button
+                            className="hud-action-btn hud-btn-search"
+                            onClick={handleSearchFragments}
+                        >
+                            🔍 BUSCAR (+15💎)
+                        </button>
+                    )}
+                </div>
+
+                {/* Activity History (floating overlay when not chatting) */}
+                {!isChatOpen && activityEntries.length > 0 && (
+                    <div className="hud-activity-overlay">
+                        <ActivityHistory entries={activityEntries} isVisible={!isChatOpen} />
+                    </div>
+                )}
+
+                {/* Settings Panel */}
+                <SettingsPanel
+                    isOpen={showSettings}
+                    onClose={() => setShowSettings(false)}
+                    musicEnabled={musicEnabled}
+                    onToggleMusic={onToggleMusic}
+                    theme={theme}
+                    onToggleTheme={toggleTheme}
+                    textSize={textSize}
+                    onSetTextSize={setTextSize}
+                    regenmonName={regenmon.name}
+                    onUpdateName={onUpdateName}
+                    canRename={!regenmon.nameChangeUsed}
+                    isLoggedIn={isLoggedIn}
+                    onLogin={login}
+                    onLogout={logout}
+                    onReset={() => { clearHistory(); setActivityEntries([]); onReset(); }}
+                />
 
                 {/* Chat Overlay */}
                 <ErrorBoundary>
