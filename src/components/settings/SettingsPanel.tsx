@@ -99,13 +99,13 @@ export default function SettingsPanel({
     <div className="fixed inset-0 z-50 flex justify-end animate-fadeIn" style={{ backgroundColor: 'var(--theme-modal-overlay)', zIndex: 100 }}>
       <div
         ref={panelRef}
-        className="settings-panel w-full sm:max-w-sm h-full overflow-y-auto border-l-4 p-0 animate-slideInRight"
-        style={{ backgroundColor: 'var(--theme-panel-bg)', borderColor: 'var(--theme-border-subtle)', paddingTop: 'env(safe-area-inset-top, 0px)', paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+        className="settings-panel w-full max-w-xs sm:max-w-sm h-full overflow-y-auto border-l-4 p-0 animate-slideInRight"
+        style={{ backgroundColor: 'var(--theme-panel-bg)', borderColor: 'var(--theme-border-subtle)' }}
         role="dialog"
         aria-modal="true"
         aria-label="Configuración"
       >
-        <div className={`${containerClass}`} style={{ margin: '8px auto' }}>
+        <div className={`${containerClass}`} style={{ margin: '0', border: 'none' }}>
           <p className="title">⚙️ Configuración</p>
 
           {/* Close button */}

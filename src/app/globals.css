@@ -2248,7 +2248,7 @@ html, body {
   /* Settings panel: right-aligned, capped width */
   .settings-panel {
     max-width: 420px;
-    margin: 0 0 0 auto;
+    margin: 0 0 0 auto !important;
   }
 }
 
@@ -2534,6 +2534,27 @@ html, body {
 
   .hud-fragments {
     margin-left: 0;
+  }
+}
+
+/* === Settings panel: Landscape phone === */
+@media (max-height: 500px) and (orientation: landscape) {
+  .settings-panel {
+    max-width: 50vw !important;
+  }
+
+  .settings-panel .nes-container {
+    padding: 8px !important;
+  }
+
+  .settings-panel .nes-btn {
+    min-height: 32px !important;
+    font-size: 8px !important;
+    padding: 4px 8px !important;
+  }
+
+  .settings-panel .text-xs {
+    font-size: 8px !important;
   }
 }
 
