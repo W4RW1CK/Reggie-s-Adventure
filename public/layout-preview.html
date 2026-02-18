@@ -51,11 +51,20 @@
     border-bottom: 2px solid rgba(255,255,255,0.1);
   }
 
+  .day-section {
+    font-size: 0.5rem;
+    color: #93c5fd;
+    white-space: nowrap;
+    padding: 4px 8px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
   .stats-row {
     display: flex;
     gap: 12px;
     align-items: center;
-    flex-wrap: wrap;
+    justify-content: center;
     flex: 1;
   }
 
@@ -166,19 +175,11 @@
   .btn-config { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: #fff; }
   .btn-conversar { background: #84cc16; border-color: #a3e635; color: #1a1a1a; }
 
-  /* Day counter */
-  .day-label {
-    position: absolute;
-    top: 48px; left: 12px;
-    z-index: 10;
-    font-size: 0.5rem;
-    color: #888;
-    background: rgba(0,0,0,0.5);
-    padding: 4px 8px;
-  }
+  /* Day counter - now in top bar */
 
   /* === RESPONSIVE: Portrait phone === */
   @media (max-width: 480px) and (orientation: portrait) {
+    .day-section { font-size: 0.4rem; padding: 3px 5px; }
     .stats-row { gap: 6px; }
     .stat-bar-bg { width: 40px; }
     .stat-val { display: none; }
@@ -196,7 +197,7 @@
     .sprite-placeholder { width: 120px; height: 120px; font-size: 2.5rem; }
     .bottom-bar { padding: 6px 10px; }
     .action-btn { font-size: 0.45rem; padding: 6px 12px; }
-    .day-label { top: 36px; font-size: 0.4rem; }
+    .day-section { font-size: 0.4rem; padding: 2px 4px; }
   }
 
   /* === RESPONSIVE: Tablet === */
@@ -230,6 +231,7 @@
 
   <!-- TOP BAR -->
   <div class="top-bar">
+    <div class="day-section">Día 1</div>
     <div class="stats-row">
       <div class="stat">
         <span class="stat-icon">🔮</span>
@@ -250,8 +252,6 @@
     </div>
     <button class="config-btn">⚙️</button>
   </div>
-
-  <div class="day-label">Día 1 de aventura</div>
 
   <!-- SPRITE CENTER -->
   <div class="sprite-area">
