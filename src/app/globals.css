@@ -2537,24 +2537,28 @@ html, body {
   }
 }
 
-/* === Settings panel: Landscape phone === */
-@media (max-height: 500px) and (orientation: landscape) {
+/* === Settings panel: Mobile fullscreen === */
+@media (max-width: 767px) {
   .settings-panel {
-    max-width: 50vw !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    border-left: none !important;
   }
+}
 
+/* === Settings panel: Landscape phone compact === */
+@media (max-height: 500px) and (orientation: landscape) {
   .settings-panel .nes-container {
     padding: 8px !important;
   }
 
   .settings-panel .nes-btn {
-    min-height: 32px !important;
-    font-size: 8px !important;
-    padding: 4px 8px !important;
+    min-height: 36px !important;
+    font-size: 9px !important;
   }
 
   .settings-panel .text-xs {
-    font-size: 8px !important;
+    font-size: 9px !important;
   }
 }
 

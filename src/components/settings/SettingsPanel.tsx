@@ -47,9 +47,11 @@ export default function SettingsPanel({
   const [nameValue, setNameValue] = useState(regenmonName);
   const [nameError, setNameError] = useState('');
 
-  // Click outside to close
+  // Click outside to close (desktop only — on mobile it's fullscreen)
   useEffect(() => {
     if (!isOpen) return;
+    const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+    if (!isDesktop) return;
     const handler = (e: MouseEvent) => {
       if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
         onClose();
@@ -99,7 +101,7 @@ export default function SettingsPanel({
     <div className="fixed inset-0 z-50 flex justify-end animate-fadeIn" style={{ backgroundColor: 'var(--theme-modal-overlay)', zIndex: 100 }}>
       <div
         ref={panelRef}
-        className="settings-panel w-full max-w-xs sm:max-w-sm h-full overflow-y-auto border-l-4 p-0 animate-slideInRight"
+        className="settings-panel w-full h-full overflow-y-auto p-0 animate-fadeIn md:animate-slideInRight md:max-w-sm md:border-l-4"
         style={{ backgroundColor: 'var(--theme-panel-bg)', borderColor: 'var(--theme-border-subtle)' }}
         role="dialog"
         aria-modal="true"
@@ -111,9 +113,9 @@ export default function SettingsPanel({
           {/* Close button */}
           <button
             onClick={onClose}
-            className="absolute text-lg hover:text-red-400 transition-colors z-10"
+            className="hover:text-red-400 transition-colors z-10"
             aria-label="Cerrar configuración"
-            style={{ position: 'absolute', top: '-10px', right: '8px', color: 'var(--theme-text)', fontSize: '18px', padding: '8px' }}
+            style={{ position: 'absolute', top: '4px', right: '12px', color: 'var(--theme-text)', fontSize: '24px', padding: '12px', lineHeight: 1 }}
           >
             ✕
           </button>
