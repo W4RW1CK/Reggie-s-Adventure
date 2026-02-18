@@ -106,20 +106,20 @@ export default function SettingsPanel({
         aria-label="Configuración"
       >
         {/* Header: Title + Close */}
-        <div className="flex items-center justify-between px-4 py-3 border-b-4" style={{ borderColor: 'var(--theme-border-subtle)' }}>
-          <span className="text-sm" style={{ color: 'var(--theme-text)' }}>⚙️ Configuración</span>
+        <div className="settings-header flex items-center justify-between border-b-4" style={{ borderColor: 'var(--theme-border-subtle)', padding: 'clamp(8px, 2vh, 16px) clamp(12px, 3vw, 24px)' }}>
+          <span style={{ color: 'var(--theme-text)', fontSize: 'clamp(12px, 2.5vw, 18px)' }}>⚙️ Configuración</span>
           <button
             onClick={onClose}
             className="hover:text-red-400 transition-colors"
             aria-label="Cerrar configuración"
-            style={{ color: 'var(--theme-text)', fontSize: '20px', padding: '4px 8px', lineHeight: 1 }}
+            style={{ color: 'var(--theme-text)', fontSize: 'clamp(18px, 4vw, 28px)', padding: 'clamp(4px, 1vw, 12px)', lineHeight: 1 }}
           >
             ✕
           </button>
         </div>
 
         {/* Settings content */}
-        <div className="px-4 py-3 flex flex-col gap-4" style={{ color: 'var(--theme-text)' }}>
+        <div className="settings-body flex flex-col" style={{ color: 'var(--theme-text)', padding: 'clamp(8px, 2vh, 16px) clamp(12px, 3vw, 24px)', gap: 'clamp(12px, 2.5vh, 24px)' }}>
 
             {/* Music */}
             <div className="flex items-center justify-between">

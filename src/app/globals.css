@@ -2537,6 +2537,31 @@ html, body {
   }
 }
 
+/* === Settings panel: Responsive text === */
+.settings-body .text-xs,
+.settings-body span.text-xs {
+  font-size: clamp(10px, 2vw, 16px) !important;
+}
+
+.settings-body .text-sm {
+  font-size: clamp(12px, 2.5vw, 18px) !important;
+}
+
+.settings-body .text-\[10px\] {
+  font-size: clamp(9px, 1.8vw, 14px) !important;
+}
+
+.settings-body .nes-btn {
+  font-size: clamp(9px, 1.8vw, 14px) !important;
+  padding: clamp(4px, 1vh, 10px) clamp(8px, 2vw, 16px) !important;
+  min-height: clamp(32px, 6vh, 52px) !important;
+}
+
+.settings-body .nes-input {
+  font-size: clamp(11px, 2.2vw, 16px) !important;
+  height: clamp(32px, 5vh, 44px) !important;
+}
+
 /* === Settings panel: Mobile + Tablet fullscreen === */
 @media (max-width: 1279px) {
   .settings-panel {
@@ -2544,6 +2569,33 @@ html, body {
     width: 100% !important;
     border-left: none !important;
   }
+}
+
+/* === Tutorial modal: Responsive text === */
+.fixed[role="dialog"] .text-xs,
+.fixed[role="dialog"] .text-sm {
+  font-size: clamp(10px, 2vw, 16px) !important;
+}
+
+.fixed[role="dialog"] .text-\[10px\] {
+  font-size: clamp(9px, 1.6vw, 13px) !important;
+}
+
+.fixed[role="dialog"] .text-\[8px\] {
+  font-size: clamp(8px, 1.4vw, 12px) !important;
+}
+
+.fixed[role="dialog"] .text-xl {
+  font-size: clamp(16px, 3vw, 24px) !important;
+}
+
+.fixed[role="dialog"] .text-2xl {
+  font-size: clamp(18px, 3.5vw, 28px) !important;
+}
+
+.fixed[role="dialog"] .nes-btn {
+  font-size: clamp(10px, 2vw, 16px) !important;
+  min-height: clamp(36px, 6vh, 52px) !important;
 }
 
 /* === Settings panel: Landscape phone compact === */
