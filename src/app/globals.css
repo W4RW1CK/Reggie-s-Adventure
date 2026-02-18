@@ -2538,7 +2538,7 @@ html, body {
 }
 
 /* === Settings panel: Mobile + Tablet fullscreen === */
-@media (max-width: 1023px) {
+@media (max-width: 1279px) {
   .settings-panel {
     max-width: 100% !important;
     width: 100% !important;
