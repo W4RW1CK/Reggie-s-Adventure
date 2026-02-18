@@ -1734,6 +1734,15 @@ body {
   user-select: none;
   overflow: hidden;
   overscroll-behavior: none;
+  touch-action: none;
+}
+
+/* Re-enable touch on interactive elements inside game */
+.game-screen button,
+.game-screen a,
+.game-screen input,
+.game-screen textarea {
+  touch-action: manipulation;
 }
 
 .game-screen input,
@@ -2162,27 +2171,34 @@ html.text-lg .game-screen { font-size: 18px; }
   animation: slideOutRight 0.25s ease-in forwards;
 }
 
-/* --- Prevent ALL overflow globally --- */
+/* --- Prevent overflow on base layer --- */
 html, body {
   overflow: hidden !important;
-  position: fixed !important;
   width: 100% !important;
   height: 100% !important;
   overscroll-behavior: none !important;
-  touch-action: none !important;
 }
 
-/* Re-enable touch on interactive elements and scrollable screens */
-button, a, input, textarea, select, .settings-panel, .nes-btn, [role="dialog"] {
-  touch-action: manipulation !important;
-}
-
-.overflow-y-auto,
+/* Overlay screens: scrollable, fill viewport */
 .title-screen,
 .creation-screen,
 .auth-screen,
-.story-screen {
-  touch-action: pan-y !important;
+.story-screen,
+.loading-screen,
+.transition-screen {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Modals: scrollable */
+.settings-panel,
+[role="dialog"] {
+  -webkit-overflow-scrolling: touch;
 }
 
 .game-container {
