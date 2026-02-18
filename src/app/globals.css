@@ -2537,8 +2537,8 @@ html, body {
   }
 }
 
-/* === Settings panel: Mobile fullscreen === */
-@media (max-width: 767px) {
+/* === Settings panel: Mobile + Tablet fullscreen === */
+@media (max-width: 1023px) {
   .settings-panel {
     max-width: 100% !important;
     width: 100% !important;

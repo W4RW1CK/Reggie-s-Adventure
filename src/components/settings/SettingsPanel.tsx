@@ -50,7 +50,7 @@ export default function SettingsPanel({
   // Click outside to close (desktop only — on mobile it's fullscreen)
   useEffect(() => {
     if (!isOpen) return;
-    const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+    const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
     if (!isDesktop) return;
     const handler = (e: MouseEvent) => {
       if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
@@ -99,7 +99,7 @@ export default function SettingsPanel({
     <div className="fixed inset-0 z-50 flex justify-end animate-fadeIn" style={{ backgroundColor: 'var(--theme-modal-overlay)', zIndex: 100 }}>
       <div
         ref={panelRef}
-        className="settings-panel w-full h-full overflow-y-auto p-0 md:max-w-sm md:border-l-4"
+        className="settings-panel w-full h-full overflow-y-auto p-0 lg:max-w-sm lg:border-l-4"
         style={{ backgroundColor: 'var(--theme-panel-bg)', borderColor: 'var(--theme-border-subtle)' }}
         role="dialog"
         aria-modal="true"
