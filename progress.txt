@@ -482,8 +482,16 @@
 - [x] 46.4: Fragment counter pulse animation
 
 ### Fases pendientes
-- [ ] 47: Auditoría S3 (w4rw1ck)
-- [ ] 47b: Ajustes Pre-Deploy (si aplica, w4rw1ck)
+- [~] 47: Auditoría S3 (w4rw1ck) — EN PROGRESO, 8+ issues encontrados
+- [~] 47b: Fixes de auditoría visual — 8 bugs fixeados (commit 30a0848):
+  - Barra Esencia invisible (rename CSS var hambre→esencia, color verde #2ecc71)
+  - Esencia inicia 100→50 (STAT_INITIAL)
+  - Avatar Privy "N" oculto (showWalletUIs: false + CSS)
+  - Botón Settings: texto "CONFIG" agregado
+  - Landscape: scroll habilitado (overflow-y: auto)
+  - Chat overlay más opaco (0.95)
+  - CreationScreen: overlap texto/form fixeado (margins)
+  - Purificar: permite uso cuando cualquier stat < 100
 - [ ] 48: Cierre de Sesión 3
 
 ---

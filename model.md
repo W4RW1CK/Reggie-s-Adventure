@@ -367,12 +367,18 @@ Multi-dispositivo:    Supabase permite acceso desde cualquier dispositivo
 - **Fase 41: Tema Light (GBC) DESPUÉS** — se deriva de los nuevos assets, no al revés
 - **Razón:** Evita trabajo doble. Si el tema Light se creara sobre assets viejos, habría que re-adaptarlo cuando se rehagan los sprites. Diseñar los backgrounds con ambos temas en mente desde el inicio es más eficiente.
 
-### Fase 47b: Ajustes Pre-Deploy
+### Fase 47b: Fixes de Auditoría Visual
 
-- **Propósito:** Red de seguridad entre auditoría y deploy
-- **Trigger:** Si el usuario detecta algo que no le convence tras la auditoría
-- **Alcance:** Abierto — puede ser visual, funcional, UX, o nada
-- **Si todo está bien:** Se salta directo a Fase 48
+- **Propósito:** Correcciones encontradas en revisión de 18 capturas (5 viewports)
+- **8 bugs fixeados** (commit `30a0848`):
+  1. Barra Esencia invisible → CSS var `hambre` → `esencia`, color verde #2ecc71
+  2. Esencia inicia 100→50 → usar STAT_INITIAL
+  3. Avatar Privy "N" tapaba UI → `showWalletUIs: false` + CSS hide
+  4. Botón Settings sin texto → agregado "CONFIG"
+  5. Landscape sin scroll → `overflow-y: auto`, `height: auto`
+  6. Chat overlay semi-transparente → opacidad 0.95
+  7. CreationScreen overlap descripción/form → margins
+  8. Purificar bloqueado si Esencia=100 → permite si cualquier stat < 100
 
 ### Preparación para S4 y S5
 
