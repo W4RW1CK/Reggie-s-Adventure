@@ -6,6 +6,7 @@ import { ChatBubble } from './ChatBubble';
 import { ChatInput } from './ChatInput';
 import { TypingIndicator } from './TypingIndicator';
 import { CHAT_MAX_MESSAGES } from '@/lib/constants';
+import { loadMemories } from '@/lib/storage';
 import classNames from 'classnames';
 
 interface ChatBoxProps {
@@ -31,6 +32,7 @@ export function ChatBox({
 }: ChatBoxProps) {
     const [inputValue, setInputValue] = useState('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const memoryCount = typeof window !== 'undefined' ? loadMemories().length : 0;
 
     // Auto-scroll to bottom on new messages
     useEffect(() => {
@@ -75,6 +77,7 @@ export function ChatBox({
                         <span>🔮 {stats.espiritu.toFixed(0)}</span>
                         <span>💛 {stats.pulso.toFixed(0)}</span>
                         <span>🌱 {stats.esencia.toFixed(0)}</span>
+                        {memoryCount > 0 && <span title={`${memoryCount} memorias guardadas`}>🧠 {memoryCount}</span>}
                     </div>
 
                     {/* Messages Area */}

@@ -979,6 +979,13 @@ body {
   border-color: #e74c3c;
 }
 
+.creation-screen__char-count {
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(7px, 1.2vw, 10px);
+  text-align: right;
+  margin-top: 4px;
+}
+
 .creation-screen__error {
   font-family: var(--font-press-start-2p);
   font-size: clamp(8px, 1.5vw, 12px);

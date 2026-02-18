@@ -126,6 +126,11 @@ export default function CreationScreen({ onDespertar }: CreationScreenProps) {
                     placeholder="Escribe un nombre..."
                     maxLength={15}
                 />
+                <div className="creation-screen__char-count">
+                    <span style={{ color: name.length > 15 ? '#ef4444' : name.length >= 2 ? '#4ade80' : 'rgba(255,255,255,0.4)' }}>
+                        {name.length}/15
+                    </span>
+                </div>
                 {error && <p className="creation-screen__error">{error}</p>}
             </div>
 
