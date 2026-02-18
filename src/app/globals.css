@@ -2,6 +2,15 @@
 /* NES.css (import from node_modules manually or via JS import if preferred, but CSS import is easier) */
 @import "nes.css/css/nes.min.css";
 
+/* Hide Privy floating wallet widget */
+#privy-wallet-btn,
+[data-privy-dialog],
+iframe[src*="privy.io/apps"][style*="position: absolute"] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
 @theme {
   --font-press-start-2p: "Press Start 2P", monospace;
 
@@ -33,9 +42,9 @@
   --color-stat-pulso-low: #7d6608;
   --color-stat-pulso-bg: #2c2c2c;
 
-  --color-stat-hambre-full: #e74c3c;
-  --color-stat-hambre-low: #78281f;
-  --color-stat-hambre-bg: #2c2c2c;
+  --color-stat-esencia-full: #2ecc71;
+  --color-stat-esencia-low: #1a7a42;
+  --color-stat-esencia-bg: #2c2c2c;
 
   --color-ui-btn-active: #4caf50;
   --color-ui-btn-hover: #66bb6a;
@@ -905,6 +914,7 @@ body {
 .creation-screen__info {
   text-align: center;
   min-height: 100px;
+  margin-bottom: 16px;
   /* Enough space for longest description + lore title */
 }
 
@@ -928,6 +938,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 12px;
+  margin-top: 8px;
   margin-bottom: 40px;
   z-index: 72;
   width: 100%;
@@ -1843,7 +1854,7 @@ body {
   --theme-border-subtle: rgba(255, 255, 255, 0.25);
   --theme-border-faint: rgba(255, 255, 255, 0.2);
   --theme-panel-bg: #1a1a2e;
-  --theme-chat-bg: rgba(0, 0, 0, 0.9);
+  --theme-chat-bg: rgba(10, 10, 20, 0.95);
   --theme-chat-header: #ea5514;
   --theme-modal-overlay: rgba(0, 0, 0, 0.7);
   --theme-input-bg: #000;
@@ -2201,10 +2212,23 @@ html, body {
 
 /* --- Landscape mobile/tablet: compact layout --- */
 @media (orientation: landscape) and (max-height: 500px) {
+  /* Allow scrolling in landscape — content taller than viewport */
+  .game-screen {
+    overflow-y: auto !important;
+    height: auto !important;
+    min-height: 100vh !important;
+  }
+
+  .game-screen__content {
+    height: auto !important;
+    min-height: 100vh !important;
+  }
+
   .game-screen__regenmon-area {
     margin-top: 0 !important;
-    transform: scale(0.7) !important;
+    transform: scale(0.6) !important;
     flex: 0 0 auto !important;
+    min-height: 120px !important;
   }
 
   .game-screen__regenmon-wrapper {
@@ -2213,8 +2237,7 @@ html, body {
 
   .game-screen__bottom-ui {
     padding-bottom: 4px !important;
-    overflow-y: auto;
-    max-height: 45vh;
+    flex: 0 0 auto !important;
   }
 
   .game-screen__bottom-ui .border-4 {

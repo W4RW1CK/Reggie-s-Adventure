@@ -25,11 +25,12 @@ export default function ActionButtons({
     showSearchFragments,
     isChatOpen = false 
 }: ActionButtonsProps) {
-    const canPurify = fragmentos >= PURIFY_COST && stats.esencia < 100;
+    const allStatsFull = stats.esencia >= 100 && stats.espiritu >= 100 && stats.pulso >= 100;
+    const canPurify = fragmentos >= PURIFY_COST && !allStatsFull;
     const purifyTooltip = fragmentos < PURIFY_COST 
         ? `Necesitas ${PURIFY_COST} 💠` 
-        : stats.esencia >= 100 
-        ? 'Esencia al máximo' 
+        : allStatsFull 
+        ? 'Todas las stats al máximo' 
         : '';
 
     return (
@@ -55,12 +56,13 @@ export default function ActionButtons({
                 {/* Settings Button */}
                 <button
                     type="button"
-                    className="nes-btn w-full flex items-center justify-center text-2xl"
+                    className="nes-btn w-full flex flex-col items-center justify-center py-2 text-xs leading-tight"
                     onClick={onSettings}
                     title="Configuración"
                     style={{ minHeight: '60px' }}
                 >
-                    ⚙️
+                    <span className="text-xl mb-1" role="img" aria-label="settings">⚙️</span>
+                    <span>CONFIG</span>
                 </button>
 
                 {/* Chat Button */}

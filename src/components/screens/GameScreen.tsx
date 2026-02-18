@@ -86,7 +86,11 @@ export default function GameScreen({
     ) + 1;
 
     const handlePurify = () => {
-        if (regenmon.stats.fragmentos < PURIFY_COST || regenmon.stats.esencia >= 100) {
+        if (regenmon.stats.fragmentos < PURIFY_COST) {
+            return;
+        }
+        // Allow purify if ANY stat can benefit (not just esencia)
+        if (regenmon.stats.esencia >= 100 && regenmon.stats.espiritu >= 100 && regenmon.stats.pulso >= 100) {
             return;
         }
         

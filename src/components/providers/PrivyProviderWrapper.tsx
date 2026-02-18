@@ -21,6 +21,10 @@ export function PrivyProviderWrapper({ children }: PrivyProviderWrapperProps) {
         loginMethods: ['google', 'email', 'passkey', 'github', 'discord'],
         appearance: {
           theme: 'dark',
+          showWalletLoginFirst: false,
+        },
+        embeddedWallets: {
+          showWalletUIs: false,
         },
       }}
     >

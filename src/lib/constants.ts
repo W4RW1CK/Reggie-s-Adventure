@@ -20,7 +20,7 @@ export const NAME_MAX_LENGTH = 15;
 export const INITIAL_STATS: RegenmonStats = {
     espiritu: STAT_INITIAL,
     pulso: STAT_INITIAL,
-    esencia: 100, // Empieza lleno
+    esencia: STAT_INITIAL, // Empieza en 50
     fragmentos: 100, // Inicia con 100 Fragmentos
 };
 
