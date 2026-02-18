@@ -47,13 +47,30 @@ export function createMockProvider(): AIProvider {
                 message = "Modo de prueba activo. Soy un Regenmon genérico.";
             }
 
-            // Simulate player name discovery (10% chance)
+            // Simulate player name discovery
             let playerName: string | undefined = undefined;
-            if (Math.random() > 0.9) {
-                playerName = "JugadorDePrueba";
+            const lowerMsg = userMessage.toLowerCase();
+
+            // Detect name patterns
+            const nameMatch = userMessage.match(/(?:me llamo|mi nombre es|soy)\s+(\w+)/i);
+            if (nameMatch) {
+                playerName = nameMatch[1];
             }
 
-            // console.log('Mock Response:', message);
+            // Simulate memory extraction from user messages
+            const memories: { key: string; value: string; type: string }[] = [];
+            
+            const likeMatch = userMessage.match(/me (?:gusta|encanta|fascina)\s+(.+)/i);
+            if (likeMatch) {
+                memories.push({ key: 'gusto_' + Date.now(), value: likeMatch[1].slice(0, 50), type: 'gustos' });
+            }
+            if (lowerMsg.includes('triste') || lowerMsg.includes('feliz') || lowerMsg.includes('enojad') || lowerMsg.includes('content')) {
+                const emotion = lowerMsg.includes('triste') ? 'triste' : lowerMsg.includes('feliz') ? 'feliz' : lowerMsg.includes('enojad') ? 'enojado' : 'contento';
+                memories.push({ key: 'emocion_' + Date.now(), value: `Se siente ${emotion}`, type: 'emociones' });
+            }
+            if (nameMatch) {
+                memories.push({ key: 'nombre_usuario', value: nameMatch[1], type: 'nombre' });
+            }
 
             return {
                 message,
@@ -62,7 +79,8 @@ export function createMockProvider(): AIProvider {
                     esencia: -2,
                     fragmentos: Math.floor(Math.random() * 6), // 0-5
                 },
-                playerName
+                playerName,
+                memories: memories.length > 0 ? memories : undefined,
             };
         }
     };

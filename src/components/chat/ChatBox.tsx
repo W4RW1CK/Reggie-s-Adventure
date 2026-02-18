@@ -29,8 +29,15 @@ export function ChatBox({
     stats
 }: ChatBoxProps) {
     const [inputValue, setInputValue] = useState('');
+    const [memoryCount, setMemoryCount] = useState(0);
     const messagesEndRef = useRef<HTMLDivElement>(null);
-    const memoryCount = typeof window !== 'undefined' ? loadMemories().length : 0;
+
+    // Update memory count when messages change (new memories may have been saved)
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setMemoryCount(loadMemories().length);
+        }
+    }, [messages]);
 
     // Auto-scroll to bottom on new messages
     useEffect(() => {
