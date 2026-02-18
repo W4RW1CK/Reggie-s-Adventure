@@ -41,9 +41,8 @@ export default function TutorialModal({ onDismiss }: TutorialModalProps) {
 
     return (
         <div
-            className="fixed inset-0 z-40 flex items-start sm:items-center justify-center backdrop-blur-sm animate-fadeIn overflow-y-auto"
-            style={{ padding: 'clamp(8px, 2vw, 16px)' }}
-            style={{ backgroundColor: 'var(--theme-modal-overlay)' }}
+            className="fixed inset-0 z-40 flex items-center justify-center backdrop-blur-sm animate-fadeIn overflow-y-auto"
+            style={{ padding: 'clamp(12px, 3vw, 24px)', backgroundColor: 'var(--theme-modal-overlay)' }}
             role="dialog"
             aria-modal="true"
             aria-labelledby="tutorial-title"
