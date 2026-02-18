@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Layout Preview — Reggie's Adventure</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Press Start 2P', cursive;
+    background: #000;
+    color: #fff;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .game-screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /* Background */
+  .bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, #0a0a2e 0%, #1a1a4e 30%, #2d1b4e 60%, #0a0a2e 100%);
+    z-index: 0;
+  }
+  .bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 70%, rgba(0,200,255,0.08) 0%, transparent 50%);
+  }
+
+  /* === TOP BAR: Stats === */
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    flex: 1;
+  }
+
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.5rem;
+  }
+  .stat-icon { font-size: 0.7rem; }
+  .stat-bar-bg {
+    width: 60px;
+    height: 8px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    overflow: hidden;
+  }
+  .stat-bar { height: 100%; transition: width 0.3s; }
+  .bar-espiritu { background: #e879f9; }
+  .bar-pulso { background: #facc15; }
+  .bar-esencia { background: #34d399; }
+  .stat-val { font-size: 0.45rem; color: #aaa; min-width: 35px; }
+
+  .fragments {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.55rem;
+    color: #93c5fd;
+    margin-left: 8px;
+  }
+
+  .config-btn {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.5rem;
+    padding: 6px 10px;
+    background: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,255,255,0.3);
+    color: #fff;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .config-btn:hover { background: rgba(255,255,255,0.2); }
+
+  /* === CENTER: Sprite === */
+  .sprite-area {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .sprite-placeholder {
+    width: 180px;
+    height: 180px;
+    border: 3px dashed rgba(0,200,255,0.4);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    animation: float 3s ease-in-out infinite;
+    background: radial-gradient(circle, rgba(0,200,255,0.1) 0%, transparent 70%);
+  }
+  .sprite-name {
+    font-size: 0.8rem;
+    text-shadow: 0 0 10px rgba(0,200,255,0.5);
+  }
+  .sprite-edit { font-size: 0.5rem; color: #888; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* === BOTTOM BAR: Buttons === */
+  .bottom-bar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    border-top: 2px solid rgba(255,255,255,0.1);
+  }
+
+  .action-btn {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.55rem;
+    padding: 10px 16px;
+    border: 2px solid;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex: 1;
+    max-width: 180px;
+    text-align: center;
+  }
+  .action-btn:hover { transform: scale(1.05); }
+  .action-btn:active { transform: scale(0.95); }
+
+  .btn-purificar { background: #3b82f6; border-color: #60a5fa; color: #fff; }
+  .btn-config { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: #fff; }
+  .btn-conversar { background: #84cc16; border-color: #a3e635; color: #1a1a1a; }
+
+  /* Day counter */
+  .day-label {
+    position: absolute;
+    top: 48px; left: 12px;
+    z-index: 10;
+    font-size: 0.5rem;
+    color: #888;
+    background: rgba(0,0,0,0.5);
+    padding: 4px 8px;
+  }
+
+  /* === RESPONSIVE: Portrait phone === */
+  @media (max-width: 480px) and (orientation: portrait) {
+    .stats-row { gap: 6px; }
+    .stat-bar-bg { width: 40px; }
+    .stat-val { display: none; }
+    .fragments { margin-left: 4px; font-size: 0.5rem; }
+    .config-btn { font-size: 0.45rem; padding: 4px 6px; }
+    .sprite-placeholder { width: 140px; height: 140px; font-size: 3rem; }
+    .action-btn { font-size: 0.45rem; padding: 8px 10px; }
+  }
+
+  /* === RESPONSIVE: Landscape phone === */
+  @media (max-height: 500px) and (orientation: landscape) {
+    .top-bar { padding: 4px 10px; }
+    .stat-bar-bg { width: 50px; height: 6px; }
+    .stat { font-size: 0.4rem; }
+    .sprite-placeholder { width: 120px; height: 120px; font-size: 2.5rem; }
+    .bottom-bar { padding: 6px 10px; }
+    .action-btn { font-size: 0.45rem; padding: 6px 12px; }
+    .day-label { top: 36px; font-size: 0.4rem; }
+  }
+
+  /* === RESPONSIVE: Tablet === */
+  @media (min-width: 768px) {
+    .stat-bar-bg { width: 80px; height: 10px; }
+    .stat { font-size: 0.55rem; }
+    .sprite-placeholder { width: 220px; height: 220px; font-size: 5rem; }
+    .action-btn { font-size: 0.6rem; padding: 12px 24px; }
+  }
+
+  /* Stars */
+  .stars { position: absolute; inset: 0; z-index: 1; }
+  .star {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: #fff;
+    border-radius: 50%;
+    animation: twinkle 3s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+<div class="game-screen">
+  <!-- Background -->
+  <div class="bg"></div>
+  <div class="stars" id="stars"></div>
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <div class="stats-row">
+      <div class="stat">
+        <span class="stat-icon">🔮</span>
+        <div class="stat-bar-bg"><div class="stat-bar bar-espiritu" style="width:51%"></div></div>
+        <span class="stat-val">51</span>
+      </div>
+      <div class="stat">
+        <span class="stat-icon">💛</span>
+        <div class="stat-bar-bg"><div class="stat-bar bar-pulso" style="width:50%"></div></div>
+        <span class="stat-val">50</span>
+      </div>
+      <div class="stat">
+        <span class="stat-icon">✨</span>
+        <div class="stat-bar-bg"><div class="stat-bar bar-esencia" style="width:48%"></div></div>
+        <span class="stat-val">48</span>
+      </div>
+      <div class="fragments">💎 100</div>
+    </div>
+    <button class="config-btn">⚙️</button>
+  </div>
+
+  <div class="day-label">Día 1 de aventura</div>
+
+  <!-- SPRITE CENTER -->
+  <div class="sprite-area">
+    <div class="sprite-placeholder">⚡</div>
+    <span class="sprite-name">REGGIE</span>
+    <span class="sprite-edit">✏️</span>
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <div class="bottom-bar">
+    <button class="action-btn btn-purificar">🔮 PURIFICAR (10💎)</button>
+    <button class="action-btn btn-config">⚙️ CONFIG</button>
+    <button class="action-btn btn-conversar">💬 CONVERSAR</button>
+  </div>
+</div>
+
+<script>
+  // Generate stars
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 50; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 60 + '%';
+    star.style.animationDelay = Math.random() * 3 + 's';
+    star.style.width = star.style.height = (Math.random() * 2 + 1) + 'px';
+    container.appendChild(star);
+  }
+</script>
+</body>
+</html>
