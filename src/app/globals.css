@@ -1053,40 +1053,63 @@ body {
   }
 }
 
-/* Landscape compact for creation */
+/* Landscape compact for creation — two-column layout */
 @media (max-height: 500px) and (orientation: landscape) {
   .creation-screen {
-    padding: 8px 16px;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 8px;
+    padding: 6px 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 4px 16px;
+    align-items: start;
+    justify-items: center;
   }
 
   .creation-screen__title {
-    width: 100%;
-    font-size: 16px;
-    margin-bottom: 4px;
+    grid-column: 1 / -1;
+    font-size: 14px;
+    margin-bottom: 2px;
   }
 
   .creation-screen__carousel {
+    grid-column: 1;
     margin-bottom: 0;
+    gap: 6px;
   }
 
   .creation-screen__svg-container {
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
+  }
+
+  .creation-screen__showcase {
+    gap: 4px;
   }
 
   .creation-screen__type-desc {
-    font-size: 8px;
+    font-size: 7px;
+    line-height: 1.2;
+  }
+
+  .creation-screen__info {
+    margin-bottom: 0;
   }
 
   .creation-screen__form {
+    grid-column: 2;
     margin-top: 0;
-    margin-bottom: 4px;
-    gap: 4px;
+    margin-bottom: 0;
+    gap: 6px;
+    align-self: center;
+  }
+
+  .creation-screen__label {
+    font-size: 10px;
+  }
+
+  .creation-screen__input {
+    padding: 6px;
+    font-size: 10px;
   }
 
   .creation-screen__submit-btn {
