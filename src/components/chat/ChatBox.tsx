@@ -56,7 +56,7 @@ export function ChatBox({
         >
             <div className="w-full max-w-[600px] pointer-events-auto animate-fade-in-up">
                 {/* Header / Config Bar */}
-                <div className="flex justify-between items-center bg-[#ea5514] text-white p-2 border-b-4 border-black font-['Press_Start_2P'] text-[10px]">
+                <div className="flex justify-between items-center text-white p-2 border-b-4 border-black font-['Press_Start_2P'] text-[10px]" style={{ backgroundColor: 'var(--theme-chat-header)' }}>
                     <span>Conversando con {regenmonName}</span>
                     <button
                         onClick={onClose}
@@ -68,19 +68,19 @@ export function ChatBox({
                 </div>
 
                 {/* Main Container */}
-                <div className="bg-[#000000e6] border-4 border-[#fff] p-4 flex flex-col gap-4 max-h-[70vh]">
+                <div className="border-4 p-4 flex flex-col gap-4 max-h-[70vh]" style={{ backgroundColor: 'var(--theme-chat-bg)', borderColor: 'var(--theme-border)' }}>
 
                     {/* Compact Stats (Session 2 Requirement) */}
-                    <div className="flex justify-center gap-4 text-[8px] text-[#a0a0a0] border-b border-[#4a4a4a] pb-2 font-['Press_Start_2P']">
+                    <div className="flex justify-center gap-4 text-[8px] pb-2 font-['Press_Start_2P']" style={{ color: 'var(--theme-text-secondary)', borderBottom: '1px solid var(--theme-border)' }}>
                         <span>🔮 {stats.espiritu.toFixed(0)}</span>
                         <span>💛 {stats.pulso.toFixed(0)}</span>
-                        <span>🍎 {stats.hambre.toFixed(0)}</span>
+                        <span>🌱 {stats.esencia.toFixed(0)}</span>
                     </div>
 
                     {/* Messages Area */}
                     <div className="flex-1 overflow-y-auto min-h-[200px] max-h-[400px] pr-2 scrollbar-nes flex flex-col">
                         {messages.length === 0 && (
-                            <div className="text-center text-[8px] text-[#777] my-auto italic">
+                            <div className="text-center text-[8px] my-auto italic" style={{ color: 'var(--theme-muted)' }}>
                                 {regenmonName} te está mirando con curiosidad...
                             </div>
                         )}
@@ -120,11 +120,11 @@ export function ChatBox({
                     width: 8px;
                 }
                 .scrollbar-nes::-webkit-scrollbar-track {
-                    background: #2c2c2c; 
+                    background: var(--theme-stat-bar-bg); 
                 }
                 .scrollbar-nes::-webkit-scrollbar-thumb {
-                    background: #4a4a4a; 
-                    border: 2px solid #2c2c2c;
+                    background: var(--theme-border); 
+                    border: 2px solid var(--theme-stat-bar-bg);
                 }
             `}</style>
         </div>

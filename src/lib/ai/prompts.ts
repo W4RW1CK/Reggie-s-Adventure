@@ -1,18 +1,19 @@
-import { RegenmonType, RegenmonStats } from '../types';
+import { RegenmonType, RegenmonStats, RegenmonMemory } from '../types';
 
 export function buildSystemPrompt(
     name: string,
     type: RegenmonType,
     stats: RegenmonStats,
     daysAlive: number,
-    playerName?: string
+    playerName?: string,
+    memories?: RegenmonMemory[]
 ): string {
-    const { espiritu, pulso, hambre } = stats;
+    const { espiritu, pulso, esencia } = stats;
 
     const spiritLevel = espiritu > 70 ? 'high' : espiritu < 30 ? 'low' : 'medium';
     const pulseLevel = pulso > 70 ? 'high' : pulso < 30 ? 'low' : 'medium';
-    const hungerLevel = hambre > 70 ? 'high' : hambre < 30 ? 'low' : 'medium';
-    const isCritical = espiritu < 10 && pulso < 10 && hambre < 10;
+    const hungerLevel = esencia < 30 ? 'high' : esencia > 70 ? 'low' : 'medium';
+    const isCritical = espiritu < 10 || pulso < 10 || esencia < 10;
 
     let personalityBlock = '';
     let themeBlock = '';
@@ -69,7 +70,7 @@ export function buildSystemPrompt(
     } else {
         if (spiritLevel === 'low') stateReactivity += '- Espíritu bajo (Esperanza): Dudas del futuro. Ves lejos la regeneración. "...a veces me pregunto cuánto falta..."\n';
         if (pulseLevel === 'low') stateReactivity += '- Pulso bajo (Energía): Estás cansado. Respuestas cortas. Economizas palabras.\n';
-        if (hungerLevel === 'high') stateReactivity += '- Hambre alta (Necesidad): Estás irritable. Mencionas tu hambre indirectamente.\n';
+        if (hungerLevel === 'high') stateReactivity += '- Esencia baja (Vitalidad): Estás débil y necesitado. Mencionas tu falta de energía indirectamente.\n';
     }
 
     const prompt = `
@@ -90,8 +91,12 @@ export function buildSystemPrompt(
     ESTADO ACTUAL:
     - Espíritu (Esperanza): ${espiritu}/100. ${spiritLevel === 'high' ? 'Crees firmemente en la regeneración.' : spiritLevel === 'low' ? 'Tu fe flaquea.' : 'Tienes días buenos y malos.'}
     - Pulso (Energía): ${pulso}/100.
-    - Hambre (Necesidad): ${hambre}/100.
+    - Esencia (Vitalidad): ${esencia}/100.
     ${stateReactivity}
+
+    MEMORIAS GUARDADAS:
+    ${memories && memories.length > 0 ? memories.map(m => `- ${m.type}: ${m.value}`).join('\n    ') : '(Ninguna aún)'}
+    Puedes hacer referencia sutil a estas memorias. No las repitas textualmente.
 
     TEMA RECURRENTE: ${themeBlock}
     TU DOLOR: ${painBlock}
@@ -106,14 +111,27 @@ export function buildSystemPrompt(
     6.  **OBJETIVO OCULTO**: ${playerName ? `Ya sabes que el usuario se llama ${playerName}. Úsalo con naturalidad.` : 'NO sabes el nombre del usuario. Intenta averiguarlo sutilmente en la conversación.'}
     7.  **FORMATO**: Máximo 50 palabras. Habla siempre en primera persona. Idioma Español.
 
+    REGLAS DE STATS EN CHAT:
+    - Espíritu cambia según el tono emocional de la conversación (-5 a +5).
+    - Pulso refleja la calma o intensidad: conversaciones tranquilas lo suben, temas intensos o estresantes lo bajan (-5 a +5).
+    - Esencia siempre se gasta al hablar (-4 a -1). Nunca sube por conversar.
+    - Fragmentos son recompensa por conversar (0 a 5). Más difícil de ganar cerca de 100.
+
     IMPORTANTE:
     Responde SIEMPRE en formato JSON válido con la siguiente estructura:
     {
       "message": "Tu respuesta aquí (string)",
-      "spiritChange": Un número entero entre -5 y 5 que refleje cómo te hizo sentir el mensaje del usuario (0 si es neutral),
-      "playerName": "El nombre del usuario si lo acabas de descubrir en este mensaje (string, opcional)"
+      "statsChange": {
+        "espiritu": "integer -5 to 5",
+        "pulso": "integer -5 to 5 (calm conversations = positive, intense = negative)",
+        "esencia": "integer -4 to -1 (talking always costs esencia)",
+        "fragmentos": "integer 0 to 5 (reward for conversing, harder near 100)"
+      },
+      "playerName": "El nombre del usuario si lo acabas de descubrir en este mensaje (string, opcional)",
+      "memories": [{"key": "color_favorito", "value": "azul", "type": "gustos"}]
     }
     Si el usuario te dice su nombre, inclúyelo en el campo "playerName". Si ya lo sabías, no es necesario repetirlo ahí.
+    Si el usuario revela información personal (nombre, gustos, emociones, datos personales, temas frecuentes), inclúyela en el array "memories" con key, value, y type (nombre|gustos|emociones|datos_personales|tema_frecuente). Si no hay info nueva, envía array vacío o omítelo.
   `;
 
     return prompt;

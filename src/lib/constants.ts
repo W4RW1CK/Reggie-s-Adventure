@@ -20,8 +20,14 @@ export const NAME_MAX_LENGTH = 15;
 export const INITIAL_STATS: RegenmonStats = {
     espiritu: STAT_INITIAL,
     pulso: STAT_INITIAL,
-    hambre: STAT_INITIAL,
+    esencia: STAT_INITIAL, // Empieza en 50
+    fragmentos: 100, // Inicia con 100 Fragmentos
 };
+
+// Economía
+export const PURIFY_COST = 10;
+export const SEARCH_FRAGMENTS_REWARD = 15;
+export const SEARCH_FRAGMENTS_THRESHOLD = 0; // Solo aparece si tienes 0
 
 // Configuración de LocalStorage Keys
 
@@ -38,8 +44,9 @@ export const CHAT_MAX_MESSAGES = 50;
 export const CHAT_MAX_CHARS = 280;
 export const CHAT_COOLDOWN_MS = 3000;
 export const CHAT_RATE_LIMIT = 15;
-export const CHAT_SPIRIT_MAX_CHANGE = 5;
-export const CHAT_PULSE_CHANGE = -2;
-export const CHAT_HUNGER_CHANGE = 1;
+export const CHAT_SPIRIT_MAX_CHANGE = 5; // Maximo cambio de espíritu
+export const CHAT_PULSE_CHANGE = -1; // Hablar gasta energía
+export const CHAT_ESENCIA_COST = -2; // Hablar gasta esencia
+export const CHAT_FRAGMENT_REWARD_RANGE = [0, 5];
 export const CHAT_CRITICAL_THRESHOLD = 10;
 

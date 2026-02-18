@@ -1,6 +1,6 @@
 {
   "name": "reggies-adventure",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,7 +10,10 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@privy-io/react-auth": "^3.13.1",
+    "@supabase/supabase-js": "^2.95.3",
     "classnames": "^2.5.1",
+    "dotenv": "^17.3.1",
     "nes.css": "^2.2.1",
     "next": "16.1.6",
     "openai": "^6.22.0",

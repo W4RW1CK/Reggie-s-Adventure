@@ -83,7 +83,7 @@ export default function TitleScreen({ onStart }: TitleScreenProps) {
                 </div>
 
                 {/* Version */}
-                <div className="title-screen__version">v0.1 — El Despertar</div>
+                <div className="title-screen__version">v0.3 — La Conexión</div>
 
                 {/* Press Start - blinking */}
                 <div className="title-screen__press-start">

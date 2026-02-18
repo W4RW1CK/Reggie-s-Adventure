@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
 
         // 2. Parse Request
         body = await req.json() as ChatRequest;
-        const { message, history, regenmon, playerName } = body;
+        const { message, history, regenmon, playerName, memories } = body;
 
         if (!message || !regenmon) {
             return NextResponse.json(
@@ -56,7 +56,8 @@ export async function POST(req: NextRequest) {
             regenmon.type,
             regenmon.stats,
             regenmon.daysAlive,
-            playerName
+            playerName,
+            memories
         );
 
         // 4. Get AI Provider (Gemini or OpenAI)
@@ -67,11 +68,20 @@ export async function POST(req: NextRequest) {
 
         // 6. Log in Development
         if (process.env.NODE_ENV === 'development') {
-            console.log('--- CHAT DEBUG ---');
-            console.log('System Prompt:', systemPrompt);
-            console.log('User Message:', message);
-            console.log('AI Response:', response);
-            console.log('------------------');
+            // console.log('--- CHAT DEBUG ---');
+            // console.log('System Prompt:', systemPrompt);
+            // console.log('User Message:', message);
+            // console.log('AI Response:', response);
+            // console.log('------------------');
+        }
+
+        // 7. Clamp statsChange values
+        if (response.statsChange) {
+            const s = response.statsChange;
+            s.espiritu = Math.max(-5, Math.min(5, s.espiritu ?? 0));
+            s.pulso = Math.max(-5, Math.min(5, s.pulso ?? 0));
+            s.esencia = Math.max(-4, Math.min(-1, s.esencia ?? -1));
+            s.fragmentos = Math.max(0, Math.min(5, s.fragmentos ?? 0));
         }
 
         return NextResponse.json(response);

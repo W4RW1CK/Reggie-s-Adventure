@@ -5,15 +5,21 @@ import RegenmonSVG from '@/components/regenmon/RegenmonSVG';
 import StatBar from '@/components/regenmon/StatBar';
 import ActionButtons from '../regenmon/ActionButtons';
 import NameEditor from '../ui/NameEditor';
-import ResetButton from '../ui/ResetButton';
 import TutorialModal from '../ui/TutorialModal';
-import MusicToggle from '../ui/MusicToggle';
+import FragmentCounter from '../ui/FragmentCounter';
+import SettingsPanel from '../settings/SettingsPanel';
+import UserIdentity from '../ui/UserIdentity';
+import ActivityHistory from '../ui/ActivityHistory';
+import { addActivity, loadHistory, clearHistory, ActivityEntry } from '@/lib/activityHistory';
+import { useTheme } from '@/hooks/useTheme';
+import { useAuth } from '@/hooks/useAuth';
 import { useState, useEffect, useMemo } from 'react';
 import { RegenmonData } from '@/lib/types';
-import { STAT_MAX, STAT_MIN } from '@/lib/constants';
+import { STAT_MAX, STAT_MIN, PURIFY_COST, SEARCH_FRAGMENTS_REWARD } from '@/lib/constants';
 import { ChatBox } from '../chat/ChatBox';
 import { useChat } from '@/hooks/useChat';
 import { useChiptuneAudio } from '@/hooks/useChiptuneAudio';
+import { ErrorBoundary } from '../ErrorBoundary';
 import classNames from 'classnames';
 
 interface GameScreenProps {
@@ -24,6 +30,9 @@ interface GameScreenProps {
     onUpdateName: (newName: string) => void;
     onDismissTutorial: () => void;
     onReset: () => void;
+    isLoggedIn?: boolean;
+    email?: string;
+    playerName?: string;
 }
 
 export default function GameScreen({
@@ -34,9 +43,21 @@ export default function GameScreen({
     onUpdateName,
     onDismissTutorial,
     onReset,
+    isLoggedIn = false,
+    email,
+    playerName,
 }: GameScreenProps) {
     const [showTutorial, setShowTutorial] = useState(false);
+    const [showSettings, setShowSettings] = useState(false);
+    const [activityEntries, setActivityEntries] = useState<ActivityEntry[]>([]);
+
+    // Load activity history on mount
+    useEffect(() => {
+        setActivityEntries(loadHistory());
+    }, []);
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 480);
+    const { theme, textSize, toggleTheme, setTextSize } = useTheme();
+    const { login, logout } = useAuth();
 
     // Track window size for responsive SVG
     useEffect(() => {
@@ -46,9 +67,12 @@ export default function GameScreen({
     }, []);
 
     const regenmonSize = useMemo(() => {
-        if (windowWidth < 480) return 130;
-        if (windowWidth < 768) return 160;
-        return 180;
+        // Use the smaller of width/height to keep sprite square and proportional
+        const vh = typeof window !== 'undefined' ? window.innerHeight : 800;
+        const vw = typeof window !== 'undefined' ? window.innerWidth : 480;
+        const minDim = Math.min(vw, vh);
+        // Sprite = ~30% of smaller dimension, clamped between 100-200px
+        return Math.max(100, Math.min(200, Math.round(minDim * 0.3)));
     }, [windowWidth]);
 
     // Effect to check if tutorial should be shown
@@ -64,18 +88,42 @@ export default function GameScreen({
         (Date.now() - new Date(regenmon.createdAt).getTime()) / (1000 * 60 * 60 * 24)
     ) + 1;
 
-    const handleAction = (action: 'train' | 'feed' | 'sleep') => {
-        switch (action) {
-            case 'train':
-                onUpdateStats({ pulso: 10 });
-                break;
-            case 'feed':
-                onUpdateStats({ hambre: -10 });
-                break;
-            case 'sleep':
-                onUpdateStats({ espiritu: 10 });
-                break;
+    const allStatsFull = regenmon.stats.esencia >= 100 && regenmon.stats.espiritu >= 100 && regenmon.stats.pulso >= 100;
+    const canPurifyBtn = regenmon.stats.fragmentos >= PURIFY_COST && !allStatsFull;
+
+    const handlePurify = () => {
+        if (regenmon.stats.fragmentos < PURIFY_COST) {
+            return;
         }
+        // Allow purify if ANY stat can benefit (not just esencia)
+        if (regenmon.stats.esencia >= 100 && regenmon.stats.espiritu >= 100 && regenmon.stats.pulso >= 100) {
+            return;
+        }
+        
+        // Spend 10 fragmentos and give: Esencia +30 (clamp to 100), Espíritu +5, Pulso +10
+        onUpdateStats({ 
+            fragmentos: -PURIFY_COST,
+            esencia: 30,
+            espiritu: 5,
+            pulso: 10
+        });
+        addActivity('purify', -PURIFY_COST);
+        setActivityEntries(loadHistory());
+    };
+
+    const handleSearchFragments = () => {
+        if (regenmon.stats.fragmentos > 0) {
+            return;
+        }
+        
+        // Give 15 fragmentos
+        onUpdateStats({ fragmentos: SEARCH_FRAGMENTS_REWARD });
+        addActivity('search_fragments', SEARCH_FRAGMENTS_REWARD);
+        setActivityEntries(loadHistory());
+    };
+
+    const handleSettings = () => {
+        setShowSettings(true);
     };
 
     const handleTutorialDismiss = (dontShowAgain: boolean) => {
@@ -91,11 +139,24 @@ export default function GameScreen({
         toggleChat,
         messages,
         sendMessage,
-        isLoading: isChatLoading
+        isLoading: isChatLoading,
+        lastStatsChange
     } = useChat({
         regenmon,
         updateStatAction: onUpdateStats
     });
+
+    // Log chat activity when stats change from chat
+    useEffect(() => {
+        if (lastStatsChange && isChatOpen) {
+            const sc = lastStatsChange as Record<string, number | undefined>;
+            const fragChange = sc.fragmentos ?? 0;
+            if (fragChange !== 0) {
+                addActivity('chat', fragChange);
+                setActivityEntries(loadHistory());
+            }
+        }
+    }, [lastStatsChange, isChatOpen]);
 
     const handleSendMessage = (text: string) => {
         sendMessage(text);
@@ -111,7 +172,7 @@ export default function GameScreen({
     return (
         <div className="game-screen w-full h-screen relative overflow-hidden flex flex-col">
             {/* Background Layer */}
-            <GameBackground type={regenmon.type} stats={regenmon.stats} />
+            <GameBackground type={regenmon.type} stats={regenmon.stats} theme={theme} />
 
             {/* Tutorial Modal */}
             {showTutorial && (
@@ -119,18 +180,40 @@ export default function GameScreen({
             )}
 
             {/* Main Content Layer */}
-            <div className="game-screen__content relative z-10 w-full h-full flex flex-col items-center justify-between">
+            <div className="game-screen__content relative z-10 w-full h-full flex flex-col">
 
-                {/* Top HUD: Info */}
-                <div className="game-screen__header w-full px-3 sm:px-4 pt-3 sm:pt-4 flex justify-between items-start text-white">
-                    <div className="flex flex-col">
-                        <span className="game-screen__day-label bg-black/50 px-2 py-1 inline-block">Día {daysAlive} de aventura</span>
+                {/* === TOP BAR (HUD) === */}
+                <div className="hud-top-bar">
+                    <div className="hud-day-section">Día {daysAlive}</div>
+                    <div className="hud-stats-row">
+                        <div className="hud-stat">
+                            <span className="hud-stat-icon">🔮</span>
+                            <div className="hud-stat-bar-bg">
+                                <div className="hud-stat-bar" style={{ width: `${Math.min(regenmon.stats.espiritu, 100)}%`, backgroundColor: 'var(--color-stat-espiritu-full)' }} />
+                            </div>
+                            <span className="hud-stat-val">{Math.round(regenmon.stats.espiritu)}</span>
+                        </div>
+                        <div className="hud-stat">
+                            <span className="hud-stat-icon">💛</span>
+                            <div className="hud-stat-bar-bg">
+                                <div className="hud-stat-bar" style={{ width: `${Math.min(regenmon.stats.pulso, 100)}%`, backgroundColor: 'var(--color-stat-pulso-full)' }} />
+                            </div>
+                            <span className="hud-stat-val">{Math.round(regenmon.stats.pulso)}</span>
+                        </div>
+                        <div className="hud-stat">
+                            <span className="hud-stat-icon">✨</span>
+                            <div className="hud-stat-bar-bg">
+                                <div className="hud-stat-bar" style={{ width: `${Math.min(regenmon.stats.esencia, 100)}%`, backgroundColor: 'var(--color-stat-esencia-full)' }} />
+                            </div>
+                            <span className="hud-stat-val">{Math.round(regenmon.stats.esencia)}</span>
+                        </div>
+                        <div className="hud-fragments">💎 {regenmon.stats.fragmentos}</div>
                     </div>
-                    <MusicToggle musicEnabled={musicEnabled} onToggle={onToggleMusic} />
+                    <button className="hud-config-btn" onClick={handleSettings}>⚙️</button>
                 </div>
 
-                {/* Center: Regenmon */}
-                <div className="game-screen__regenmon-area flex-1 flex flex-col items-center justify-center">
+                {/* === CENTER: Sprite === */}
+                <div className="hud-sprite-area flex-1 flex flex-col items-center justify-center">
                     <div className="relative animate-float game-screen__regenmon-wrapper">
                         <RegenmonSVG
                             type={regenmon.type}
@@ -139,84 +222,99 @@ export default function GameScreen({
                         />
                     </div>
 
-                    <div className="mt-1 sm:mt-2 text-center bg-black/50 border-4 border-white/20 px-4 py-2 inline-block">
+                    {/* Floating stat change feedback */}
+                    {lastStatsChange && (() => {
+                        const items: string[] = [];
+                        const sc = lastStatsChange as Record<string, number | undefined>;
+                        if (sc.espiritu && sc.espiritu !== 0) items.push(`${sc.espiritu > 0 ? '+' : ''}${sc.espiritu} 🔮`);
+                        if (sc.pulso && sc.pulso !== 0) items.push(`${sc.pulso > 0 ? '+' : ''}${sc.pulso} 💛`);
+                        if (sc.esencia && sc.esencia !== 0) items.push(`${sc.esencia > 0 ? '+' : ''}${sc.esencia} 🌱`);
+                        if (sc.fragmentos && sc.fragmentos !== 0) items.push(`+${sc.fragmentos} 💠`);
+                        return items.length > 0 ? (
+                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 animate-bounce text-sm font-bold px-3 py-1 rounded whitespace-nowrap z-20" style={{ color: 'var(--theme-text)', backgroundColor: 'var(--theme-overlay)' }}>
+                                {items.join('  ')}
+                            </div>
+                        ) : null;
+                    })()}
+
+                    <div className="mt-1 sm:mt-2 text-center">
                         <NameEditor
                             currentName={regenmon.name}
                             onSave={onUpdateName}
                             canRename={!regenmon.nameChangeUsed}
                         />
                     </div>
+
+                    {/* User Identity (small, below name) */}
+                    <div className="mt-1 opacity-70">
+                        <UserIdentity isLoggedIn={isLoggedIn} email={email} playerName={playerName} />
+                    </div>
                 </div>
 
-                {/* Bottom UI: Stats & Actions — inside an NES-style container */}
-                <div className="game-screen__bottom-ui w-full px-3 sm:px-4 pb-3 sm:pb-4">
-                    <div className="bg-black/60 border-4 border-white/25 p-3 sm:p-4 flex flex-col gap-2 sm:gap-3">
-                        {/* Stats Grid */}
-                        <div className="grid grid-cols-1 gap-0.5 sm:gap-1">
-                            <StatBar
-                                label="Espíritu"
-                                subtitle="Esperanza"
-                                value={regenmon.stats.espiritu}
-                                color="var(--color-stat-espiritu-full)"
-                                icon="🔮"
-                            />
-                            <StatBar
-                                label="Pulso"
-                                subtitle="Energía vital"
-                                value={regenmon.stats.pulso}
-                                color="var(--color-stat-pulso-full)"
-                                icon="💛"
-                            />
-                            <StatBar
-                                label="Hambre"
-                                subtitle="Necesidad"
-                                value={regenmon.stats.hambre}
-                                color="var(--color-stat-hambre-full)"
-                                icon="🍖"
-                            />
-                        </div>
-
-                        {/* Actions */}
-                        <div className="mt-1 sm:mt-2">
-                            <ActionButtons
-                                onAction={handleAction}
-                                stats={regenmon.stats}
-                            />
-                        </div>
-
-
-                        {/* Footer: Reset */}
-                        <div className="flex justify-center mt-1 sm:mt-2">
-                            <ResetButton onReset={onReset} />
-                        </div>
-                    </div>
-
-                    {/* Chat Button (Session 2) */}
-                    {!isChatOpen && (
-                        <div className="mt-2">
-                            <button
-                                type="button"
-                                className="nes-btn w-full is-success"
-                                onClick={toggleChat}
-                                aria-label="Abrir chat con tu Regenmon"
-                            >
-                                💬 Conversar
-                            </button>
-                        </div>
+                {/* === BOTTOM BAR (HUD) === */}
+                <div className="hud-bottom-bar">
+                    <button
+                        className={`hud-action-btn hud-btn-purificar ${!canPurifyBtn ? 'hud-btn-disabled' : ''}`}
+                        onClick={handlePurify}
+                        disabled={!canPurifyBtn}
+                    >
+                        🔮 PURIFICAR ({PURIFY_COST}💎)
+                    </button>
+                    <button
+                        className={`hud-action-btn ${isChatOpen ? 'hud-btn-close' : 'hud-btn-conversar'}`}
+                        onClick={toggleChat}
+                    >
+                        {isChatOpen ? '✕ CERRAR' : '💬 CONVERSAR'}
+                    </button>
+                    {regenmon.stats.fragmentos === 0 && (
+                        <button
+                            className="hud-action-btn hud-btn-search"
+                            onClick={handleSearchFragments}
+                        >
+                            🔍 BUSCAR (+15💎)
+                        </button>
                     )}
                 </div>
 
-                {/* Chat Overlay */}
-                <ChatBox
-                    isOpen={isChatOpen}
-                    onClose={toggleChat}
-                    messages={messages}
-                    onSendMessage={handleSendMessage}
-                    isLoading={isChatLoading}
-                    regenmonType={regenmon.type}
+                {/* Activity History (floating overlay when not chatting) */}
+                {!isChatOpen && activityEntries.length > 0 && (
+                    <div className="hud-activity-overlay">
+                        <ActivityHistory entries={activityEntries} isVisible={!isChatOpen} />
+                    </div>
+                )}
+
+                {/* Settings Panel */}
+                <SettingsPanel
+                    isOpen={showSettings}
+                    onClose={() => setShowSettings(false)}
+                    musicEnabled={musicEnabled}
+                    onToggleMusic={onToggleMusic}
+                    theme={theme}
+                    onToggleTheme={toggleTheme}
+                    textSize={textSize}
+                    onSetTextSize={setTextSize}
                     regenmonName={regenmon.name}
-                    stats={regenmon.stats}
+                    onUpdateName={onUpdateName}
+                    canRename={!regenmon.nameChangeUsed}
+                    isLoggedIn={isLoggedIn}
+                    onLogin={login}
+                    onLogout={logout}
+                    onReset={() => { clearHistory(); setActivityEntries([]); onReset(); }}
                 />
+
+                {/* Chat Overlay */}
+                <ErrorBoundary>
+                    <ChatBox
+                        isOpen={isChatOpen}
+                        onClose={toggleChat}
+                        messages={messages}
+                        onSendMessage={handleSendMessage}
+                        isLoading={isChatLoading}
+                        regenmonType={regenmon.type}
+                        regenmonName={regenmon.name}
+                        stats={regenmon.stats}
+                    />
+                </ErrorBoundary>
 
             </div>
         </div>

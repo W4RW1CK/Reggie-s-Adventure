@@ -10,13 +10,13 @@ import {
     saveChatHistory,
     loadChatHistory,
     savePlayerData,
-    loadPlayerData
+    loadPlayerData,
+    loadMemories,
+    saveMemories
 } from '@/lib/storage';
 import {
     CHAT_COOLDOWN_MS,
     CHAT_SPIRIT_MAX_CHANGE,
-    CHAT_PULSE_CHANGE,
-    CHAT_HUNGER_CHANGE,
     CHAT_MAX_MESSAGES,
     CHAT_CRITICAL_THRESHOLD
 } from '@/lib/constants';
@@ -31,6 +31,7 @@ export function useChat({ regenmon, updateStatAction }: UseChatProps) {
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [lastMessageTime, setLastMessageTime] = useState(0);
+    const [lastStatsChange, setLastStatsChange] = useState<Partial<import('@/lib/types').RegenmonStats> | null>(null);
 
     // Load history on mount
     useEffect(() => {
@@ -50,10 +51,10 @@ export function useChat({ regenmon, updateStatAction }: UseChatProps) {
         if (now - lastMessageTime < CHAT_COOLDOWN_MS) return;
 
         // Critical state check
-        const { espiritu, pulso, hambre } = regenmon.stats;
-        if (espiritu < CHAT_CRITICAL_THRESHOLD &&
-            pulso < CHAT_CRITICAL_THRESHOLD &&
-            hambre < CHAT_CRITICAL_THRESHOLD) {
+        const { espiritu, pulso, esencia } = regenmon.stats;
+        if (espiritu < CHAT_CRITICAL_THRESHOLD ||
+            pulso < CHAT_CRITICAL_THRESHOLD ||
+            esencia < CHAT_CRITICAL_THRESHOLD) {
             // Should be handled by UI disabling, but safety check
             return;
         }
@@ -75,16 +76,18 @@ export function useChat({ regenmon, updateStatAction }: UseChatProps) {
         try {
             // 2. Prepare Request
             const playerData = loadPlayerData();
+            const currentMemories = loadMemories();
             const request: ChatRequest = {
                 message: text,
-                history: messages.slice(-10), // Send last 10 for context window
+                history: updatedHistory.slice(-10),
                 regenmon: {
                     name: regenmon.name,
                     type: regenmon.type,
                     stats: regenmon.stats,
                     daysAlive: Math.floor((now - new Date(regenmon.createdAt).getTime()) / (1000 * 60 * 60 * 24))
                 },
-                playerName: playerData?.name
+                playerName: playerData?.name,
+                memories: currentMemories
             };
 
             // 3. Call API
@@ -111,12 +114,18 @@ export function useChat({ regenmon, updateStatAction }: UseChatProps) {
             setMessages(finalHistory);
             saveChatHistory(finalHistory);
 
-            // 5. Update Stats
-            updateStatAction({
-                espiritu: data.spiritChange,
-                pulso: CHAT_PULSE_CHANGE,
-                hambre: CHAT_HUNGER_CHANGE
-            });
+            // 5. Update Stats (AI-driven)
+            const changes = data.statsChange || {};
+            const finalChanges = {
+                espiritu: changes.espiritu ?? 0,
+                pulso: changes.pulso ?? 0,
+                esencia: changes.esencia ?? -1,
+                fragmentos: changes.fragmentos ?? 0
+            };
+            updateStatAction(finalChanges);
+            setLastStatsChange(finalChanges);
+            // Auto-clear after 3 seconds
+            setTimeout(() => setLastStatsChange(null), 3000);
 
             // 6. Handle Name Discovery
             if (data.playerName && !playerData) {
@@ -126,15 +135,41 @@ export function useChat({ regenmon, updateStatAction }: UseChatProps) {
                 });
             }
 
+            // 7. Handle Memories
+            if (data.memories && data.memories.length > 0) {
+                const existing = loadMemories();
+                const merged = [...existing];
+                for (const newMem of data.memories) {
+                    const idx = merged.findIndex(m => m.key === newMem.key);
+                    const memoryEntry = {
+                        key: newMem.key,
+                        value: newMem.value,
+                        type: newMem.type as import('@/lib/types').MemoryType,
+                        discoveredAt: Date.now()
+                    };
+                    if (idx >= 0) {
+                        merged[idx] = memoryEntry;
+                    } else {
+                        merged.push(memoryEntry);
+                    }
+                }
+                saveMemories(merged);
+            }
+
         } catch (error) {
             console.error('Chat Error:', error);
-            // Optional: Add system message about error
+            
+            // Remove the optimistically added user message
+            setMessages(prev => prev.slice(0, -1));
+            
+            // Add system error message
             const errorMsg: ChatMessage = {
                 role: 'assistant',
                 content: '... (ruido estático) ...',
                 timestamp: Date.now(),
             };
             setMessages(prev => [...prev, errorMsg]);
+            saveChatHistory([...messages, errorMsg]);
         } finally {
             setIsLoading(false);
         }
@@ -145,6 +180,7 @@ export function useChat({ regenmon, updateStatAction }: UseChatProps) {
         toggleChat,
         messages,
         sendMessage,
-        isLoading
+        isLoading,
+        lastStatsChange
     };
 }

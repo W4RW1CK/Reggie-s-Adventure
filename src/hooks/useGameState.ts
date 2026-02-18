@@ -1,47 +1,80 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { RegenmonData, RegenmonStats, AppConfig } from '@/lib/types';
 import {
-    loadRegenmon,
-    saveRegenmon,
     loadConfig,
     saveConfig as saveConfigToStorage,
-    updateStats as updateStatsInStorage,
     deleteRegenmon
 } from '@/lib/storage';
+import { 
+    loadRegenmonHybrid, 
+    saveRegenmonHybrid, 
+    migrateLocalToSupabase 
+} from '@/lib/sync';
 import { useStatDecay } from './useStatDecay';
 import { STAT_MIN, STAT_MAX, STAT_INITIAL } from '@/lib/constants';
 
-export function useGameState() {
+interface UseGameStateProps {
+    privyUserId?: string;
+    isLoggedIn: boolean;
+}
+
+export function useGameState({ privyUserId, isLoggedIn }: UseGameStateProps) {
     const [regenmon, setRegenmon] = useState<RegenmonData | null>(null);
     const [config, setConfig] = useState<AppConfig>({ musicEnabled: false, isFirstTime: true });
     const [loading, setLoading] = useState(true);
+    const [migrationComplete, setMigrationComplete] = useState(false);
+    const pendingUpdatesRef = useRef<Partial<RegenmonStats>[]>([]);
+    const previousPrivyUserId = useRef<string | undefined>(privyUserId);
 
-    // Load initial data
+    // Load initial data and handle auth changes
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const loadedRegenmon = loadRegenmon();
-            const loadedConfig = loadConfig();
+        if (typeof window === 'undefined') return;
 
-            setRegenmon(loadedRegenmon);
-            setConfig(loadedConfig);
-            setLoading(false);
-        }
-    }, []);
+        const loadData = async () => {
+            try {
+                // Always load config from localStorage
+                const loadedConfig = loadConfig();
+                setConfig(loadedConfig);
+
+                // Handle first login migration
+                if (isLoggedIn && privyUserId && !migrationComplete && previousPrivyUserId.current !== privyUserId) {
+                    // console.log('First login detected, attempting migration...');
+                    await migrateLocalToSupabase(privyUserId);
+                    setMigrationComplete(true);
+                }
+
+                // Load regenmon data using hybrid strategy
+                const loadedRegenmon = await loadRegenmonHybrid(privyUserId);
+                setRegenmon(loadedRegenmon);
+            } catch (error) {
+                console.error('Error loading data:', error);
+                // Fallback to localStorage only
+                const loadedRegenmon = await loadRegenmonHybrid();
+                setRegenmon(loadedRegenmon);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadData();
+        
+        // Update previous user ID
+        previousPrivyUserId.current = privyUserId;
+    }, [isLoggedIn, privyUserId, migrationComplete]);
 
     // Wrapper to update stats state AND storage
     const handleUpdateStats = useCallback((newStats: RegenmonStats) => {
-        if (!regenmon) return;
-
-        const updatedRegenmon = {
-            ...regenmon,
-            stats: newStats,
-            lastUpdated: new Date().toISOString(),
-        };
-
-        setRegenmon(updatedRegenmon);
-        saveRegenmon(updatedRegenmon);
-    }, [regenmon]);
+        setRegenmon(current => {
+            if (!current) return null;
+            const updated = { ...current, stats: newStats, lastUpdated: new Date().toISOString() };
+            // Use hybrid save strategy
+            saveRegenmonHybrid(updated, privyUserId).catch(error => {
+                console.error('Error saving regenmon:', error);
+            });
+            return updated;
+        });
+    }, [privyUserId]);
 
     // Hook for decay
     useStatDecay({
@@ -55,14 +88,21 @@ export function useGameState() {
         const newData: RegenmonData = {
             name,
             type,
-            stats: { espiritu: STAT_INITIAL, pulso: STAT_INITIAL, hambre: STAT_INITIAL },
+            stats: { espiritu: STAT_INITIAL, pulso: STAT_INITIAL, esencia: STAT_INITIAL, fragmentos: 100 },
+            theme: 'dark',
             createdAt: new Date().toISOString(),
             lastUpdated: new Date().toISOString(),
             nameChangeUsed: false,
             tutorialDismissed: false,
+            memories: [],
+            evolution: { totalMemories: 0, stage: 1, threshold: 10 },
         };
         setRegenmon(newData);
-        saveRegenmon(newData);
+        
+        // Use hybrid save strategy
+        saveRegenmonHybrid(newData, privyUserId).catch(error => {
+            console.error('Error saving new regenmon:', error);
+        });
 
         // Also update config since they are now playing
         const newConfig = { ...config, isFirstTime: false };
@@ -70,42 +110,62 @@ export function useGameState() {
         saveConfigToStorage(newConfig);
     };
 
-    const updateStatsWithDeltas = (deltas: Partial<RegenmonStats>) => {
-        setRegenmon(prev => {
-            if (!prev) return null;
+    const updateStatsWithDeltas = useCallback((deltas: Partial<RegenmonStats>) => {
+        pendingUpdatesRef.current.push(deltas);
 
-            const newStats = { ...prev.stats };
-            let hasChanges = false;
+        // Debounce updates
+        const processUpdates = () => {
+            const allDeltas = pendingUpdatesRef.current;
+            pendingUpdatesRef.current = [];
 
-            (Object.entries(deltas) as [keyof RegenmonStats, number][]).forEach(([stat, amount]) => {
-                const currentVal = newStats[stat];
+            // Merge all pending deltas
+            const mergedDeltas = allDeltas.reduce((acc, delta) => {
+                Object.entries(delta).forEach(([key, value]) => {
+                    acc[key as keyof RegenmonStats] = (acc[key as keyof RegenmonStats] || 0) + value;
+                });
+                return acc;
+            }, {} as Partial<RegenmonStats>);
 
-                // Check limits based on delta direction
-                if (amount > 0 && currentVal >= STAT_MAX) return;
-                if (amount < 0 && currentVal <= STAT_MIN) return;
+            setRegenmon(prev => {
+                if (!prev) return null;
 
-                const newVal = Math.max(STAT_MIN, Math.min(STAT_MAX, currentVal + amount));
+                const newStats = { ...prev.stats };
+                let hasChanges = false;
 
-                if (newVal !== currentVal) {
-                    newStats[stat] = newVal;
-                    hasChanges = true;
-                }
+                (Object.entries(mergedDeltas) as [keyof RegenmonStats, number][]).forEach(([stat, amount]) => {
+                    const currentVal = newStats[stat];
+
+                    // Check limits based on delta direction
+                    if (amount > 0 && currentVal >= STAT_MAX) return;
+                    if (amount < 0 && currentVal <= STAT_MIN) return;
+
+                    const newVal = Math.max(STAT_MIN, Math.min(STAT_MAX, currentVal + amount));
+
+                    if (newVal !== currentVal) {
+                        newStats[stat] = newVal;
+                        hasChanges = true;
+                    }
+                });
+
+                if (!hasChanges) return prev;
+
+                const updatedRegenmon = {
+                    ...prev,
+                    stats: newStats,
+                    lastUpdated: new Date().toISOString(),
+                };
+
+                // Side effect: save to storage using hybrid strategy
+                saveRegenmonHybrid(updatedRegenmon, privyUserId).catch(error => {
+                    console.error('Error saving stats update:', error);
+                });
+
+                return updatedRegenmon;
             });
+        };
 
-            if (!hasChanges) return prev;
-
-            const updatedRegenmon = {
-                ...prev,
-                stats: newStats,
-                lastUpdated: new Date().toISOString(),
-            };
-
-            // Side effect: save to storage
-            saveRegenmon(updatedRegenmon);
-
-            return updatedRegenmon;
-        });
-    };
+        setTimeout(processUpdates, 0); // Next tick
+    }, [privyUserId]);
 
     const toggleMusic = () => {
         const newConfig = { ...config, musicEnabled: !config.musicEnabled };
@@ -131,14 +191,18 @@ export function useGameState() {
         if (!regenmon) return;
         const updated = { ...regenmon, name: newName, nameChangeUsed: true };
         setRegenmon(updated);
-        saveRegenmon(updated);
+        saveRegenmonHybrid(updated, privyUserId).catch(error => {
+            console.error('Error saving name update:', error);
+        });
     };
 
     const dismissTutorial = () => {
         if (!regenmon) return;
         const updated = { ...regenmon, tutorialDismissed: true };
         setRegenmon(updated);
-        saveRegenmon(updated);
+        saveRegenmonHybrid(updated, privyUserId).catch(error => {
+            console.error('Error saving tutorial dismissal:', error);
+        });
     };
 
     return {

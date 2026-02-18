@@ -7,7 +7,7 @@ interface StoryScreenProps {
 }
 
 const STORY_TEXT =
-    'En un rincón olvidado del mundo digital, una señal se enciende... algo quiere despertar. Un fragmento de energía antigua — de un tiempo en que la información fluía como ríos de luz y las conexiones eran puras — espera a alguien que le dé forma. Ese alguien... eres tú.';
+    'En un rincón olvidado del mundo digital, una señal se enciende... algo quiere despertar. Un fragmento de energía antigua espera a alguien que le dé forma. Ese alguien... eres tú.';
 
 const CHAR_DELAY_MS = 50;
 

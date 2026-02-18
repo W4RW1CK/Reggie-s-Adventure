@@ -10,20 +10,26 @@ export function ChatBubble({ message, regenmonType }: ChatBubbleProps) {
     const isUser = message.role === 'user';
 
     // Type-specific subtle borders (as per FRONTEND_GUIDELINES.md)
-    const borderColor = !isUser && regenmonType ? {
-        'rayo': 'border-[#f7dc6f]',
-        'flama': 'border-[#e74c3c]',
-        'hielo': 'border-[#85c1e9]',
-    }[regenmonType] : 'border-[#4a4a4a]'; // Default NES border
+    const typeBorderColors: Record<string, string> = {
+        'rayo': '#f7dc6f',
+        'flama': '#e74c3c',
+        'hielo': '#85c1e9',
+    };
+
+    const borderColorValue = !isUser && regenmonType ? typeBorderColors[regenmonType] : undefined;
 
     return (
         <div
             className={classNames(
                 'font-["Press_Start_2P"] text-[8px] p-2 my-1 max-w-[80%] image-pixelated border-2',
-                isUser ? 'ml-auto text-right bg-[#0f3460] text-[#e8e8e8]' : 'mr-auto text-left bg-black/40 text-white',
-                isUser ? 'border-[#4a4a4a]' : borderColor
+                isUser ? 'ml-auto text-right' : 'mr-auto text-left',
             )}
-            style={{ imageRendering: 'pixelated' }}
+            style={{
+                imageRendering: 'pixelated',
+                backgroundColor: isUser ? 'var(--theme-surface)' : 'var(--theme-overlay)',
+                color: 'var(--theme-text)',
+                borderColor: borderColorValue || 'var(--theme-border)',
+            }}
         >
             {message.content}
         </div>

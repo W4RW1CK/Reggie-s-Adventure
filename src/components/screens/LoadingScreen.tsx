@@ -81,7 +81,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
 
                 {/* Version tag */}
                 <div className="loading-screen__version">
-                    v0.1 — El Despertar
+                    v0.3 — La Conexión
                 </div>
             </div>
         </div>

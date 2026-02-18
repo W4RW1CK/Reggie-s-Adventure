@@ -36,13 +36,20 @@ export function createGeminiProvider(apiKey: string): AIProvider {
                     // Clean up code blocks if Present
                     const cleanText = responseText.replace(/```json\n?|\n?```/g, '').trim();
                     const data = JSON.parse(cleanText) as ChatResponse;
+                    if (data.statsChange) {
+                        const s = data.statsChange;
+                        s.espiritu = Math.max(-5, Math.min(5, s.espiritu ?? 0));
+                        s.pulso = Math.max(-5, Math.min(5, s.pulso ?? 0));
+                        s.esencia = Math.max(-4, Math.min(-1, s.esencia ?? -1));
+                        s.fragmentos = Math.max(0, Math.min(5, s.fragmentos ?? 0));
+                    }
                     return data;
                 } catch (e) {
                     console.error('Failed to parse Gemini JSON response:', responseText, e);
                     // Fallback
                     return {
                         message: responseText.slice(0, 200), // Limit length just in case
-                        spiritChange: 0,
+                        statsChange: { espiritu: 0 },
                     };
                 }
 

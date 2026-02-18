@@ -27,12 +27,19 @@ export function createOpenAIProvider(apiKey: string): AIProvider {
 
                 try {
                     const data = JSON.parse(responseText) as ChatResponse;
+                    if (data.statsChange) {
+                        const s = data.statsChange;
+                        s.espiritu = Math.max(-5, Math.min(5, s.espiritu ?? 0));
+                        s.pulso = Math.max(-5, Math.min(5, s.pulso ?? 0));
+                        s.esencia = Math.max(-4, Math.min(-1, s.esencia ?? -1));
+                        s.fragmentos = Math.max(0, Math.min(5, s.fragmentos ?? 0));
+                    }
                     return data;
                 } catch (e) {
                     console.error('Failed to parse OpenAI JSON response:', responseText, e);
                     return {
                         message: responseText.slice(0, 200),
-                        spiritChange: 0,
+                        statsChange: { espiritu: 0, esencia: -1, fragmentos: 1 },
                     };
                 }
 

@@ -4,9 +4,9 @@ import { AIProvider } from './interface';
 export function createMockProvider(): AIProvider {
     return {
         async chat(systemPrompt: string, history: ChatMessage[], userMessage: string): Promise<ChatResponse> {
-            console.log('--- MOCK AI PROVIDER ---');
-            console.log('System Prompt received (length):', systemPrompt.length);
-            console.log('User Message:', userMessage);
+            // console.log('--- MOCK AI PROVIDER ---');
+            // console.log('System Prompt received (length):', systemPrompt.length);
+            // console.log('User Message:', userMessage);
 
             // Simulate network delay
             await new Promise(resolve => setTimeout(resolve, 1500));
@@ -53,11 +53,15 @@ export function createMockProvider(): AIProvider {
                 playerName = "JugadorDePrueba";
             }
 
-            console.log('Mock Response:', message);
+            // console.log('Mock Response:', message);
 
             return {
                 message,
-                spiritChange,
+                statsChange: {
+                    espiritu: spiritChange,
+                    esencia: -2,
+                    fragmentos: Math.floor(Math.random() * 6), // 0-5
+                },
                 playerName
             };
         }

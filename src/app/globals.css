@@ -2,6 +2,15 @@
 /* NES.css (import from node_modules manually or via JS import if preferred, but CSS import is easier) */
 @import "nes.css/css/nes.min.css";
 
+/* Hide Privy floating wallet widget */
+#privy-wallet-btn,
+[data-privy-dialog],
+iframe[src*="privy.io/apps"][style*="position: absolute"] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
 @theme {
   --font-press-start-2p: "Press Start 2P", monospace;
 
@@ -33,9 +42,9 @@
   --color-stat-pulso-low: #7d6608;
   --color-stat-pulso-bg: #2c2c2c;
 
-  --color-stat-hambre-full: #e74c3c;
-  --color-stat-hambre-low: #78281f;
-  --color-stat-hambre-bg: #2c2c2c;
+  --color-stat-esencia-full: #34d399;
+  --color-stat-esencia-low: #1a7a42;
+  --color-stat-esencia-bg: #2c2c2c;
 
   --color-ui-btn-active: #4caf50;
   --color-ui-btn-hover: #66bb6a;
@@ -49,7 +58,7 @@
 /* Global resets for NES look */
 body {
   font-family: var(--font-press-start-2p);
-  background-color: var(--color-bg-dark);
+  background-color: var(--theme-bg, var(--color-bg-dark));
   color: var(--color-text-primary);
   image-rendering: pixelated;
   height: 100vh;
@@ -120,7 +129,7 @@ body {
 }
 
 .loading-screen__star {
-  font-size: 12px;
+  font-size: clamp(12px, 2.5vw, 18px);
   color: #f5c542;
   animation: star-twinkle 1.5s ease-in-out infinite;
 }
@@ -131,7 +140,7 @@ body {
 
 .loading-screen__star--2 {
   animation-delay: 0.5s;
-  font-size: 16px;
+  font-size: clamp(16px, 3vw, 24px);
   color: #ffffff;
 }
 
@@ -161,7 +170,7 @@ body {
 
 .loading-screen__logo-top {
   font-family: var(--font-press-start-2p);
-  font-size: 28px;
+  font-size: clamp(20px, 5vw, 36px);
   color: #f5c542;
   text-shadow:
     3px 3px 0px #d4a017,
@@ -172,7 +181,7 @@ body {
 
 .loading-screen__logo-bottom {
   font-family: var(--font-press-start-2p);
-  font-size: 20px;
+  font-size: clamp(14px, 4vw, 28px);
   color: #e8e8e8;
   text-shadow:
     2px 2px 0px #4a4a4a,
@@ -214,7 +223,7 @@ body {
 /* Loading text */
 .loading-screen__loading-text {
   font-family: var(--font-press-start-2p);
-  font-size: 10px;
+  font-size: clamp(10px, 2vw, 16px);
   color: #a0a0a0;
   letter-spacing: 2px;
   min-width: 140px;
@@ -223,8 +232,8 @@ body {
 
 /* NES-style progress bar */
 .loading-screen__progress-container {
-  width: 200px;
-  height: 16px;
+  width: clamp(160px, 40vw, 280px);
+  height: clamp(12px, 2.5vh, 20px);
   border: 4px solid #e8e8e8;
   background-color: #1a1a2e;
   padding: 2px;
@@ -278,7 +287,7 @@ body {
 /* Version text */
 .loading-screen__version {
   font-family: var(--font-press-start-2p);
-  font-size: 8px;
+  font-size: clamp(8px, 1.5vw, 12px);
   color: #888888;
   letter-spacing: 1px;
   margin-top: 16px;
@@ -314,7 +323,8 @@ body {
   background-color: #0f0f2a;
   cursor: pointer;
   z-index: 90;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   /* Vignette border effect */
   box-shadow: inset 0 0 120px 40px rgba(0, 0, 40, 0.8);
 }
@@ -387,7 +397,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: clamp(8px, 2vh, 20px);
   z-index: 10;
   animation: content-fade-in 0.8s ease-out;
 }
@@ -412,7 +422,7 @@ body {
 }
 
 .title-screen__sparkle {
-  font-size: 10px;
+  font-size: clamp(10px, 2vw, 16px);
   color: #f5c542;
   animation: sparkle-pulse 2s ease-in-out infinite;
 }
@@ -425,19 +435,19 @@ body {
 .title-screen__sparkle--2 {
   animation-delay: 0.4s;
   color: #e8e8e8;
-  font-size: 8px;
+  font-size: clamp(8px, 1.5vw, 14px);
 }
 
 .title-screen__sparkle--3 {
   animation-delay: 0.8s;
   color: #3498db;
-  font-size: 14px;
+  font-size: clamp(14px, 2.5vw, 20px);
 }
 
 .title-screen__sparkle--4 {
   animation-delay: 1.2s;
   color: #e8e8e8;
-  font-size: 8px;
+  font-size: clamp(8px, 1.5vw, 14px);
 }
 
 .title-screen__sparkle--5 {
@@ -467,7 +477,7 @@ body {
 
 .title-screen__title-main {
   font-family: var(--font-press-start-2p);
-  font-size: 36px;
+  font-size: clamp(22px, 6vw, 44px);
   color: #f5c542;
   text-shadow:
     4px 4px 0px #d4a017,
@@ -478,7 +488,7 @@ body {
 
 .title-screen__title-sub {
   font-family: var(--font-press-start-2p);
-  font-size: 24px;
+  font-size: clamp(16px, 4.5vw, 32px);
   color: #ffffff;
   text-shadow:
     3px 3px 0px #4a4a4a,
@@ -522,7 +532,7 @@ body {
 /* Version */
 .title-screen__version {
   font-family: var(--font-press-start-2p);
-  font-size: 8px;
+  font-size: clamp(8px, 1.5vw, 12px);
   color: #888888;
   letter-spacing: 1px;
 }
@@ -530,10 +540,10 @@ body {
 /* Press Start - NES blinking */
 .title-screen__press-start {
   font-family: var(--font-press-start-2p);
-  font-size: 14px;
+  font-size: clamp(12px, 2.5vw, 20px);
   color: #ffffff;
   letter-spacing: 3px;
-  margin-top: 32px;
+  margin-top: clamp(12px, 4vh, 32px);
   animation: press-start-blink 1s steps(2) infinite;
 }
 
@@ -550,7 +560,7 @@ body {
 /* Input hint */
 .title-screen__hint {
   font-family: var(--font-press-start-2p);
-  font-size: 7px;
+  font-size: clamp(7px, 1.3vw, 11px);
   color: #777777;
   letter-spacing: 1px;
 }
@@ -560,7 +570,7 @@ body {
   position: absolute;
   bottom: 24px;
   font-family: var(--font-press-start-2p);
-  font-size: 7px;
+  font-size: clamp(7px, 1.3vw, 11px);
   color: #777777;
   letter-spacing: 1px;
   z-index: 10;
@@ -571,11 +581,17 @@ body {
   .title-screen__title-main {
     font-size: 22px;
     letter-spacing: 3px;
+    text-shadow:
+      2px 2px 0px #d4a017,
+      4px 4px 0px rgba(0, 0, 0, 0.5);
   }
 
   .title-screen__title-sub {
     font-size: 16px;
     letter-spacing: 4px;
+    text-shadow:
+      2px 2px 0px #4a4a4a,
+      3px 3px 0px rgba(0, 0, 0, 0.4);
   }
 
   .title-screen__press-start {
@@ -726,9 +742,11 @@ body {
   border: 2px solid #000;
   /* Inner spacing border */
   padding: 24px;
-  min-height: 200px;
+  min-height: 220px;
+  max-height: 60vh;
   display: flex;
   align-items: flex-start;
+  overflow-y: auto;
 }
 
 .story-screen__text {
@@ -821,12 +839,12 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   background-color: #1a1a2e;
-  /* Deep purple/blue */
   z-index: 70;
-  padding: 24px;
+  padding: clamp(12px, 3vh, 24px);
   overflow-y: auto;
+  overflow-x: hidden;
   /* Allow scrolling on small screens */
 }
 
@@ -844,10 +862,10 @@ body {
 
 .creation-screen__title {
   font-family: var(--font-press-start-2p);
-  font-size: 24px;
+  font-size: clamp(14px, 3.5vw, 32px);
   color: #fff;
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: clamp(6px, 1.5vh, 32px);
   text-shadow: 2px 2px #000;
   z-index: 72;
 }
@@ -856,8 +874,8 @@ body {
 .creation-screen__carousel {
   display: flex;
   align-items: center;
-  gap: 24px;
-  margin-bottom: 40px;
+  gap: clamp(8px, 2vw, 32px);
+  margin-bottom: clamp(8px, 2vh, 40px);
   z-index: 72;
   width: 100%;
   max-width: 600px;
@@ -867,7 +885,7 @@ body {
 .creation-screen__arrow {
   font-family: var(--font-press-start-2p);
   color: #fff;
-  font-size: 24px;
+  font-size: clamp(20px, 4vw, 32px);
   background: none;
   border: none;
   cursor: pointer;
@@ -884,13 +902,13 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  width: 220px;
+  gap: clamp(6px, 1.5vh, 16px);
+  width: 280px;
 }
 
 .creation-screen__svg-container {
-  width: 180px;
-  height: 180px;
+  width: clamp(70px, 18vh, 160px);
+  height: clamp(70px, 18vh, 160px);
   border: 4px solid #fff;
   background-color: rgba(0, 0, 0, 0.3);
   display: flex;
@@ -902,20 +920,21 @@ body {
 
 .creation-screen__info {
   text-align: center;
-  height: 60px;
-  /* Fixed height to prevent jumpiness */
+  min-height: auto;
+  margin-bottom: clamp(4px, 1vh, 16px);
+  /* Enough space for longest description + lore title */
 }
 
 .creation-screen__type-label {
   font-family: var(--font-press-start-2p);
-  font-size: 16px;
+  font-size: clamp(14px, 3vw, 22px);
   margin-bottom: 8px;
   text-transform: uppercase;
 }
 
 .creation-screen__type-desc {
   font-family: var(--font-press-start-2p);
-  font-size: 10px;
+  font-size: clamp(9px, 1.8vw, 14px);
   color: #ccc;
   line-height: 1.4;
 }
@@ -925,8 +944,9 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 40px;
+  gap: clamp(8px, 2vh, 16px);
+  margin-top: clamp(4px, 1vh, 8px);
+  margin-bottom: clamp(16px, 4vh, 40px);
   z-index: 72;
   width: 100%;
   max-width: 300px;
@@ -934,14 +954,14 @@ body {
 
 .creation-screen__label {
   font-family: var(--font-press-start-2p);
-  font-size: 12px;
+  font-size: clamp(11px, 2.2vw, 16px);
   color: #fff;
 }
 
 .creation-screen__input {
   font-family: var(--font-press-start-2p);
-  font-size: 14px;
-  padding: 12px;
+  font-size: clamp(12px, 2.5vw, 18px);
+  padding: clamp(8px, 2vh, 16px);
   text-align: center;
   width: 100%;
   border: 4px solid #4a4a4a;
@@ -961,7 +981,7 @@ body {
 
 .creation-screen__error {
   font-family: var(--font-press-start-2p);
-  font-size: 8px;
+  font-size: clamp(8px, 1.5vw, 12px);
   color: #e74c3c;
   margin-top: 4px;
 }
@@ -969,8 +989,8 @@ body {
 /* Submit Button */
 .creation-screen__submit-btn {
   font-family: var(--font-press-start-2p);
-  font-size: 14px;
-  padding: 16px 32px;
+  font-size: clamp(12px, 2.5vw, 18px);
+  padding: clamp(10px, 2.5vh, 20px) clamp(20px, 5vw, 40px);
   background-color: #27ae60;
   color: #fff;
   border: 4px solid #2ecc71;
@@ -1003,16 +1023,98 @@ body {
 @media (max-width: 480px) {
   .creation-screen__title {
     font-size: 18px;
-    margin-bottom: 20px;
+    margin-bottom: 8px;
   }
 
   .creation-screen__carousel {
-    gap: 12px;
+    gap: 8px;
+    margin-bottom: 8px;
   }
 
   .creation-screen__svg-container {
-    width: 140px;
-    height: 140px;
+    width: 100px;
+    height: 100px;
+  }
+
+  .creation-screen__type-desc {
+    font-size: 8px;
+    line-height: 1.3;
+  }
+
+  .creation-screen__form {
+    margin-top: 0;
+    margin-bottom: 8px;
+    gap: 6px;
+  }
+
+  .creation-screen__submit-btn {
+    padding: 8px 20px;
+    font-size: 11px;
+  }
+}
+
+/* Landscape compact for creation — two-column layout */
+@media (max-height: 500px) and (orientation: landscape) {
+  .creation-screen {
+    padding: 6px 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 4px 16px;
+    align-items: start;
+    justify-items: center;
+  }
+
+  .creation-screen__title {
+    grid-column: 1 / -1;
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+
+  .creation-screen__carousel {
+    grid-column: 1;
+    margin-bottom: 0;
+    gap: 6px;
+  }
+
+  .creation-screen__svg-container {
+    width: 70px;
+    height: 70px;
+  }
+
+  .creation-screen__showcase {
+    gap: 4px;
+  }
+
+  .creation-screen__type-desc {
+    font-size: 7px;
+    line-height: 1.2;
+  }
+
+  .creation-screen__info {
+    margin-bottom: 0;
+  }
+
+  .creation-screen__form {
+    grid-column: 2;
+    margin-top: 0;
+    margin-bottom: 0;
+    gap: 6px;
+    align-self: center;
+  }
+
+  .creation-screen__label {
+    font-size: 10px;
+  }
+
+  .creation-screen__input {
+    padding: 6px;
+    font-size: 10px;
+  }
+
+  .creation-screen__submit-btn {
+    padding: 6px 16px;
+    font-size: 10px;
   }
 }
 
@@ -1071,6 +1173,17 @@ body {
   animation: droop 4s ease-in-out infinite;
 }
 
+/* No Hope — lost sway */
+@keyframes sway-lost {
+  0%, 100% { transform: translateX(0) rotate(0deg); opacity: 0.7; }
+  25% { transform: translateX(-4px) rotate(-2deg); opacity: 0.6; }
+  75% { transform: translateX(4px) rotate(2deg); opacity: 0.6; }
+}
+
+.animate-sway-lost {
+  animation: sway-lost 4s ease-in-out infinite;
+}
+
 /* Weak Pulse */
 @keyframes pulse-slow {
 
@@ -1088,6 +1201,27 @@ body {
 
 .animate-pulse-slow {
   animation: pulse-slow 3s ease-in-out infinite;
+}
+
+/* ── Background sparkle particles (good mood only) ── */
+@keyframes sparkle-float {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translateY(-60px) scale(0.5); opacity: 0; }
+}
+@keyframes sparkle-twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.animate-flicker {
+  animation: flicker 0.3s infinite;
 }
 
 /* Angry Shake */
@@ -1181,7 +1315,7 @@ body {
 }
 
 .transition-screen__icon {
-  font-size: 48px;
+  font-size: clamp(36px, 8vw, 60px);
   animation: pulse-slow 2s infinite ease-in-out;
   filter: blur(1px);
 }
@@ -1189,7 +1323,7 @@ body {
 .transition-screen__text {
   font-family: var(--font-press-start-2p);
   color: #fff;
-  font-size: 14px;
+  font-size: clamp(12px, 2.5vw, 20px);
   text-align: center;
   line-height: 1.8;
   letter-spacing: 2px;
@@ -1460,7 +1594,8 @@ body {
 }
 
 .game-screen__bottom-ui {
-  max-width: 480px;
+  max-width: 100%;
+  width: 100%;
 }
 
 /* --- Mobile: < 480px --- */
@@ -1585,7 +1720,7 @@ body {
   }
 
   .game-screen__bottom-ui {
-    max-width: 440px;
+    max-width: 100%;
     margin: 0 auto;
   }
 
@@ -1642,16 +1777,15 @@ body {
   }
 
   .game-screen__bottom-ui {
-    max-width: 500px;
+    max-width: 700px;
     margin: 0 auto;
     padding-bottom: 32px;
   }
 
-  /* Move regenmon slightly up to center better in the large space */
+  /* Regenmon bigger on desktop */
   .game-screen__regenmon-area {
-    margin-top: -4vh;
-    transform: scale(1.2);
-    /* Make it bigger on desktop */
+    margin-top: -2vh;
+    transform: scale(1.3);
   }
 
   .game-screen__regenmon-wrapper {
@@ -1661,6 +1795,17 @@ body {
   .nes-btn {
     min-height: 60px;
     font-size: 14px !important;
+  }
+}
+
+/* --- Large Desktop: > 1200px --- */
+@media (min-width: 1201px) {
+  .game-screen__bottom-ui {
+    max-width: 800px;
+  }
+
+  .game-screen__regenmon-area {
+    transform: scale(1.5);
   }
 }
 
@@ -1675,6 +1820,17 @@ body {
 .game-screen {
   -webkit-user-select: none;
   user-select: none;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+}
+
+/* Re-enable touch on interactive elements inside game */
+.game-screen button,
+.game-screen a,
+.game-screen input,
+.game-screen textarea {
+  touch-action: manipulation;
 }
 
 .game-screen input,
@@ -1782,8 +1938,922 @@ body {
     transition: none !important;
   }
 }
+/* =============================================
+   THEME SYSTEM (Phase 39)
+   ============================================= */
+
+/* Dark theme (default NES) */
+.theme-dark {
+  --theme-bg: #1a1a2e;
+  --theme-surface: #0f3460;
+  --theme-text: #e8e8e8;
+  --theme-text-secondary: #a0a0a0;
+  --theme-border: #4a4a4a;
+  --theme-overlay: rgba(0, 0, 0, 0.6);
+  --theme-overlay-light: rgba(0, 0, 0, 0.5);
+  --theme-border-subtle: rgba(255, 255, 255, 0.25);
+  --theme-border-faint: rgba(255, 255, 255, 0.2);
+  --theme-panel-bg: #1a1a2e;
+  --theme-chat-bg: rgba(10, 10, 20, 0.95);
+  --theme-chat-header: #ea5514;
+  --theme-modal-overlay: rgba(0, 0, 0, 0.7);
+  --theme-input-bg: #000;
+  --theme-input-text: #fff;
+  --theme-muted: #777;
+  --theme-stat-bar-bg: #2c2c2c;
+}
+
+/* Light theme (Game Boy Color) */
+.theme-light {
+  --theme-bg: #f5f0e1;
+  --theme-surface: #d4c5a9;
+  --theme-text: #2a2a2a;
+  --theme-text-secondary: #5a5a4a;
+  --theme-border: #8b8370;
+  --theme-overlay: rgba(212, 197, 169, 0.85);
+  --theme-overlay-light: rgba(232, 220, 200, 0.8);
+  --theme-border-subtle: rgba(139, 131, 112, 0.5);
+  --theme-border-faint: rgba(139, 131, 112, 0.3);
+  --theme-panel-bg: #e8dcc8;
+  --theme-chat-bg: rgba(245, 240, 225, 0.95);
+  --theme-chat-header: #b8860b;
+  --theme-modal-overlay: rgba(42, 42, 42, 0.5);
+  --theme-input-bg: #f5f0e1;
+  --theme-input-text: #2a2a2a;
+  --theme-muted: #8b8370;
+  --theme-stat-bar-bg: #c8b99a;
+}
+
+/* Light theme body overrides */
+.theme-light body,
+.theme-light .game-screen {
+  background-color: var(--theme-bg);
+  color: var(--theme-text);
+}
+
+/* Light NES containers: use is-light styling */
+.theme-light .nes-container.is-dark {
+  background-color: var(--theme-surface);
+  color: var(--theme-text);
+  border-color: var(--theme-border);
+}
+
+/* Light theme scrollbar */
+.theme-light ::-webkit-scrollbar-track {
+  background: #e8dcc8;
+}
+.theme-light ::-webkit-scrollbar-thumb {
+  background: #8b8370;
+}
+
+/* Light theme screen overrides */
+.theme-light .loading-screen {
+  background-color: var(--theme-bg);
+}
+.theme-light .loading-screen__logo-top,
+.theme-light .loading-screen__logo-bottom {
+  color: #2a2a2a;
+  text-shadow: 2px 2px 0px #8b8370;
+}
+.theme-light .loading-screen__loading-text {
+  color: #5a5a4a;
+}
+.theme-light .loading-screen__version {
+  color: #8b8370;
+}
+.theme-light .loading-screen__progress-container {
+  background-color: var(--theme-stat-bar-bg);
+  border-color: var(--theme-border);
+}
+.theme-light .loading-screen__progress-bar {
+  background-color: #b8860b;
+}
+.theme-light .loading-screen__star {
+  color: #b8860b;
+}
+.theme-light .loading-screen__pixel {
+  background-color: var(--theme-border);
+}
+.theme-light .loading-screen__pixel--accent {
+  background-color: #b8860b;
+}
+.theme-light .loading-screen__scanlines {
+  opacity: 0.03;
+}
+
+.theme-light .title-screen {
+  background-color: var(--theme-bg);
+  box-shadow: inset 0 0 120px 40px rgba(139, 131, 112, 0.3);
+}
+.theme-light .title-screen__title-main {
+  color: #2a2a2a;
+  text-shadow: 3px 3px 0px #8b8370;
+}
+.theme-light .title-screen__title-sub {
+  color: #b8860b;
+  text-shadow: 2px 2px 0px #8b8370;
+}
+.theme-light .title-screen__press-start {
+  color: #2a2a2a;
+}
+.theme-light .title-screen__version {
+  color: #5a5a4a;
+}
+.theme-light .title-screen__hint {
+  color: #8b8370;
+}
+.theme-light .title-screen__footer {
+  color: #8b8370;
+}
+.theme-light .title-screen__sparkle {
+  color: #b8860b;
+}
+.theme-light .title-screen__div-diamond {
+  color: #b8860b;
+}
+.theme-light .title-screen__div-line {
+  background-color: var(--theme-border);
+}
+.theme-light .title-screen__scanlines {
+  opacity: 0.03;
+}
+.theme-light .title-screen__creature {
+  color: #8b8370;
+}
+
+.theme-light .creation-screen {
+  background-color: var(--theme-bg);
+}
+.theme-light .creation-screen__title {
+  color: #2a2a2a;
+  text-shadow: 2px 2px 0px #8b8370;
+}
+.theme-light .creation-screen__type-desc {
+  color: #5a5a4a;
+}
+.theme-light .creation-screen__label {
+  color: #2a2a2a;
+}
+.theme-light .creation-screen__input {
+  background-color: var(--theme-input-bg);
+  color: var(--theme-input-text);
+  border-color: var(--theme-border);
+}
+.theme-light .creation-screen__arrow {
+  color: #5a5a4a;
+}
+.theme-light .creation-screen__error {
+  color: #e74c3c;
+}
+.theme-light .creation-screen__submit-btn {
+  background-color: #b8860b;
+  color: #fff;
+}
+.theme-light .creation-screen__submit-btn:disabled {
+  background-color: var(--theme-stat-bar-bg);
+  color: #8b8370;
+}
+.theme-light .creation-screen__scanlines {
+  opacity: 0.03;
+}
+.theme-light .creation-screen__svg-container {
+  background-color: var(--theme-overlay-light);
+}
+
+/* Light theme: Story Screen */
+.theme-light .story-screen {
+  background-color: var(--theme-bg);
+}
+.theme-light .story-screen__dialog {
+  background-color: var(--theme-surface);
+  border-color: var(--theme-border);
+}
+.theme-light .story-screen__text {
+  color: var(--theme-text);
+}
+.theme-light .story-screen__cursor {
+  color: #b8860b;
+}
+.theme-light .story-screen__continue-btn {
+  background-color: var(--theme-surface);
+  color: var(--theme-text);
+  border-color: var(--theme-border);
+}
+.theme-light .story-screen__continue-btn:hover {
+  background-color: #b8860b;
+  color: #fff;
+}
+.theme-light .story-screen__scanlines {
+  opacity: 0.03;
+}
+.theme-light .story-screen__particle {
+  background-color: rgba(139, 131, 112, 0.2);
+}
+
+/* Light theme: Transition Screen */
+.theme-light .transition-screen {
+  background-color: var(--theme-bg);
+}
+.theme-light .transition-screen__text {
+  color: var(--theme-text);
+  text-shadow: 0 0 10px rgba(139, 131, 112, 0.3);
+}
+.theme-light .transition-screen__scanlines {
+  opacity: 0.03;
+}
+
+/* Light theme stat bar overrides */
+.theme-light .stat-bar {
+  background-color: var(--theme-stat-bar-bg);
+}
+
+/* Light theme NES button overrides */
+.theme-light .nes-btn {
+  color: var(--theme-text);
+}
+.theme-light .nes-textarea {
+  background-color: var(--theme-input-bg);
+  color: var(--theme-input-text);
+}
+
+/* Text sizes */
+html.text-sm .game-screen { font-size: 12px; }
+html.text-base .game-screen { font-size: 14px; }
+html.text-lg .game-screen { font-size: 18px; }
+
+/* Settings panel slide-in */
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.3s ease-out;
+}
+
 /* Chat Animations */
 @keyframes typing-bounce {
   0%, 80%, 100% { transform: translateY(0); }
   40% { transform: translateY(-6px); }
+}
+
+/* =============================================
+   PHASE 46: RESPONSIVE & POLISH (S3)
+   ============================================= */
+
+/* --- Theme transitions (no flash on toggle) --- */
+.theme-dark,
+.theme-light {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.theme-dark *,
+.theme-light * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Exclude animations/transforms from blanket transition */
+.theme-dark .animate-float-idle,
+.theme-dark .animate-bounce-subtle,
+.theme-dark .animate-droop,
+.theme-dark .animate-shake-fast,
+.theme-dark .animate-pulse-slow,
+.theme-dark .animate-sway-lost,
+.theme-light .animate-float-idle,
+.theme-light .animate-bounce-subtle,
+.theme-light .animate-droop,
+.theme-light .animate-shake-fast,
+.theme-light .animate-pulse-slow,
+.theme-light .animate-sway-lost,
+.loading-screen__progress-bar,
+.story-screen__particle,
+.game-background *,
+.title-screen__creature,
+.title-screen__sparkle {
+  transition: none !important;
+}
+
+/* --- Fragment counter pulse animation --- */
+@keyframes fragment-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+.fragment-counter--pulse {
+  animation: fragment-pulse 0.4s ease-out;
+}
+
+/* --- Stat bar smooth width --- */
+.stat-bar-fill {
+  transition: width 0.5s ease-out;
+}
+
+/* --- Settings panel slide-out --- */
+@keyframes slideOutRight {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+
+.animate-slideOutRight {
+  animation: slideOutRight 0.25s ease-in forwards;
+}
+
+/* --- Prevent overflow on base layer --- */
+html, body {
+  overflow: hidden !important;
+  width: 100% !important;
+  height: 100% !important;
+  overscroll-behavior: none !important;
+}
+
+/* Overlay screens: scrollable, fill viewport */
+.title-screen,
+.creation-screen,
+.auth-screen,
+.story-screen,
+.loading-screen,
+.transition-screen {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Modals: scrollable */
+.settings-panel,
+[role="dialog"] {
+  -webkit-overflow-scrolling: touch;
+}
+
+.game-container {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+/* --- Mobile: < 480px polish --- */
+@media (max-width: 479px) {
+  /* Action buttons: tighter on very small screens */
+  .action-buttons-row {
+    gap: 4px !important;
+  }
+
+  .action-buttons-row .nes-btn {
+    font-size: 9px !important;
+    padding: 4px 2px !important;
+    min-height: 44px !important;
+  }
+
+  .action-buttons-row .nes-btn .text-xl {
+    font-size: 16px !important;
+  }
+
+  /* Fragment counter compact */
+  .fragment-counter {
+    padding: 2px 8px !important;
+    font-size: 11px;
+  }
+
+  .fragment-counter .text-lg {
+    font-size: 14px !important;
+  }
+
+  .fragment-counter .text-sm {
+    font-size: 11px !important;
+  }
+
+  /* Settings panel: full-width on mobile */
+  .settings-panel {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* Activity history compact */
+  .nes-container.activity-history {
+    padding: 4px 8px !important;
+  }
+
+  /* NES containers padding */
+  .nes-container {
+    padding: 8px !important;
+  }
+
+  .nes-container.with-title {
+    padding-top: 16px !important;
+  }
+
+  /* Touch targets */
+  button, [role="button"], a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Except tiny inline elements */
+  .inline-btn-small {
+    min-height: auto;
+    min-width: auto;
+  }
+}
+
+/* --- Desktop: > 768px polish --- */
+@media (min-width: 769px) {
+  .game-container {
+    max-width: 100%;
+    margin: 0;
+    position: relative;
+  }
+
+  /* Light theme premium feel on desktop */
+  .theme-light .game-container {
+    box-shadow: none;
+  }
+
+  /* Settings panel: right-aligned, capped width */
+  .settings-panel {
+    max-width: 420px;
+    margin: 0 0 0 auto !important;
+  }
+}
+
+/* --- Landscape mobile/tablet: compact layout --- */
+@media (orientation: landscape) and (max-height: 500px) {
+  /* Allow scrolling in landscape — content taller than viewport */
+  .game-screen {
+    overflow-y: auto !important;
+    height: auto !important;
+    min-height: 100vh !important;
+  }
+
+  .game-screen__content {
+    height: auto !important;
+    min-height: 100vh !important;
+  }
+
+  .game-screen__regenmon-area {
+    margin-top: 0 !important;
+    transform: scale(0.6) !important;
+    flex: 0 0 auto !important;
+    min-height: 120px !important;
+  }
+
+  .game-screen__regenmon-wrapper {
+    margin-bottom: 0 !important;
+  }
+
+  .game-screen__bottom-ui {
+    padding-bottom: 4px !important;
+    flex: 0 0 auto !important;
+  }
+
+  .game-screen__bottom-ui .border-4 {
+    padding: 4px 8px !important;
+    gap: 2px !important;
+  }
+
+  .game-screen__header {
+    padding-top: 4px !important;
+  }
+
+  .game-screen__day-label {
+    font-size: 8px !important;
+  }
+
+  /* Compact stat bars in landscape */
+  .game-screen__bottom-ui .grid {
+    gap: 0 !important;
+  }
+
+  /* Smaller buttons */
+  .action-buttons-row .nes-btn {
+    min-height: 36px !important;
+    padding: 2px 4px !important;
+    font-size: 9px !important;
+  }
+
+  /* Hide activity history in landscape to save space */
+  .activity-history {
+    display: none !important;
+  }
+
+  /* Name box compact */
+  .game-screen__regenmon-area + div .border-4 {
+    padding: 2px 8px !important;
+  }
+}
+
+/* --- Tablet landscape: more space --- */
+@media (orientation: landscape) and (min-height: 501px) and (max-height: 900px) {
+  .game-screen__regenmon-area {
+    transform: scale(1.0) !important;
+  }
+
+  .game-screen__bottom-ui {
+    max-width: 600px;
+  }
+}
+
+/* =============================================
+   HUD LAYOUT (Approved Preview)
+   ============================================= */
+
+.hud-top-bar {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2.5vw;
+  padding: 1.8vh 2.5vw;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.hud-day-section {
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(0.45rem, 1.4vw, 0.75rem);
+  color: #93c5fd;
+  white-space: nowrap;
+  padding: 1vh 1.2vw;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  flex-shrink: 0;
+}
+
+.hud-stats-row {
+  display: flex;
+  gap: 2vw;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.hud-stat {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.6vw;
+  font-size: clamp(0.45rem, 1.4vw, 0.75rem);
+}
+
+.hud-stat-icon {
+  font-size: clamp(0.65rem, 2vw, 1rem);
+}
+
+.hud-stat-bar-bg {
+  flex: 1;
+  min-width: 4vw;
+  height: 2.5vh;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+}
+
+.hud-stat-bar {
+  height: 100%;
+  transition: width 0.3s;
+}
+
+.hud-stat-val {
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(0.4rem, 1.2vw, 0.65rem);
+  color: #aaa;
+  min-width: 2.5vw;
+  text-align: right;
+}
+
+.hud-fragments {
+  display: flex;
+  align-items: center;
+  gap: 0.5vw;
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(0.45rem, 1.4vw, 0.75rem);
+  color: #93c5fd;
+  margin-left: 1vw;
+  flex-shrink: 0;
+}
+
+.hud-config-btn {
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(0.45rem, 1.4vw, 0.75rem);
+  padding: 1vh 1.2vw;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.hud-config-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* === HUD Sprite Area === */
+.hud-sprite-area {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1vh;
+}
+
+/* === HUD Bottom Bar === */
+.hud-bottom-bar {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  gap: 2vw;
+  padding: 1.8vh 2.5vw;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  border-top: 2px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.hud-action-btn {
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(0.5rem, 1.8vw, 0.9rem);
+  padding: 1.8vh 3vw;
+  border: 2px solid;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex: 1;
+  max-width: 35vw;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.hud-action-btn:hover {
+  transform: scale(1.05);
+}
+
+.hud-action-btn:active {
+  transform: scale(0.95);
+}
+
+.hud-btn-purificar {
+  background: #3b82f6;
+  border-color: #60a5fa;
+  color: #fff;
+}
+
+.hud-btn-conversar {
+  background: #84cc16;
+  border-color: #a3e635;
+  color: #1a1a1a;
+}
+
+.hud-btn-close {
+  background: #ef4444;
+  border-color: #f87171;
+  color: #fff;
+}
+
+.hud-btn-search {
+  background: #eab308;
+  border-color: #facc15;
+  color: #1a1a1a;
+}
+
+.hud-btn-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.hud-btn-disabled:hover {
+  transform: none;
+}
+
+/* Activity overlay (floating above bottom bar) */
+.hud-activity-overlay {
+  position: absolute;
+  bottom: 8vh;
+  left: 2.5vw;
+  right: 2.5vw;
+  z-index: 8;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* === HUD Responsive: Small screens === */
+@media (max-width: 480px) {
+  .hud-stat-bar-bg {
+    display: none;
+  }
+
+  .hud-stat-val {
+    display: inline;
+    min-width: auto;
+  }
+
+  .hud-fragments {
+    margin-left: 0;
+  }
+}
+
+/* === Settings panel: Responsive text + containers === */
+.settings-body .text-xs,
+.settings-body span.text-xs {
+  font-size: clamp(10px, 2vw, 16px) !important;
+}
+
+.settings-body .text-sm {
+  font-size: clamp(12px, 2.5vw, 18px) !important;
+}
+
+.settings-body .text-\[10px\] {
+  font-size: clamp(9px, 1.8vw, 14px) !important;
+}
+
+.settings-body .nes-btn {
+  font-size: clamp(9px, 1.8vw, 14px) !important;
+  padding: clamp(4px, 1vh, 10px) clamp(8px, 2vw, 16px) !important;
+  min-height: clamp(32px, 6vh, 52px) !important;
+  border-width: clamp(2px, 0.4vw, 4px) !important;
+}
+
+.settings-body .nes-input {
+  font-size: clamp(11px, 2.2vw, 16px) !important;
+  height: clamp(32px, 5vh, 44px) !important;
+  border-width: clamp(2px, 0.4vw, 4px) !important;
+  padding: clamp(4px, 1vh, 8px) clamp(6px, 1.5vw, 12px) !important;
+}
+
+/* Settings panel container borders + spacing */
+.settings-panel {
+  border-width: clamp(2px, 0.4vw, 4px) !important;
+}
+
+.settings-header {
+  border-bottom-width: clamp(2px, 0.4vw, 4px) !important;
+}
+
+/* Settings rows gap */
+.settings-body .flex.items-center.justify-between {
+  gap: clamp(8px, 2vw, 16px);
+}
+
+.settings-body .flex.items-center.gap-2 {
+  gap: clamp(4px, 1vw, 10px) !important;
+}
+
+.settings-body .flex.gap-2 {
+  gap: clamp(4px, 1vw, 10px) !important;
+}
+
+/* === Settings panel: Mobile + Tablet fullscreen === */
+@media (max-width: 1279px) {
+  .settings-panel {
+    max-width: 100% !important;
+    width: 100% !important;
+    border-left: none !important;
+  }
+}
+
+/* === Tutorial modal: Responsive text + containers === */
+.fixed[role="dialog"] .text-xs,
+.fixed[role="dialog"] .text-sm {
+  font-size: clamp(10px, 2vw, 16px) !important;
+}
+
+.fixed[role="dialog"] .text-\[10px\] {
+  font-size: clamp(9px, 1.6vw, 13px) !important;
+}
+
+.fixed[role="dialog"] .text-\[8px\] {
+  font-size: clamp(8px, 1.4vw, 12px) !important;
+}
+
+.fixed[role="dialog"] .text-xl {
+  font-size: clamp(16px, 3vw, 24px) !important;
+}
+
+.fixed[role="dialog"] .text-2xl {
+  font-size: clamp(18px, 3.5vw, 28px) !important;
+}
+
+.fixed[role="dialog"] .nes-btn {
+  font-size: clamp(10px, 2vw, 16px) !important;
+  min-height: clamp(36px, 6vh, 52px) !important;
+  border-width: clamp(2px, 0.4vw, 4px) !important;
+  padding: clamp(6px, 1.2vh, 12px) clamp(10px, 2vw, 20px) !important;
+}
+
+.fixed[role="dialog"] .nes-container {
+  padding: clamp(12px, 3vw, 28px) !important;
+  border-width: clamp(2px, 0.5vw, 4px) !important;
+}
+
+.fixed[role="dialog"] .nes-container.with-title {
+  padding-top: clamp(16px, 4vh, 32px) !important;
+}
+
+.fixed[role="dialog"] .nes-container .title {
+  font-size: clamp(10px, 2vw, 16px) !important;
+}
+
+.fixed[role="dialog"] .flex.items-center.gap-3,
+.fixed[role="dialog"] .flex.items-start.gap-3 {
+  gap: clamp(6px, 1.5vw, 14px) !important;
+}
+
+.fixed[role="dialog"] .grid.gap-2,
+.fixed[role="dialog"] .grid.gap-4 {
+  gap: clamp(6px, 1.5vh, 16px) !important;
+}
+
+.fixed[role="dialog"] .flex.gap-2 {
+  gap: clamp(4px, 1vw, 10px) !important;
+}
+
+.fixed[role="dialog"] p {
+  margin-bottom: clamp(4px, 1vh, 12px);
+}
+
+/* === Settings panel: Landscape phone compact === */
+@media (max-height: 500px) and (orientation: landscape) {
+  .settings-panel .nes-container {
+    padding: 8px !important;
+  }
+
+  .settings-panel .nes-btn {
+    min-height: 36px !important;
+    font-size: 9px !important;
+  }
+
+  .settings-panel .text-xs {
+    font-size: 9px !important;
+  }
+}
+
+/* === HUD Responsive: Landscape phone === */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hud-top-bar {
+    padding: 0.8vh 2vw;
+  }
+
+  .hud-stat-bar-bg {
+    height: 2vh;
+  }
+
+  .hud-bottom-bar {
+    padding: 1vh 2vw;
+  }
+
+  .hud-action-btn {
+    padding: 1vh 2.5vw;
+  }
+
+  .hud-day-section {
+    padding: 0.6vh 1vw;
+  }
+}
+
+/* === HUD Light Theme === */
+.theme-light .hud-top-bar {
+  background: rgba(212, 197, 169, 0.85);
+  border-bottom-color: rgba(139, 131, 112, 0.3);
+}
+
+.theme-light .hud-bottom-bar {
+  background: rgba(212, 197, 169, 0.85);
+  border-top-color: rgba(139, 131, 112, 0.3);
+}
+
+.theme-light .hud-day-section {
+  color: #5a5a4a;
+  background: rgba(139, 131, 112, 0.15);
+  border-color: rgba(139, 131, 112, 0.3);
+}
+
+.theme-light .hud-stat-val {
+  color: #5a5a4a;
+}
+
+.theme-light .hud-fragments {
+  color: #5a5a4a;
+}
+
+.theme-light .hud-config-btn {
+  color: #2a2a2a;
+  background: rgba(139, 131, 112, 0.15);
+  border-color: rgba(139, 131, 112, 0.4);
+}
+
+.theme-light .hud-stat-bar-bg {
+  background: rgba(139, 131, 112, 0.25);
+  border-color: rgba(139, 131, 112, 0.4);
 }
