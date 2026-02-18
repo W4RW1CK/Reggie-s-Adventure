@@ -96,11 +96,11 @@ export default function SettingsPanel({
   const containerClass = theme === 'dark' ? 'nes-container is-dark with-title' : 'nes-container is-light with-title';
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-center sm:justify-end animate-fadeIn" style={{ backgroundColor: 'var(--theme-modal-overlay)' }}>
+    <div className="fixed inset-0 z-50 flex justify-center sm:justify-end animate-fadeIn" style={{ backgroundColor: 'var(--theme-modal-overlay)', zIndex: 100 }}>
       <div
         ref={panelRef}
-        className="settings-panel w-full max-w-[90vw] sm:max-w-sm h-full overflow-y-auto sm:border-l-4 p-0 animate-slideInRight"
-        style={{ backgroundColor: 'var(--theme-panel-bg)', borderColor: 'var(--theme-border-subtle)' }}
+        className="settings-panel w-full max-w-[90vw] sm:max-w-sm h-full overflow-y-auto sm:border-l-4 p-0 animate-slideInRight safe-area-padding"
+        style={{ backgroundColor: 'var(--theme-panel-bg)', borderColor: 'var(--theme-border-subtle)', paddingTop: 'env(safe-area-inset-top, 0px)', paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
         role="dialog"
         aria-modal="true"
         aria-label="Configuración"
