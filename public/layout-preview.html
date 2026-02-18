@@ -52,17 +52,18 @@
   }
 
   .day-section {
-    font-size: 0.5rem;
+    font-size: 0.45rem;
     color: #93c5fd;
     white-space: nowrap;
     padding: 4px 8px;
     background: rgba(255,255,255,0.08);
     border: 1px solid rgba(255,255,255,0.15);
+    flex-shrink: 0;
   }
 
   .stats-row {
     display: flex;
-    gap: 12px;
+    gap: 8px;
     align-items: center;
     justify-content: center;
     flex: 1;
@@ -75,8 +76,12 @@
     font-size: 0.5rem;
   }
   .stat-icon { font-size: 0.7rem; }
+  .stat {
+    flex: 1;
+  }
   .stat-bar-bg {
-    width: 60px;
+    flex: 1;
+    min-width: 40px;
     height: 8px;
     background: rgba(255,255,255,0.15);
     border: 1px solid rgba(255,255,255,0.3);
@@ -181,7 +186,7 @@
   @media (max-width: 480px) and (orientation: portrait) {
     .day-section { font-size: 0.4rem; padding: 3px 5px; }
     .stats-row { gap: 6px; }
-    .stat-bar-bg { width: 40px; }
+    .stat-bar-bg { min-width: 25px; }
     .stat-val { display: none; }
     .fragments { margin-left: 4px; font-size: 0.5rem; }
     .config-btn { font-size: 0.45rem; padding: 4px 6px; }
@@ -192,7 +197,7 @@
   /* === RESPONSIVE: Landscape phone === */
   @media (max-height: 500px) and (orientation: landscape) {
     .top-bar { padding: 4px 10px; }
-    .stat-bar-bg { width: 50px; height: 6px; }
+    .stat-bar-bg { min-width: 30px; height: 6px; }
     .stat { font-size: 0.4rem; }
     .sprite-placeholder { width: 120px; height: 120px; font-size: 2.5rem; }
     .bottom-bar { padding: 6px 10px; }
@@ -202,7 +207,7 @@
 
   /* === RESPONSIVE: Tablet === */
   @media (min-width: 768px) {
-    .stat-bar-bg { width: 80px; height: 10px; }
+    .stat-bar-bg { min-width: 60px; height: 10px; }
     .stat { font-size: 0.55rem; }
     .sprite-placeholder { width: 220px; height: 220px; font-size: 5rem; }
     .action-btn { font-size: 0.6rem; padding: 12px 24px; }
@@ -231,7 +236,7 @@
 
   <!-- TOP BAR -->
   <div class="top-bar">
-    <div class="day-section">Día 1</div>
+    <div class="day-section">Día 1 de aventura</div>
     <div class="stats-row">
       <div class="stat">
         <span class="stat-icon">🔮</span>
