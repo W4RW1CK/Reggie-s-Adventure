@@ -901,8 +901,8 @@ body {
 }
 
 .creation-screen__svg-container {
-  width: clamp(120px, 25vw, 200px);
-  height: clamp(120px, 25vw, 200px);
+  width: clamp(80px, 20vh, 180px);
+  height: clamp(80px, 20vh, 180px);
   border: 4px solid #fff;
   background-color: rgba(0, 0, 0, 0.3);
   display: flex;
@@ -914,8 +914,8 @@ body {
 
 .creation-screen__info {
   text-align: center;
-  min-height: 100px;
-  margin-bottom: 16px;
+  min-height: auto;
+  margin-bottom: clamp(4px, 1vh, 16px);
   /* Enough space for longest description + lore title */
 }
 

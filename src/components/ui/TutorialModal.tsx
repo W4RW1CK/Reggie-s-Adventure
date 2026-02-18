@@ -49,12 +49,12 @@ export default function TutorialModal({ onDismiss }: TutorialModalProps) {
             aria-labelledby="tutorial-title"
             onClick={handleBackdropClick}
         >
-            <div className="nes-container is-dark with-title max-w-lg w-full animate-slideUp my-auto">
+            <div className="nes-container is-dark with-title max-w-lg w-full animate-slideUp my-auto" style={{ maxHeight: '90vh', display: 'flex', flexDirection: 'column' }}>
                 <p id="tutorial-title" className="title text-[#f1c40f]">
                     {titles[step]}
                 </p>
 
-                <div className="flex flex-col gap-4 text-xs sm:text-sm max-h-[60vh] overflow-y-auto custom-scrollbar">
+                <div className="flex flex-col gap-4 text-xs sm:text-sm overflow-y-auto custom-scrollbar" style={{ maxHeight: '55vh' }}>
 
                     {/* STEP 0: STATS & FRAGMENTOS */}
                     {step === 0 && (
