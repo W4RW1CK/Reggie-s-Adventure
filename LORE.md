@@ -1,7 +1,7 @@
 # 📜 LORE — Reggie's Adventure
 > **Versión actual:** v0.3 — La Conexión
 > **Última actualización:** 2026-02-16
-> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `EN PLANIFICACIÓN`
+> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `COMPLETADA` (96/96 — 100%)
 
 ---
 

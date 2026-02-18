@@ -1,7 +1,7 @@
 # 📊 PROGRESS — Reggie's Adventure
 > **Versión actual:** v0.3 — La Conexión
 > **Última actualización:** 2026-02-17
-> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `EN PROGRESO`
+> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `COMPLETADA` (96/96 — 100%)
 >
 > 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — biblia narrativa del universo
 > 🔨 **Fases detalladas:** [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) — qué construir y en qué orden
@@ -9,7 +9,7 @@
 
 ---
 
-## ESTADO ACTUAL: SESIÓN 2 `COMPLETADA` (Fases 1-31)
+## ESTADO ACTUAL: SESIÓN 3 `COMPLETADA` (Fases 1-48) — 96/96 (100%)
 
 ---
 
@@ -481,9 +481,9 @@
 - [x] 46.3: CSS transitions
 - [x] 46.4: Fragment counter pulse animation
 
-### Fases pendientes
-- [~] 47: Auditoría S3 (w4rw1ck) — EN PROGRESO, 8+ issues encontrados
-- [~] 47b: Fixes de auditoría visual — 8 bugs fixeados (commit 30a0848):
+### Fase 47: Auditoría S3 — COMPLETADA ✅
+- [x] 47: Auditoría S3 completa — S1=35/35 (100%), S2=30/30 (100%), S3=31/31 (100%), Total=96/96 (100%)
+- [x] 47b: Fixes de auditoría visual — 8 bugs fixeados (commit 30a0848):
   - Barra Esencia invisible (rename CSS var hambre→esencia, color verde #2ecc71)
   - Esencia inicia 100→50 (STAT_INITIAL)
   - Avatar Privy "N" oculto (showWalletUIs: false + CSS)
@@ -492,7 +492,17 @@
   - Chat overlay más opaco (0.95)
   - CreationScreen: overlap texto/form fixeado (margins)
   - Purificar: permite uso cuando cualquier stat < 100
-- [ ] 48: Cierre de Sesión 3
+
+### Bonus Features — COMPLETADAS ✅
+- [x] **Floating stat deltas**: `hud-floating-delta` + `float-up-fade` keyframe. Shows "+5 🔮 -1 ✨" above sprite on stat changes (purify, search, chat). Files: `GameScreen.tsx`, `globals.css`
+- [x] **Memory indicator 🧠 N**: `hud-memories` class. Shows in top bar HUD next to fragments when logged in and memoryCount > 0. `useChat.ts` exposes `memoryCount`. Files: `GameScreen.tsx`, `useChat.ts`, `globals.css`
+- [x] **Character counter**: `.creation-screen__char-count` below name input. Shows `name.length/15` with color-coded feedback (red >15, green ≥2, dim). Files: `CreationScreen.tsx`, `globals.css`
+- [x] **History button 📜**: Moved to right side of bottom bar as compact toggle with `.hud-history-btn` + `.hud-history-btn--active` (glow state)
+- [x] **S3 audit fixes**: B2 fragments "💎 ---" when not logged in, D4 purify toast "¡Me siento renovado!", F1/F2/F3 toast system with loading/success/error states
+- [x] **Aesthetic vision in LORE.md**: Cypherpunk arcana, pixel art rules, sprites/scenarios per type, HUD layout, toast system, settings panel, audio, game actions table (commit bb931f9)
+
+### Fase 48: Cierre de Sesión 3 — COMPLETADA ✅
+- [x] 48: Cierre de Sesión 3 — documentación actualizada, audit 96/96
 
 ---
 

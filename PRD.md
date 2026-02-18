@@ -1,7 +1,7 @@
 # 📋 PRD — Reggie's Adventure
 > **Versión actual:** v0.3 — La Conexión
 > **Última actualización:** 2026-02-16
-> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `EN PLANIFICACIÓN`
+> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `COMPLETADA` (96/96 — 100%)
 >
 > 📜 **Narrativa completa:** [LORE.md](./LORE.md) — biblia narrativa del universo
 > 🗺️ **Flujos de usuario:** [APP_FLOW.md](./APP_FLOW.md) — cómo navega el jugador
@@ -46,7 +46,7 @@ Al completar las 5 sesiones, el jugador tiene:
 | F1.2 | Pantalla de título | Nombre del juego + Regenmons decorativos + "Press Start" parpadeante (clic/tap/teclado) |
 | F1.3 | Historia introductoria | Texto typewriter la 1ra vez / tras reset. No se puede saltar. Botón "Continuar ▶" |
 | F1.4 | Creación: Carrusel de tipos | 3 tipos (Rayo/Flama/Hielo) con mini-descripción, navegables uno a uno |
-| F1.5 | Creación: Nombre | Campo 2-15 chars, validación visible |
+| F1.5 | Creación: Nombre | Campo 2-15 chars, validación visible, contador `name.length/15` con color-coded feedback |
 | F1.6 | Creación: Botón "¡Despertar!" | Solo activo cuando nombre válido + tipo seleccionado |
 | F1.7 | Transición | Texto "Tu Regenmon está despertando..." con fade |
 | F1.8 | Display: SVG del Regenmon | Criatura SVG modular con idle animation (rebote/respiración) |
@@ -116,7 +116,7 @@ Al completar las 5 sesiones, el jugador tiene:
 - Efecto typewriter en mensajes de chat
 - Streaming de respuestas
 
-### Sesión 3 — La Conexión (v0.3) `EN PLANIFICACIÓN`
+### Sesión 3 — La Conexión (v0.3) `COMPLETADA`
 
 > La Conexión se expande más allá del dispositivo. Auth, persistencia en la nube,
 > Fragmentos 💠 como moneda de regeneración, y una reescritura profunda de stats y botones.
@@ -147,7 +147,10 @@ Al completar las 5 sesiones, el jugador tiene:
 | F3.20 | Ajuste de texto | Agrandar/disminuir tamaño de texto sin romper UI |
 | F3.21 | Identidad del usuario (evolutiva) | Logueado: muestra email/método auth en header. Cuando el Regenmon descubre el nombre del jugador → reemplaza por el nombre. No logueado: nada |
 | F3.22 | Buscar Fragmentos (0💠) | Si balance = 0: aparece botón "🔍 Buscar Fragmentos". Da 15💠. Desaparece tras uso. Anti-frustración |
-| F3.23 | Historial de actividades (bonus) | Sección colapsable "📜 Historial". Últimas 10 acciones: qué, cuántos 💠, cuándo. Persiste al recargar |
+| F3.23 | Historial de actividades (bonus) | Sección colapsable "📜 Historial". Últimas 10 acciones: qué, cuántos 💠, cuándo. Persiste al recargar. History button 📜 on right side of bottom bar as compact toggle with active glow |
+| F3.24 | Floating stat deltas (bonus) | Fade-up animation showing "+5 🔮 -1 ✨" or "-10 💎" above sprite on stat changes (purify, search, chat). CSS `hud-floating-delta`, keyframe `float-up-fade` |
+| F3.25 | Memory indicator (bonus) | 🧠 N indicator in top bar HUD next to fragments. Only when logged in and memoryCount > 0. CSS `hud-memories` |
+| F3.26 | Character counter (bonus) | `name.length/15` below name input in CreationScreen with color-coded feedback (red >15, green ≥2, dim). CSS `.creation-screen__char-count` |
 
 #### Fuera de Scope ❌ (Sesión 3)
 - Barra de evolución visible (S4)
@@ -263,15 +266,19 @@ US-43: Como jugador, quiero ver un historial de mis acciones recientes para ente
 - [x] Nombre del jugador descubierto y recordado por el Regenmon
 - [x] API-agnostic: funciona con Gemini (dev) y OpenAI (prod)
 - [x] Lore integrado: personalidad, fragmentos de memoria, tono filosófico (ver LORE.md)
-- [ ] Auth funcional con Privy (S3)
-- [ ] Fragmentos 💠 como moneda del juego (S3)
-- [ ] Persistencia en Supabase con sync híbrido (S3)
-- [ ] Tema Light (GBC) y Dark (NES) con toggle (S3)
-- [ ] Stats completamente AI-driven (S3)
-- [ ] Purificar con costo de Fragmentos (S3)
-- [ ] Identidad evolutiva del usuario en header (S3)
-- [ ] Buscar Fragmentos cuando balance = 0 (S3)
-- [ ] Historial de actividades colapsable (S3 bonus)
+- [x] Auth funcional con Privy (S3)
+- [x] Fragmentos 💠 como moneda del juego (S3)
+- [x] Persistencia en Supabase con sync híbrido (S3)
+- [x] Tema Light (GBC) y Dark (NES) con toggle (S3)
+- [x] Stats completamente AI-driven (S3)
+- [x] Purificar con costo de Fragmentos (S3)
+- [x] Identidad evolutiva del usuario en header (S3)
+- [x] Buscar Fragmentos cuando balance = 0 (S3)
+- [x] Historial de actividades colapsable (S3 bonus)
+- [x] Floating stat deltas with fade-up animation (S3 bonus)
+- [x] Memory indicator 🧠 N in HUD (S3 bonus)
+- [x] Character counter in CreationScreen (S3 bonus)
+- [x] History button 📜 compact toggle on right side of bottom bar (S3 bonus)
 
 ---
 

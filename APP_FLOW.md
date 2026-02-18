@@ -1,7 +1,7 @@
 # 🗺️ APP_FLOW — Reggie's Adventure
 > **Versión actual:** v0.3 — La Conexión
 > **Última actualización:** 2026-02-16
-> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `EN PLANIFICACIÓN`
+> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `COMPLETADA` (96/96 — 100%)
 >
 > 📜 **Narrativa y personalidad:** Todo diálogo, texto de historia y comportamiento conversacional
 > debe ser consistente con [LORE.md](./LORE.md). En caso de conflicto, LORE.md prevalece.
@@ -131,6 +131,7 @@ ABRIR APP
 - Campo de nombre:
   - Placeholder: "Nombre de tu Regenmon"
   - Validación: 2-15 caracteres
+  - **Character counter**: `name.length/15` below input with color-coded feedback (red >15, green ≥2, dim). CSS class `.creation-screen__char-count`
   - Mensajes de error visibles si nombre inválido
 - Botón "¡Despertar!"
 
@@ -188,7 +189,9 @@ ABRIR APP
 1. **Header:**
    - 💠 Balance de Fragmentos (izquierda)
      - Logueado: "💠 100 Fragmentos"
-     - No logueado: "💠 --- Fragmentos"
+     - No logueado: "💠 --- Fragmentos" (shows "💎 ---")
+   - 🧠 Memory indicator (next to fragments, only when logged in and memoryCount > 0)
+     - Format: "🧠 N" where N = number of memories. CSS class `hud-memories`
    - Identidad del usuario (derecha, discreto, **evolutiva**)
      - No logueado: no se muestra nada
      - Logueado + nombre NO descubierto: email/método auth truncado (ej: "mel@...")
@@ -220,7 +223,8 @@ ABRIR APP
    - **Modo compacto (durante chat):** 🔮 80 | 💛 50 | 🌱 30
 
 6. **Botones de acción (S3):**
-   - `[🌀 Purificar (10💠)]  [⚙️]  [💬 Conversar]`
+   - `[🌀 Purificar (10💠)]  [⚙️]  [💬 Conversar]  [📜]`
+   - **📜 History**: compact toggle on right side of bottom bar (`.hud-history-btn`), active glow state (`.hud-history-btn--active`)
    - **Purificar:** Cuesta 10 Fragmentos. Disabled si <10💠 o Esencia=100
    - **⚙️:** Abre panel de Settings
    - **Conversar:** Toggle chat (cambia a "✕ Cerrar")
@@ -417,7 +421,7 @@ ABRIR APP
     - Pulso: ±5 (IA decide: tranquilo=+, intenso=-)
     - Esencia: -1 a -4 (IA decide, siempre baja)
     - Fragmentos: 0-5 ganados (IA decide, no garantizado)
-14. Feedback flotante visible para cada cambio de stat + Fragmentos ganados
+14. **Floating stat deltas** visible above sprite for each change (`.hud-floating-delta` + `float-up-fade` keyframe): "+5 🔮 -1 ✨" etc.
 15. Regenmon actualiza expresión/postura si corresponde
 16. ¿La IA descubrió el nombre del jugador?
     ├── SÍ → Se guarda en playerName, feedback visual "🧠"

@@ -1,7 +1,7 @@
 # 🎨 FRONTEND_GUIDELINES — Reggie's Adventure
 > **Versión actual:** v0.3 — La Conexión
 > **Última actualización:** 2026-02-16
-> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `EN PLANIFICACIÓN`
+> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `COMPLETADA` (96/96 — 100%)
 >
 > 📜 **Lore visual:** Los colores por tipo, paisajes, y animaciones del Regenmon
 > reflejan su significado narrativo. Ver [LORE.md](./LORE.md) para contexto.
@@ -150,7 +150,7 @@ Escala: 4px base
 
 ```
 ┌─────────────────────────────────────┐
-│ 💠 100 Fragmentos    mel@...  │ ← Header (Fragmentos + identidad)
+│ 💠 100  🧠 3  mel@...  │ ← Header (Fragmentos + Memories + identidad)
 ├─────────────────────────────────────┤
 │                                     │
 │         [Paisaje de Fondo]          │ ← Background (ver LORE.md → Los Paisajes)
@@ -166,7 +166,7 @@ Escala: 4px base
 │  💛 Energía   [█████─────] 50/100    │
 │  🌱 Esencia  [███───────] 30/100    │
 │                                     │
-│  [🌀 Purificar (10💠)] [⚙️] [💬 Conversar]  │ ← Botones (S3)
+│  [🌀 Purificar (10💠)] [⚙️] [💬 Conversar] [📜]  │ ← Botones (S3) + History toggle (right)
 │                                     │
 └─────────────────────────────────────┘
 ```
@@ -561,6 +561,103 @@ Estilo: NES container (`nes-container is-dark`), posición fija o slide-in, fond
 - Components are theme-agnostic — they just use variables
 - Game Boy Color warm palette for light theme: `#f5f0e1` (bg), `#d4c5a9` (surface), `#2a2a2a` (text)
 - Toggle in Settings panel; persisted in localStorage via `useTheme` hook
+
+---
+
+### Floating Stat Deltas (S3 — Bonus)
+
+```css
+/* Fade-up animation showing stat changes above sprite */
+.hud-floating-delta {
+  position: absolute;
+  font-size: 10px;
+  font-family: 'Press Start 2P';
+  pointer-events: none;
+  animation: float-up-fade 1.5s ease-out forwards;
+}
+
+@keyframes float-up-fade {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-40px); }
+}
+```
+
+- Shows "+5 🔮 -1 ✨" or "-10 💎" above sprite when stats change
+- Triggered on: purify, search fragments, chat responses
+- Auto-dismiss after animation completes (1.5s)
+- Multiple deltas can stack vertically
+
+### Memory Indicator 🧠 (S3 — Bonus)
+
+```css
+/* Shows in top bar HUD next to fragments */
+.hud-memories {
+  font-size: 8px;
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+```
+
+- Format: `🧠 N` where N = memoryCount
+- Only visible when: logged in AND memoryCount > 0
+- Position: top bar HUD, between fragments and user identity
+- `useChat.ts` exposes `memoryCount` for this indicator
+
+### Character Counter (S3 — Bonus)
+
+```css
+/* Below name input in CreationScreen */
+.creation-screen__char-count {
+  font-size: 8px;
+  text-align: center;
+  margin-top: 4px;
+}
+
+.creation-screen__char-count--valid { color: #4caf50; } /* green, ≥2 chars */
+.creation-screen__char-count--invalid { color: #e74c3c; } /* red, >15 chars */
+.creation-screen__char-count--dim { color: var(--text-secondary); } /* <2 chars */
+```
+
+- Format: `name.length/15`
+- Color-coded: red when >15, green when ≥2, dim otherwise
+
+### History Button 📜 (S3 — Repositioned)
+
+```css
+/* Compact toggle on right side of bottom bar */
+.hud-history-btn {
+  font-size: 10px;
+  padding: 8px;
+  cursor: pointer;
+  border: 2px solid var(--border-nes);
+  background: transparent;
+}
+
+.hud-history-btn--active {
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+  border-color: #00e5ff;
+}
+```
+
+- Position: right side of bottom bar (after Conversar button)
+- Compact: icon-only 📜 toggle
+- Active state: glow effect when history is expanded
+
+### Toast System (S3)
+
+Toast notifications with three states for game actions:
+
+| State | Style | Duration | Use |
+|-------|-------|----------|-----|
+| Loading | Pulsing, muted colors | Until resolved | "Purificando..." |
+| Success | Green accent, brief | 3s auto-dismiss | "¡Me siento renovado!" |
+| Error | Red accent | 5s or manual dismiss | "Error de conexión" |
+
+- D4 purify toast: "¡Me siento renovado!"
+- F1/F2/F3: loading → success/error state transitions
+- B2: fragments show "💎 ---" when not logged in
 
 ---
 

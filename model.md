@@ -1,7 +1,7 @@
 # 🧠 MODEL — Reggie's Adventure
 > **Versión actual:** v0.3 — La Conexión
 > **Última actualización:** 2026-02-17
-> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `EN PROGRESO`
+> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `COMPLETADA` (96/96 — 100%)
 >
 > 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — toda decisión de personalidad, tono o diálogo se valida contra LORE
 > 📋 **Spec del producto:** [PRD.md](./PRD.md) — toda decisión de features se refleja ahí
@@ -15,7 +15,7 @@
 |--------|---------|--------|
 | S1: El Despertar | v0.1.16 | `COMPLETADA` |
 | S2: La Voz | v0.2 | `COMPLETADA` |
-| S3: La Conexión | v0.3 | `EN PROGRESO` (Fases 32-38 ✅, 39 en curso) |
+| S3: La Conexión | v0.3 | `COMPLETADA` (96/96 — 100%) |
 | S4: La Evolución | — | `PENDIENTE` |
 | S5: El Encuentro | — | `PENDIENTE` |
 
@@ -476,4 +476,19 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 - **Floating feedback**: Auto-dismiss after 3s, shows all non-zero changes with emoji indicators
 - **FragmentCounter**: Shows "💠 ---" when not logged in (preserves mystery/incentive to login)
 - **Purificar disabled states**: When fragmentos < 10 OR esencia >= 100 (no wasted purifications)
+
+### S3 Completion & Bonus Features (2026-02-18)
+- **Full audit scores**: S1=35/35 (100%), S2=30/30 (100%), S3=31/31 (100%), Total=96/96 (100%)
+- **Floating stat deltas**: `hud-floating-delta` + `float-up-fade` keyframe — fade-up animation showing "+5 🔮 -1 ✨" above sprite on stat changes (purify, search, chat). Files: `GameScreen.tsx`, `globals.css`
+- **Memory indicator 🧠 N**: `hud-memories` class — shows in top bar HUD next to fragments. Only when logged in and memoryCount > 0. `useChat.ts` exposes `memoryCount`. Files: `GameScreen.tsx`, `useChat.ts`, `globals.css`
+- **Character counter**: `.creation-screen__char-count` — `name.length/15` below name input in CreationScreen with color-coded feedback (red >15, green ≥2, dim). Files: `CreationScreen.tsx`, `globals.css`
+- **History button 📜**: Moved to right side of bottom bar as compact toggle with `.hud-history-btn` + `.hud-history-btn--active` (glow state)
+- **S3 audit fixes**: B2 fragments "💎 ---" when not logged in, D4 purify toast "¡Me siento renovado!", F1/F2/F3 toast system with loading/success/error states
+- **Aesthetic vision in LORE.md**: Documented cypherpunk arcana, pixel art rules, sprites/scenarios per type, HUD layout, toast system, settings panel, audio, game actions table (commit bb931f9)
+
+### 📌 Rules & Lessons Learned
+- **Docs/ folder is UNTOUCHABLE** — never modify files in the Docs/ directory
+- **9 canonical files** at root: PRD.md, TECH_STACK.md, IMPLEMENTATION_PLAN.md, FRONTEND_GUIDELINES.md, BACKEND_STRUCTURE.md, APP_FLOW.md, LORE.md, progress.txt, model.md
+- **Lesson**: Always update canonical files BEFORE (or immediately after) pushing code changes. Code and docs must stay in sync.
+- **Audit methodology**: S1 (35 items), S2 (30 items), S3 (31 items) = 96 total verification points
 

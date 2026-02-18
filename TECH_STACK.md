@@ -1,7 +1,7 @@
 # ⚙️ TECH_STACK — Reggie's Adventure
 > **Versión actual:** v0.3 — La Conexión
 > **Última actualización:** 2026-02-16
-> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `EN PLANIFICACIÓN`
+> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `COMPLETADA` (96/96 — 100%)
 >
 > 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — los system prompts de IA (`lib/ai/prompts.ts`) se basan íntegramente en LORE
 > 🛠️ **Implementación técnica:** [BACKEND_STRUCTURE.md](./BACKEND_STRUCTURE.md) — schemas y lógica que usan estas herramientas
@@ -62,6 +62,10 @@
 | `image-rendering: pixelated` | Crisp pixel art scaling at any resolution |
 | CSS `filter: brightness() saturate()` | Mood-based background modulation without extra assets |
 | SVG animated overlays | Face expressions on sprites, streaks/particles on backgrounds |
+| CSS `hud-floating-delta` + `@keyframes float-up-fade` | Floating stat delta animations ("+5 🔮 -1 ✨") above sprite on stat changes |
+| CSS `hud-memories` | Memory indicator 🧠 N in top bar HUD (visible when logged in, memoryCount > 0) |
+| CSS `.creation-screen__char-count` | Character counter below name input with color-coded feedback (red/green/dim) |
+| CSS `.hud-history-btn` / `.hud-history-btn--active` | History button 📜 compact toggle on right side of bottom bar with active glow |
 
 ## Sesiones Futuras (no instalar todavía)
 
@@ -190,7 +194,7 @@ reggie-adventure/
 │   │   ├── useGameState.ts       # Estado del juego + localStorage/Supabase
 │   │   ├── useStatDecay.ts       # Lógica de decaimiento + regen pasiva Pulso
 │   │   ├── useScreenManager.ts   # Navegación entre pantallas
-│   │   ├── useChat.ts            # Estado del chat + API calls
+│   │   ├── useChat.ts            # Estado del chat + API calls + memoryCount exposure
 │   │   ├── useAuth.ts            # [NEW S3] Wrapper de Privy hooks
 │   │   ├── useFragments.ts       # [NEW S3] Economía de Fragmentos
 │   │   └── useTheme.ts           # [NEW S3] Dark/Light mode + tamaño texto

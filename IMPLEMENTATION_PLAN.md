@@ -1,7 +1,7 @@
 # 🔨 IMPLEMENTATION_PLAN — Reggie's Adventure
 > **Versión actual:** v0.3 — La Conexión
 > **Última actualización:** 2026-02-16
-> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `EN PLANIFICACIÓN`
+> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `COMPLETADA` (96/96 — 100%)
 >
 > 📜 **Narrativa:** [LORE.md](./LORE.md) — toda fase que toque personalidad, diálogo o tono debe consultarlo
 > 📋 **Features:** [PRD.md](./PRD.md) — cada fase implementa uno o más features del PRD
@@ -1174,7 +1174,17 @@ BACKGROUNDS (commit 1ea9efb):
       → Migración de datos S2 → S3
 ```
 
-### Fase 47b: Ajustes Pre-Deploy (si aplica)
+### Fase 47b: Ajustes Pre-Deploy + Bonus Features (COMPLETADA)
+
+> **Bonus features implemented during S3 polish:**
+> - **Floating stat deltas**: `hud-floating-delta` class + `float-up-fade` keyframe in `globals.css`. Shows "+5 🔮 -1 ✨" above sprite on purify/search/chat. Integrated in `GameScreen.tsx`.
+> - **Memory indicator 🧠 N**: `hud-memories` class. Shows in top bar HUD next to fragments when logged in and memoryCount > 0. `useChat.ts` exposes `memoryCount`.
+> - **Character counter**: `.creation-screen__char-count` in `CreationScreen.tsx`. Shows `name.length/15` below name input with color-coded feedback (red >15, green ≥2, dim).
+> - **History button**: Moved to right side of bottom bar as compact 📜 toggle with `.hud-history-btn` and `.hud-history-btn--active` (glow state).
+> - **S3 audit fixes**: B2 fragments "💎 ---" when not logged in, D4 purify toast "¡Me siento renovado!", F1/F2/F3 toast system with loading/success/error states.
+> - **Aesthetic vision**: Fully documented in LORE.md (commit bb931f9) — cypherpunk arcana, pixel art rules, sprites/scenarios per type, HUD layout, toast system, settings panel, audio, game actions table.
+>
+> **Full audit scores**: S1=35/35 (100%), S2=30/30 (100%), S3=31/31 (100%), Total=96/96 (100%)
 
 > **Fase deliberadamente abierta.** Después de la auditoría, si algo no se ve bien,
 > no se siente bien, o simplemente no convence — se corrige aquí antes de salir a producción.

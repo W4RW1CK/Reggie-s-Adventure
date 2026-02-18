@@ -1,7 +1,7 @@
 # 🛠️ BACKEND_STRUCTURE — Reggie's Adventure
 > **Versión actual:** v0.3 — La Conexión
 > **Última actualización:** 2026-02-16
-> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `EN PLANIFICACIÓN`
+> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `COMPLETADA` (96/96 — 100%)
 >
 > 📜 **System Prompt:** La personalidad, tono, y reglas de diálogo del Regenmon se definen en [LORE.md](./LORE.md). Este doc define la implementación técnica.
 > ⚙️ **Herramientas:** [TECH_STACK.md](./TECH_STACK.md) — versiones de Supabase, Privy, IA providers
@@ -323,6 +323,12 @@ El system prompt se construye dinámicamente según:
 | Rayo (Bien) | Rayo (Mal) | Flama (Bien) | Flama (Mal) | Hielo (Bien) | Hielo (Mal) |
 |------------|-----------|-------------|------------|-------------|------------|
 | Chispas de humor, entusiasmo | Frustrado, "sobrecargado" | Efusivo, casi poético | Se apaga, pierde calor | Sereno, comparte verdades | Distante, congelado, monosílabos |
+
+### useChat Hook — memoryCount Exposure (S3)
+
+`useChat.ts` now exposes `memoryCount` (number) derived from the stored memories array length.
+This is consumed by the `🧠 N` memory indicator in the top bar HUD (`hud-memories` class in GameScreen).
+Only displayed when user is logged in and memoryCount > 0.
 
 ### Rate Limiting
 
