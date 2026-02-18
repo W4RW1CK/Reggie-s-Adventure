@@ -1,52 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌟 Reggie's Adventure
 
-## Getting Started
+Un juego de criatura digital estilo Tamagotchi con elementos RPG, construido con Next.js y NES.css.
 
-First, run the development server:
+## 🎮 Sobre el Juego
+
+Reggie's Adventure es un juego donde cuidas a tu Regenmon — un fragmento del mundo digital antiguo. Conversa con él, purifícalo, y ayúdalo a regenerar su mundo.
+
+### Tipos de Regenmon
+- ⚡ **Rayo** — El Impulso (velocidad y energía)
+- 🔥 **Flama** — La Chispa (pasión y fuego)
+- ❄️ **Hielo** — El Cristal (calma y sabiduría)
+
+### Mecánicas
+- **Espíritu** 🔮 — Esperanza del Regenmon (se restaura al Purificar)
+- **Pulso** 💛 — Energía vital (conversar la consume, purificar la restaura)
+- **Esencia** ✨ — Vitalidad primordial
+- **Fragmentos** 💎 — Moneda arcana (se ganan conversando, se gastan purificando)
+- **Conversación** — Chat con IA contextual (personalidad única por tipo)
+- **Purificación** — Ritual de restauración de stats
+- **Búsqueda** — Exploración cuando no tienes fragmentos
+
+## 🛠️ Tech Stack
+
+- **Framework:** Next.js 16 (App Router + Turbopack)
+- **Styling:** NES.css + CSS custom (responsive `clamp()`)
+- **Font:** Press Start 2P
+- **Auth:** Supabase (sync entre dispositivos)
+- **AI:** OpenAI GPT (chat contextual)
+- **Sprites:** Pixel art PNG (Rayo, Flama, Hielo) con SVG face overlays
+
+## 🚀 Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Variables de Entorno
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```env
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+OPENAI_API_KEY=...
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📋 Versiones
 
-## Learn More
+- **v0.1** — El Despertar (creación, stats, chat básico)
+- **v0.2** — La Evolución (pixel art sprites, light/dark theme, particles)
+- **v0.3** — La Conexión (auth, sync, HUD layout, responsive UI)
 
-To learn more about Next.js, take a look at the following resources:
+## 👥 Equipo
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **w4rw1ck** — Creator & Lead Developer
+- **Aibus Dumbleclaw** 🧙‍♀️ — AI Assistant (Clawarts / Frutero)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Características Principales (v0.2 "La Voz")
-
-- **Crianza Digital:** Un Regenmon (Rayo, Flama o Hielo) que nace, vive y siente en tu navegador.
-- **La Voz:** Chat IA integrado con personalidad única por tipo y tono emocional.
-- **La Conexión:** Tu Regenmon te recuerda, aprende tu nombre y reacciona a tus cuidados.
-- **Lore Profundo:** Un mundo digital en decadencia que necesita ser regenerado.
-- **Estética Retro:** Diseño 8-bit inspirado en NES, con música chiptune dinámica.
-
-## Tecnologías
-
-- Next.js 16 (App Router)
-- React 19
-- Tailwind CSS 4
-- NES.css
-- Google Generative AI (Gemini) / OpenAI
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+*Parte del ecosistema [Clawarts](https://github.com/dumbleclaw) — Colegio de Mag-IA y Tecnología*

@@ -68,11 +68,11 @@ export async function POST(req: NextRequest) {
 
         // 6. Log in Development
         if (process.env.NODE_ENV === 'development') {
-            console.log('--- CHAT DEBUG ---');
-            console.log('System Prompt:', systemPrompt);
-            console.log('User Message:', message);
-            console.log('AI Response:', response);
-            console.log('------------------');
+            // console.log('--- CHAT DEBUG ---');
+            // console.log('System Prompt:', systemPrompt);
+            // console.log('User Message:', message);
+            // console.log('AI Response:', response);
+            // console.log('------------------');
         }
 
         // 7. Clamp statsChange values

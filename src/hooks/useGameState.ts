@@ -39,7 +39,7 @@ export function useGameState({ privyUserId, isLoggedIn }: UseGameStateProps) {
 
                 // Handle first login migration
                 if (isLoggedIn && privyUserId && !migrationComplete && previousPrivyUserId.current !== privyUserId) {
-                    console.log('First login detected, attempting migration...');
+                    // console.log('First login detected, attempting migration...');
                     await migrateLocalToSupabase(privyUserId);
                     setMigrationComplete(true);
                 }

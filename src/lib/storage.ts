@@ -45,7 +45,7 @@ export function loadRegenmon(): RegenmonData | null {
 function migrateData(data: any): RegenmonData {
     // 1. Convert Hambre -> Esencia (if needed)
     if (typeof data.stats.hambre === 'number' && typeof data.stats.esencia === 'undefined') {
-        console.log('Migrating Hambre -> Esencia');
+        // console.log('Migrating Hambre -> Esencia');
         data.stats.esencia = Math.max(0, 100 - data.stats.hambre); // Invert logic
         delete data.stats.hambre;
     }

@@ -60,7 +60,7 @@ export async function migrateLocalToSupabase(privyUserId: string): Promise<boole
     const existingData = await getRegenmon(privyUserId);
     if (existingData) {
       // User already has data in Supabase, no migration needed
-      console.log('User already has data in Supabase, skipping migration');
+      // console.log('User already has data in Supabase, skipping migration');
       return true;
     }
 
@@ -68,7 +68,7 @@ export async function migrateLocalToSupabase(privyUserId: string): Promise<boole
     const localData = loadRegenmon();
     if (!localData) {
       // No local data to migrate
-      console.log('No local data to migrate');
+      // console.log('No local data to migrate');
       return true;
     }
 
@@ -76,7 +76,7 @@ export async function migrateLocalToSupabase(privyUserId: string): Promise<boole
     const success = await upsertRegenmon(privyUserId, localData);
     
     if (success) {
-      console.log('Successfully migrated local data to Supabase');
+      // console.log('Successfully migrated local data to Supabase');
       return true;
     } else {
       console.error('Failed to migrate local data to Supabase');
