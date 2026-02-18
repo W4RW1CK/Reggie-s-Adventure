@@ -49,6 +49,7 @@ export default function GameScreen({
 }: GameScreenProps) {
     const [showTutorial, setShowTutorial] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
+    const [showHistory, setShowHistory] = useState(false);
     const [activityEntries, setActivityEntries] = useState<ActivityEntry[]>([]);
 
     // Load activity history on mount
@@ -274,12 +275,22 @@ export default function GameScreen({
                             🔍 BUSCAR (+15💎)
                         </button>
                     )}
+                    {/* History toggle button — right side */}
+                    {!isChatOpen && activityEntries.length > 0 && (
+                        <button
+                            className={`hud-history-btn ${showHistory ? 'hud-history-btn--active' : ''}`}
+                            onClick={() => setShowHistory(!showHistory)}
+                            title="Historial"
+                        >
+                            📜
+                        </button>
+                    )}
                 </div>
 
-                {/* Activity History (floating overlay when not chatting) */}
-                {!isChatOpen && activityEntries.length > 0 && (
+                {/* Activity History (overlay above bottom bar) */}
+                {showHistory && !isChatOpen && activityEntries.length > 0 && (
                     <div className="hud-activity-overlay">
-                        <ActivityHistory entries={activityEntries} isVisible={!isChatOpen} />
+                        <ActivityHistory entries={activityEntries} isVisible={true} defaultExpanded={true} />
                     </div>
                 )}
 

@@ -2637,6 +2637,32 @@ html, body {
   transform: none;
 }
 
+/* History toggle button (right side of bottom bar) */
+.hud-history-btn {
+  font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+  padding: 1vh 1.5vw;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hud-history-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.hud-history-btn--active {
+  background: rgba(147, 197, 253, 0.25);
+  border-color: #93c5fd;
+  box-shadow: 0 0 8px rgba(147, 197, 253, 0.3);
+}
+
 /* Activity overlay (floating above bottom bar) */
 .hud-activity-overlay {
   position: absolute;
@@ -2644,8 +2670,8 @@ html, body {
   left: 2.5vw;
   right: 2.5vw;
   z-index: 8;
-  pointer-events: none;
-  opacity: 0.7;
+  pointer-events: auto;
+  opacity: 0.9;
 }
 
 /* === HUD Responsive: Small screens === */
