@@ -2,11 +2,8 @@
 
 import GameBackground from '@/components/game/GameBackground';
 import RegenmonSVG from '@/components/regenmon/RegenmonSVG';
-import StatBar from '@/components/regenmon/StatBar';
-import ActionButtons from '../regenmon/ActionButtons';
 import NameEditor from '../ui/NameEditor';
 import TutorialModal from '../ui/TutorialModal';
-import FragmentCounter from '../ui/FragmentCounter';
 import SettingsPanel from '../settings/SettingsPanel';
 import UserIdentity from '../ui/UserIdentity';
 import ActivityHistory from '../ui/ActivityHistory';
@@ -15,12 +12,11 @@ import { useTheme } from '@/hooks/useTheme';
 import { useAuth } from '@/hooks/useAuth';
 import { useState, useEffect, useMemo } from 'react';
 import { RegenmonData } from '@/lib/types';
-import { STAT_MAX, STAT_MIN, PURIFY_COST, SEARCH_FRAGMENTS_REWARD } from '@/lib/constants';
+import { PURIFY_COST, SEARCH_FRAGMENTS_REWARD } from '@/lib/constants';
 import { ChatBox } from '../chat/ChatBox';
 import { useChat } from '@/hooks/useChat';
 import { useChiptuneAudio } from '@/hooks/useChiptuneAudio';
 import { ErrorBoundary } from '../ErrorBoundary';
-import classNames from 'classnames';
 
 interface GameScreenProps {
     regenmon: RegenmonData;

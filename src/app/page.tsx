@@ -12,7 +12,6 @@ import StoryScreen from '@/components/screens/StoryScreen';
 import CreationScreen from '@/components/screens/CreationScreen';
 import TransitionScreen from '@/components/screens/TransitionScreen';
 import GameScreen from '@/components/screens/GameScreen';
-import { LoginButton } from '@/components/auth/LoginButton';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { RegenmonType } from '@/lib/types';
 

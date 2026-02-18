@@ -5,9 +5,7 @@ import { ChatMessage, RegenmonType, RegenmonStats } from '@/lib/types';
 import { ChatBubble } from './ChatBubble';
 import { ChatInput } from './ChatInput';
 import { TypingIndicator } from './TypingIndicator';
-import { CHAT_MAX_MESSAGES } from '@/lib/constants';
 import { loadMemories } from '@/lib/storage';
-import classNames from 'classnames';
 
 interface ChatBoxProps {
     isOpen: boolean;
