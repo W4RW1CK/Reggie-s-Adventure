@@ -4013,3 +4013,309 @@ html, body {
 .theme-light .precamera__btn--gallery { background: #e8dcc8; color: #2a2a2a; border-color: #8b8370; }
 .theme-light .chat-photo-picker__menu { background: #e8dcc8; border-color: #8b8370; }
 .theme-light .chat-photo-picker__option { background: #d4c5a9; color: #2a2a2a; border-color: #8b8370; }
+
+/* =============================================
+   PHASE 58: DIARIO PANEL (📖 Memorias + Historial)
+   ============================================= */
+
+/* Overlay — fullscreen on mobile/tablet, dimmed backdrop on desktop */
+.diario-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.diario-overlay--closing {
+  animation: fadeOut 0.2s ease-in forwards;
+}
+
+/* Mobile + Tablet (<1025px): fullscreen overlay */
+.diario-panel {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--theme-panel-bg, #1a1a2e);
+  animation: slideUp 0.25s ease-out;
+}
+
+.diario-panel--closing {
+  animation: slideDown 0.2s ease-in forwards;
+}
+
+/* Desktop (≥1025px): floating window with dimmed backdrop */
+@media (min-width: 1025px) {
+  .diario-overlay {
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .diario-panel {
+    width: 480px;
+    max-width: 90vw;
+    height: auto;
+    max-height: 80vh;
+    border: 4px solid var(--theme-border, #4a4a4a);
+    animation: popIn 0.25s ease-out;
+  }
+
+  .diario-panel--closing {
+    animation: fadeOut 0.2s ease-in forwards;
+  }
+}
+
+.theme-light .diario-overlay {
+  background: transparent;
+}
+@media (min-width: 1025px) {
+  .theme-light .diario-overlay {
+    background: rgba(42, 42, 42, 0.4);
+  }
+}
+
+/* Header */
+.diario__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 2px solid var(--theme-border-subtle, rgba(255, 255, 255, 0.25));
+  flex-shrink: 0;
+}
+
+.diario__title {
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(10px, 2.5vw, 14px);
+  color: var(--theme-text, #e8e8e8);
+  margin: 0;
+}
+
+.diario__close {
+  font-size: clamp(16px, 4vw, 24px);
+  color: var(--theme-text, #e8e8e8);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+
+.diario__close:hover {
+  color: #f87171;
+}
+
+/* Tabs */
+.diario__tabs {
+  display: flex;
+  border-bottom: 2px solid var(--theme-border-faint, rgba(255, 255, 255, 0.2));
+  flex-shrink: 0;
+}
+
+.diario__tab {
+  flex: 1;
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(8px, 1.8vw, 11px);
+  padding: 10px 12px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--theme-text-secondary, #a0a0a0);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  text-align: center;
+}
+
+.diario__tab:hover {
+  color: var(--theme-text, #e8e8e8);
+}
+
+.diario__tab--active {
+  color: #ff9500;
+  border-bottom-color: #ff9500;
+}
+
+.theme-light .diario__tab--active {
+  color: #ff9500;
+  border-bottom-color: #ff9500;
+}
+
+/* Content area */
+.diario__content {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  min-height: 0;
+}
+
+.diario__tabpanel {
+  padding: 12px 16px;
+}
+
+/* Empty state */
+.diario__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px 16px;
+  text-align: center;
+}
+
+.diario__empty p {
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(8px, 1.6vw, 10px);
+  color: var(--theme-text-secondary, #a0a0a0);
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* Entry list */
+.diario__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Entry card */
+.diario__entry {
+  display: flex;
+  gap: 10px;
+  padding: 10px 4px;
+  border-bottom: 1px solid var(--theme-border-faint, rgba(255, 255, 255, 0.1));
+}
+
+.diario__entry:last-child {
+  border-bottom: none;
+}
+
+.diario__entry-icon {
+  font-size: clamp(14px, 3vw, 18px);
+  flex-shrink: 0;
+  width: 24px;
+  text-align: center;
+  padding-top: 2px;
+}
+
+.diario__entry-body {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Memoria entry text (diary quote) */
+.diario__entry-text {
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(7px, 1.4vw, 9px);
+  font-style: italic;
+  color: var(--theme-text, #e8e8e8);
+  line-height: 1.8;
+  margin: 0 0 6px 0;
+}
+
+/* Activity entry label */
+.diario__entry-label {
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(7px, 1.4vw, 9px);
+  color: var(--theme-text, #e8e8e8);
+  margin: 0 0 4px 0;
+}
+
+.diario__entry-detail {
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(6px, 1.2vw, 8px);
+  color: var(--theme-text-secondary, #a0a0a0);
+  margin: 0 0 4px 0;
+  line-height: 1.6;
+}
+
+/* Meta row */
+.diario__entry-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.diario__entry-time {
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(6px, 1vw, 7px);
+  color: var(--theme-muted, #777);
+}
+
+.diario__entry-source {
+  font-size: clamp(8px, 1.5vw, 10px);
+}
+
+/* Resonance badges */
+.diario__resonance {
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(6px, 1vw, 7px);
+  padding: 2px 6px;
+  border: 1px solid;
+}
+
+.diario__resonance--strong {
+  color: #4caf50;
+  border-color: rgba(76, 175, 80, 0.4);
+}
+.diario__resonance--medium {
+  color: #f5c542;
+  border-color: rgba(245, 197, 66, 0.4);
+}
+.diario__resonance--weak {
+  color: #a0a0a0;
+  border-color: rgba(160, 160, 160, 0.3);
+}
+.diario__resonance--penalizing {
+  color: #e74c3c;
+  border-color: rgba(231, 76, 60, 0.4);
+}
+
+/* Fragment deltas */
+.diario__frag-delta {
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(6px, 1vw, 8px);
+}
+
+.diario__frag-delta--positive {
+  color: #4caf50;
+}
+
+.diario__frag-delta--negative {
+  color: #e74c3c;
+}
+
+.diario__progress-delta {
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(6px, 1vw, 7px);
+  color: #80deea;
+}
+
+/* Light theme overrides */
+.theme-light .diario__entry {
+  border-bottom-color: rgba(139, 131, 112, 0.2);
+}
+
+.theme-light .diario__resonance--strong {
+  color: #16a34a;
+  border-color: rgba(22, 163, 74, 0.3);
+}
+.theme-light .diario__resonance--medium {
+  color: #b8860b;
+  border-color: rgba(184, 134, 11, 0.3);
+}
+.theme-light .diario__resonance--weak {
+  color: #5a5a4a;
+  border-color: rgba(90, 90, 74, 0.3);
+}
+.theme-light .diario__frag-delta--positive {
+  color: #16a34a;
+}
+.theme-light .diario__progress-delta {
+  color: #2563eb;
+}

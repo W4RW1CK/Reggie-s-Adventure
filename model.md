@@ -856,3 +856,13 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 - **GameScreen.tsx updated**: Wired useFullscreen hook, added effectsEnabled state, adapted SettingsPanel props to S4 interface.
 - **globals.css**: Added ~200 lines of S4 settings panel CSS + HUD enhancement CSS. Responsive behavior: fullscreen overlay on mobile/tablet, floating window on desktop. Light theme variants for all new components.
 - **Theme system**: Existing S3 useTheme hook + CSS custom properties system fully adequate for S4. Dark theme (existing NES colors) and Light theme (warm #fffbf5 background, #383838 text per Frutero palette) both supported via `.theme-dark` / `.theme-light` classes on html element with localStorage persistence.
+
+### Fase 58: Diario Panel — Memorias + Historial (2026-02-19)
+- **DiarioPanel.tsx**: Single panel with two tabs ("Memorias" | "Historial"). Mobile+Tablet: fullscreen overlay. Desktop (≥1025px): floating window (480px wide) with dimmed backdrop. Close via ✕ button, Escape key, or backdrop click (desktop). Tab active state: #ff9500 underline (Frutero primary). Smooth open/close animations reusing existing CSS keyframes.
+- **Memorias tab**: Displays DiaryEntry objects from photo evaluations. Each entry shows emoji icon (by resonance level) + Regenmon's reaction text (italic) + metadata (resonance badge, source icon, time ago). Chronological order (newest first). Empty state: "Aún no has compartido memorias. ¡Toma tu primera foto! 📷"
+- **Historial tab**: Displays FragmentTransaction objects as activity log. Entry types: 🖼️ Photo, 💬 Chat, 🔮 Purification (spirit/essence), 🔍 Search fragments, 🎯 Mission. Each entry: icon + description + fragment delta (color-coded +/-) + progress delta + time ago. Empty state: "Tu aventura acaba de comenzar..."
+- **useActivityLog hook**: Manages FragmentTransaction entries in localStorage (max 50, FIFO). Storage key: `STORAGE_KEYS.ACTIVITY_LOG`.
+- **useDiaryEntries hook**: Manages DiaryEntry objects in localStorage (max 50). Storage key: `STORAGE_KEYS.DIARY_ENTRIES`.
+- **constants.ts**: Added `ACTIVITY_LOG` and `DIARY_ENTRIES` to `STORAGE_KEYS`.
+- **CSS**: ~200 lines in globals.css. Responsive: fullscreen on mobile/tablet, floating on desktop. Light theme overrides for all elements. NES pixel aesthetic maintained.
+- **Build**: ✅ Clean

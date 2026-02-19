@@ -78,6 +78,8 @@ export const STORAGE_KEYS = {
     MEMORIES: 'reggie-adventure-memories', // [NEW Phase 26]
     STRIKES: 'reggie-adventure-strikes',   // [NEW Phase 49 — S4]
     MISSION: 'reggie-adventure-mission',   // [NEW Phase 49 — S4]
+    ACTIVITY_LOG: 'reggie-adventure-activity-log', // [NEW Phase 58 — S4]
+    DIARY_ENTRIES: 'reggie-adventure-diary-entries', // [NEW Phase 58 — S4]
 };
 
 // Chat Constants

@@ -570,7 +570,7 @@
 - [x] Fase 55: Fullscreen + Layout (useFullscreen, mobile-first overhaul)
 - [x] Fase 56: HUD Redesign + Settings Panel + Theme System
 - [x] Fase 57: Photo UI (PreCamera, PostPhoto, PhotoFlow, ChatPhotoPicker)
-- [ ] Fase 58: Memorias Panel (MemoriasPanel, diary entries)
+- [x] Fase 58: Diario Panel (DiarioPanel with Memorias + Historial tabs, useActivityLog, useDiaryEntries)
 - [ ] Fase 59: Evolution Visual (5 stages × 3 types sprites, fracture animation)
 - [ ] Fase 60: Missions UI (MissionCard, mission flow)
 - [ ] Fase 61: Theme Adaptation (S4 components in Dark/Light)
