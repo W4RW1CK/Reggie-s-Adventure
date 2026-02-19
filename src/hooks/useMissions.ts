@@ -4,9 +4,10 @@ import {
   MISSION_EXPIRATION_MS,
   MISSION_BYPASS_WINDOW_MS,
   PROGRESS_MISSION_BONUS,
+  STORAGE_KEYS,
 } from '@/lib/constants';
 
-const STORAGE_KEY = 'reggie-adventure-mission';
+const STORAGE_KEY = STORAGE_KEYS.MISSION;
 
 // Mission templates per type — AI would generate these in prod,
 // but we provide contextual templates as a starting point

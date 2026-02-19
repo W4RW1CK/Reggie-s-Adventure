@@ -4,9 +4,10 @@ import {
   STRIKE_COOLDOWN_DURATION_MS,
   STRIKE_BLOCK_DURATION_MS,
   STRIKE_RESET_DAYS,
+  STORAGE_KEYS,
 } from '@/lib/constants';
 
-const STORAGE_KEY = 'reggie-adventure-strikes';
+const STORAGE_KEY = STORAGE_KEYS.STRIKES;
 const MS_PER_DAY = 86400000;
 
 function loadStrikes(): StrikeData {

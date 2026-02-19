@@ -76,6 +76,8 @@ export const STORAGE_KEYS = {
     CHAT: 'reggie-adventure-chat',
     PLAYER: 'reggie-adventure-player',
     MEMORIES: 'reggie-adventure-memories', // [NEW Phase 26]
+    STRIKES: 'reggie-adventure-strikes',   // [NEW Phase 49 — S4]
+    MISSION: 'reggie-adventure-mission',   // [NEW Phase 49 — S4]
 };
 
 // Chat Constants
@@ -86,7 +88,7 @@ export const CHAT_RATE_LIMIT = 15;
 export const CHAT_SPIRIT_MAX_CHANGE = 5; // Maximo cambio de espíritu
 export const CHAT_PULSE_CHANGE = -1; // Hablar gasta energía
 export const CHAT_ESENCIA_COST = -2; // Hablar gasta esencia
-export const CHAT_FRAGMENT_REWARD_RANGE = [0, 5];
+export const CHAT_FRAGMENT_REWARD_RANGE: [number, number] = [0, 5];
 export const CHAT_CRITICAL_THRESHOLD = 10;
 
 // UI Constants
