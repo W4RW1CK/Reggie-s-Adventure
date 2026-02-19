@@ -62,6 +62,8 @@ export default function PhotoFlow({
   const [step, setStep] = useState<PhotoStep>('pre-camera');
   const [result, setResult] = useState<VisionResponse | null>(null);
   const [loadingText, setLoadingText] = useState('Tu Regenmon está sintiendo esta memoria...');
+  const [missionCompleted, setMissionCompleted] = useState(false);
+  const [missionBonusAmount, setMissionBonusAmount] = useState(0);
 
   const cooldownStatus = getPhotoCooldownStatus(lastPhotoAt, strikes, activeMission);
 
@@ -109,7 +111,11 @@ export default function PhotoFlow({
       let missionBonus = 0;
       if (activeMission && !activeMission.completed) {
         missionBonus = onCompleteMission();
-        if (missionBonus > 0) onAddProgress(missionBonus);
+        if (missionBonus > 0) {
+          onAddProgress(missionBonus);
+          setMissionCompleted(true);
+          setMissionBonusAmount(missionBonus);
+        }
       }
 
       // Add photo entry
@@ -150,6 +156,8 @@ export default function PhotoFlow({
         result={result}
         regenmonType={regenmonType}
         regenmonName={regenmonName}
+        missionCompleted={missionCompleted}
+        missionBonus={missionBonusAmount}
         onChat={onGoToChat}
         onWorld={onGoToWorld}
       />

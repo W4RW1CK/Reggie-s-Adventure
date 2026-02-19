@@ -6,6 +6,8 @@ interface PostPhotoProps {
   result: VisionResponse;
   regenmonType: RegenmonType;
   regenmonName: string;
+  missionCompleted?: boolean;
+  missionBonus?: number;
   onChat: () => void;
   onWorld: () => void;
 }
@@ -32,7 +34,7 @@ function getSpriteClass(level: ResonanceLevel): string {
   }
 }
 
-export default function PostPhoto({ result, regenmonType, regenmonName, onChat, onWorld }: PostPhotoProps) {
+export default function PostPhoto({ result, regenmonType, regenmonName, missionCompleted, missionBonus, onChat, onWorld }: PostPhotoProps) {
   const resonance = getResonanceLabel(result.resonanceLevel);
   const spriteClass = getSpriteClass(result.resonanceLevel);
   const isPenalizing = result.resonanceLevel === 'penalizing';
@@ -78,6 +80,9 @@ export default function PostPhoto({ result, regenmonType, regenmonName, onChat, 
             <span className={`postphoto__delta ${result.pulseChange > 0 ? 'postphoto__delta--positive' : 'postphoto__delta--negative'}`}>
               {result.pulseChange > 0 ? '+' : ''}{result.pulseChange} 💛
             </span>
+          )}
+          {missionCompleted && missionBonus && missionBonus > 0 && (
+            <span className="postphoto__delta postphoto__delta--mission">🎯 +{missionBonus} progreso bonus</span>
           )}
           {isPenalizing && (
             <span className="postphoto__delta postphoto__delta--negative">⚠️ Strike registrado</span>

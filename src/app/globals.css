@@ -4630,3 +4630,300 @@ html, body {
     animation: none !important;
   }
 }
+
+/* ==========================================
+   PHASE 60: Missions UI
+   ========================================== */
+
+/* Mission button in HUD top bar */
+.hud-mission-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: clamp(14px, 3vw, 20px);
+  opacity: 0.4;
+  transition: opacity 0.3s, transform 0.15s;
+  padding: 4px;
+}
+
+.hud-mission-btn--active {
+  opacity: 1;
+  animation: mission-pulse 2s ease-in-out infinite;
+}
+
+.hud-mission-btn:hover {
+  transform: scale(1.2);
+}
+
+/* S4 HUD mission button styling */
+.s4-hud__mission {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+/* Mission Popup */
+.mission-popup-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 60px;
+  background: rgba(0, 0, 0, 0.3);
+  animation: fade-in 0.15s ease-out;
+}
+
+.mission-popup-backdrop--closing {
+  animation: fade-out 0.15s ease-in forwards;
+}
+
+.mission-popup {
+  background: var(--theme-surface, #1a1a2e);
+  border: 2px solid var(--theme-border, #4a4a4a);
+  border-radius: 12px;
+  padding: 16px;
+  max-width: 320px;
+  width: 90vw;
+  position: relative;
+  animation: popup-slide-in 0.2s ease-out;
+  font-family: var(--font-press-start-2p);
+}
+
+.mission-popup--closing {
+  animation: popup-slide-out 0.15s ease-in forwards;
+}
+
+.mission-popup--revealing {
+  animation: mission-reveal 0.5s ease-out;
+}
+
+@keyframes popup-slide-in {
+  from { opacity: 0; transform: translateY(-10px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes popup-slide-out {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(-10px) scale(0.95); }
+}
+
+@keyframes mission-reveal {
+  0% { transform: scale(0.8); opacity: 0; filter: brightness(2); }
+  50% { transform: scale(1.05); filter: brightness(1.5); }
+  100% { transform: scale(1); opacity: 1; filter: brightness(1); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.mission-popup__close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--theme-text-secondary, #a0a0a0);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px;
+}
+
+.mission-popup__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.mission-popup__type {
+  font-size: 8px;
+  color: var(--theme-text-accent, #fff);
+}
+
+.mission-popup__timer {
+  font-size: 7px;
+  color: var(--theme-text-secondary, #a0a0a0);
+}
+
+.mission-popup__prompt {
+  font-size: 9px;
+  line-height: 1.6;
+  color: var(--theme-text-primary, #e8e8e8);
+  margin-bottom: 10px;
+}
+
+.mission-popup__reward {
+  font-size: 7px;
+  color: #f5c542;
+  text-align: center;
+  margin-bottom: 12px;
+  padding: 4px 8px;
+  background: rgba(245, 197, 66, 0.1);
+  border-radius: 6px;
+}
+
+.mission-popup__actions {
+  display: flex;
+  justify-content: center;
+}
+
+.mission-popup__btn {
+  font-family: var(--font-press-start-2p);
+  font-size: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--theme-border, #4a4a4a);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.mission-popup__btn:active {
+  transform: scale(0.95);
+}
+
+.mission-popup__btn--abandon {
+  background: transparent;
+  color: var(--theme-text-secondary, #a0a0a0);
+}
+
+.mission-popup__btn--abandon:hover {
+  background: rgba(231, 76, 60, 0.15);
+  color: #e74c3c;
+}
+
+.mission-popup__btn--activate {
+  background: rgba(245, 197, 66, 0.2);
+  color: #f5c542;
+  border-color: rgba(245, 197, 66, 0.4);
+}
+
+.mission-popup__btn--activate:hover {
+  background: rgba(245, 197, 66, 0.3);
+}
+
+.mission-popup__btn--yes {
+  background: rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+  margin-left: 6px;
+}
+
+.mission-popup__btn--no {
+  background: transparent;
+  color: var(--theme-text-secondary, #a0a0a0);
+  margin-left: 6px;
+}
+
+.mission-popup__confirm {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 8px;
+  color: var(--theme-text-secondary, #a0a0a0);
+}
+
+.mission-popup__empty {
+  text-align: center;
+  padding: 8px 0;
+}
+
+.mission-popup__empty-text {
+  font-size: 9px;
+  color: var(--theme-text-primary, #e8e8e8);
+  margin-bottom: 8px;
+}
+
+.mission-popup__empty-desc {
+  font-size: 7px;
+  color: var(--theme-text-secondary, #a0a0a0);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+/* Light theme */
+.theme-light .mission-popup {
+  background: #f5f0e1;
+  border-color: rgba(139, 131, 112, 0.3);
+}
+
+.theme-light .mission-popup__prompt {
+  color: #2a2a2a;
+}
+
+.theme-light .mission-popup__empty-text {
+  color: #2a2a2a;
+}
+
+/* Mission Completion Celebration */
+.mission-celebration {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.mission-celebration__sparkle {
+  position: absolute;
+  top: 30%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #f5c542;
+  animation: sparkle-burst 1.2s ease-out forwards;
+}
+
+.mission-celebration__sparkle:nth-child(even) {
+  background: #e74c3c;
+}
+
+.mission-celebration__sparkle:nth-child(3n) {
+  background: #3498db;
+}
+
+@keyframes sparkle-burst {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-40px) scale(1.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-120px) scale(0.5);
+  }
+}
+
+/* PostPhoto mission bonus delta */
+.postphoto__delta--mission {
+  color: #f5c542 !important;
+  font-weight: bold;
+  animation: mission-bonus-glow 1s ease-in-out 2;
+}
+
+@keyframes mission-bonus-glow {
+  0%, 100% { text-shadow: none; }
+  50% { text-shadow: 0 0 8px rgba(245, 197, 66, 0.6); }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .mission-popup,
+  .mission-popup--revealing,
+  .mission-popup-backdrop,
+  .mission-celebration__sparkle,
+  .hud-mission-btn--active {
+    animation: none !important;
+  }
+}

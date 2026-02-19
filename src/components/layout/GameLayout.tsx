@@ -10,7 +10,9 @@ interface GameLayoutProps {
   fragments: number;
   isLoggedIn: boolean;
   missionActive: boolean;
+  missionPrompt?: string;
   onSettingsClick: () => void;
+  onMissionClick: () => void;
   onChatClick: () => void;
   onPhotoClick: () => void;
   onDiarioClick: () => void;
@@ -24,7 +26,9 @@ export default function GameLayout({
   fragments,
   isLoggedIn,
   missionActive,
+  missionPrompt,
   onSettingsClick,
+  onMissionClick,
   onChatClick,
   onPhotoClick,
   onDiarioClick,
@@ -39,7 +43,9 @@ export default function GameLayout({
         fragments={fragments}
         isLoggedIn={isLoggedIn}
         missionActive={missionActive}
+        missionPrompt={missionPrompt}
         onSettingsClick={onSettingsClick}
+        onMissionClick={onMissionClick}
       />
 
       {/* Main content area */}

@@ -13,6 +13,7 @@ interface HUDProps {
   missionActive: boolean;
   missionPrompt?: string;
   onSettingsClick: () => void;
+  onMissionClick: () => void;
   isHealthCritical?: boolean;
 }
 
@@ -22,6 +23,7 @@ export default function HUD({
   missionActive,
   missionPrompt,
   onSettingsClick,
+  onMissionClick,
   isHealthCritical = false,
 }: HUDProps) {
   const [deltas, setDeltas] = useState<FragmentDelta[]>([]);
@@ -70,13 +72,14 @@ export default function HUD({
 
       {/* Right: Mission + Settings */}
       <div className="s4-hud__right">
-        <span
+        <button
           className={`s4-hud__mission ${missionActive ? 's4-hud__mission--active' : ''}`}
           aria-label={missionActive ? `Misión activa: ${missionPrompt || 'Misión en curso'}` : 'Sin misión activa'}
           title={missionActive ? missionPrompt : undefined}
+          onClick={onMissionClick}
         >
           🎯
-        </span>
+        </button>
         <button
           className="s4-hud__settings"
           onClick={handleSettingsClick}

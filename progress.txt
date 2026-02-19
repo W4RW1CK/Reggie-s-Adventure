@@ -572,7 +572,7 @@
 - [x] Fase 57: Photo UI (PreCamera, PostPhoto, PhotoFlow, ChatPhotoPicker)
 - [x] Fase 58: Diario Panel (DiarioPanel with Memorias + Historial tabs, useActivityLog, useDiaryEntries)
 - [x] Fase 59: Evolution Visual (FractureOverlay, WorldBackground, FractureDots, sprite adaptation, fracture closing animation)
-- [ ] Fase 60: Missions UI (MissionCard, mission flow)
+- [x] Fase 60: Missions UI (MissionPopup, mission flow, completion celebration, HUD wiring, PostPhoto mission bonus)
 - [ ] Fase 61: Theme Adaptation (S4 components in Dark/Light)
 - [ ] Fase 62: Transitions + Polish (evolution morph, photo reveal, mission animations)
 

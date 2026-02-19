@@ -876,3 +876,13 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 - **page.tsx updated**: Passes `progress`, `newFractureJustClosed`, `clearNewFracture`, `isEvolutionFrozen()` to GameScreen.
 - **globals.css**: ~250 lines of Phase 59 CSS — fracture animations (pulse, seal, particle burst), world background transitions, fracture dots, sprite evolution stages (5 filter presets + halo + dormant), orbital particles. Light theme overrides. Reduced motion support.
 - **Build**: ✅ Clean
+
+### Fase 60: Missions UI — Detail Popup, Completion Celebration (2026-02-19)
+- **MissionPopup.tsx**: Lightweight card overlay (not fullscreen). Tapping 🎯 in HUD opens it. Active mission: shows type-specific label (⚡/🔥/❄️), description, time remaining, +5 bonus reminder, "Abandonar" with confirmation. No mission: "Buscar misión" button triggers `useMissions.generateMission()` with reveal animation. Dismiss via ✕ or click outside.
+- **HUD.tsx**: 🎯 changed from `<span>` to `<button>` with `onMissionClick` callback. Pulse animation when mission active.
+- **GameScreen.tsx**: Wired `useMissions` hook. Added `hud-mission-btn` to old-style HUD top bar alongside ⚙️. Mission popup and celebration overlay integrated.
+- **PostPhoto.tsx + PhotoFlow.tsx**: Mission completion now shows "+N progreso bonus 🎯" delta with golden glow animation. `missionCompleted` and `missionBonus` props passed from PhotoFlow to PostPhoto.
+- **Mission Completion Celebration**: 12 sparkle particles (gold/red/blue) burst animation overlaid on screen. Auto-dismisses.
+- **Triple reinforcement wired**: HUD (🎯 glow+tap), Chat (system prompt from Phase 54), Profile (visible in popup).
+- **globals.css**: ~200 lines — popup backdrop/card animations, sparkle burst keyframes, mission bonus glow, light theme overrides, reduced motion support.
+- **Build**: ✅ Clean

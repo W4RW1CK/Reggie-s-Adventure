@@ -21,6 +21,8 @@ import { PURIFY_COST, SEARCH_FRAGMENTS_REWARD } from '@/lib/constants';
 import { ChatBox } from '../chat/ChatBox';
 import { useChat } from '@/hooks/useChat';
 import { useChiptuneAudio } from '@/hooks/useChiptuneAudio';
+import { useMissions } from '@/hooks/useMissions';
+import MissionPopup from '../missions/MissionPopup';
 import { ErrorBoundary } from '../ErrorBoundary';
 
 interface GameScreenProps {
@@ -59,6 +61,8 @@ export default function GameScreen({
     const [showTutorial, setShowTutorial] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
     const [showHistory, setShowHistory] = useState(false);
+    const [showMissionPopup, setShowMissionPopup] = useState(false);
+    const [missionCelebration, setMissionCelebration] = useState(false);
     const [activityEntries, setActivityEntries] = useState<ActivityEntry[]>([]);
     const [toast, setToast] = useState<{ text: string; type: 'loading' | 'success' | 'error' } | null>(null);
     const [floatingDelta, setFloatingDelta] = useState<string | null>(null);
@@ -72,6 +76,15 @@ export default function GameScreen({
     const { login, logout } = useAuth();
     const { isFullscreen, isSupported: isFullscreenSupported, toggleFullscreen } = useFullscreen();
     const [effectsEnabled, setEffectsEnabled] = useState(true);
+
+    // Missions
+    const {
+        activeMission,
+        generateMission,
+        completeMission,
+        abandonMission,
+        isExpired,
+    } = useMissions({ regenmonType: regenmon.type, memories: regenmon.memories });
 
     // Track window size for responsive SVG
     useEffect(() => {
@@ -159,6 +172,10 @@ export default function GameScreen({
 
     const handleSettings = () => {
         setShowSettings(true);
+    };
+
+    const handleMissionClick = () => {
+        setShowMissionPopup(true);
     };
 
     const handleTutorialDismiss = (dontShowAgain: boolean) => {
@@ -262,6 +279,13 @@ export default function GameScreen({
                             <div className="hud-memories">🧠 {memoryCount}</div>
                         )}
                     </div>
+                    <button
+                        className={`hud-mission-btn ${activeMission && !activeMission.completed && !isExpired ? 'hud-mission-btn--active' : ''}`}
+                        onClick={handleMissionClick}
+                        aria-label={activeMission && !activeMission.completed ? 'Misión activa' : 'Sin misión'}
+                    >
+                        🎯
+                    </button>
                     <button className="hud-config-btn" onClick={handleSettings}>⚙️</button>
                 </div>
 
@@ -378,6 +402,33 @@ export default function GameScreen({
                     onToggleEffects={() => setEffectsEnabled(prev => !prev)}
                     onRestartTutorial={() => { setShowSettings(false); setShowTutorial(true); }}
                 />
+
+                {/* Mission Popup */}
+                <MissionPopup
+                    isOpen={showMissionPopup}
+                    onClose={() => setShowMissionPopup(false)}
+                    activeMission={isExpired ? null : activeMission}
+                    regenmonType={regenmon.type}
+                    onActivateNew={generateMission}
+                    onAbandon={abandonMission}
+                />
+
+                {/* Mission Completion Celebration */}
+                {missionCelebration && (
+                    <div className="mission-celebration" aria-hidden="true">
+                        {[...Array(12)].map((_, i) => (
+                            <span
+                                key={i}
+                                className="mission-celebration__sparkle"
+                                style={{
+                                    left: `${10 + Math.random() * 80}%`,
+                                    animationDelay: `${Math.random() * 0.5}s`,
+                                    animationDuration: `${0.8 + Math.random() * 0.6}s`,
+                                }}
+                            />
+                        ))}
+                    </div>
+                )}
 
                 {/* Chat Overlay */}
                 <ErrorBoundary>
