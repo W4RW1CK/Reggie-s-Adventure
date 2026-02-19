@@ -2973,3 +2973,411 @@ html, body {
   background: rgba(139, 131, 112, 0.25);
   border-color: rgba(139, 131, 112, 0.4);
 }
+
+/* =============================================
+   PHASE 55: S4 LAYOUT SYSTEM
+   ============================================= */
+
+/* --- Loading screen: real progress bar (driven by JS width) --- */
+.loading-screen__progress-bar--real {
+  height: 100%;
+  background-color: #4caf50;
+  transition: width 0.3s ease;
+  image-rendering: pixelated;
+  background-image: repeating-linear-gradient(90deg,
+    #4caf50 0px, #4caf50 8px,
+    #388e3c 8px, #388e3c 10px);
+  /* Override the CSS animation from old progress bar */
+  animation: none;
+}
+
+/* --- Fullscreen invitation (merged with loading screen) --- */
+.loading-screen__fullscreen-invite {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.loading-screen__ready-text {
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(14px, 3vw, 22px);
+  color: #4caf50;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
+}
+
+.loading-screen__invite-text {
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(9px, 1.8vw, 14px);
+  color: #a0a0a0;
+}
+
+.loading-screen__invite-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.loading-screen__fs-btn {
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(10px, 2vw, 14px);
+  padding: 12px 24px;
+  border: 4px solid;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 240px;
+  text-align: center;
+}
+
+.loading-screen__fs-btn--primary {
+  background-color: #4caf50;
+  border-color: #66bb6a;
+  color: #fff;
+}
+
+.loading-screen__fs-btn--primary:hover {
+  background-color: #66bb6a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
+}
+
+.loading-screen__fs-btn--secondary {
+  background-color: transparent;
+  border-color: #4a4a4a;
+  color: #a0a0a0;
+}
+
+.loading-screen__fs-btn--secondary:hover {
+  border-color: #888;
+  color: #e8e8e8;
+}
+
+/* Light theme fullscreen invite */
+.theme-light .loading-screen__ready-text {
+  color: #2a2a2a;
+  text-shadow: none;
+}
+
+.theme-light .loading-screen__invite-text {
+  color: #5a5a4a;
+}
+
+.theme-light .loading-screen__fs-btn--primary {
+  background-color: #b8860b;
+  border-color: #d4a017;
+}
+
+.theme-light .loading-screen__fs-btn--secondary {
+  border-color: #8b8370;
+  color: #5a5a4a;
+}
+
+/* --- S4 HUD (always visible in all states) --- */
+.s4-hud {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  font-family: var(--font-press-start-2p);
+}
+
+.s4-hud__left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.s4-hud__right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.s4-hud__fragments {
+  font-size: clamp(8px, 2vw, 12px);
+  color: #93c5fd;
+}
+
+.s4-hud__mission {
+  font-size: clamp(14px, 3vw, 20px);
+  opacity: 0.4;
+  transition: opacity 0.3s;
+}
+
+.s4-hud__mission--active {
+  opacity: 1;
+  animation: mission-pulse 2s ease-in-out infinite;
+}
+
+@keyframes mission-pulse {
+  0%, 100% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.15); filter: brightness(1.4); }
+}
+
+.s4-hud__settings {
+  font-size: clamp(14px, 3vw, 20px);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  transition: transform 0.15s;
+}
+
+.s4-hud__settings:hover {
+  transform: scale(1.2);
+}
+
+/* Light theme HUD */
+.theme-light .s4-hud {
+  background: rgba(212, 197, 169, 0.9);
+  border-bottom-color: rgba(139, 131, 112, 0.3);
+}
+
+.theme-light .s4-hud__fragments {
+  color: #5a5a4a;
+}
+
+/* --- S4 Bottom Bar (mobile/tablet vertical only) --- */
+.s4-bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 8px 16px;
+  padding-bottom: max(8px, env(safe-area-inset-bottom));
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  border-top: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.s4-bottom-bar__bubble {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 20px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: all 0.15s;
+  min-width: 70px;
+  font-family: var(--font-press-start-2p);
+}
+
+.s4-bottom-bar__bubble:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.s4-bottom-bar__bubble--active {
+  background: rgba(147, 197, 253, 0.2);
+  border-color: #93c5fd;
+  box-shadow: 0 0 8px rgba(147, 197, 253, 0.3);
+}
+
+.s4-bottom-bar__icon {
+  font-size: clamp(16px, 4vw, 24px);
+}
+
+.s4-bottom-bar__label {
+  font-size: clamp(6px, 1.5vw, 9px);
+  color: #a0a0a0;
+}
+
+.s4-bottom-bar__bubble--active .s4-bottom-bar__label {
+  color: #93c5fd;
+}
+
+/* Light theme bottom bar */
+.theme-light .s4-bottom-bar {
+  background: rgba(212, 197, 169, 0.9);
+  border-top-color: rgba(139, 131, 112, 0.3);
+}
+
+.theme-light .s4-bottom-bar__bubble {
+  border-color: rgba(139, 131, 112, 0.4);
+  background: rgba(139, 131, 112, 0.1);
+}
+
+.theme-light .s4-bottom-bar__label {
+  color: #5a5a4a;
+}
+
+.theme-light .s4-bottom-bar__bubble--active {
+  background: rgba(184, 134, 11, 0.15);
+  border-color: #b8860b;
+}
+
+.theme-light .s4-bottom-bar__bubble--active .s4-bottom-bar__label {
+  color: #b8860b;
+}
+
+/* --- S4 Layout System (3-state) --- */
+.s4-layout {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.s4-layout__content {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  /* Space for HUD top + bottom bar */
+  padding-top: 40px;
+  padding-bottom: 64px;
+}
+
+.s4-layout__panel {
+  position: absolute;
+  inset: 0;
+  display: none;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.s4-layout__panel--visible {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── MOBILE: <640px — alternating full-screen states ── */
+@media (max-width: 639px) {
+  .s4-layout__panel--visible {
+    display: flex;
+  }
+
+  .s4-bottom-bar {
+    display: flex;
+  }
+}
+
+/* ── TABLET VERTICAL: 641-1024px portrait — same as mobile, more spacious ── */
+@media (min-width: 641px) and (max-width: 1024px) and (orientation: portrait) {
+  .s4-layout__panel--visible {
+    display: flex;
+  }
+
+  .s4-bottom-bar {
+    display: flex;
+  }
+
+  .s4-bottom-bar__bubble {
+    padding: 10px 28px;
+    min-width: 90px;
+  }
+
+  .s4-bottom-bar__icon {
+    font-size: 24px;
+  }
+
+  .s4-bottom-bar__label {
+    font-size: 9px;
+  }
+}
+
+/* ── TABLET HORIZONTAL: 641-1024px landscape — side-by-side like desktop ── */
+@media (min-width: 641px) and (max-width: 1024px) and (orientation: landscape) {
+  .s4-layout__content {
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 0;
+  }
+
+  .s4-layout__panel {
+    position: relative;
+    inset: auto;
+  }
+
+  .s4-layout__panel--world {
+    flex: 7;
+    display: flex !important;
+  }
+
+  .s4-layout__panel--chat.s4-layout__panel--visible {
+    flex: 3;
+    display: flex !important;
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .s4-layout__panel--photo.s4-layout__panel--visible {
+    flex: 3;
+    display: flex !important;
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Hide bottom bar in tablet landscape */
+  .s4-bottom-bar {
+    display: none;
+  }
+}
+
+/* ── DESKTOP: 1025px+ — 70% world / 30% chat ── */
+@media (min-width: 1025px) {
+  .s4-layout__content {
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 0;
+  }
+
+  .s4-layout__panel {
+    position: relative;
+    inset: auto;
+  }
+
+  /* World always visible on desktop */
+  .s4-layout__panel--world {
+    flex: 7;
+    display: flex !important;
+  }
+
+  /* Chat/Photo as side panel */
+  .s4-layout__panel--chat.s4-layout__panel--visible {
+    flex: 3;
+    display: flex !important;
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .s4-layout__panel--photo.s4-layout__panel--visible {
+    flex: 3;
+    display: flex !important;
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Hide bottom bar on desktop */
+  .s4-bottom-bar {
+    display: none;
+  }
+}
+
+/* Light theme layout borders */
+.theme-light .s4-layout__panel--chat.s4-layout__panel--visible,
+.theme-light .s4-layout__panel--photo.s4-layout__panel--visible {
+  border-left-color: rgba(139, 131, 112, 0.3);
+}
+
+/* Fullscreen mode adjustments */
+:fullscreen .s4-layout {
+  max-width: 100vw;
+  height: 100vh;
+}

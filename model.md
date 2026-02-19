@@ -824,3 +824,19 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 ### Fixes Applied
 - Centralized `STRIKES` and `MISSION` storage keys into `STORAGE_KEYS` constant
 - Added `[number, number]` type to `CHAT_FRAGMENT_REWARD_RANGE`
+
+### Fase 55: Loading + Fullscreen + Layout Foundation (2026-02-19)
+- **useAssetPreloader**: Real preloader using `new Image().src` for sprites (3) + backgrounds (6) = 9 assets. Progress tracked 0-100%.
+- **LoadingScreen rewrite**: Old 3s timer replaced with actual asset preloading. Progress bar driven by real load state. Fullscreen invitation merged into loading screen (not a separate screen).
+- **useFullscreen**: Browser Fullscreen API wrapper (`document.documentElement.requestFullscreen()`). Supports toggle, isSupported detection, event-driven state.
+- **Fullscreen invitation**: "Todo listo. Para la mejor experiencia:" → [🖥️ Pantalla completa] [Continuar así]. Auto-proceeds if API not supported.
+- **useViewState**: 3-state manager ('world' | 'chat' | 'photo') with navigation callbacks.
+- **GameLayout**: 3-panel layout system with CSS-driven responsive behavior.
+- **HUD component**: Fixed top bar with 🔮 fragments (left), 🎯 mission indicator with pulse animation (right), ⚙️ settings button. Always visible, z-index 50.
+- **BottomBar**: 3 bubbles (💬 Chat, 📷 Foto, 📖 Diario). Mobile/tablet vertical only — hidden on desktop and tablet landscape via CSS.
+- **Custom breakpoints**: Mobile <640px (full-screen states), Tablet vertical 641-1024px portrait (same as mobile, spacious), Tablet horizontal 641-1024px landscape (side-by-side 70/30), Desktop 1025px+ (70/30 split). Uses `@media` with exact values, NOT Tailwind defaults.
+- **Tablet orientation**: `@media (orientation: landscape)` combined with width range for hybrid behavior.
+- **Light theme**: All new components have `.theme-light` variants.
+- **No S3 breakage**: Existing GameScreen.tsx untouched. New components are additive.
+- **Files created**: `useAssetPreloader.ts`, `useFullscreen.ts`, `useViewState.ts`, `HUD.tsx`, `BottomBar.tsx`, `GameLayout.tsx`
+- **Files modified**: `LoadingScreen.tsx` (rewritten), `globals.css` (new S4 layout CSS)

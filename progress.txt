@@ -567,7 +567,7 @@
 - [x] Fase 54: Canonical Files Sync (system prompt update, types consolidation, storage migration, constants audit)
 
 **Frontend (55-62):**
-- [ ] Fase 55: Fullscreen + Layout (useFullscreen, mobile-first overhaul)
+- [x] Fase 55: Fullscreen + Layout (useFullscreen, mobile-first overhaul)
 - [ ] Fase 56: HUD Redesign (progress indicator, mission indicator, photo button)
 - [ ] Fase 57: Photo UI (PhotoUpload, PhotoResult, usePhotoEval)
 - [ ] Fase 58: Memorias Panel (MemoriasPanel, diary entries)
