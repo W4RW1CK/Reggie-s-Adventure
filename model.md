@@ -886,3 +886,16 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 - **Triple reinforcement wired**: HUD (🎯 glow+tap), Chat (system prompt from Phase 54), Profile (visible in popup).
 - **globals.css**: ~200 lines — popup backdrop/card animations, sparkle burst keyframes, mission bonus glow, light theme overrides, reduced motion support.
 - **Build**: ✅ Clean
+
+### Fase 61: Theme Adaptation + Sprite Polish + Transition Smoothing (2026-02-19)
+- **Light theme palette update**: Migrated from GBC palette (#f5f0e1) to Frutero palette (#fffbf5 bg, #383838 text, #ff9500 primary). All `.theme-light` overrides now reference CSS vars instead of hardcoded hex values.
+- **Theme switching smoothness**: Added `transition: background-color 0.4s, color 0.4s, border-color 0.4s` to all major layout elements. Smooth visual transition when toggling dark↔light.
+- **Sprite idle animation**: `sprite-idle-breathe` keyframe — subtle 3s float/breathe cycle on `.game-screen__regenmon-wrapper`.
+- **Sprite purify bounce**: `sprite-purify-bounce` class triggered on purification — 0.7s bounce with scale. Color flash per stat type.
+- **Sprite chat pulse**: `sprite-chat-pulse` class triggered on chat message response — 0.4s subtle scale pulse.
+- **Critical/frozen state**: Enhanced grayscale(0.9) + brightness(0.35) on frozen sprite images.
+- **Pixel art crisp rendering**: `image-rendering: pixelated` + fallbacks on all sprite img elements.
+- **Light theme full audit**: PreCamera, PostPhoto, PhotoFlow, DiarioPanel, MissionPopup, SettingsPanel, HUD, BottomBar, Toast, FractureDots, WorldBackground — all readable in both themes.
+- **Responsive polish**: Min 44px touch targets on mobile. `overflow-wrap: break-word` on text panels.
+- **Reduced motion**: All Phase 61 animations respect `prefers-reduced-motion`.
+- **Build**: ✅ Clean

@@ -66,6 +66,7 @@ export default function GameScreen({
     const [activityEntries, setActivityEntries] = useState<ActivityEntry[]>([]);
     const [toast, setToast] = useState<{ text: string; type: 'loading' | 'success' | 'error' } | null>(null);
     const [floatingDelta, setFloatingDelta] = useState<string | null>(null);
+    const [spriteAnimClass, setSpriteAnimClass] = useState('');
 
     // Load activity history on mount
     useEffect(() => {
@@ -123,6 +124,11 @@ export default function GameScreen({
         setTimeout(() => setFloatingDelta(null), 1500);
     }, []);
 
+    const triggerSpriteAnim = useCallback((cls: string) => {
+        setSpriteAnimClass(cls);
+        setTimeout(() => setSpriteAnimClass(''), 700);
+    }, []);
+
     const showToast = (text: string, type: 'loading' | 'success' | 'error') => {
         setToast({ text, type });
         if (type !== 'loading') {
@@ -152,6 +158,7 @@ export default function GameScreen({
             setActivityEntries(loadHistory());
             showToast('✨ ¡Me siento renovado! Energía restaurada.', 'success');
             showFloatingDelta(`-${PURIFY_COST} 💎`);
+            triggerSpriteAnim('sprite-purify-bounce');
         }, 600);
     };
 
@@ -215,8 +222,9 @@ export default function GameScreen({
             if (sc.esencia && sc.esencia !== 0) parts.push(`${sc.esencia > 0 ? '+' : ''}${sc.esencia} ✨`);
             if (sc.fragmentos && sc.fragmentos !== 0) parts.push(`${sc.fragmentos > 0 ? '+' : ''}${sc.fragmentos} 💎`);
             if (parts.length > 0) showFloatingDelta(parts.join('  '));
+            triggerSpriteAnim('sprite-chat-pulse');
         }
-    }, [lastStatsChange, isChatOpen, showFloatingDelta]);
+    }, [lastStatsChange, isChatOpen, showFloatingDelta, triggerSpriteAnim]);
 
     const handleSendMessage = (text: string) => {
         sendMessage(text);
@@ -298,7 +306,7 @@ export default function GameScreen({
 
                 {/* === CENTER: Sprite === */}
                 <div className="hud-sprite-area flex-1 flex flex-col items-center justify-center">
-                    <div className={`relative animate-float game-screen__regenmon-wrapper sprite-evolution sprite-evolution--stage-${getEvolutionStage(progress)} ${isEvolutionFrozen ? 'sprite-evolution--frozen' : ''}`}>
+                    <div className={`relative game-screen__regenmon-wrapper sprite-evolution sprite-evolution--stage-${getEvolutionStage(progress)} ${isEvolutionFrozen ? 'sprite-evolution--frozen' : ''} ${spriteAnimClass}`}>
                         <RegenmonSVG
                             type={regenmon.type}
                             stats={regenmon.stats}

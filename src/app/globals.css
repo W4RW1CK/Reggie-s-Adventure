@@ -1970,25 +1970,25 @@ body {
   --theme-stat-bar-bg: #2c2c2c;
 }
 
-/* Light theme (Game Boy Color) */
+/* Light theme (S4 Frutero palette — warm white) */
 .theme-light {
-  --theme-bg: #f5f0e1;
-  --theme-surface: #d4c5a9;
-  --theme-text: #2a2a2a;
-  --theme-text-secondary: #5a5a4a;
-  --theme-border: #8b8370;
-  --theme-overlay: rgba(212, 197, 169, 0.85);
-  --theme-overlay-light: rgba(232, 220, 200, 0.8);
-  --theme-border-subtle: rgba(139, 131, 112, 0.5);
-  --theme-border-faint: rgba(139, 131, 112, 0.3);
-  --theme-panel-bg: #e8dcc8;
-  --theme-chat-bg: rgba(245, 240, 225, 0.95);
-  --theme-chat-header: #b8860b;
-  --theme-modal-overlay: rgba(42, 42, 42, 0.5);
-  --theme-input-bg: #f5f0e1;
-  --theme-input-text: #2a2a2a;
-  --theme-muted: #8b8370;
-  --theme-stat-bar-bg: #c8b99a;
+  --theme-bg: #fffbf5;
+  --theme-surface: #f0ebe0;
+  --theme-text: #383838;
+  --theme-text-secondary: #6a6a6a;
+  --theme-border: #c0b8a8;
+  --theme-overlay: rgba(255, 251, 245, 0.9);
+  --theme-overlay-light: rgba(255, 251, 245, 0.8);
+  --theme-border-subtle: rgba(192, 184, 168, 0.5);
+  --theme-border-faint: rgba(192, 184, 168, 0.3);
+  --theme-panel-bg: #f5f0e6;
+  --theme-chat-bg: rgba(255, 251, 245, 0.96);
+  --theme-chat-header: #ff9500;
+  --theme-modal-overlay: rgba(56, 56, 56, 0.45);
+  --theme-input-bg: #fffbf5;
+  --theme-input-text: #383838;
+  --theme-muted: #a09888;
+  --theme-stat-bar-bg: #e0d8c8;
 }
 
 /* Light theme body overrides */
@@ -2007,10 +2007,10 @@ body {
 
 /* Light theme scrollbar */
 .theme-light ::-webkit-scrollbar-track {
-  background: #e8dcc8;
+  background: var(--theme-panel-bg);
 }
 .theme-light ::-webkit-scrollbar-thumb {
-  background: #8b8370;
+  background: var(--theme-border);
 }
 
 /* Light theme screen overrides */
@@ -4005,14 +4005,14 @@ html, body {
 }
 
 /* Light theme overrides for photo UI */
-.theme-light .precamera__back { color: #5a5a5a; }
-.theme-light .precamera__back:hover { color: #2a2a2a; }
-.theme-light .precamera__first-time { background: #e8dcc8; border-color: #8b8370; }
-.theme-light .precamera__mission { background: #e8dcc8; }
-.theme-light .postphoto__btn--world { background: #e8dcc8; color: #2a2a2a; border-color: #8b8370; }
-.theme-light .precamera__btn--gallery { background: #e8dcc8; color: #2a2a2a; border-color: #8b8370; }
-.theme-light .chat-photo-picker__menu { background: #e8dcc8; border-color: #8b8370; }
-.theme-light .chat-photo-picker__option { background: #d4c5a9; color: #2a2a2a; border-color: #8b8370; }
+.theme-light .precamera__back { color: var(--theme-text-secondary); }
+.theme-light .precamera__back:hover { color: var(--theme-text); }
+.theme-light .precamera__first-time { background: var(--theme-surface); border-color: var(--theme-border); }
+.theme-light .precamera__mission { background: var(--theme-surface); }
+.theme-light .postphoto__btn--world { background: var(--theme-surface); color: var(--theme-text); border-color: var(--theme-border); }
+.theme-light .precamera__btn--gallery { background: var(--theme-surface); color: var(--theme-text); border-color: var(--theme-border); }
+.theme-light .chat-photo-picker__menu { background: var(--theme-surface); border-color: var(--theme-border); }
+.theme-light .chat-photo-picker__option { background: var(--theme-panel-bg); color: var(--theme-text); border-color: var(--theme-border); }
 
 /* =============================================
    PHASE 58: DIARIO PANEL (📖 Memorias + Historial)
@@ -4851,16 +4851,16 @@ html, body {
 
 /* Light theme */
 .theme-light .mission-popup {
-  background: #f5f0e1;
-  border-color: rgba(139, 131, 112, 0.3);
+  background: var(--theme-surface);
+  border-color: var(--theme-border-subtle);
 }
 
 .theme-light .mission-popup__prompt {
-  color: #2a2a2a;
+  color: var(--theme-text);
 }
 
 .theme-light .mission-popup__empty-text {
-  color: #2a2a2a;
+  color: var(--theme-text);
 }
 
 /* Mission Completion Celebration */
@@ -4924,6 +4924,321 @@ html, body {
   .mission-popup-backdrop,
   .mission-celebration__sparkle,
   .hud-mission-btn--active {
+    animation: none !important;
+  }
+}
+
+/* ==========================================
+   PHASE 61: Theme Adaptation + Sprite Polish + Transition Smoothing
+   ========================================== */
+
+/* ── Smooth theme switching ── */
+html, body,
+.game-screen,
+.s4-hud,
+.s4-bottom-bar,
+.hud-top-bar,
+.hud-bottom-bar,
+.hud-stat-bar-bg,
+.hud-stat-bar,
+.precamera,
+.postphoto,
+.diario-panel,
+.mission-popup,
+.s4-settings-overlay,
+.s4-settings,
+.chat-box,
+.chat-bubble,
+.chat-input__textarea,
+.stat-bar,
+.nes-container {
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+
+/* ── Sprite idle animation (subtle float/breathe) ── */
+@keyframes sprite-idle-breathe {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-3px) scale(1.015); }
+}
+
+.game-screen__regenmon-wrapper {
+  animation: sprite-idle-breathe 3s ease-in-out infinite;
+}
+
+/* ── Sprite bounce on purification ── */
+@keyframes sprite-purify-bounce {
+  0% { transform: translateY(0) scale(1); }
+  15% { transform: translateY(-12px) scale(1.05); }
+  30% { transform: translateY(0) scale(0.97); }
+  45% { transform: translateY(-6px) scale(1.02); }
+  60% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+.sprite-purify-bounce {
+  animation: sprite-purify-bounce 0.7s ease-out !important;
+}
+
+/* Purify color flash per stat type */
+@keyframes purify-flash-spirit {
+  0%, 100% { filter: brightness(1); }
+  30% { filter: brightness(1.4) hue-rotate(-30deg); }
+}
+@keyframes purify-flash-essence {
+  0%, 100% { filter: brightness(1); }
+  30% { filter: brightness(1.4) hue-rotate(60deg); }
+}
+
+.sprite-purify-flash--spirit {
+  animation: purify-flash-spirit 0.5s ease-out;
+}
+.sprite-purify-flash--essence {
+  animation: purify-flash-essence 0.5s ease-out;
+}
+
+/* ── Sprite reaction on chat message (subtle pulse) ── */
+@keyframes sprite-chat-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+.sprite-chat-pulse {
+  animation: sprite-chat-pulse 0.4s ease-in-out;
+}
+
+/* ── Critical/frozen state enhancement ── */
+.sprite-evolution--frozen .postphoto__sprite-img,
+.sprite-evolution--frozen img {
+  filter: grayscale(0.9) brightness(0.35);
+}
+
+/* ── Pixel art crisp rendering ── */
+.postphoto__sprite-img,
+.game-screen__regenmon-wrapper img,
+.sprite-evolution img,
+[class*="sprite"] img {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* ── Panel open/close transition consistency ── */
+.s4-settings-overlay,
+.diario-overlay,
+.mission-popup-backdrop {
+  animation-duration: 0.25s;
+  animation-fill-mode: forwards;
+}
+
+/* ── State transitions (world↔chat↔photo) smooth animations ── */
+.s4-layout__panel {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* ── Light theme: additional component coverage ── */
+
+/* PostPhoto screen text readability */
+.theme-light .postphoto__name {
+  color: var(--theme-text);
+}
+
+.theme-light .postphoto__diary {
+  color: var(--theme-text-secondary);
+}
+
+.theme-light .postphoto__resonance--weak {
+  color: #888;
+}
+
+/* PreCamera text readability */
+.theme-light .precamera__title {
+  color: var(--theme-text);
+}
+
+.theme-light .precamera__desc {
+  color: var(--theme-text-secondary);
+}
+
+.theme-light .precamera__cooldown {
+  color: var(--theme-text-secondary);
+}
+
+/* PhotoFlow loading text */
+.theme-light .photoflow-loading__text {
+  color: var(--theme-text-secondary);
+}
+
+.theme-light .photoflow-loading__spinner {
+  border-color: var(--theme-border);
+  border-top-color: #ff9500;
+}
+
+/* Settings toggles */
+.theme-light .s4-settings__section-title {
+  color: var(--theme-text);
+}
+
+.theme-light .s4-settings__label {
+  color: var(--theme-text);
+}
+
+/* HUD stat bars in light theme: ensure contrast */
+.theme-light .hud-stat-bar-bg {
+  background: var(--theme-stat-bar-bg);
+  border: 1px solid var(--theme-border-faint);
+}
+
+/* Fragment counter light theme */
+.theme-light .hud-fragments,
+.theme-light .s4-hud__fragments {
+  color: var(--theme-text);
+}
+
+/* Memory indicator */
+.theme-light .hud-memories {
+  color: var(--theme-text-secondary);
+}
+
+/* Diario entry improvements for light theme */
+.theme-light .diario__entry-text {
+  color: var(--theme-text);
+}
+
+.theme-light .diario__entry-meta {
+  color: var(--theme-text-secondary);
+}
+
+/* FractureDots light theme */
+.theme-light .fracture-dots__progress {
+  background: rgba(158, 210, 45, 0.12);
+}
+
+/* Toast in light theme */
+.theme-light .hud-toast--success {
+  background: rgba(76, 175, 80, 0.15);
+  color: #2e7d32;
+  border-color: rgba(76, 175, 80, 0.3);
+}
+
+.theme-light .hud-toast--error {
+  background: rgba(231, 76, 60, 0.1);
+  color: #c62828;
+  border-color: rgba(231, 76, 60, 0.3);
+}
+
+.theme-light .hud-toast--loading {
+  background: var(--theme-surface);
+  color: var(--theme-text);
+  border-color: var(--theme-border);
+}
+
+/* Mission popup light theme: full coverage */
+.theme-light .mission-popup__close {
+  color: var(--theme-text-secondary);
+}
+
+.theme-light .mission-popup__type {
+  color: var(--theme-text);
+}
+
+.theme-light .mission-popup__timer {
+  color: var(--theme-text-secondary);
+}
+
+.theme-light .mission-popup__empty-desc {
+  color: var(--theme-text-secondary);
+}
+
+.theme-light .mission-popup__reward {
+  background: rgba(255, 149, 0, 0.1);
+}
+
+.theme-light .mission-popup__btn--abandon:hover {
+  background: rgba(231, 76, 60, 0.1);
+}
+
+.theme-light .mission-popup__btn--activate {
+  background: rgba(255, 149, 0, 0.15);
+  color: #e68600;
+  border-color: rgba(255, 149, 0, 0.4);
+}
+
+.theme-light .mission-popup__btn--activate:hover {
+  background: rgba(255, 149, 0, 0.25);
+}
+
+.theme-light .mission-popup__btn {
+  border-color: var(--theme-border);
+}
+
+/* Chat bubbles in light theme */
+.theme-light .chat-bubble--user {
+  background: rgba(255, 149, 0, 0.12);
+  border-color: rgba(255, 149, 0, 0.3);
+}
+
+.theme-light .chat-bubble--regenmon {
+  background: var(--theme-surface);
+  border-color: var(--theme-border);
+}
+
+/* World background particles in light theme */
+.theme-light .world-bg__particle {
+  background: rgba(158, 210, 45, 0.5);
+}
+
+/* ── Responsive polish ── */
+
+/* Touch targets: ensure minimum 44px on mobile */
+@media (max-width: 640px) {
+  .hud-mission-btn,
+  .hud-config-btn,
+  .hud-history-btn,
+  .s4-hud__mission,
+  .s4-hud__settings,
+  .s4-bottom-bar__bubble,
+  .diario__close,
+  .precamera__back,
+  .postphoto__btn,
+  .precamera__btn,
+  .mission-popup__btn,
+  .mission-popup__close {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Tablet landscape side-by-side (already defined in Phase 55, ensure 70/30) */
+@media (min-width: 641px) and (max-width: 1024px) and (orientation: landscape) {
+  .hud-top-bar {
+    padding: 4px 12px;
+  }
+  
+  .hud-bottom-bar {
+    padding: 6px 12px;
+  }
+}
+
+/* No overflow/cut-off text */
+.precamera__content,
+.postphoto__content,
+.diario__body,
+.mission-popup {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Phase 61 reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html, body, .game-screen, .s4-hud, .hud-top-bar, .hud-bottom-bar,
+  .s4-settings-overlay, .diario-panel, .mission-popup {
+    transition: none !important;
+  }
+  .game-screen__regenmon-wrapper,
+  .sprite-purify-bounce,
+  .sprite-chat-pulse,
+  .sprite-purify-flash--spirit,
+  .sprite-purify-flash--essence {
     animation: none !important;
   }
 }
