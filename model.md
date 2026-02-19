@@ -840,3 +840,10 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 - **No S3 breakage**: Existing GameScreen.tsx untouched. New components are additive.
 - **Files created**: `useAssetPreloader.ts`, `useFullscreen.ts`, `useViewState.ts`, `HUD.tsx`, `BottomBar.tsx`, `GameLayout.tsx`
 - **Files modified**: `LoadingScreen.tsx` (rewritten), `globals.css` (new S4 layout CSS)
+
+### Fase 56: HUD Redesign + Settings Panel + Theme System (2026-02-19)
+- **HUD.tsx rewrite**: Enhanced with animated fragment deltas (floating +N/-N that fades via CSS keyframe `hud-delta-float`), mission indicator with pulse animation (`s4-hud__mission--active`), critical state flash (`s4-hud__fragments--critical` with `hud-critical-pulse` animation). Wired to real game state props.
+- **SettingsPanel.tsx rewrite**: Complete S4 redesign. Mobile+Tablet: fullscreen overlay covering entire viewport. Desktop (≥1025px): floating window with dimmed backdrop, close via backdrop click. Options: Fullscreen toggle (wired to useFullscreen), Theme (dark/light via useTheme), Music (on/off), Effects (on/off), Tutorial restart, Version display (v0.4.0-S4). Smooth open/close transitions with CSS animations.
+- **GameScreen.tsx updated**: Wired useFullscreen hook, added effectsEnabled state, adapted SettingsPanel props to S4 interface.
+- **globals.css**: Added ~200 lines of S4 settings panel CSS + HUD enhancement CSS. Responsive behavior: fullscreen overlay on mobile/tablet, floating window on desktop. Light theme variants for all new components.
+- **Theme system**: Existing S3 useTheme hook + CSS custom properties system fully adequate for S4. Dark theme (existing NES colors) and Light theme (warm #fffbf5 background, #383838 text per Frutero palette) both supported via `.theme-dark` / `.theme-light` classes on html element with localStorage persistence.

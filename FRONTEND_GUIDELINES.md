@@ -640,7 +640,10 @@ Estilo: NES container (`nes-container is-dark`), posición fija o slide-in, fond
 - `.theme-light` class on root element overrides all variables
 - Components are theme-agnostic — they just use variables
 - Game Boy Color warm palette for light theme: `#f5f0e1` (bg), `#d4c5a9` (surface), `#2a2a2a` (text)
+- S4 Light theme also supports Frutero palette: `#fffbf5` (warm white bg), `#383838` (dark text), `#ff9500` (primary), `#f6464f` (secondary), `#9ed22d` (accent)
 - Toggle in Settings panel; persisted in localStorage via `useTheme` hook
+- `useTheme()` returns `{ theme, textSize, toggleTheme, setTextSize }` — applies CSS class to `<html>` element
+- Storage key: `regenmon_theme` in localStorage
 
 ---
 

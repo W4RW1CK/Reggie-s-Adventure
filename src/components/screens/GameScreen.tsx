@@ -10,6 +10,7 @@ import ActivityHistory from '../ui/ActivityHistory';
 import { addActivity, loadHistory, clearHistory, ActivityEntry } from '@/lib/activityHistory';
 import { useTheme } from '@/hooks/useTheme';
 import { useAuth } from '@/hooks/useAuth';
+import { useFullscreen } from '@/hooks/useFullscreen';
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { RegenmonData } from '@/lib/types';
 import { PURIFY_COST, SEARCH_FRAGMENTS_REWARD } from '@/lib/constants';
@@ -55,8 +56,10 @@ export default function GameScreen({
         setActivityEntries(loadHistory());
     }, []);
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 480);
-    const { theme, textSize, toggleTheme, setTextSize } = useTheme();
+    const { theme, toggleTheme } = useTheme();
     const { login, logout } = useAuth();
+    const { isFullscreen, isSupported: isFullscreenSupported, toggleFullscreen } = useFullscreen();
+    const [effectsEnabled, setEffectsEnabled] = useState(true);
 
     // Track window size for responsive SVG
     useEffect(() => {
@@ -327,19 +330,16 @@ export default function GameScreen({
                 <SettingsPanel
                     isOpen={showSettings}
                     onClose={() => setShowSettings(false)}
-                    musicEnabled={musicEnabled}
-                    onToggleMusic={onToggleMusic}
+                    isFullscreen={isFullscreen}
+                    isFullscreenSupported={isFullscreenSupported}
+                    onToggleFullscreen={toggleFullscreen}
                     theme={theme}
                     onToggleTheme={toggleTheme}
-                    textSize={textSize}
-                    onSetTextSize={setTextSize}
-                    regenmonName={regenmon.name}
-                    onUpdateName={onUpdateName}
-                    canRename={!regenmon.nameChangeUsed}
-                    isLoggedIn={isLoggedIn}
-                    onLogin={login}
-                    onLogout={logout}
-                    onReset={() => { clearHistory(); setActivityEntries([]); onReset(); }}
+                    musicEnabled={musicEnabled}
+                    onToggleMusic={onToggleMusic}
+                    effectsEnabled={effectsEnabled}
+                    onToggleEffects={() => setEffectsEnabled(prev => !prev)}
+                    onRestartTutorial={() => { setShowSettings(false); setShowTutorial(true); }}
                 />
 
                 {/* Chat Overlay */}
