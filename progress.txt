@@ -546,7 +546,7 @@
 - [x] Fase 49: Vision API — Infraestructura (vision-provider, adaptadores, prompts, /api/evaluate)
 - [x] Fase 50: Emotional Evaluation System (vision-prompts, type-specific resonance, anti-jailbreak, coherence bonus)
 - [x] Fase 51: Dual Economy — Fragmentos + Progreso (split purify, S4 types/constants, storage migration S3→S4, Supabase sync)
-- [ ] Fase 52: Fractures (milestones de evolución, contenido narrativo, visual)
+- [x] Fase 52: Fracture System + Evolution Stages (data layer: evolution.ts, worldState.ts, useGameState refactor)
 - [ ] Fase 53: Missions + Anti-Abuse (useMissions, useStrikes, mission bypass, anti-spam)
 - [ ] Fase 54: Canonical Files Sync (system prompt update, types, storage)
 

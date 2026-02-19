@@ -673,6 +673,36 @@ lib/ai/
 | Black photo | Rejected, 2min cooldown (not 5min) |
 | Manipulative text | Anti-jailbreak: text in photo ignored |
 
+### Evolution Logic (`lib/evolution.ts`)
+
+Pure functions for evolution stage calculation and fracture detection:
+
+```typescript
+getEvolutionStage(progress)      // → 1-5 based on FRACTURE_THRESHOLDS
+getClosedFractures(progress)     // → number[] of crossed thresholds
+getNextFracture(progress)        // → { threshold, remaining } | null
+isNewFracture(old, new)          // → boolean (did a fracture just close?)
+getNewlyClosedFracture(old, new) // → threshold number | null
+```
+
+### World State Metadata (`lib/worldState.ts`)
+
+Maps evolution stage to visual/narrative metadata:
+
+```typescript
+type WorldHealth = 'corrupted' | 'healing' | 'recovering' | 'flourishing' | 'regenerated';
+
+interface WorldStateMetadata {
+  health: WorldHealth;
+  description: string;         // Lore description (Spanish)
+  backgroundIntensity: number; // 0.0-1.0
+  particleFrequency: number;   // 0.0-1.0
+  corruptionLevel: number;     // 1.0-0.0
+}
+
+getWorldState(stage) // → WorldStateMetadata for stages 1-5
+```
+
 ### Photo Cooldown System
 
 ```typescript

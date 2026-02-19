@@ -650,6 +650,13 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 - **Split purify over single purify**: More strategic choice for player — target the stat that needs it most
 - **File naming**: `gemini-vision.ts` / `openai-vision.ts` (provider-first naming, consistent with existing `gemini.ts` / `openai.ts` for chat)
 
+### Fase 52: Fracture System + Evolution Stages Data Layer (2026-02-19)
+- **evolution.ts**: Pure functions for stage calc (1-5), fracture detection, next fracture info — separated from hooks for testability
+- **worldState.ts**: Maps evolution stage → WorldStateMetadata (health label, description, backgroundIntensity, particleFrequency, corruptionLevel) — 5 stages from 'corrupted' to 'regenerated'
+- **useGameState refactor**: `getEvolutionStage()` now delegates to `evolution.ts` instead of inline logic; added `getWorldHealth()` returning `WorldStateMetadata`
+- **newFractureJustClosed flag**: Boolean state set when `addProgress()` crosses a fracture threshold; `clearNewFracture()` resets it (frontend calls after animation)
+- **Evolution freeze verified**: `addProgress()` checks all stats < CHAT_CRITICAL_THRESHOLD (10) and early-returns without adding progress; progress NEVER decreases
+
 ### 📌 Rules & Lessons Learned
 - **Docs/ folder is UNTOUCHABLE** — never modify files in the Docs/ directory
 - **9 canonical files** at root: PRD.md, TECH_STACK.md, IMPLEMENTATION_PLAN.md, FRONTEND_GUIDELINES.md, BACKEND_STRUCTURE.md, APP_FLOW.md, LORE.md, progress.txt, model.md

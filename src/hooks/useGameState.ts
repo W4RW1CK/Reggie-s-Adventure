@@ -14,9 +14,11 @@ import {
 import { useStatDecay } from './useStatDecay';
 import { 
     STAT_MIN, STAT_MAX, STAT_INITIAL, 
-    CHAT_CRITICAL_THRESHOLD, FRACTURE_THRESHOLDS, PHOTO_HISTORY_MAX,
+    CHAT_CRITICAL_THRESHOLD, PHOTO_HISTORY_MAX,
     PURIFY_SPIRIT_COST, PURIFY_SPIRIT_GAIN, PURIFY_ESSENCE_COST, PURIFY_ESSENCE_GAIN
 } from '@/lib/constants';
+import { getEvolutionStage as calcEvolutionStage, isNewFracture } from '@/lib/evolution';
+import { getWorldState, WorldStateMetadata } from '@/lib/worldState';
 import { PhotoEntry } from '@/lib/types';
 
 interface UseGameStateProps {
@@ -29,6 +31,7 @@ export function useGameState({ privyUserId, isLoggedIn }: UseGameStateProps) {
     const [config, setConfig] = useState<AppConfig>({ musicEnabled: false, isFirstTime: true });
     const [loading, setLoading] = useState(true);
     const [migrationComplete, setMigrationComplete] = useState(false);
+    const [newFractureJustClosed, setNewFractureJustClosed] = useState(false);
     const pendingUpdatesRef = useRef<Partial<RegenmonStats>[]>([]);
     const previousPrivyUserId = useRef<string | undefined>(privyUserId);
 
@@ -210,7 +213,18 @@ export function useGameState({ privyUserId, isLoggedIn }: UseGameStateProps) {
         if (amount <= 0) return;
         setRegenmon(prev => {
             if (!prev) return null;
-            const updated = { ...prev, progress: prev.progress + amount, lastUpdated: new Date().toISOString() };
+            // Evolution freeze: if all stats < critical threshold, pause progress
+            const { espiritu, pulso, esencia } = prev.stats;
+            if (espiritu < CHAT_CRITICAL_THRESHOLD && pulso < CHAT_CRITICAL_THRESHOLD && esencia < CHAT_CRITICAL_THRESHOLD) {
+                return prev; // Frozen — do not add progress
+            }
+            const oldProgress = prev.progress;
+            const newProgress = oldProgress + amount;
+            // Detect new fracture for animation trigger
+            if (isNewFracture(oldProgress, newProgress)) {
+                setNewFractureJustClosed(true);
+            }
+            const updated = { ...prev, progress: newProgress, lastUpdated: new Date().toISOString() };
             saveRegenmonHybrid(updated, privyUserId).catch(e => console.error('Error saving progress:', e));
             return updated;
         });
@@ -228,12 +242,16 @@ export function useGameState({ privyUserId, isLoggedIn }: UseGameStateProps) {
 
     const getEvolutionStage = useCallback((): number => {
         if (!regenmon) return 1;
-        const p = regenmon.progress;
-        for (let i = FRACTURE_THRESHOLDS.length - 1; i >= 0; i--) {
-            if (p >= FRACTURE_THRESHOLDS[i]) return i + 2; // stages 2-5
-        }
-        return 1;
+        return calcEvolutionStage(regenmon.progress);
     }, [regenmon]);
+
+    const getWorldHealth = useCallback((): WorldStateMetadata => {
+        return getWorldState(getEvolutionStage());
+    }, [getEvolutionStage]);
+
+    const clearNewFracture = useCallback(() => {
+        setNewFractureJustClosed(false);
+    }, []);
 
     const isEvolutionFrozen = useCallback((): boolean => {
         if (!regenmon) return false;
@@ -275,6 +293,9 @@ export function useGameState({ privyUserId, isLoggedIn }: UseGameStateProps) {
         addPhotoEntry,
         getEvolutionStage,
         isEvolutionFrozen,
+        getWorldHealth,
+        newFractureJustClosed,
+        clearNewFracture,
         purifySpirit,
         purifyEssence,
     };
