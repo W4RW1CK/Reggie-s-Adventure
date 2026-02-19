@@ -657,6 +657,12 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 - **newFractureJustClosed flag**: Boolean state set when `addProgress()` crosses a fracture threshold; `clearNewFracture()` resets it (frontend calls after animation)
 - **Evolution freeze verified**: `addProgress()` checks all stats < CHAT_CRITICAL_THRESHOLD (10) and early-returns without adding progress; progress NEVER decreases
 
+### Fase 53: Missions + Anti-Abuse System (2026-02-19)
+- **photoCooldown.ts**: Centralized cooldown logic — checks standard 5min cooldown, failed 2min cooldown, strike blocks, and mission bypass in one function. Returns `CooldownStatus` with reason and remaining time.
+- **useStrikes.ts**: Strike hook with localStorage persistence. Strike 1=warning, Strike 2=30min cooldown for 24hrs, Strike 3=blocked 48hrs. Auto-reset after 7 days clean. Periodic cleanup of expired cooldowns/blocks.
+- **useMissions.ts**: Mission hook with type-specific templates (5 per type). 1 active max, +5 progress bonus, 24hr expiration. Mission bypass: 1 photo within 30min window during cooldown. Abandon without penalty.
+- **Integration**: All three modules use existing types (StrikeData, Mission) from types.ts and constants from constants.ts. No changes to useGameState needed — these are composable hooks that frontend phases (55-62) will wire in.
+
 ### 📌 Rules & Lessons Learned
 - **Docs/ folder is UNTOUCHABLE** — never modify files in the Docs/ directory
 - **9 canonical files** at root: PRD.md, TECH_STACK.md, IMPLEMENTATION_PLAN.md, FRONTEND_GUIDELINES.md, BACKEND_STRUCTURE.md, APP_FLOW.md, LORE.md, progress.txt, model.md

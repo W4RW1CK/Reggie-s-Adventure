@@ -703,19 +703,59 @@ interface WorldStateMetadata {
 getWorldState(stage) // → WorldStateMetadata for stages 1-5
 ```
 
-### Photo Cooldown System
+### Photo Cooldown Logic (`lib/photoCooldown.ts`)
+
+Centralized cooldown checking that considers standard cooldown, strike state, and mission bypass:
 
 ```typescript
-const PHOTO_COOLDOWN_MS = 300000;        // 5 min standard
-const PHOTO_FAILED_COOLDOWN_MS = 120000; // 2 min for failed/black
-const MISSION_BYPASS_WINDOW_MS = 1800000; // 30 min window
+interface CooldownStatus {
+  canTakePhoto: boolean;
+  remainingMs: number;
+  reason: 'ready' | 'cooldown' | 'strike_cooldown' | 'blocked';
+}
 
-function canSubmitPhoto(lastPhotoAt: number, isMissionBypass: boolean): boolean {
-  if (isMissionBypass) return true; // 1 photo, 30min window
-  const elapsed = Date.now() - lastPhotoAt;
-  return elapsed >= PHOTO_COOLDOWN_MS;
+getPhotoCooldownStatus(lastPhotoAt, strikes, activeMission, failed?) // → CooldownStatus
+formatCooldown(ms) // → "3m 45s" | "1h 20m"
+```
+
+- **Standard cooldown**: 5 min between photos
+- **Failed photo cooldown**: 2 min (less frustration)
+- **Mission bypass**: If active mission not completed/bypassed, skip cooldown within 30min window
+- **Strike integration**: Checks blockedUntil and cooldownUntil from StrikeData
+
+### Strikes Hook (`hooks/useStrikes.ts`)
+
+Manages the photo abuse prevention system:
+
+```typescript
+useStrikes() → { strikes, addStrike, resetStrikes, isBlocked, isOnCooldown }
+```
+
+- **Strike 1**: Warning + stat penalty message
+- **Strike 2**: 30min cooldown for 24hrs (`cooldownUntil`)
+- **Strike 3**: Blocked 48hrs (`blockedUntil`)
+- **Auto-reset**: 7 days clean → strikes back to 0
+- **Persistence**: localStorage with timestamps
+- **Periodic cleanup**: Expired cooldowns/blocks cleared every 60s
+
+### Missions Hook (`hooks/useMissions.ts`)
+
+AI-contextual missions (optional, bonus rewards):
+
+```typescript
+useMissions({ regenmonType, memories }) → {
+  activeMission, generateMission, completeMission,
+  useMissionBypass, abandonMission, canBypass, isExpired
 }
 ```
+
+- **1 active mission max** — can't stack
+- **+5 progress bonus** on completion
+- **Mission bypass**: 1 photo within 30min window, even during cooldown
+- **24hr expiration** — auto-expires if not completed
+- **Type-specific templates**: 5 prompts per type (Rayo=movement/light, Flama=connection/warmth, Hielo=knowledge/nature)
+- **Abandon without penalty**
+- **Persistence**: localStorage
 
 ---
 
