@@ -543,9 +543,9 @@
 ### Fases S4 (49-64):
 
 **Backend (49-54):**
-- [ ] Fase 49: Vision API — Infraestructura (vision-provider, adaptadores, prompts, /api/evaluate)
-- [ ] Fase 50: Emotional Evaluation System (types, constants, edge cases)
-- [ ] Fase 51: Dual Economy — Fragmentos + Progreso (useProgress, fracture thresholds, Supabase schema)
+- [x] Fase 49: Vision API — Infraestructura (vision-provider, adaptadores, prompts, /api/evaluate)
+- [x] Fase 50: Emotional Evaluation System (vision-prompts, type-specific resonance, anti-jailbreak, coherence bonus)
+- [x] Fase 51: Dual Economy — Fragmentos + Progreso (split purify, S4 types/constants, storage migration S3→S4, Supabase sync)
 - [ ] Fase 52: Fractures (milestones de evolución, contenido narrativo, visual)
 - [ ] Fase 53: Missions + Anti-Abuse (useMissions, useStrikes, mission bypass, anti-spam)
 - [ ] Fase 54: Canonical Files Sync (system prompt update, types, storage)

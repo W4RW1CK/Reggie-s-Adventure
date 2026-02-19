@@ -616,39 +616,40 @@ POST /api/evaluate
 
 ### Request Body
 ```typescript
-interface EvaluateRequest {
-  image: string;            // Base64 encoded image (NEVER stored)
-  regenmon: {
-    name: string;
-    type: 'rayo' | 'flama' | 'hielo';
-    stats: { spirit: number; pulse: number; essence: number; };
-    evolutionStage: number;
-  };
+interface VisionRequest {
+  imageBase64: string;        // Base64 encoded image (NEVER stored)
+  regenmonType: 'rayo' | 'flama' | 'hielo';
+  regenmonName: string;
+  stats: { espiritu: number; pulso: number; esencia: number; };
+  memories: RegenmonMemory[]; // Existing memories for coherence bonus
 }
 ```
 
 ### Response Body
 ```typescript
-interface EvaluateResponse {
-  resonance: 'weak' | 'medium' | 'strong' | 'penalizing';
-  fragments: number;        // 0 (penalizing), 3-5 (weak), 5-8 (medium), 8-12 (strong)
-  progress: number;         // 0 (penalizing), 2-4 (weak), 4-7 (medium), 7-12 (strong)
-  diaryEntry: string;       // Short phrase from Regenmon's perspective
-  reason: string;           // Brief explanation of resonance level
-  isBlackPhoto: boolean;    // Rejected: 2min cooldown
-  isInappropriate: boolean; // Strike applied
-  isSpam: boolean;          // Decreasing resonance
+interface VisionResponse {
+  fragments: number;          // 0-12 (varies by resonance level)
+  spiritChange: number;       // -5 to +5
+  pulseChange: number;        // -3 to +3
+  essenceChange: number;      // -2 to -1 (always negative)
+  diaryEntry: string;         // ~100 chars, from Regenmon's perspective
+  resonanceLevel: ResonanceLevel; // 'weak' | 'medium' | 'strong' | 'penalizing'
+  resonanceReason: string;    // Brief explanation of resonance level
 }
 ```
+
+> **Note:** The route handler (`/api/evaluate`) adds validation, rate limiting (5/min),
+> range clamping, and fallback values on top of the raw VisionResponse from the provider.
 
 ### Vision API Abstraction (`lib/ai/vision-*`)
 
 ```
 lib/ai/
 ├── vision-provider.ts     # Auto-switch: Gemini Vision (dev) / GPT-4o Vision (prod)
-├── vision-gemini.ts       # Adaptador Gemini Vision
-├── vision-openai.ts       # Adaptador GPT-4o Vision
-└── vision-prompts.ts      # Emotional evaluation prompts by type
+├── vision-interface.ts    # VisionProvider interface + VisionResult type
+├── gemini-vision.ts       # Adaptador Gemini Vision (gemini-2.0-flash)
+├── openai-vision.ts       # Adaptador GPT-4o Vision
+└── vision-prompts.ts      # Emotional evaluation prompts by type (9 blocks, buildVisionPrompt())
 ```
 
 **Vision Prompt Approach:**
@@ -857,10 +858,14 @@ Bloque 15 — MISIONES (S4):
 - Ejemplo Hielo: "¿Hay algo sereno cerca de ti ahora?"
 ```
 
-### Purification (current state + possible S4 change)
+### Purification (S4 — Split Dual Purify)
 
-**Current (S3):** One button, 10💠, +30 Esencia +5 Espíritu +10 Pulso
-**Possible S4 change (TBD):** Split into two buttons — details to be defined by user
+**S3 (deprecated):** One button, 10💠, +30 Esencia +5 Espíritu +10 Pulso
+**S4 (current):** Split into two buttons:
+- `purifySpirit`: 10💠 → +10 Espíritu
+- `purifyEssence`: 10💠 → +10 Esencia
+
+> Old single `purify` function deprecated. Constants: `PURIFY_SPIRIT_COST=10`, `PURIFY_SPIRIT_GAIN=10`, `PURIFY_ESSENCE_COST=10`, `PURIFY_ESSENCE_GAIN=10`.
 
 ---
 

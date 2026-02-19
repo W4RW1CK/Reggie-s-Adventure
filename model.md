@@ -615,6 +615,41 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 **Frontend (55-62):** Fullscreen+Layout → HUD Redesign → Photo UI → Memorias Panel → Evolution Visual → Missions UI → Theme Adaptation → Transitions
 **Close (63-64):** User adjustments pre-deploy → Testing+Audit+Deploy
 
+---
+
+## Log de Implementación Sesión 4
+
+### Fase 49: Vision API — Infraestructura (2026-02-19)
+- **vision-provider.ts**: Auto-switch Gemini Vision / GPT-4o Vision (same pattern as chat provider)
+- **vision-interface.ts**: `VisionProvider` interface + `VisionResult` type
+- **gemini-vision.ts**: Adaptador Gemini Vision (gemini-2.0-flash model)
+- **openai-vision.ts**: Adaptador GPT-4o Vision
+- **/api/evaluate route.ts**: POST handler with validation, rate limiting (5/min), range clamping, fallback values
+- **Types added**: `VisionRequest`, `VisionResponse`, `ResonanceLevel` in types.ts
+
+### Fase 50: Emotional Evaluation System (2026-02-19)
+- **vision-prompts.ts**: `buildVisionPrompt()` with 9 prompt blocks (role, story, personality, nature, resonance, diary examples, stats context, anti-jailbreak, response format)
+- **Type-specific resonance**: Rayo=speed/light/movement/tech, Flama=warmth/connection/emotions, Hielo=knowledge/nature/reflection
+- **Anti-jailbreak block**: Text manipulation in photos ignored by prompt instruction
+- **Coherence bonus**: +1-2 extra fragments for photos that resonate with existing memory themes
+
+### Fase 51: Dual Economy (2026-02-19)
+- **New types**: `PhotoEntry`, `StrikeData`, `Mission` interfaces added to types.ts
+- **RegenmonData extended**: S4 fields — `progress`, `photoHistory` (max 20), `strikes`, `lastPhotoAt`, `activeMission`
+- **S4 constants**: All cooldowns (`PHOTO_COOLDOWN_MS=300000`, `PHOTO_FAILED_COOLDOWN_MS=120000`), fragment ranges, progress ranges, `FRACTURE_THRESHOLDS=[50,100,200,400]`
+- **Split purification**: `purifySpirit` (10💠→+10 Espíritu) + `purifyEssence` (10💠→+10 Esencia). Old single purify deprecated with `@deprecated` tag on `PURIFY_COST`
+- **Progress from chat**: 1-3 per substantive message (IA evaluates substance)
+- **Evolution stage calc**: 5 stages derived from fracture thresholds (50, 100, 200, 400)
+- **Evolution freeze**: When all stats < 10, progress doesn't increase (never decreases)
+- **Storage migration**: S3→S4 automatic migration adds new S4 fields with defaults
+- **Supabase sync**: Updated to include new S4 columns (progress, strikes, diary_entries, active_mission, etc.)
+
+### Design Decisions (Phases 49-51)
+- **VisionRequest includes memories**: Allows coherence bonus calculation — photos that match existing memory themes get extra fragments
+- **VisionResponse includes stat changes**: Photos affect all 3 stats (spirit, pulse, essence), not just fragments/progress
+- **Split purify over single purify**: More strategic choice for player — target the stat that needs it most
+- **File naming**: `gemini-vision.ts` / `openai-vision.ts` (provider-first naming, consistent with existing `gemini.ts` / `openai.ts` for chat)
+
 ### 📌 Rules & Lessons Learned
 - **Docs/ folder is UNTOUCHABLE** — never modify files in the Docs/ directory
 - **9 canonical files** at root: PRD.md, TECH_STACK.md, IMPLEMENTATION_PLAN.md, FRONTEND_GUIDELINES.md, BACKEND_STRUCTURE.md, APP_FLOW.md, LORE.md, progress.txt, model.md

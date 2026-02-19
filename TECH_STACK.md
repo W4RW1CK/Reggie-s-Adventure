@@ -251,10 +251,11 @@ reggie-adventure/
 │   │       ├── gemini.ts         # Adaptador Gemini (chat)
 │   │       ├── openai.ts         # Adaptador OpenAI (chat)
 │   │       ├── prompts.ts        # System prompts por tipo (actualizado S4)
-│   │       ├── vision-provider.ts # [NEW S4] Auto-switch Vision API (Gemini Vision / GPT-4o Vision)
-│   │       ├── vision-gemini.ts   # [NEW S4] Adaptador Gemini Vision
-│   │       ├── vision-openai.ts   # [NEW S4] Adaptador GPT-4o Vision
-│   │       └── vision-prompts.ts  # [NEW S4] Prompts emocionales para evaluación de fotos
+│   │       ├── vision-provider.ts  # [NEW S4] Auto-switch Vision API (Gemini Vision / GPT-4o Vision)
+│   │       ├── vision-interface.ts # [NEW S4] VisionProvider interface + VisionResult type
+│   │       ├── gemini-vision.ts   # [NEW S4] Adaptador Gemini Vision (gemini-2.0-flash)
+│   │       ├── openai-vision.ts   # [NEW S4] Adaptador GPT-4o Vision
+│   │       └── vision-prompts.ts  # [NEW S4] Prompts emocionales para evaluación de fotos (9 bloques)
 │   └── assets/
 │       └── backgrounds/    # Paisajes pixel art (reconstruidos S3)
 ├── .env.local              # API keys (NO commitear)
