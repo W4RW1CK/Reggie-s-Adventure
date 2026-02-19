@@ -5242,3 +5242,294 @@ html, body,
     animation: none !important;
   }
 }
+
+/* ============================================
+   Phase 62 — Tutorial Overlay
+   ============================================ */
+
+.tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  animation: tutorial-fadein 0.3s ease-out;
+}
+
+.tutorial-overlay--exiting {
+  animation: tutorial-fadeout 0.3s ease-out forwards;
+}
+
+.tutorial-overlay__backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.tutorial-spotlight-ring {
+  position: absolute;
+  border-radius: 12px;
+  border: 2px solid rgba(241, 196, 15, 0.6);
+  box-shadow: 0 0 20px rgba(241, 196, 15, 0.3), inset 0 0 20px rgba(241, 196, 15, 0.1);
+  animation: tutorial-ring-pulse 2s ease-in-out infinite;
+  pointer-events: none;
+  transition: all 0.35s ease;
+}
+
+.tutorial-tooltip {
+  position: absolute;
+  z-index: 10000;
+  max-width: 320px;
+  width: calc(100% - 32px);
+  background: rgba(20, 20, 30, 0.95);
+  border: 2px solid #f1c40f;
+  border-radius: 12px;
+  padding: 16px;
+  color: #eee;
+  font-family: inherit;
+  animation: tutorial-tooltip-in 0.3s ease-out;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.tutorial-tooltip__badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #f1c40f 0%, #e67e22 100%);
+  color: #000;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+}
+
+.tutorial-tooltip__title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #f1c40f;
+  margin: 0 0 6px 0;
+}
+
+.tutorial-tooltip__desc {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #ccc;
+  margin: 0 0 12px 0;
+}
+
+.tutorial-tooltip__dots {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.tutorial-tooltip__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: all 0.2s;
+}
+
+.tutorial-tooltip__dot--active {
+  background: #f1c40f;
+  transform: scale(1.3);
+}
+
+.tutorial-tooltip__dot--done {
+  background: rgba(241, 196, 15, 0.5);
+}
+
+.tutorial-tooltip__actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.tutorial-tooltip__skip {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 11px;
+  cursor: pointer;
+  padding: 4px 8px;
+  font-family: inherit;
+}
+
+.tutorial-tooltip__skip:hover {
+  color: #bbb;
+}
+
+.tutorial-tooltip__next {
+  background: #f1c40f;
+  color: #000;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.tutorial-tooltip__next:hover {
+  background: #f39c12;
+}
+
+@keyframes tutorial-fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes tutorial-fadeout {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes tutorial-ring-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(241, 196, 15, 0.3), inset 0 0 20px rgba(241, 196, 15, 0.1); }
+  50% { box-shadow: 0 0 30px rgba(241, 196, 15, 0.5), inset 0 0 30px rgba(241, 196, 15, 0.2); }
+}
+
+@keyframes tutorial-tooltip-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ============================================
+   Phase 62 — State Transitions (World ↔ Chat)
+   ============================================ */
+
+.game-screen__content {
+  transition: opacity 0.25s ease;
+}
+
+/* Chat overlay entrance/exit */
+.chat-overlay-enter {
+  animation: chat-slide-in 0.25s ease-out;
+}
+
+.chat-overlay-exit {
+  animation: chat-slide-out 0.25s ease-out forwards;
+}
+
+@keyframes chat-slide-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes chat-slide-out {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(20px); }
+}
+
+/* Photo flow fade in */
+.photoflow-enter {
+  animation: photoflow-fadein 0.25s ease-out;
+}
+
+@keyframes photoflow-fadein {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ============================================
+   Phase 62 — Fracture Effect Enhancement
+   ============================================ */
+
+.fracture-line--sealing {
+  animation: fracture-seal-flash 0.6s ease-out;
+}
+
+@keyframes fracture-seal-flash {
+  0% { filter: brightness(1); }
+  20% { filter: brightness(3); }
+  100% { filter: brightness(1); }
+}
+
+.fracture-new-effect {
+  animation: fracture-shake 0.5s ease-out;
+}
+
+@keyframes fracture-shake {
+  0%, 100% { transform: translate(0, 0); }
+  15% { transform: translate(-3px, 2px); }
+  30% { transform: translate(3px, -2px); }
+  45% { transform: translate(-2px, -1px); }
+  60% { transform: translate(2px, 1px); }
+  75% { transform: translate(-1px, 1px); }
+}
+
+/* ============================================
+   Phase 62 — Photo Evaluation Reveal
+   ============================================ */
+
+.photo-result-reveal {
+  animation: photo-result-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes photo-result-in {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ============================================
+   Phase 62 — Mission Popup Transitions
+   ============================================ */
+
+.mission-popup-backdrop {
+  animation: mission-backdrop-in 0.2s ease-out;
+}
+
+.mission-popup-backdrop--closing {
+  animation: mission-backdrop-out 0.2s ease-out forwards;
+}
+
+.mission-popup {
+  animation: mission-slide-in 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.mission-popup--closing {
+  animation: mission-slide-out 0.2s ease-in forwards;
+}
+
+@keyframes mission-slide-in {
+  from { opacity: 0; transform: translateY(-30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes mission-slide-out {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(-20px) scale(0.95); }
+}
+
+@keyframes mission-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes mission-backdrop-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* ============================================
+   Phase 62 — Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .tutorial-overlay,
+  .tutorial-spotlight-ring,
+  .tutorial-tooltip,
+  .chat-overlay-enter,
+  .chat-overlay-exit,
+  .photoflow-enter,
+  .photo-result-reveal,
+  .mission-popup,
+  .mission-popup-backdrop,
+  .fracture-line--sealing,
+  .fracture-new-effect {
+    animation: none !important;
+    transition: none !important;
+  }
+}

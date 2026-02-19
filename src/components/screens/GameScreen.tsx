@@ -243,11 +243,13 @@ export default function GameScreen({
             <WorldBackground type={regenmon.type} stats={regenmon.stats} progress={progress} theme={theme} />
 
             {/* Fracture Overlay */}
-            <FractureOverlay
-                progress={progress}
-                newFractureJustClosed={newFractureJustClosed}
-                onFractureAnimationComplete={onClearNewFracture || (() => {})}
-            />
+            <div className={newFractureJustClosed ? 'fracture-new-effect' : ''}>
+                <FractureOverlay
+                    progress={progress}
+                    newFractureJustClosed={newFractureJustClosed}
+                    onFractureAnimationComplete={onClearNewFracture || (() => {})}
+                />
+            </div>
 
             {/* Tutorial Modal */}
             {showTutorial && (

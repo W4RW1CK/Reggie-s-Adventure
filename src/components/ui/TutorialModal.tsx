@@ -1,241 +1,263 @@
-import React, { useState, useEffect, useCallback } from 'react';
+'use client';
+
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { STORAGE_KEYS } from '@/lib/constants';
 
 interface TutorialModalProps {
     onDismiss: (dontShowAgain: boolean) => void;
 }
 
-const TOTAL_STEPS = 3;
+interface TutorialStep {
+    id: string;
+    title: string;
+    description: string;
+    targetSelector: string;
+    badge?: string;
+}
+
+const NEW_PLAYER_STEPS: TutorialStep[] = [
+    {
+        id: 'sprite',
+        title: 'Este es tu Regenmon',
+        description: 'Un fragmento del mundo digital antiguo. Cuídalo y juntos regenerarán el mundo.',
+        targetSelector: '.game-screen__regenmon-wrapper',
+    },
+    {
+        id: 'chat',
+        title: 'Habla con él',
+        description: 'Usa el botón CONVERSAR para establecer un vínculo. Cada palabra cuenta.',
+        targetSelector: '.hud-bottom-bar',
+    },
+    {
+        id: 'purify',
+        title: 'Cuídalo',
+        description: 'Purifica con fragmentos para restaurar su energía vital.',
+        targetSelector: '.hud-btn-purificar',
+    },
+    {
+        id: 'photo',
+        title: '📸 Comparte memorias',
+        description: 'Toma fotos del mundo real y compártelas. Tu Regenmon las sentirá.',
+        targetSelector: '.hud-btn-photo, .hud-photo-btn',
+        badge: '✨ Nuevo',
+    },
+    {
+        id: 'evolution',
+        title: 'Evoluciona',
+        description: 'Cada interacción suma progreso. Cierra fracturas y evoluciona juntos.',
+        targetSelector: '.fracture-overlay, .hud-stats-row',
+        badge: '✨ Nuevo',
+    },
+];
+
+const RETURNING_PLAYER_STEPS: TutorialStep[] = [
+    {
+        id: 'photo',
+        title: '📸 Comparte memorias',
+        description: '¡Nuevo! Toma fotos del mundo real y compártelas con tu Regenmon.',
+        targetSelector: '.hud-btn-photo, .hud-photo-btn',
+        badge: '✨ Nuevo',
+    },
+    {
+        id: 'evolution',
+        title: 'Evoluciona',
+        description: '¡Nuevo! Cada interacción suma progreso. Cierra fracturas y observa cómo evoluciona.',
+        targetSelector: '.fracture-overlay, .hud-stats-row',
+        badge: '✨ Nuevo',
+    },
+];
+
+function isReturningPlayer(): boolean {
+    if (typeof window === 'undefined') return false;
+    // Check if there's existing regenmon data (S3 player)
+    const data = localStorage.getItem(STORAGE_KEYS.DATA);
+    if (!data) return false;
+    try {
+        const parsed = JSON.parse(data);
+        // If they have chat history or memories, they're returning
+        return !!(parsed.memories?.length > 0 || parsed.evolution?.totalMemories > 0);
+    } catch {
+        return false;
+    }
+}
+
+function getSpotlightRect(selector: string): DOMRect | null {
+    // Try each selector separated by comma
+    const selectors = selector.split(',').map(s => s.trim());
+    for (const sel of selectors) {
+        const el = document.querySelector(sel);
+        if (el) {
+            return el.getBoundingClientRect();
+        }
+    }
+    return null;
+}
 
 export default function TutorialModal({ onDismiss }: TutorialModalProps) {
-    const [dontShowAgain, setDontShowAgain] = useState(false);
     const [step, setStep] = useState(0);
+    const [spotlightRect, setSpotlightRect] = useState<DOMRect | null>(null);
+    const [isExiting, setIsExiting] = useState(false);
+    const steps = useRef<TutorialStep[]>([]);
 
-    const handleKeyDown = useCallback((e: KeyboardEvent) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            if ((e.target as HTMLElement)?.tagName === 'INPUT') return;
-            e.preventDefault();
-            if (step < TOTAL_STEPS - 1) {
-                setStep(s => s + 1);
-            } else {
-                onDismiss(dontShowAgain);
-            }
-        }
-    }, [onDismiss, dontShowAgain, step]);
-
+    // Determine steps on mount
     useEffect(() => {
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [handleKeyDown]);
-
-    const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (e.target === e.currentTarget) {
-            onDismiss(dontShowAgain);
+        const completed = localStorage.getItem(STORAGE_KEYS.TUTORIAL_COMPLETED);
+        if (completed) {
+            // Tutorial was already completed, this is a restart from settings
+            // Show full tutorial
+            steps.current = NEW_PLAYER_STEPS;
+        } else if (isReturningPlayer()) {
+            steps.current = RETURNING_PLAYER_STEPS;
+        } else {
+            steps.current = NEW_PLAYER_STEPS;
         }
-    };
+    }, []);
 
-    const titles = [
-        "GUÍA DE LA CONEXIÓN",
-        "ACCIONES DEL VÍNCULO",
-        "HERRAMIENTAS ARCANAS",
-    ];
+    const currentSteps = steps.current.length > 0 ? steps.current : NEW_PLAYER_STEPS;
+    const currentStep = currentSteps[step];
+    const totalSteps = currentSteps.length;
+
+    // Update spotlight position
+    useEffect(() => {
+        if (!currentStep) return;
+        const updateRect = () => {
+            const rect = getSpotlightRect(currentStep.targetSelector);
+            setSpotlightRect(rect);
+        };
+        updateRect();
+        // Re-measure on resize
+        window.addEventListener('resize', updateRect);
+        const interval = setInterval(updateRect, 500); // Catch layout shifts
+        return () => {
+            window.removeEventListener('resize', updateRect);
+            clearInterval(interval);
+        };
+    }, [step, currentStep]);
+
+    const handleNext = useCallback(() => {
+        if (step < totalSteps - 1) {
+            setStep(s => s + 1);
+        } else {
+            handleFinish();
+        }
+    }, [step, totalSteps]);
+
+    const handleFinish = useCallback(() => {
+        setIsExiting(true);
+        localStorage.setItem(STORAGE_KEYS.TUTORIAL_COMPLETED, 'true');
+        setTimeout(() => {
+            onDismiss(true);
+        }, 300);
+    }, [onDismiss]);
+
+    const handleSkip = useCallback(() => {
+        handleFinish();
+    }, [handleFinish]);
+
+    // Keyboard navigation
+    useEffect(() => {
+        const handler = (e: KeyboardEvent) => {
+            if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') {
+                e.preventDefault();
+                handleNext();
+            } else if (e.key === 'Escape') {
+                handleSkip();
+            }
+        };
+        window.addEventListener('keydown', handler);
+        return () => window.removeEventListener('keydown', handler);
+    }, [handleNext, handleSkip]);
+
+    if (!currentStep) return null;
+
+    const padding = 12;
+    const hasSpotlight = spotlightRect !== null;
+
+    // Position tooltip: below spotlight if in upper half, above if in lower half
+    const tooltipTop = spotlightRect
+        ? spotlightRect.bottom + padding > window.innerHeight * 0.6
+            ? Math.max(8, spotlightRect.top - 180)
+            : spotlightRect.bottom + padding
+        : window.innerHeight * 0.35;
 
     return (
         <div
-            className="fixed inset-0 z-40 flex items-center justify-center backdrop-blur-sm animate-fadeIn overflow-y-auto"
-            style={{ padding: 'clamp(12px, 3vw, 24px)', backgroundColor: 'var(--theme-modal-overlay)' }}
+            className={`tutorial-overlay ${isExiting ? 'tutorial-overlay--exiting' : ''}`}
             role="dialog"
             aria-modal="true"
-            aria-labelledby="tutorial-title"
-            onClick={handleBackdropClick}
+            aria-label="Tutorial"
         >
-            <div className="nes-container is-dark with-title max-w-lg w-full animate-slideUp my-auto" style={{ maxHeight: '90vh', display: 'flex', flexDirection: 'column' }}>
-                <p id="tutorial-title" className="title text-[#f1c40f]">
-                    {titles[step]}
-                </p>
+            {/* Semi-transparent backdrop with spotlight cutout */}
+            <svg className="tutorial-overlay__backdrop" width="100%" height="100%">
+                <defs>
+                    <mask id="tutorial-spotlight-mask">
+                        <rect width="100%" height="100%" fill="white" />
+                        {hasSpotlight && (
+                            <rect
+                                x={spotlightRect!.left - padding}
+                                y={spotlightRect!.top - padding}
+                                width={spotlightRect!.width + padding * 2}
+                                height={spotlightRect!.height + padding * 2}
+                                rx="12"
+                                fill="black"
+                            />
+                        )}
+                    </mask>
+                </defs>
+                <rect
+                    width="100%"
+                    height="100%"
+                    fill="rgba(0,0,0,0.75)"
+                    mask="url(#tutorial-spotlight-mask)"
+                />
+            </svg>
 
-                <div className="flex flex-col gap-4 text-xs sm:text-sm overflow-y-auto custom-scrollbar" style={{ maxHeight: '55vh', overflowWrap: 'break-word', wordBreak: 'break-word' }}>
+            {/* Spotlight border glow */}
+            {hasSpotlight && (
+                <div
+                    className="tutorial-spotlight-ring"
+                    style={{
+                        left: spotlightRect!.left - padding,
+                        top: spotlightRect!.top - padding,
+                        width: spotlightRect!.width + padding * 2,
+                        height: spotlightRect!.height + padding * 2,
+                    }}
+                />
+            )}
 
-                    {/* STEP 0: STATS & FRAGMENTOS */}
-                    {step === 0 && (
-                        <div className="animate-fadeIn">
-                            <p className="mb-4">
-                                Tu Regenmon es un fragmento del mundo digital antiguo. Cuídalo para que juntos puedan regenerarlo.
-                            </p>
+            {/* Tooltip card */}
+            <div
+                className="tutorial-tooltip"
+                style={{
+                    top: tooltipTop,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                }}
+            >
+                {currentStep.badge && (
+                    <span className="tutorial-tooltip__badge">{currentStep.badge}</span>
+                )}
+                <h3 className="tutorial-tooltip__title">{currentStep.title}</h3>
+                <p className="tutorial-tooltip__desc">{currentStep.description}</p>
 
-                            <div className="grid grid-cols-1 gap-2 my-2">
-                                <div className="flex items-center gap-3">
-                                    <span className="text-xl">🔮</span>
-                                    <div>
-                                        <span className="text-[#9b59b6] font-bold">ESPÍRITU — Esperanza</span>
-                                        <p className="text-[10px] opacity-90">Cuánto cree en la regeneración. Se restaura al Purificar.</p>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-center gap-3">
-                                    <span className="text-xl">💛</span>
-                                    <div>
-                                        <span className="text-[#f1c40f] font-bold">PULSO — Energía vital</span>
-                                        <p className="text-[10px] opacity-90">Su fuerza para existir. Conversar la consume, Purificar la restaura.</p>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-center gap-3">
-                                    <span className="text-xl">✨</span>
-                                    <div>
-                                        <span className="text-[#2ecc71] font-bold">ESENCIA — Vitalidad</span>
-                                        <p className="text-[10px] opacity-90">La energía primordial que lo mantiene vivo. Purificar la restaura.</p>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-center gap-3">
-                                    <span className="text-xl">💠</span>
-                                    <div>
-                                        <span className="text-[#3498db] font-bold">FRAGMENTOS — Moneda arcana</span>
-                                        <p className="text-[10px] opacity-90">Restos de datos puros. Los ganas al conversar y los gastas para Purificar.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* STEP 1: CHAT, PURIFICAR, BUSCAR */}
-                    {step === 1 && (
-                        <div className="animate-fadeIn">
-                            <p className="mb-4">
-                                Has establecido una conexión directa. Ahora puedes <span className="text-[#2ecc71] font-bold">hablar</span> y <span className="text-[#9b59b6] font-bold">purificar</span>.
-                            </p>
-
-                            <div className="grid grid-cols-1 gap-4 my-2">
-                                <div className="flex items-start gap-3">
-                                    <span className="text-2xl">💬</span>
-                                    <div>
-                                        <span className="text-[#2ecc71] font-bold">EL VÍNCULO</span>
-                                        <p className="text-[10px] opacity-90">
-                                            Cada palabra cuenta. Hablar le da <strong>Esperanza (+Espíritu)</strong> y te otorga <strong>Fragmentos 💠</strong>, pero requiere esfuerzo <strong>(-Pulso)</strong>.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-start gap-3">
-                                    <span className="text-2xl">🌀</span>
-                                    <div>
-                                        <span className="text-[#9b59b6] font-bold">PURIFICAR</span>
-                                        <p className="text-[10px] opacity-90">
-                                            Canaliza 10💠 para limpiar los datos corruptos. Restaura <strong>Esencia, Espíritu y Pulso</strong> de golpe. Úsalo sabiamente.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-start gap-3">
-                                    <span className="text-2xl">🔍</span>
-                                    <div>
-                                        <span className="text-[#e67e22] font-bold">BUSCAR FRAGMENTOS</span>
-                                        <p className="text-[10px] opacity-90">
-                                            ¿Sin Fragmentos? Busca entre los restos digitales. Un último recurso cuando tus reservas llegan a cero.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-start gap-3">
-                                    <span className="text-2xl">🧠</span>
-                                    <div>
-                                        <span className="text-[#3498db] font-bold">MEMORIA</span>
-                                        <p className="text-[10px] opacity-90">
-                                            Tu Regenmon aprende de ti. Cada conversación deja huellas que lo hacen evolucionar.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* STEP 2: TOOLS & SETTINGS */}
-                    {step === 2 && (
-                        <div className="animate-fadeIn">
-                            <p className="mb-4">
-                                El mundo digital te ofrece herramientas para gestionar la conexión.
-                            </p>
-
-                            <div className="grid grid-cols-1 gap-4 my-2">
-                                <div className="flex items-start gap-3">
-                                    <span className="text-2xl">⚙️</span>
-                                    <div>
-                                        <span className="text-[#95a5a6] font-bold">CONFIGURACIÓN</span>
-                                        <p className="text-[10px] opacity-90">
-                                            Abre el panel de ajustes para cambiar el tema visual, activar la música, ajustar el tamaño del texto, renombrar a tu Regenmon o vincular tu cuenta.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-start gap-3">
-                                    <span className="text-2xl">📜</span>
-                                    <div>
-                                        <span className="text-[#f39c12] font-bold">HISTORIAL</span>
-                                        <p className="text-[10px] opacity-90">
-                                            Un registro arcano de todo lo que ha sucedido: purificaciones, búsquedas, conversaciones. La memoria del mundo.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-start gap-3">
-                                    <span className="text-2xl">🎵</span>
-                                    <div>
-                                        <span className="text-[#e74c3c] font-bold">LA VOZ DEL MUNDO</span>
-                                        <p className="text-[10px] opacity-90">
-                                            Al conversar, el ruido del mundo baja para que puedan escucharse. La música se atenúa durante el vínculo.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="bg-gray-800 p-2 text-[10px] border-4 border-gray-600 mt-4 text-center italic text-gray-400">
-                                &ldquo;Lo que regeneramos juntos, no se borra jamás.&rdquo;
-                            </div>
-                        </div>
-                    )}
-
+                {/* Step indicator */}
+                <div className="tutorial-tooltip__dots">
+                    {currentSteps.map((_, i) => (
+                        <span
+                            key={i}
+                            className={`tutorial-tooltip__dot ${i === step ? 'tutorial-tooltip__dot--active' : ''} ${i < step ? 'tutorial-tooltip__dot--done' : ''}`}
+                        />
+                    ))}
                 </div>
 
-                {/* FOOTER / CONTROLS */}
-                <div className="mt-4 flex flex-col gap-3 pt-4 border-t border-gray-700">
-                    <label className="flex items-center gap-2 cursor-pointer opacity-80 hover:opacity-100">
-                        <input
-                            type="checkbox"
-                            className="nes-checkbox is-dark"
-                            checked={dontShowAgain}
-                            onChange={(e) => setDontShowAgain(e.target.checked)}
-                        />
-                        <span className="text-xs">No volver a mostrar esta guía</span>
-                    </label>
-
-                    <div className="flex gap-2">
-                        {step > 0 && (
-                            <button
-                                onClick={() => setStep(s => s - 1)}
-                                className="nes-btn w-1/3 text-xs"
-                            >
-                                ◀
-                            </button>
-                        )}
-
-                        {step < TOTAL_STEPS - 1 ? (
-                            <button
-                                onClick={() => setStep(s => s + 1)}
-                                className="nes-btn is-primary flex-1 animate-pulse"
-                                autoFocus
-                            >
-                                SIGUIENTE ▶
-                            </button>
-                        ) : (
-                            <button
-                                onClick={() => onDismiss(dontShowAgain)}
-                                className="nes-btn is-success flex-1"
-                                autoFocus
-                            >
-                                ¡ENTENDIDO!
-                            </button>
-                        )}
-                    </div>
+                {/* Buttons */}
+                <div className="tutorial-tooltip__actions">
+                    <button className="tutorial-tooltip__skip" onClick={handleSkip}>
+                        Saltar tutorial
+                    </button>
+                    <button className="tutorial-tooltip__next" onClick={handleNext} autoFocus>
+                        {step < totalSteps - 1 ? 'Siguiente ▶' : '¡Entendido!'}
+                    </button>
                 </div>
             </div>
         </div>
