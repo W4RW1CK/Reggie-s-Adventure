@@ -75,6 +75,26 @@ export interface PlayerData {
     discoveredAt: number;  // Timestamp de descubrimiento
 }
 
+export type ResonanceLevel = 'weak' | 'medium' | 'strong' | 'penalizing';
+
+export interface VisionRequest {
+    imageBase64: string;
+    regenmonType: RegenmonType;
+    regenmonName: string;
+    stats: { espiritu: number; pulso: number; esencia: number };
+    memories: RegenmonMemory[];
+}
+
+export interface VisionResponse {
+    fragments: number;            // 0-12
+    spiritChange: number;         // -5 to +5
+    pulseChange: number;          // -3 to +3
+    essenceChange: number;        // -2 to -1 (always negative)
+    diaryEntry: string;           // ~100 chars, from Regenmon's perspective
+    resonanceLevel: ResonanceLevel;
+    resonanceReason: string;      // brief explanation
+}
+
 export type MemoryType = 'nombre' | 'gustos' | 'emociones' | 'datos_personales' | 'tema_frecuente';
 
 export interface RegenmonMemory {
