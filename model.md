@@ -1,7 +1,7 @@
 # 🧠 MODEL — Reggie's Adventure
-> **Versión actual:** v0.3 — La Conexión
-> **Última actualización:** 2026-02-17
-> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `COMPLETADA` (96/96 — 100%)
+> **Versión actual:** v0.4 — La Evolución
+> **Última actualización:** 2026-02-19
+> **Estado:** Sesión 3 — `COMPLETADA` (96/96 — 100%) | Sesión 4 — `PENDIENTE`
 >
 > 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — toda decisión de personalidad, tono o diálogo se valida contra LORE
 > 📋 **Spec del producto:** [PRD.md](./PRD.md) — toda decisión de features se refleja ahí
@@ -16,7 +16,7 @@
 | S1: El Despertar | v0.1.16 | `COMPLETADA` |
 | S2: La Voz | v0.2 | `COMPLETADA` |
 | S3: La Conexión | v0.3 | `COMPLETADA` (96/96 — 100%) |
-| S4: La Evolución | — | `PENDIENTE` |
+| S4: La Evolución | v0.4 | `PENDIENTE` |
 | S5: El Encuentro | — | `PENDIENTE` |
 
 ---
@@ -485,6 +485,135 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 - **History button 📜**: Moved to right side of bottom bar as compact toggle with `.hud-history-btn` + `.hud-history-btn--active` (glow state)
 - **S3 audit fixes**: B2 fragments "💎 ---" when not logged in, D4 purify toast "¡Me siento renovado!", F1/F2/F3 toast system with loading/success/error states
 - **Aesthetic vision in LORE.md**: Documented cypherpunk arcana, pixel art rules, sprites/scenarios per type, HUD layout, toast system, settings panel, audio, game actions table (commit bb931f9)
+
+---
+
+## Sesión 4: La Evolución — Decisiones de Diseño
+
+> Fuente: Diseño documentado el 2026-02-19.
+> Principio rector: **Las memorias del mundo real alimentan la evolución del Regenmon.**
+> Privacidad absoluta: fotos NUNCA se almacenan.
+>
+> 📜 **Narrativa S4:** [LORE.md → Las Memorias](./LORE.md), [Las Fracturas](./LORE.md), [Las Misiones](./LORE.md)
+> 🛠️ **Implementación:** [BACKEND_STRUCTURE.md → Sesión 4](./BACKEND_STRUCTURE.md)
+> 🗺️ **Flujos:** [APP_FLOW.md → Flujos S4](./APP_FLOW.md)
+> 🔨 **Fases:** [IMPLEMENTATION_PLAN.md → Sesión 4](./IMPLEMENTATION_PLAN.md) (Fases 49-64)
+
+### Cambios Mayores vs S3
+
+| Área | S3 (antes) | S4 (ahora) |
+|------|------------|------------|
+| Fotos | No existían | **Memorias del mundo real** — evaluación emocional por resonancia de tipo |
+| Economía | Solo Fragmentos (gastable) | **Dual**: Fragmentos (gastable) + Progreso (lifetime, NUNCA baja) |
+| Evolución | Infraestructura sin visual | **5 etapas invisibles** + **4 Fracturas** como milestones |
+| Misiones | No existían | **IA-generated**, contextuales, opcionales, 1 activa max |
+| Memorias | Infraestructura básica | **Diario emocional** — Regenmon escribe frases por foto |
+| Anti-abuse | Rate limit en chat | **Strike system** para fotos + anti-spam chat |
+| Vision API | No existía | **Dual**: Gemini Vision (dev) / GPT-4o Vision (prod) |
+| UI | Estática | **Fullscreen API** + mobile-first overhaul |
+
+### Fotos como Memorias (NO código/técnico)
+
+- **Concepto:** El usuario sube fotos de su VIDA REAL — momentos, lugares, personas, cosas
+- **NO:** fotos de código, screenshots de apps, memes, contenido técnico
+- **Evaluación:** EMOCIONAL, no técnica. Sin "score 85/100" — resonancia (weak/medium/strong/penalizing)
+- **Perspectiva:** Desde el Regenmon. "Siento la velocidad..." no "La foto tiene buena composición"
+- **Privacidad:** La foto se envía a Vision API, se procesa, se genera respuesta, se DESCARTA. NUNCA almacenada
+
+### Dual Economy: Fragmentos + Progreso
+
+- **Fragmentos 💠:** Moneda gastable (ya existente). Se ganan por fotos y chat. Se gastan en Purificar
+- **Progreso:** Valor lifetime. NUNCA decrece. Determina etapa de evolución
+- **Por qué dual:** Los Fragmentos crean gameplay loop (ganar → gastar → ganar). El Progreso crea sensación de avance permanente
+- **Progreso por actividad:**
+  - Chat con sustancia: 1-3 (IA evalúa)
+  - Photo weak: 2-4
+  - Photo medium: 4-7
+  - Photo strong: 7-12
+  - Mission bonus: +5
+  - Penalizing: 0
+
+### Fracturas y Evolución Invisible
+
+- **4 Fracturas:** Umbrales de progreso (50, 100, 200, 400)
+- **5 Etapas:** Sin barra de progreso visible. El jugador SIENTE el cambio
+- **Total para max:** ~750 progreso (~42 días activo, ~15 días hardcore)
+- **Por qué invisible:** La evolución no es un grind — es una experiencia. Ver un número subir mata la magia
+- **Freeze:** Si todos los stats < 10, progreso se congela (nunca baja). Sprite dormido
+- **Fractura como momento:** Dramático, emocional, con narrativa por tipo
+
+### Photo Cooldown y Mission Bypass
+
+- **Standard:** 5 min entre fotos
+- **Failed/black:** 2 min (menos frustración por error)
+- **Mission bypass:** Si el Regenmon pidió foto en misión → cooldown se salta
+  - Límite: 1 foto por bypass
+  - Ventana: 30 min para entregar
+- **Por qué 5min:** Evita spam, fuerza al jugador a ser intencional con sus fotos
+
+### Strike System
+
+- **Strike 1:** Warning + stat penalty. "Tu Regenmon no pudo procesar esa memoria..."
+- **Strike 2:** 30min cooldown por 24hrs
+- **Strike 3:** Fotos bloqueadas 48hrs
+- **Reset:** 7 días limpios → strikes a 0
+- **Triggers:** Foto inapropiada (detectada por Vision API)
+
+### Photo Edge Cases
+
+| Case | Decision |
+|------|----------|
+| Borrosa | Reduced eval, capped at medium |
+| Inapropiada | Strike + 0 rewards |
+| Spam/repetitiva | Decreasing resonance |
+| Screenshot | Capped at medium |
+| Selfie | Normal eval |
+| Black photo | Rejected, 2min cooldown |
+| Text manipulation | Anti-jailbreak ignores |
+
+### Resonancia por Tipo
+
+- **Rayo:** Flujo de info, velocidad, claridad, tech, movimiento, energía, luz
+- **Flama:** Conexiones humanas, calidez, abrazos, amigos, comidas compartidas, emociones
+- **Hielo:** Conocimiento, libros, naturaleza, paisajes, quietud, reflexión, preservación
+
+### Dos Paneles, Dos Propósitos
+
+- **📜 Historial:** Transaction log — purify -10💠, chat +3💠, photo +8💠. Números
+- **🧠 Memorias:** Emotional diary — frases del Regenmon sobre cada foto. Sentimientos
+
+### Vision API Approach
+
+- **Dual:** Gemini Vision (dev) / GPT-4o Vision (prod). Mismo patrón que chat
+- **Prompt:** Desde perspectiva emocional del Regenmon
+- **Output:** { resonance, fragments, progress, diaryEntry, reason }
+- **Diary entry:** Frase corta del Regenmon. "Vi algo verde hoy... me recordó a cuando..."
+
+### Misiones IA
+
+- **Contextuales:** Basadas en tipo, etapa, diario, conversación
+- **Opcionales:** Abandonar sin penalty
+- **1 activa max:** No acumular
+- **Bonus:** +5 progreso al completar
+- **Photo bypass:** Si pide foto, cooldown se salta
+
+### Fullscreen API
+
+- **Browser native:** `document.documentElement.requestFullscreen()`
+- **Mobile-first:** Diseñado para máxima inmersión en portrait
+- **Breakpoints:** TBD por usuario
+
+### Purificación (posible cambio S4)
+
+- **Actual (S3):** 1 botón, 10💠, +30 Esencia +5 Espíritu +10 Pulso
+- **Posible S4:** Split en 2 botones — TBD por usuario
+- **Documentar estado actual, implementar cambio si se decide**
+
+### Implementation Phases (16 total, 49-64)
+
+**Backend (49-54):** Vision API → Emotional Evaluation → Dual Economy → Fractures → Missions+Anti-abuse → Canonical Files Sync
+**Frontend (55-62):** Fullscreen+Layout → HUD Redesign → Photo UI → Memorias Panel → Evolution Visual → Missions UI → Theme Adaptation → Transitions
+**Close (63-64):** User adjustments pre-deploy → Testing+Audit+Deploy
 
 ### 📌 Rules & Lessons Learned
 - **Docs/ folder is UNTOUCHABLE** — never modify files in the Docs/ directory

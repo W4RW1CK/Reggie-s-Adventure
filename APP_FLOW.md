@@ -1,7 +1,7 @@
 # 🗺️ APP_FLOW — Reggie's Adventure
-> **Versión actual:** v0.3 — La Conexión
-> **Última actualización:** 2026-02-16
-> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `COMPLETADA` (96/96 — 100%)
+> **Versión actual:** v0.4 — La Evolución
+> **Última actualización:** 2026-02-19
+> **Estado:** Sesión 3 — `COMPLETADA` (96/96 — 100%) | Sesión 4 — `PENDIENTE`
 >
 > 📜 **Narrativa y personalidad:** Todo diálogo, texto de historia y comportamiento conversacional
 > debe ser consistente con [LORE.md](./LORE.md). En caso de conflicto, LORE.md prevalece.
@@ -522,6 +522,129 @@ ABRIR APP
 7. Sync a Supabase si logueado (campo JSONB)
 8. Max 10 entradas (FIFO — las más antiguas se eliminan)
 9. Reset borra historial
+```
+
+---
+
+## Flujos S4 — La Evolución
+
+### Flujo: Compartir Foto (S4)
+
+> Lore: Las fotos son memorias del mundo real. El Regenmon las evalúa emocionalmente
+> según la resonancia con su tipo. Las fotos NUNCA se almacenan — solo las emociones que generan.
+
+```
+1. Usuario presiona [📸 Foto] en bottom bar
+2. ¿Fotos bloqueadas por strikes?
+   ├── SÍ → Mensaje: "Las memorias están bloqueadas... [X horas restantes]"
+   └── NO → Continúa
+3. ¿Cooldown activo?
+   ├── SÍ → Muestra countdown: "Puedes compartir otra memoria en X:XX"
+   │         (Excepción: mission bypass activo → saltar cooldown)
+   └── NO → Continúa
+4. Se abre selector de imagen (cámara en mobile, archivo en desktop)
+5. Preview de la foto aparece
+6. Usuario presiona "Compartir Memoria"
+7. Indicador de loading: "Tu Regenmon está sintiendo esta memoria..."
+8. Foto se envía a /api/evaluate (base64)
+9. ¿Evaluación exitosa?
+   ├── SÍ → Continúa al paso 10
+   └── NO → Error: "No pude sentir esta memoria... inténtalo de nuevo"
+10. Resultado de evaluación:
+    ├── Black photo → Rechazada. "No puedo ver nada..." Cooldown 2min
+    ├── Inapropiada → Strike aplicado. Warning visual. 0 fragments, 0 progress
+    ├── Penalizing → 0 fragments, 0 progress. Mensaje de decepción
+    ├── Weak → 3-5 💠, 2-4 progress. Diary entry. Reacción sutil
+    ├── Medium → 5-8 💠, 4-7 progress. Diary entry. Reacción cálida
+    └── Strong → 8-12 💠, 7-12 progress. Diary entry. Reacción intensa
+11. Diary entry del Regenmon se muestra (frase emocional)
+12. Fragmentos y progreso se actualizan
+13. ¿Se cruzó un umbral de Fractura?
+    ├── SÍ → Animación de Fractura (ver Flujo: Fractura)
+    └── NO → Continúa
+14. Foto se DESCARTA (nunca almacenada). Solo metadata + diary entry persisten
+15. Cooldown de 5min comienza (2min si fue foto negra/fallida)
+16. localStorage (y Supabase si logueado) se actualizan
+```
+
+### Flujo: Fractura (S4)
+
+> Lore: Una Fractura es un momento de transformación. La energía acumulada del Regenmon
+> rompe su forma actual y emerge algo nuevo. Es dramático, emocional, y definitivo.
+
+```
+1. Progreso cruza umbral (50, 100, 200, o 400)
+2. Animación de Fractura:
+   → Flash brillante (brightness pulse)
+   → Shake sutil del sprite
+   → Partículas explotan hacia afuera
+   → Sprite transiciona a nueva forma
+3. Texto narrativo del Regenmon sobre su evolución:
+   → Fractura 1 (50): "Algo cambió en mí... siento más"
+   → Fractura 2 (100): "La conexión se profundiza..."
+   → Fractura 3 (200): "Ya no soy lo que era... soy más"
+   → Fractura 4 (400): "La forma final... esto es lo que siempre fui"
+   (Texto varía por tipo: Rayo/Flama/Hielo)
+4. Nueva etapa visual del sprite se activa
+5. Fractura se registra en estado (no se repite)
+6. localStorage (y Supabase si logueado) se actualizan
+```
+
+### Flujo: Misión (S4)
+
+> Lore: Las misiones son sugerencias del Regenmon — cosas que quiere experimentar
+> del mundo del usuario. Son opcionales, contextuales, y generadas por IA.
+
+```
+1. ¿Existe misión activa?
+   ├── SÍ → No se genera nueva (max 1)
+   └── NO → Continúa
+2. IA genera misión contextual (basada en tipo, etapa, diario, conversación)
+   → Rayo: "¿Puedes mostrarme algo que se mueva rápido?"
+   → Flama: "Me gustaría ver algo que te haga feliz..."
+   → Hielo: "¿Hay algo sereno cerca de ti ahora?"
+3. Misión aparece en UI (MissionCard)
+4. Opciones del jugador:
+   ├── Completar (subir foto relevante):
+   │   → Evaluación normal + bonus +5 progress
+   │   → Si la misión pide foto, cooldown se salta (1 foto, ventana 30min)
+   │   → Misión se marca como completada
+   ├── Abandonar:
+   │   → Misión desaparece, sin penalty
+   └── Ignorar:
+       → Misión permanece activa indefinidamente
+5. Tras completar/abandonar, se puede generar nueva misión
+```
+
+### Flujo: Strike (S4)
+
+```
+1. Foto evaluada como inapropiada
+2. Strike counter incrementa
+3. Según nivel de strikes:
+   ├── Strike 1: Warning visual + stat penalty
+   │   → "⚠️ Tu Regenmon no pudo procesar esa memoria..."
+   │   → Stats bajan levemente
+   ├── Strike 2: Cooldown extendido
+   │   → 30min entre fotos por las próximas 24hrs
+   │   → "Las memorias necesitan descanso..."
+   └── Strike 3: Fotos bloqueadas
+       → Bloqueado por 48hrs
+       → "Las memorias están cerradas... necesitan sanar"
+4. Tras 7 días sin strikes → counter se resetea a 0
+```
+
+### Flujo: Evolution Freeze (S4)
+
+```
+1. ¿Todos los stats < 10?
+   ├── SÍ → Evolution freeze activado:
+   │   → Progreso no aumenta (ni por fotos ni por chat)
+   │   → Sprite aparece dormido (opacity baja, grayscale)
+   │   → Regenmon menciona que se siente dormido
+   │   → Progreso NUNCA decrece (solo se congela)
+   └── NO → Evolución normal
+2. Cuando cualquier stat sube ≥ 10 → freeze se desactiva
 ```
 
 ---

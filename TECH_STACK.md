@@ -1,7 +1,7 @@
 # ⚙️ TECH_STACK — Reggie's Adventure
-> **Versión actual:** v0.3 — La Conexión
-> **Última actualización:** 2026-02-16
-> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `COMPLETADA` (96/96 — 100%)
+> **Versión actual:** v0.4 — La Evolución
+> **Última actualización:** 2026-02-19
+> **Estado:** Sesión 3 — `COMPLETADA` (96/96 — 100%) | Sesión 4 — `PENDIENTE`
 >
 > 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — los system prompts de IA (`lib/ai/prompts.ts`) se basan íntegramente en LORE
 > 🛠️ **Implementación técnica:** [BACKEND_STRUCTURE.md](./BACKEND_STRUCTURE.md) — schemas y lógica que usan estas herramientas
@@ -67,6 +67,24 @@
 | CSS `.creation-screen__char-count` | Character counter below name input with color-coded feedback (red/green/dim) |
 | CSS `.hud-history-btn` / `.hud-history-btn--active` | History button 📜 compact toggle on right side of bottom bar with active glow |
 
+## Vision API (Sesión 4)
+
+| Paquete / API | Versión | Propósito |
+|---------------|---------|-----------|
+| Gemini Vision API | `latest` | Evaluación emocional de fotos — desarrollo local |
+| GPT-4o Vision API | `latest` | Evaluación emocional de fotos — producción |
+
+> **Nota:** Dual Vision API — mismo patrón que el chat. Auto-switch: `GEMINI_API_KEY` (dev) → `OPENAI_API_KEY` (prod).
+> Las fotos se envían a la Vision API para evaluación emocional pero **NUNCA se almacenan** — solo metadata y diary entries.
+
+## Fullscreen API (Sesión 4)
+
+| API | Propósito |
+|-----|-----------|
+| `Fullscreen API` (browser native) | Modo inmersivo fullscreen para máxima experiencia en mobile |
+
+> **Nota:** API nativa del navegador, no requiere dependencia. `document.documentElement.requestFullscreen()`.
+
 ## Sesiones Futuras (no instalar todavía)
 
 | Paquete | Versión | Sesión | Propósito |
@@ -83,7 +101,9 @@
 | Claude API / Gemini API | S2+ | Chat IA con personalidad | Sí |
 | Privy | S3 | Autenticación (Google/Email/Passkey) | Sí (propia) |
 | Supabase | S3 | Base de datos PostgreSQL | Sí (propia) |
-| Gemini Vision | S4 | IA multimodal (fotos) | Sí |
+| Gemini Vision | S4 | Evaluación emocional de fotos (dev) | Sí |
+| GPT-4o Vision | S4 | Evaluación emocional de fotos (prod) | Sí |
+| Fullscreen API | S4 | Modo inmersivo (browser native) | No |
 
 ---
 
@@ -96,6 +116,7 @@ NEXT_PUBLIC_PRIVY_APP_ID=tu_privy_app_id
 PRIVY_APP_SECRET=tu_privy_app_secret
 NEXT_PUBLIC_SUPABASE_URL=tu_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_supabase_anon_key
+# S4: Vision API usa la misma GEMINI_API_KEY para evaluación de fotos
 ```
 
 ### Producción (Vercel Environment Variables)
@@ -105,6 +126,7 @@ NEXT_PUBLIC_PRIVY_APP_ID=tu_privy_app_id
 PRIVY_APP_SECRET=tu_privy_app_secret
 NEXT_PUBLIC_SUPABASE_URL=tu_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_supabase_anon_key
+# S4: Vision API usa la misma OPENAI_API_KEY para evaluación de fotos (GPT-4o Vision)
 ```
 
 > **Regla:** Las API keys NUNCA se commitean al repo. Solo existen en `.env.local` o en las variables de Vercel.
@@ -122,6 +144,10 @@ Clave: "reggie-adventure-player"   → Nombre del jugador (descubierto por IA)
 Clave: "reggie-adventure-fragments" → [NEW S3] Balance de Fragmentos 💠
 Clave: "reggie-adventure-memories"  → [NEW S3] Memorias del Regenmon
 Clave: "reggie-adventure-history"   → [NEW S3] Historial de actividades (max 10)
+Clave: "reggie-adventure-progress"  → [NEW S4] Progreso lifetime (never decreases)
+Clave: "reggie-adventure-diary"     → [NEW S4] Diary entries del Regenmon (memorias emocionales)
+Clave: "reggie-adventure-missions"  → [NEW S4] Misión activa (max 1)
+Clave: "reggie-adventure-strikes"   → [NEW S4] Strike counter + timestamps
 ```
 
 ### Sesión 3+: Supabase (usuarios autenticados)
@@ -158,8 +184,10 @@ reggie-adventure/
 ├── src/
 │   ├── app/
 │   │   ├── api/
-│   │   │   └── chat/
-│   │   │       └── route.ts      # API Route para chat con IA (S2, actualizado S3)
+│   │   │   ├── chat/
+│   │   │   │   └── route.ts      # API Route para chat con IA (S2, actualizado S3)
+│   │   │   └── evaluate/
+│   │   │       └── route.ts      # [NEW S4] API Route para evaluación emocional de fotos
 │   │   ├── layout.tsx      # Layout principal, fuentes, metadata, PrivyProvider
 │   │   ├── page.tsx        # Página única — maneja todos los estados
 │   │   └── globals.css     # Estilos globales + NES.css imports + temas GBC/NES
@@ -184,6 +212,15 @@ reggie-adventure/
 │   │   │   └── SettingsPanel.tsx    # Música, Reset, Nombre, Auth, Texto, Tema
 │   │   ├── auth/           # [NEW S3] Componentes de autenticación
 │   │   │   └── LoginButton.tsx      # Botón/modal de login con Privy
+│   │   ├── photo/          # [NEW S4] Sistema de fotos
+│   │   │   ├── PhotoUpload.tsx      # Upload + preview + envío a Vision API
+│   │   │   └── PhotoResult.tsx      # Resultado de evaluación emocional
+│   │   ├── memorias/       # [NEW S4] Panel de memorias emocionales
+│   │   │   └── MemoriasPanel.tsx    # Diario del Regenmon (frases por foto)
+│   │   ├── missions/       # [NEW S4] Sistema de misiones
+│   │   │   └── MissionCard.tsx      # Misión activa (1 max)
+│   │   ├── evolution/      # [NEW S4] Visuales de evolución
+│   │   │   └── EvolutionVisual.tsx  # Sprites por etapa + Fracturas
 │   │   └── ui/             # Componentes reutilizables
 │   │       ├── MusicToggle.tsx
 │   │       ├── TutorialModal.tsx
@@ -197,18 +234,27 @@ reggie-adventure/
 │   │   ├── useChat.ts            # Estado del chat + API calls + memoryCount exposure
 │   │   ├── useAuth.ts            # [NEW S3] Wrapper de Privy hooks
 │   │   ├── useFragments.ts       # [NEW S3] Economía de Fragmentos
-│   │   └── useTheme.ts           # [NEW S3] Dark/Light mode + tamaño texto
+│   │   ├── useTheme.ts           # [NEW S3] Dark/Light mode + tamaño texto
+│   │   ├── useProgress.ts        # [NEW S4] Progreso lifetime + Fracturas
+│   │   ├── usePhotoEval.ts       # [NEW S4] Upload + evaluación de fotos
+│   │   ├── useMissions.ts        # [NEW S4] Misiones IA (1 activa max)
+│   │   ├── useStrikes.ts         # [NEW S4] Sistema de strikes anti-abuse
+│   │   └── useFullscreen.ts      # [NEW S4] Fullscreen API wrapper
 │   ├── lib/
-│   │   ├── constants.ts    # Valores fijos (decay rate, stat limits, etc.)
-│   │   ├── types.ts        # TypeScript types (actualizado S3)
-│   │   ├── storage.ts      # Funciones de localStorage
-│   │   ├── supabase.ts     # [NEW S3] Cliente Supabase + funciones CRUD
+│   │   ├── constants.ts    # Valores fijos (decay rate, stat limits, etc.) (actualizado S4)
+│   │   ├── types.ts        # TypeScript types (actualizado S4)
+│   │   ├── storage.ts      # Funciones de localStorage (actualizado S4)
+│   │   ├── supabase.ts     # [NEW S3] Cliente Supabase + funciones CRUD (actualizado S4)
 │   │   ├── sync.ts         # [NEW S3] Sync localStorage ↔ Supabase
 │   │   └── ai/             # Capa de abstracción IA
 │   │       ├── provider.ts       # Auto-switch Gemini/OpenAI/Claude
-│   │       ├── gemini.ts         # Adaptador Gemini
-│   │       ├── openai.ts         # Adaptador OpenAI
-│   │       └── prompts.ts        # System prompts por tipo (actualizado S3)
+│   │       ├── gemini.ts         # Adaptador Gemini (chat)
+│   │       ├── openai.ts         # Adaptador OpenAI (chat)
+│   │       ├── prompts.ts        # System prompts por tipo (actualizado S4)
+│   │       ├── vision-provider.ts # [NEW S4] Auto-switch Vision API (Gemini Vision / GPT-4o Vision)
+│   │       ├── vision-gemini.ts   # [NEW S4] Adaptador Gemini Vision
+│   │       ├── vision-openai.ts   # [NEW S4] Adaptador GPT-4o Vision
+│   │       └── vision-prompts.ts  # [NEW S4] Prompts emocionales para evaluación de fotos
 │   └── assets/
 │       └── backgrounds/    # Paisajes pixel art (reconstruidos S3)
 ├── .env.local              # API keys (NO commitear)

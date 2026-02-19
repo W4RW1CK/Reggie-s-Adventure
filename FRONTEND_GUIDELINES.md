@@ -1,7 +1,7 @@
 # 🎨 FRONTEND_GUIDELINES — Reggie's Adventure
-> **Versión actual:** v0.3 — La Conexión
-> **Última actualización:** 2026-02-16
-> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `COMPLETADA` (96/96 — 100%)
+> **Versión actual:** v0.4 — La Evolución
+> **Última actualización:** 2026-02-19
+> **Estado:** Sesión 3 — `COMPLETADA` (96/96 — 100%) | Sesión 4 — `PENDIENTE`
 >
 > 📜 **Lore visual:** Los colores por tipo, paisajes, y animaciones del Regenmon
 > reflejan su significado narrativo. Ver [LORE.md](./LORE.md) para contexto.
@@ -658,6 +658,197 @@ Toast notifications with three states for game actions:
 - D4 purify toast: "¡Me siento renovado!"
 - F1/F2/F3: loading → success/error state transitions
 - B2: fragments show "💎 ---" when not logged in
+
+---
+
+## Photo UI (S4 — La Evolución)
+
+### Photo Upload Component
+
+```css
+.photo-upload {
+  /* NES container with camera icon */
+  text-align: center;
+  padding: 16px;
+}
+
+.photo-upload__preview {
+  max-width: 200px;
+  max-height: 200px;
+  image-rendering: pixelated;
+  border: 4px solid var(--border-nes);
+}
+
+.photo-upload__cooldown {
+  font-size: 8px;
+  color: var(--text-secondary);
+}
+
+.photo-upload__blocked {
+  color: #e74c3c;
+  font-size: 8px;
+}
+```
+
+### Photo Result Component
+
+| Resonance | Color | Visual |
+|-----------|-------|--------|
+| Weak | `#a0a0a0` (gray) | Subtle glow, minimal particles |
+| Medium | `#f5c542` (gold) | Warm glow, moderate particles |
+| Strong | `#4caf50` (green) | Bright glow, abundant particles |
+| Penalizing | `#e74c3c` (red) | No glow, warning visual |
+
+```css
+.photo-result {
+  text-align: center;
+  padding: 16px;
+  animation: result-reveal 0.5s ease;
+}
+
+.photo-result__diary {
+  font-size: 8px;
+  font-style: italic;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  /* The Regenmon's emotional phrase about the photo */
+}
+
+@keyframes result-reveal {
+  0% { opacity: 0; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+```
+
+### Memorias Panel (🧠)
+
+> **Two panels, two purposes:**
+> - 📜 **Historial** = transaction log (purify, chat, photo) — numbers
+> - 🧠 **Memorias** = emotional diary of the Regenmon — phrases, feelings
+
+```css
+.memorias-panel {
+  /* NES container, scrollable */
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.memorias-entry {
+  padding: 8px;
+  border-bottom: 1px solid var(--border-nes);
+  font-size: 8px;
+}
+
+.memorias-entry__text {
+  /* Diary entry from Regenmon's perspective */
+  font-style: italic;
+  color: var(--text-primary);
+}
+
+.memorias-entry__meta {
+  color: var(--text-secondary);
+  font-size: 6px;
+  margin-top: 4px;
+}
+
+/* Resonance indicator dot */
+.memorias-entry__resonance--weak { color: #a0a0a0; }
+.memorias-entry__resonance--medium { color: #f5c542; }
+.memorias-entry__resonance--strong { color: #4caf50; }
+```
+
+### Evolution Visual (S4)
+
+> **5 invisible stages** — no visible progress bar. Player FEELS the progress.
+> Sprite changes subtly with each stage. Fractures are dramatic moments.
+
+```css
+/* Fracture animation — plays when crossing threshold */
+.fracture-animation {
+  animation: fracture-flash 2s ease forwards;
+}
+
+@keyframes fracture-flash {
+  0% { filter: brightness(1); }
+  20% { filter: brightness(3) saturate(2); }
+  40% { filter: brightness(0.5); }
+  60% { filter: brightness(2); }
+  80% { filter: brightness(1.2); }
+  100% { filter: brightness(1); }
+}
+
+/* Dormant sprite when evolution frozen (all stats < 10) */
+.sprite--dormant {
+  opacity: 0.4;
+  filter: grayscale(0.8);
+  animation: dormant-pulse 4s ease-in-out infinite;
+}
+
+@keyframes dormant-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.5; }
+}
+```
+
+### Mission Card (S4)
+
+```css
+.mission-card {
+  /* NES container with subtle glow */
+  padding: 12px;
+  font-size: 8px;
+  border: 2px solid var(--border-nes);
+}
+
+.mission-card--active {
+  box-shadow: 0 0 8px rgba(245, 197, 66, 0.3);
+}
+
+.mission-card__bonus {
+  color: #4caf50;
+  font-size: 6px;
+}
+```
+
+### Fullscreen (S4)
+
+```css
+/* Fullscreen toggle button */
+.fullscreen-btn {
+  position: fixed;
+  top: 4px;
+  right: 4px;
+  font-size: 12px;
+  z-index: 100;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+/* Fullscreen mode adjustments */
+:fullscreen .game-container {
+  max-width: 100vw;
+  height: 100vh;
+}
+```
+
+### Strike Warning (S4)
+
+```css
+.strike-warning {
+  color: #e74c3c;
+  font-size: 8px;
+  text-align: center;
+  padding: 8px;
+  animation: strike-shake 0.5s ease;
+}
+
+@keyframes strike-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+```
 
 ---
 

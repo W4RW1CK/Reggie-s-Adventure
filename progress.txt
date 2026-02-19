@@ -1,7 +1,7 @@
 # 📊 PROGRESS — Reggie's Adventure
-> **Versión actual:** v0.3 — La Conexión
-> **Última actualización:** 2026-02-17
-> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `COMPLETADA` (96/96 — 100%)
+> **Versión actual:** v0.4 — La Evolución
+> **Última actualización:** 2026-02-19
+> **Estado:** Sesión 3 — `COMPLETADA` (96/96 — 100%) | Sesión 4 — `PENDIENTE`
 >
 > 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — biblia narrativa del universo
 > 🔨 **Fases detalladas:** [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) — qué construir y en qué orden
@@ -503,6 +503,66 @@
 
 ### Fase 48: Cierre de Sesión 3 — COMPLETADA ✅
 - [x] 48: Cierre de Sesión 3 — documentación actualizada, audit 96/96
+
+---
+
+---
+
+## Planificación Sesión 4 — La Evolución (2026-02-19)
+
+> **Nota S4:** Sistema de fotos como memorias del mundo real, dual economy,
+> Fracturas como milestones de evolución, misiones IA, strike system.
+> Fotos NUNCA se almacenan. Dual Vision API: Gemini Vision (dev) / GPT-4o Vision (prod).
+
+- [x] Diseño de S4 completado — documentado en model.md
+- [x] Archivos canónicos actualizados: PRD, TECH_STACK, IMPLEMENTATION_PLAN, FRONTEND_GUIDELINES, BACKEND_STRUCTURE, APP_FLOW, LORE, model.md, progress.txt
+- [x] Decisiones clave tomadas:
+  - Fotos de MEMORIAS del mundo real (NO código/técnico)
+  - Evaluación emocional por resonancia de tipo (weak/medium/strong/penalizing)
+  - Dual economy: Fragmentos (gastable) + Progreso (lifetime, NUNCA baja)
+  - Fragmentos por foto: weak 3-5, medium 5-8, strong 8-12, penalizing 0
+  - Progreso por foto: weak 2-4, medium 4-7, strong 7-12, penalizing 0
+  - Chat con sustancia: 1-3 progreso
+  - Mission bonus: +5 progreso
+  - 4 Fracturas: umbrales 50, 100, 200, 400 progreso
+  - 5 etapas de evolución invisibles (sin barra visible)
+  - Total max evolución: 750 progreso (~42 días activo, ~15 días hardcore)
+  - Photo cooldown: 5min standard, 2min failed/black
+  - Mission bypass: cooldown skip, 1 foto, ventana 30min
+  - Strike system: 1=warning, 2=30min cooldown 24hrs, 3=blocked 48hrs, reset 7 días
+  - Fotos NUNCA almacenadas (privacidad absoluta)
+  - Dual Vision API: Gemini Vision (dev) / GPT-4o Vision (prod)
+  - Fullscreen API para inmersión
+  - Evolution freeze: si todos stats < 10, progreso congelado (nunca decrece)
+  - Purificación: mantener actual (posible split TBD)
+  - Dos paneles: 📜 Historial = transacciones, 🧠 Memorias = diario emocional
+  - Resonancia por tipo: Rayo=movimiento/tech, Flama=conexiones/emociones, Hielo=naturaleza/conocimiento
+- [x] IMPLEMENTATION_PLAN.md: Fases 49-64 definidas (16 fases)
+- [ ] Implementación de S4 — PENDIENTE
+
+### Fases S4 (49-64):
+
+**Backend (49-54):**
+- [ ] Fase 49: Vision API — Infraestructura (vision-provider, adaptadores, prompts, /api/evaluate)
+- [ ] Fase 50: Emotional Evaluation System (types, constants, edge cases)
+- [ ] Fase 51: Dual Economy — Fragmentos + Progreso (useProgress, fracture thresholds, Supabase schema)
+- [ ] Fase 52: Fractures (milestones de evolución, contenido narrativo, visual)
+- [ ] Fase 53: Missions + Anti-Abuse (useMissions, useStrikes, mission bypass, anti-spam)
+- [ ] Fase 54: Canonical Files Sync (system prompt update, types, storage)
+
+**Frontend (55-62):**
+- [ ] Fase 55: Fullscreen + Layout (useFullscreen, mobile-first overhaul)
+- [ ] Fase 56: HUD Redesign (progress indicator, mission indicator, photo button)
+- [ ] Fase 57: Photo UI (PhotoUpload, PhotoResult, usePhotoEval)
+- [ ] Fase 58: Memorias Panel (MemoriasPanel, diary entries)
+- [ ] Fase 59: Evolution Visual (5 stages × 3 types sprites, fracture animation)
+- [ ] Fase 60: Missions UI (MissionCard, mission flow)
+- [ ] Fase 61: Theme Adaptation (S4 components in Dark/Light)
+- [ ] Fase 62: Transitions + Polish (evolution morph, photo reveal, mission animations)
+
+**Close (63-64):**
+- [ ] Fase 63: User Adjustments Pre-Deploy (full playtest)
+- [ ] Fase 64: Testing + Audit + Deploy (a11y, security, lore, edge cases, v0.4 tag)
 
 ---
 

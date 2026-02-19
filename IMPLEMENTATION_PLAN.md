@@ -1,7 +1,7 @@
 # 🔨 IMPLEMENTATION_PLAN — Reggie's Adventure
-> **Versión actual:** v0.3 — La Conexión
-> **Última actualización:** 2026-02-16
-> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `COMPLETADA` (96/96 — 100%)
+> **Versión actual:** v0.4 — La Evolución
+> **Última actualización:** 2026-02-19
+> **Estado:** Sesión 3 — `COMPLETADA` (96/96 — 100%) | Sesión 4 — `PENDIENTE`
 >
 > 📜 **Narrativa:** [LORE.md](./LORE.md) — toda fase que toque personalidad, diálogo o tono debe consultarlo
 > 📋 **Features:** [PRD.md](./PRD.md) — cada fase implementa uno o más features del PRD
@@ -1220,13 +1220,336 @@ BACKGROUNDS (commit 1ea9efb):
 ## Sesiones Futuras (estructura general)
 
 ### Sesión 4 — La Evolución
+
+> **Estrategia:** Implementar en 3 bloques: Backend (49-54) → Frontend (55-62) → Close (63-64).
+> Cada fase es un hito verificable. 16 fases total (49-64).
+>
+> 📜 **Referencia narrativa:** [LORE.md](./LORE.md) (Fotos como memorias, Fracturas, Diario, Evolución)
+> 📋 **Decisiones de diseño:** [model.md](./model.md) → Sección "Sesión 4"
+> 🎮 **App actual (v0.3):** https://reggie-s-adventure.vercel.app/
+>
+> ⚠️ **Cambios mayores vs S3:**
+> - Fotos de MEMORIAS del mundo real (NO código/técnico)
+> - Evaluación emocional por resonancia de tipo (weak/medium/strong/penalizing)
+> - Dual economy: Fragmentos (gastable) + Progreso (lifetime, NUNCA baja)
+> - 4 Fracturas como milestones de evolución (50, 100, 200, 400 progreso)
+> - 5 etapas de evolución invisibles (sin barra de progreso visible)
+> - Misiones IA contextuales (1 activa max, opcionales)
+> - Strike system anti-abuse para fotos
+> - Fotos NUNCA almacenadas — privacidad absoluta
+> - Dual Vision API: Gemini Vision (dev) / GPT-4o Vision (prod)
+> - Fullscreen API para inmersión
+> - Purificación: actual sistema mantenido (posible split TBD)
+
+#### Backend (Fases 49-54)
+
+##### Fase 49: Vision API — Infraestructura
+
 ```
-- Evolución visual por memorias acumuladas (mín. 3 etapas por tipo)
-- Entrenamiento: subir fotos de código → IA evalúa → score + Fragmentos + stats
-- Sistema de misiones completables con recompensas
-- Personalización IA profunda basada en memorias
-- Sección visible de "Memorias" en la UI
-- Barra de evolución visible (progreso hacia siguiente etapa)
+49.1  Crear src/lib/ai/vision-provider.ts:
+      → Auto-switch: GEMINI_API_KEY → Gemini Vision, OPENAI_API_KEY → GPT-4o Vision
+      → Interfaz VisionProvider { evaluate(image, regenmonType, regenmonName): VisionResponse }
+      → Error claro si ninguna key configurada
+49.2  Crear src/lib/ai/vision-gemini.ts:
+      → Adaptador Gemini Vision
+      → Recibe imagen como base64, envía con prompt emocional
+      → Parsea respuesta → VisionResponse
+49.3  Crear src/lib/ai/vision-openai.ts:
+      → Adaptador GPT-4o Vision
+      → Misma interfaz que vision-gemini.ts
+49.4  Crear src/lib/ai/vision-prompts.ts:
+      → buildVisionPrompt(regenmonType, regenmonName): string
+      → Prompt desde perspectiva emocional del Regenmon, NO evaluación técnica
+      → Sin "score 85/100" — en su lugar resonancia: weak/medium/strong/penalizing
+      → Resonancia por tipo:
+        Rayo: flujo de info, velocidad, claridad, tech, movimiento, energía, luz
+        Flama: conexiones humanas, calidez, abrazos, amigos, comidas compartidas, emociones
+        Hielo: conocimiento, libros, naturaleza, paisajes, quietud, reflexión, preservación
+      → Output: { resonance, fragments, progress, diaryEntry, reason }
+49.5  Crear src/app/api/evaluate/route.ts:
+      → POST handler: recibe imagen base64 + regenmon data
+      → Llama a vision-provider.evaluate()
+      → Valida rangos de resonancia
+      → Retorna EvaluationResponse
+      → Rate limiting: cooldown 5min entre fotos (2min para fallidas/negras)
+49.6  Verificar: POST a /api/evaluate con imagen de prueba devuelve evaluación emocional
+```
+
+##### Fase 50: Emotional Evaluation System
+
+```
+50.1  Actualizar src/lib/types.ts:
+      → VisionResponse { resonance, fragments, progress, diaryEntry, reason, isBlackPhoto, isInappropriate, isSpam }
+      → EvaluationResponse (API response type)
+      → ResonanceLevel = 'weak' | 'medium' | 'strong' | 'penalizing'
+      → DiaryEntry { text, timestamp, resonance, type }
+50.2  Actualizar src/lib/constants.ts:
+      → FRAGMENT_RANGES: weak=[3,5], medium=[5,8], strong=[8,12], penalizing=0
+      → PROGRESS_RANGES: chat=[1,3], photo_weak=[2,4], photo_medium=[4,7], photo_strong=[7,12], mission_bonus=5, penalizing=0
+      → PHOTO_COOLDOWN_MS = 300000 (5 min)
+      → PHOTO_FAILED_COOLDOWN_MS = 120000 (2 min)
+      → MISSION_BYPASS_WINDOW_MS = 1800000 (30 min)
+50.3  Implementar edge cases en evaluación:
+      → Borrosa: reduced evaluation (capped at medium)
+      → Inapropiada: strike + 0 fragments + 0 progress
+      → Spam/repetitiva: decreasing resonance over rapid submissions
+      → Screenshot: capped at medium resonance
+      → Selfie: normal evaluation
+      → Black photo: rejected, 2min cooldown
+      → Manipulative text in photo: anti-jailbreak ignores
+50.4  Verificar: edge cases correctamente manejados
+```
+
+##### Fase 51: Dual Economy — Fragmentos + Progreso
+
+```
+51.1  Crear src/hooks/useProgress.ts:
+      → Estado: progress (number, lifetime, NUNCA decrece)
+      → currentStage (1-5, basado en Fracturas)
+      → addProgress(amount): suma al progreso
+      → getStage(): calcula etapa según umbrales
+      → isEvolutionFrozen(): true si todos los stats < 10
+      → Freeze: si todos stats < 10, progreso no aumenta, sprite dormido
+51.2  Actualizar src/lib/constants.ts:
+      → FRACTURE_THRESHOLDS = [50, 100, 200, 400]
+      → TOTAL_MAX_EVOLUTION = 750
+      → EVOLUTION_STAGES = 5
+      → EVOLUTION_FREEZE_THRESHOLD = 10
+51.3  Actualizar src/hooks/useChat.ts:
+      → Chat con sustancia da 1-3 progreso (IA evalúa sustancia)
+      → Anti-spam: mensajes vacíos/repetitivos = 0 progreso
+51.4  Integrar progreso con evaluación de fotos:
+      → Photo weak: 2-4 progress
+      → Photo medium: 4-7 progress
+      → Photo strong: 7-12 progress
+      → Mission bonus: +5 progress
+51.5  Actualizar Supabase schema:
+      → Agregar campos: progress INTEGER DEFAULT 0, evolution_stage INTEGER DEFAULT 1
+      → Agregar campos: diary_entries JSONB DEFAULT '[]', active_mission JSONB
+      → Agregar campos: strikes INTEGER DEFAULT 0, last_strike_at TIMESTAMPTZ, photos_blocked_until TIMESTAMPTZ
+51.6  Verificar: progreso se acumula correctamente, nunca decrece, freeze funciona
+```
+
+##### Fase 52: Fractures (Milestones de Evolución)
+
+```
+52.1  Implementar detección de Fracturas en useProgress.ts:
+      → Al añadir progreso, verificar si se cruzó un umbral (50, 100, 200, 400)
+      → Disparar evento de Fractura (visual + narrativo)
+      → Guardar Fractura en estado (qué fracturas se han alcanzado)
+52.2  Crear contenido narrativo por Fractura × tipo:
+      → Fractura 1 (50): Primer despertar evolutivo
+      → Fractura 2 (100): Conexión profunda
+      → Fractura 3 (200): Transformación
+      → Fractura 4 (400): Forma final
+      → Texto único por tipo (Rayo/Flama/Hielo) × Fractura (4×3 = 12 textos)
+52.3  Actualizar evolución visual:
+      → Cada Fractura desbloquea nueva etapa visual del sprite
+      → 5 etapas: base (0-49), stage2 (50-99), stage3 (100-199), stage4 (200-399), stage5 (400+)
+52.4  Verificar: Fracturas se detectan, disparan, y persisten correctamente
+```
+
+##### Fase 53: Missions + Anti-Abuse
+
+```
+53.1  Crear src/hooks/useMissions.ts:
+      → Estado: activeMission (null o MissionData), missionHistory
+      → generateMission(): pide misión contextual a IA (basada en tipo, etapa, memorias)
+      → completeMission(): verifica, otorga +5 progress bonus
+      → abandonMission(): cancela la activa
+      → Max 1 misión activa a la vez
+53.2  Crear src/hooks/useStrikes.ts:
+      → Estado: strikes (0-3), lastStrikeAt, photosBlockedUntil
+      → addStrike(): incrementa strikes, aplica penalidades
+        Strike 1: warning + stat penalty
+        Strike 2: 30min cooldown por 24hrs
+        Strike 3: fotos bloqueadas 48hrs
+      → resetStrikes(): tras 7 días limpios
+      → isBlocked(): true si fotos están bloqueadas
+53.3  Implementar mission bypass:
+      → Si Regenmon pidió foto en misión, cooldown se salta
+      → Ventana de 30min para entregar foto
+      → Límite: 1 foto por bypass
+53.4  Implementar anti-spam para chat:
+      → Mensajes repetitivos o sin sustancia = 0 progreso
+      → IA evalúa sustancia del mensaje
+53.5  Verificar: misiones se generan, completan, strikes funcionan, bypass funciona
+```
+
+##### Fase 54: Canonical Files Sync
+
+```
+54.1  Actualizar system prompt (prompts.ts) con contexto S4:
+      → Nuevo bloque: Progreso, Fracturas, Evolución
+      → Regenmon consciente de su etapa evolutiva
+      → Puede referenciar fotos pasadas (via diary entries)
+      → Puede generar misiones en respuesta
+54.2  Actualizar tipos y storage para S4
+54.3  Verificar consistencia de datos entre localStorage y Supabase
+54.4  Sync archivos canónicos con implementación real
+```
+
+#### Frontend (Fases 55-62)
+
+##### Fase 55: Fullscreen + Layout
+
+```
+55.1  Crear src/hooks/useFullscreen.ts:
+      → requestFullscreen(), exitFullscreen(), isFullscreen
+      → Detectar soporte del navegador
+      → Botón de fullscreen en UI
+55.2  Mobile-first UI overhaul:
+      → Nuevo layout optimizado para fullscreen mobile
+      → Breakpoints TBD por usuario
+      → Mantener compatibilidad desktop
+55.3  Verificar: fullscreen funciona en Chrome, Firefox, Safari mobile
+```
+
+##### Fase 56: HUD Redesign
+
+```
+56.1  Actualizar header/HUD para S4:
+      → Agregar indicador de progreso/etapa (sutil, no barra)
+      → Mantener Fragmentos, Memorias count, identidad
+      → Misión activa indicator
+56.2  Ajustar bottom bar:
+      → Agregar botón de 📸 Foto
+      → Mantener Purificar, Settings, Conversar, Historial
+56.3  Verificar: HUD no está saturado, todo cabe en mobile
+```
+
+##### Fase 57: Photo UI
+
+```
+57.1  Crear src/components/photo/PhotoUpload.tsx:
+      → Input file (accept="image/*", capture="environment" en mobile)
+      → Preview de la foto antes de enviar
+      → Botón "Compartir Memoria" para enviar
+      → Indicador de cooldown (countdown timer)
+      → Mensaje cuando fotos bloqueadas (strikes)
+57.2  Crear src/components/photo/PhotoResult.tsx:
+      → Muestra resultado de evaluación emocional
+      → Resonancia visual (weak/medium/strong) con colores
+      → Diary entry del Regenmon (frase emocional)
+      → Fragmentos y progreso ganados
+      → Animación de recepción
+57.3  Crear src/hooks/usePhotoEval.ts:
+      → submitPhoto(file): envía a /api/evaluate
+      → Maneja cooldown, strikes, mission bypass
+      → Estado: isEvaluating, lastResult, cooldownRemaining
+57.4  Verificar: foto se sube, evalúa, resultado se muestra, cooldown funciona
+```
+
+##### Fase 58: Memorias Panel (🧠)
+
+```
+58.1  Crear src/components/memorias/MemoriasPanel.tsx:
+      → Panel con diary entries del Regenmon
+      → Cada entrada: frase emocional + timestamp + resonancia
+      → Separado del Historial (📜 = transacciones/números, 🧠 = emociones/frases)
+      → Scroll infinito o paginado
+      → Estilo NES container
+58.2  Integrar en GameScreen:
+      → Botón 🧠 en UI (o expandir el indicador existente)
+      → Se oculta durante chat (como otros paneles)
+58.3  Verificar: memorias se muestran, se actualizan con nuevas fotos
+```
+
+##### Fase 59: Evolution Visual
+
+```
+59.1  Crear src/components/evolution/EvolutionVisual.tsx:
+      → 5 variantes de sprite por tipo (15 sprites total mínimo)
+      → Transición visual al evolucionar (Fractura)
+      → Partículas y efectos aumentan con cada etapa
+59.2  Generar sprites de evolución con Gemini:
+      → Stage 1: base actual
+      → Stage 2: ligeros cambios (más detalle, partículas)
+      → Stage 3: cambios notables (forma más definida)
+      → Stage 4: cambios significativos (forma madura)
+      → Stage 5: forma final (máxima expresión del tipo)
+59.3  Implementar Fracture animation:
+      → Efecto visual especial al cruzar umbral
+      → Texto narrativo del Regenmon sobre su evolución
+      → Sonido/música opcional
+59.4  Sprite dormido cuando evolution frozen (todos stats < 10)
+59.5  Verificar: sprites cambian por etapa, fracturas tienen animación
+```
+
+##### Fase 60: Missions UI
+
+```
+60.1  Crear src/components/missions/MissionCard.tsx:
+      → Muestra misión activa (descripción, objetivo, estado)
+      → Botón "Completar" o "Abandonar"
+      → Indicador de bonus (+5 progress)
+      → Estilo NES card
+60.2  Integrar en GameScreen:
+      → Misión visible en HUD o como sección expandible
+      → Misión bypass: si pide foto, muestra "📸 Tu Regenmon te pidió una foto"
+60.3  Verificar: misiones se muestran, completan, abandonan correctamente
+```
+
+##### Fase 61: Theme Adaptation
+
+```
+61.1  Adaptar nuevos componentes S4 a ambos temas (Dark/Light):
+      → PhotoUpload, PhotoResult, MemoriasPanel, MissionCard, EvolutionVisual
+      → Usar CSS custom properties existentes
+61.2  Verificar: todos los componentes S4 se ven bien en ambos temas
+```
+
+##### Fase 62: Transitions + Polish
+
+```
+62.1  Transiciones entre estados de evolución:
+      → Smooth morphing al cambiar de etapa
+      → Fracture effect (flash, shake, particles)
+62.2  Photo evaluation transitions:
+      → Loading state mientras se evalúa
+      → Reveal animation del resultado
+62.3  Mission transitions:
+      → Appear/disappear animations
+      → Completion celebration
+62.4  Verificar: todas las transiciones son fluidas y lore-appropriate
+```
+
+#### Close (Fases 63-64)
+
+##### Fase 63: User Adjustments Pre-Deploy
+
+```
+63.1  Revisión personal del usuario:
+      → Probar app completa como jugador
+      → Flujo: foto → evaluación → progreso → fractura → evolución
+      → Flujo: misión → completar → bonus
+      → Flujo: strikes → warning → cooldown → block
+63.2  Aplicar correcciones identificadas
+63.3  Verificar en mobile y desktop
+```
+
+##### Fase 64: Testing + Audit + Deploy
+
+```
+64.1  Auditoría de accesibilidad S4:
+      → Photo upload accesible (teclado, screen reader)
+      → Memorias panel navegable
+      → Fullscreen toggle accesible
+64.2  Auditoría de seguridad S4:
+      → Fotos NUNCA almacenadas (verificar)
+      → Vision API keys no expuestas
+      → Strike system no bypasseable
+64.3  Auditoría de lore S4:
+      → Evaluaciones emocionales consistentes con tipo
+      → Diary entries suenan como el Regenmon
+      → Fracturas tienen narrativa apropiada
+64.4  Testing completo:
+      → Edge cases: foto negra, inapropiada, spam, screenshot
+      → Cooldowns, strikes, mission bypass
+      → Evolución completa (5 etapas)
+      → Ambos temas, mobile y desktop
+64.5  Deploy a producción
+64.6  Crear tag de versión v0.4
 ```
 
 ### Sesión 5 — El Encuentro

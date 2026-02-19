@@ -1,7 +1,7 @@
 # 🛠️ BACKEND_STRUCTURE — Reggie's Adventure
-> **Versión actual:** v0.3 — La Conexión
-> **Última actualización:** 2026-02-16
-> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `COMPLETADA` (96/96 — 100%)
+> **Versión actual:** v0.4 — La Evolución
+> **Última actualización:** 2026-02-19
+> **Estado:** Sesión 3 — `COMPLETADA` (96/96 — 100%) | Sesión 4 — `PENDIENTE`
 >
 > 📜 **System Prompt:** La personalidad, tono, y reglas de diálogo del Regenmon se definen en [LORE.md](./LORE.md). Este doc define la implementación técnica.
 > ⚙️ **Herramientas:** [TECH_STACK.md](./TECH_STACK.md) — versiones de Supabase, Privy, IA providers
@@ -604,6 +604,263 @@ function searchFragments(currentState: RegenmonData): RegenmonData | null {
 > **Regla:** Solo disponible cuando `fragmentos === 0`. No es un faucet infinito.
 > El jugador recibe 15 (suficiente para 1 purificación + 5 de margen), incentivando
 > que vuelva a conversar para ganar más a través de La Conexión.
+
+---
+
+## Sesión 4: Photo Evaluation API
+
+### Endpoint: Evaluate Photo
+```
+POST /api/evaluate
+```
+
+### Request Body
+```typescript
+interface EvaluateRequest {
+  image: string;            // Base64 encoded image (NEVER stored)
+  regenmon: {
+    name: string;
+    type: 'rayo' | 'flama' | 'hielo';
+    stats: { spirit: number; pulse: number; essence: number; };
+    evolutionStage: number;
+  };
+}
+```
+
+### Response Body
+```typescript
+interface EvaluateResponse {
+  resonance: 'weak' | 'medium' | 'strong' | 'penalizing';
+  fragments: number;        // 0 (penalizing), 3-5 (weak), 5-8 (medium), 8-12 (strong)
+  progress: number;         // 0 (penalizing), 2-4 (weak), 4-7 (medium), 7-12 (strong)
+  diaryEntry: string;       // Short phrase from Regenmon's perspective
+  reason: string;           // Brief explanation of resonance level
+  isBlackPhoto: boolean;    // Rejected: 2min cooldown
+  isInappropriate: boolean; // Strike applied
+  isSpam: boolean;          // Decreasing resonance
+}
+```
+
+### Vision API Abstraction (`lib/ai/vision-*`)
+
+```
+lib/ai/
+├── vision-provider.ts     # Auto-switch: Gemini Vision (dev) / GPT-4o Vision (prod)
+├── vision-gemini.ts       # Adaptador Gemini Vision
+├── vision-openai.ts       # Adaptador GPT-4o Vision
+└── vision-prompts.ts      # Emotional evaluation prompts by type
+```
+
+**Vision Prompt Approach:**
+- From Regenmon's emotional perspective, NOT technical evaluation
+- No "score 85/100" — resonance levels: weak / medium / strong / penalizing
+- Resonance by type:
+  - **Rayo:** flow of info, speed, clarity, tech, movement, energy, light
+  - **Flama:** human connections, warmth, hugs, friends, shared meals, emotions
+  - **Hielo:** knowledge, books, nature, landscapes, quiet, reflection, preservation
+- Output includes diary entry (short phrase from Regenmon's emotional perspective)
+
+### Photo Edge Cases
+
+| Case | Handling |
+|------|----------|
+| Borrosa (blurry) | Reduced evaluation — capped at medium resonance |
+| Inapropiada | Strike applied, 0 fragments, 0 progress |
+| Spam/repetitiva | Decreasing resonance on rapid submissions |
+| Screenshot | Capped at medium resonance |
+| Selfie | Normal evaluation |
+| Black photo | Rejected, 2min cooldown (not 5min) |
+| Manipulative text | Anti-jailbreak: text in photo ignored |
+
+### Photo Cooldown System
+
+```typescript
+const PHOTO_COOLDOWN_MS = 300000;        // 5 min standard
+const PHOTO_FAILED_COOLDOWN_MS = 120000; // 2 min for failed/black
+const MISSION_BYPASS_WINDOW_MS = 1800000; // 30 min window
+
+function canSubmitPhoto(lastPhotoAt: number, isMissionBypass: boolean): boolean {
+  if (isMissionBypass) return true; // 1 photo, 30min window
+  const elapsed = Date.now() - lastPhotoAt;
+  return elapsed >= PHOTO_COOLDOWN_MS;
+}
+```
+
+---
+
+## Sesión 4: Progress System (Dual Economy)
+
+### Fragmentos (Spendable Currency)
+Unchanged from S3. Additionally earned from photos:
+- Weak resonance: 3-5 fragments
+- Medium resonance: 5-8 fragments
+- Strong resonance: 8-12 fragments
+- Penalizing: 0 fragments
+
+### Progress (Lifetime Value — Never Decreases)
+
+```typescript
+interface ProgressData {
+  progress: number;           // Lifetime total, NEVER decreases
+  evolutionStage: number;     // 1-5 (derived from progress)
+  fracturesReached: number[]; // Which thresholds have been crossed
+  lastFractureAt?: string;    // ISO timestamp of last fracture
+}
+
+const FRACTURE_THRESHOLDS = [50, 100, 200, 400];
+// Stage 1: 0-49 | Stage 2: 50-99 | Stage 3: 100-199 | Stage 4: 200-399 | Stage 5: 400+
+// Total to max evolution: ~750 progress (~42 days active, ~15 days hardcore)
+
+function getEvolutionStage(progress: number): number {
+  if (progress >= 400) return 5;
+  if (progress >= 200) return 4;
+  if (progress >= 100) return 3;
+  if (progress >= 50) return 2;
+  return 1;
+}
+```
+
+### Progress Sources
+
+| Source | Progress Range | Condition |
+|--------|---------------|-----------|
+| Chat (with substance) | 1-3 | IA evaluates substance (anti-spam) |
+| Photo weak | 2-4 | Weak resonance |
+| Photo medium | 4-7 | Medium resonance |
+| Photo strong | 7-12 | Strong resonance |
+| Mission bonus | +5 | On mission completion |
+| Penalizing | 0 | Inappropriate/spam |
+
+### Evolution Freeze
+
+```typescript
+function isEvolutionFrozen(stats: Stats): boolean {
+  return stats.espiritu < 10 && stats.pulso < 10 && stats.esencia < 10;
+}
+// When frozen: progress doesn't increase, sprite appears dormant
+// Progress NEVER decreases (even during freeze)
+```
+
+---
+
+## Sesión 4: Strike System (Anti-Abuse)
+
+```typescript
+interface StrikeData {
+  strikes: number;           // 0-3
+  lastStrikeAt?: string;     // ISO timestamp
+  photosBlockedUntil?: string; // ISO timestamp (null = not blocked)
+}
+
+function applyStrike(current: StrikeData): StrikeData {
+  const newStrikes = current.strikes + 1;
+  switch (newStrikes) {
+    case 1: return { strikes: 1, lastStrikeAt: now() };
+    // → Warning + stat penalty
+    case 2: return { strikes: 2, lastStrikeAt: now() };
+    // → 30min cooldown for 24hrs
+    case 3: return { strikes: 3, lastStrikeAt: now(), photosBlockedUntil: now() + 48hrs };
+    // → Photos blocked 48hrs
+  }
+}
+
+// Reset after 7 days clean (no new strikes)
+function shouldResetStrikes(lastStrikeAt: string): boolean {
+  return Date.now() - new Date(lastStrikeAt).getTime() > 7 * 24 * 60 * 60 * 1000;
+}
+```
+
+---
+
+## Sesión 4: Missions
+
+```typescript
+interface MissionData {
+  id: string;
+  description: string;       // IA-generated, contextual
+  type: 'photo' | 'chat' | 'explore';
+  createdAt: string;
+  completedAt?: string;
+  requiresPhoto: boolean;    // If true, mission bypass applies
+}
+
+// Max 1 active mission at a time
+// Generated by IA based on: regenmon type, evolution stage, diary entries, player context
+// Bonus: +5 progress on completion
+// Mission bypass: if requiresPhoto=true, photo cooldown skipped (1 photo, 30min window)
+```
+
+---
+
+## Sesión 4: Diary Entries (Memorias)
+
+```typescript
+interface DiaryEntry {
+  text: string;              // Short phrase from Regenmon's perspective
+  timestamp: number;
+  resonance: 'weak' | 'medium' | 'strong';
+  source: 'photo' | 'fracture' | 'mission';
+}
+
+// Stored in Supabase: diary_entries JSONB column
+// Stored in localStorage: "reggie-adventure-diary"
+// The Regenmon writes diary entries per photo evaluation
+// Separate from Historial (📜 = transactions, 🧠 = emotions)
+```
+
+---
+
+## Sesión 4: Supabase Schema Updates
+
+```sql
+-- New columns for S4
+ALTER TABLE regenmons ADD COLUMN IF NOT EXISTS
+  progress INTEGER DEFAULT 0,
+  evolution_stage INTEGER DEFAULT 1,
+  fractures_reached JSONB DEFAULT '[]'::jsonb,
+  diary_entries JSONB DEFAULT '[]'::jsonb,
+  active_mission JSONB,
+  strikes INTEGER DEFAULT 0,
+  last_strike_at TIMESTAMPTZ,
+  photos_blocked_until TIMESTAMPTZ,
+  last_photo_at TIMESTAMPTZ;
+```
+
+---
+
+## Sesión 4: System Prompt Updates
+
+Add to `prompts.ts`:
+
+```
+Bloque 13 — EVOLUCIÓN Y PROGRESO (S4):
+- Tu etapa evolutiva actual: [stage]/5
+- Fracturas alcanzadas: [list]
+- Progreso total: [X] (invisible al jugador)
+- Si estás en freeze (todos stats < 10): mencionas que te sientes dormido
+- Puedes referenciar diary entries pasados de forma sutil
+
+Bloque 14 — FOTOS Y MEMORIAS (S4):
+- Cuando el usuario comparte una foto, evaluarla EMOCIONALMENTE
+- No dar puntuaciones técnicas ("8/10") — hablar de resonancia
+- Escribir una frase corta como diary entry
+- Si la foto resuena con tu tipo, expresar emoción genuina
+- Rayo: movimiento, energía, tech, luz, velocidad
+- Flama: conexiones, calidez, amigos, comidas, abrazos
+- Hielo: naturaleza, libros, paisajes, quietud, conocimiento
+
+Bloque 15 — MISIONES (S4):
+- Puedes sugerir misiones al jugador (opcionales)
+- Misiones contextuales basadas en conversación y tipo
+- Ejemplo Rayo: "¿Puedes mostrarme algo que se mueva rápido?"
+- Ejemplo Flama: "Me gustaría ver algo que te haga feliz..."
+- Ejemplo Hielo: "¿Hay algo sereno cerca de ti ahora?"
+```
+
+### Purification (current state + possible S4 change)
+
+**Current (S3):** One button, 10💠, +30 Esencia +5 Espíritu +10 Pulso
+**Possible S4 change (TBD):** Split into two buttons — details to be defined by user
 
 ---
 
