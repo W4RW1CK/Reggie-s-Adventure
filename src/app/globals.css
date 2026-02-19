@@ -4319,3 +4319,314 @@ html, body {
 .theme-light .diario__progress-delta {
   color: #2563eb;
 }
+
+/* ══════════════════════════════════════════════════════════════
+   Phase 59 — Fracture Overlay, World Background, Sprite Adaptation
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Fracture Overlay ── */
+.fracture-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.fracture-line {
+  position: absolute;
+  transition: opacity 0.8s ease, filter 0.8s ease;
+}
+
+.fracture-line--active .fracture-line__path {
+  stroke: #9ed22d;
+  filter: drop-shadow(0 0 4px rgba(158, 210, 45, 0.6));
+  animation: fracture-pulse 2.5s ease-in-out infinite;
+}
+
+.fracture-line--active .fracture-line__glow {
+  stroke: rgba(158, 210, 45, 0.3);
+  filter: drop-shadow(0 0 8px rgba(158, 210, 45, 0.4));
+}
+
+.fracture-line--closed .fracture-line__path {
+  stroke: rgba(158, 210, 45, 0.15);
+  filter: none;
+}
+
+.fracture-line--closed .fracture-line__glow {
+  stroke: rgba(158, 210, 45, 0.05);
+  filter: none;
+}
+
+/* Sealing animation */
+.fracture-line--sealing .fracture-line__path {
+  animation: fracture-seal 2.5s ease forwards;
+}
+
+.fracture-line--sealing .fracture-line__glow {
+  animation: fracture-seal-glow 2.5s ease forwards;
+}
+
+@keyframes fracture-pulse {
+  0%, 100% { opacity: 0.7; filter: drop-shadow(0 0 4px rgba(158, 210, 45, 0.5)); }
+  50% { opacity: 1; filter: drop-shadow(0 0 8px rgba(158, 210, 45, 0.8)); }
+}
+
+@keyframes fracture-seal {
+  0% { stroke: #9ed22d; stroke-width: 2.5; opacity: 1; filter: drop-shadow(0 0 4px rgba(158, 210, 45, 0.6)); }
+  20% { stroke: #ffffff; stroke-width: 4; opacity: 1; filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.9)); }
+  50% { stroke: #9ed22d; stroke-width: 3; opacity: 0.8; filter: drop-shadow(0 0 12px rgba(158, 210, 45, 0.7)); }
+  80% { stroke: rgba(158, 210, 45, 0.4); stroke-width: 2; opacity: 0.4; filter: none; }
+  100% { stroke: rgba(158, 210, 45, 0.15); stroke-width: 2.5; opacity: 1; filter: none; }
+}
+
+@keyframes fracture-seal-glow {
+  0% { stroke: rgba(158, 210, 45, 0.3); }
+  20% { stroke: rgba(255, 255, 255, 0.6); }
+  100% { stroke: rgba(158, 210, 45, 0.05); }
+}
+
+/* Fracture particles */
+.fracture-particles {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fracture-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #9ed22d;
+  border-radius: 50%;
+  box-shadow: 0 0 4px #9ed22d;
+  animation: fracture-particle-burst 1.5s ease-out var(--particle-delay, 0s) forwards;
+}
+
+@keyframes fracture-particle-burst {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(
+      calc(cos(var(--particle-angle, 0deg)) * var(--particle-distance, 20px)),
+      calc(sin(var(--particle-angle, 0deg)) * var(--particle-distance, 20px))
+    ) scale(0);
+    opacity: 0;
+  }
+}
+
+/* ── World Background (evolution-based) ── */
+.world-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.world-bg__image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  transition: filter 2s ease-in-out;
+}
+
+.world-bg__corruption {
+  position: absolute;
+  inset: 0;
+  transition: background-color 2s ease-in-out;
+  pointer-events: none;
+}
+
+.world-bg__particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.world-bg__particle {
+  position: absolute;
+  bottom: 20%;
+  width: 3px;
+  height: 3px;
+  background: rgba(158, 210, 45, 0.5);
+  border-radius: 50%;
+  animation: world-particle-float 4s ease-in-out infinite;
+}
+
+@keyframes world-particle-float {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 0.6; }
+  100% { transform: translateY(-80px) scale(0.5); opacity: 0; }
+}
+
+/* ── Fracture Dots (Profile) ── */
+.fracture-dots {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.fracture-dots__label {
+  font-size: 8px;
+  color: var(--theme-text-secondary, #a0a0a0);
+  font-family: 'Press Start 2P', monospace;
+}
+
+.fracture-dots__row {
+  display: flex;
+  gap: 6px;
+}
+
+.fracture-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transition: all 0.5s ease;
+}
+
+.fracture-dot--closed {
+  background: #9ed22d;
+  box-shadow: 0 0 4px rgba(158, 210, 45, 0.6);
+}
+
+.fracture-dot--open {
+  background: transparent;
+  border: 2px solid rgba(158, 210, 45, 0.4);
+}
+
+.fracture-dots__progress {
+  width: 48px;
+  height: 3px;
+  background: rgba(158, 210, 45, 0.15);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 2px;
+}
+
+.fracture-dots__progress-fill {
+  height: 100%;
+  background: rgba(158, 210, 45, 0.5);
+  transition: width 0.5s ease;
+  border-radius: 2px;
+}
+
+/* ── Sprite Evolution Adaptation ── */
+.sprite-evolution {
+  position: relative;
+  transition: filter 1.5s ease, opacity 1.5s ease;
+}
+
+.sprite-evolution--stage-1 {
+  filter: brightness(0.6) saturate(0.4);
+  opacity: 0.7;
+}
+
+.sprite-evolution--stage-2 {
+  filter: brightness(0.75) saturate(0.6);
+  opacity: 0.8;
+}
+
+.sprite-evolution--stage-3 {
+  filter: brightness(0.9) saturate(0.8);
+  opacity: 0.9;
+}
+
+.sprite-evolution--stage-4 {
+  filter: brightness(1.0) saturate(1.0);
+  opacity: 1;
+}
+
+.sprite-evolution--stage-5 {
+  filter: brightness(1.1) saturate(1.2);
+  opacity: 1;
+}
+
+/* Stage 5 glow halo */
+.sprite-evolution--stage-5::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(158, 210, 45, 0.15) 0%, transparent 70%);
+  animation: sprite-halo 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes sprite-halo {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+/* Dormant/Frozen state */
+.sprite-evolution--frozen {
+  filter: grayscale(0.8) brightness(0.4) !important;
+  opacity: 0.4 !important;
+  animation: sprite-dormant 4s ease-in-out infinite !important;
+}
+
+@keyframes sprite-dormant {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.5; }
+}
+
+/* Stage particles (higher stages = more particles around sprite) */
+.sprite-evolution__particles {
+  position: absolute;
+  inset: -20px;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.sprite-evolution__particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #9ed22d;
+  border-radius: 50%;
+  animation: sprite-particle-orbit 3s linear infinite;
+}
+
+@keyframes sprite-particle-orbit {
+  0% { transform: rotate(0deg) translateX(var(--orbit-radius, 40px)) scale(1); opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { transform: rotate(360deg) translateX(var(--orbit-radius, 40px)) scale(0.5); opacity: 0.6; }
+}
+
+/* Light theme overrides */
+.theme-light .fracture-dot--open {
+  border-color: rgba(158, 210, 45, 0.5);
+}
+
+.theme-light .fracture-dots__label {
+  color: #5a5a5a;
+}
+
+.theme-light .world-bg__particle {
+  background: rgba(158, 210, 45, 0.6);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .fracture-line--active .fracture-line__path,
+  .fracture-line--sealing .fracture-line__path,
+  .fracture-line--sealing .fracture-line__glow,
+  .fracture-particle,
+  .world-bg__particle,
+  .sprite-evolution__particle,
+  .sprite-evolution--frozen {
+    animation: none !important;
+  }
+  .sprite-evolution--stage-5::after {
+    animation: none !important;
+  }
+}

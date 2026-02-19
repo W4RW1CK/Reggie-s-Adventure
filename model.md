@@ -866,3 +866,13 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 - **constants.ts**: Added `ACTIVITY_LOG` and `DIARY_ENTRIES` to `STORAGE_KEYS`.
 - **CSS**: ~200 lines in globals.css. Responsive: fullscreen on mobile/tablet, floating on desktop. Light theme overrides for all elements. NES pixel aesthetic maintained.
 - **Build**: ✅ Clean
+
+### Fase 59: Fractures Visual System + World Evolution + Sprite Adaptation (2026-02-19)
+- **FractureOverlay.tsx** (`src/components/world/`): 4 SVG crack-like fracture lines positioned around the sprite area. Active fractures: glowing #9ed22d with pulsing animation. Closed fractures: dimmed/faded. Sealing animation: bright flash → seal → fade (2.5s). Particle burst effect (8 particles) on fracture close. Triggered by `newFractureJustClosed` prop, calls `clearNewFracture()` after animation.
+- **WorldBackground.tsx** (`src/components/world/`): Evolution-aware replacement for GameBackground on the game screen. 5 stages mapped to CSS filters: Stage 1 = dark/desaturated (corrupted), Stage 5 = bright/saturated (regenerated). Corruption overlay fades as world heals. Ambient particles appear at higher stages (particleFrequency from worldState.ts). Smooth 2s CSS transitions between stages. Both dark and light theme support.
+- **FractureDots.tsx** (`src/components/world/`): Profile/stats component showing 4 dots for fractures. Closed = filled #9ed22d with glow. Open = outline only. Subtle progress bar toward next fracture threshold.
+- **Sprite visual adaptation**: CSS classes `.sprite-evolution--stage-1` through `--stage-5` modulate brightness/saturation. Stage 1 = dim/muted (0.6 brightness, 0.4 saturate). Stage 5 = bright with radial glow halo. Orbital particles appear at stages 3+. Frozen state: `.sprite-evolution--frozen` with grayscale(0.8) + dormant pulse animation.
+- **GameScreen.tsx updated**: Wired WorldBackground (replaces GameBackground for evolution-aware rendering), FractureOverlay, sprite evolution classes. New props: `progress`, `newFractureJustClosed`, `onClearNewFracture`, `isEvolutionFrozen`.
+- **page.tsx updated**: Passes `progress`, `newFractureJustClosed`, `clearNewFracture`, `isEvolutionFrozen()` to GameScreen.
+- **globals.css**: ~250 lines of Phase 59 CSS — fracture animations (pulse, seal, particle burst), world background transitions, fracture dots, sprite evolution stages (5 filter presets + halo + dormant), orbital particles. Light theme overrides. Reduced motion support.
+- **Build**: ✅ Clean

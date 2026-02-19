@@ -1,7 +1,11 @@
 'use client';
 
 import GameBackground from '@/components/game/GameBackground';
+import WorldBackground from '@/components/world/WorldBackground';
+import FractureOverlay from '@/components/world/FractureOverlay';
+import FractureDots from '@/components/world/FractureDots';
 import RegenmonSVG from '@/components/regenmon/RegenmonSVG';
+import { getEvolutionStage } from '@/lib/evolution';
 import NameEditor from '../ui/NameEditor';
 import TutorialModal from '../ui/TutorialModal';
 import SettingsPanel from '../settings/SettingsPanel';
@@ -30,6 +34,10 @@ interface GameScreenProps {
     isLoggedIn?: boolean;
     email?: string;
     playerName?: string;
+    progress?: number;
+    newFractureJustClosed?: boolean;
+    onClearNewFracture?: () => void;
+    isEvolutionFrozen?: boolean;
 }
 
 export default function GameScreen({
@@ -43,6 +51,10 @@ export default function GameScreen({
     isLoggedIn = false,
     email,
     playerName,
+    progress = 0,
+    newFractureJustClosed = false,
+    onClearNewFracture,
+    isEvolutionFrozen = false,
 }: GameScreenProps) {
     const [showTutorial, setShowTutorial] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
@@ -202,8 +214,15 @@ export default function GameScreen({
 
     return (
         <div className="game-screen w-full h-screen relative overflow-hidden flex flex-col">
-            {/* Background Layer */}
-            <GameBackground type={regenmon.type} stats={regenmon.stats} theme={theme} />
+            {/* Background Layer — evolution-aware */}
+            <WorldBackground type={regenmon.type} stats={regenmon.stats} progress={progress} theme={theme} />
+
+            {/* Fracture Overlay */}
+            <FractureOverlay
+                progress={progress}
+                newFractureJustClosed={newFractureJustClosed}
+                onFractureAnimationComplete={onClearNewFracture || (() => {})}
+            />
 
             {/* Tutorial Modal */}
             {showTutorial && (
@@ -255,12 +274,30 @@ export default function GameScreen({
 
                 {/* === CENTER: Sprite === */}
                 <div className="hud-sprite-area flex-1 flex flex-col items-center justify-center">
-                    <div className="relative animate-float game-screen__regenmon-wrapper">
+                    <div className={`relative animate-float game-screen__regenmon-wrapper sprite-evolution sprite-evolution--stage-${getEvolutionStage(progress)} ${isEvolutionFrozen ? 'sprite-evolution--frozen' : ''}`}>
                         <RegenmonSVG
                             type={regenmon.type}
                             stats={regenmon.stats}
                             size={regenmonSize}
                         />
+                        {/* Stage particles (stages 3+) */}
+                        {!isEvolutionFrozen && getEvolutionStage(progress) >= 3 && (
+                            <div className="sprite-evolution__particles">
+                                {[...Array(Math.min(getEvolutionStage(progress) - 2, 4))].map((_, i) => (
+                                    <span
+                                        key={i}
+                                        className="sprite-evolution__particle"
+                                        style={{
+                                            top: '50%',
+                                            left: '50%',
+                                            '--orbit-radius': `${35 + i * 8}px`,
+                                            animationDelay: `${i * 0.8}s`,
+                                            animationDuration: `${3 + i * 0.5}s`,
+                                        } as React.CSSProperties}
+                                    />
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     {/* Floating stat change delta */}

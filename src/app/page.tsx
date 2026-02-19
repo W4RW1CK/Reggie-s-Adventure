@@ -34,6 +34,9 @@ export default function Home() {
     markIntroSeen,
     updateRegenmonName,
     dismissTutorial,
+    newFractureJustClosed,
+    clearNewFracture,
+    isEvolutionFrozen,
   } = useGameState({ privyUserId: privyUserId || undefined, isLoggedIn });
 
   const { 
@@ -105,6 +108,10 @@ export default function Home() {
               isLoggedIn={isLoggedIn}
               email={user?.email}
               playerName={playerName}
+              progress={regenmon.progress}
+              newFractureJustClosed={newFractureJustClosed}
+              onClearNewFracture={clearNewFracture}
+              isEvolutionFrozen={isEvolutionFrozen()}
             />
           </ErrorBoundary>
         )}
