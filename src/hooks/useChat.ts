@@ -18,15 +18,21 @@ import {
     CHAT_COOLDOWN_MS,
     CHAT_SPIRIT_MAX_CHANGE,
     CHAT_MAX_MESSAGES,
-    CHAT_CRITICAL_THRESHOLD
+    CHAT_CRITICAL_THRESHOLD,
+    PROGRESS_CHAT_RANGE
 } from '@/lib/constants';
+
+function randomInRange(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 interface UseChatProps {
     regenmon: RegenmonData | null;
     updateStatAction: (deltas: Partial<RegenmonStats>) => void;
+    addProgress?: (amount: number) => void;
 }
 
-export function useChat({ regenmon, updateStatAction }: UseChatProps) {
+export function useChat({ regenmon, updateStatAction, addProgress }: UseChatProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -128,6 +134,13 @@ export function useChat({ regenmon, updateStatAction }: UseChatProps) {
             setLastStatsChange(finalChanges);
             // Auto-clear after 3 seconds
             setTimeout(() => setLastStatsChange(null), 3000);
+
+            // S4: Award progress for substantive messages
+            const hasSubstance = finalChanges.espiritu !== 0 || finalChanges.pulso !== 0 || 
+                                 finalChanges.esencia !== 0 || finalChanges.fragmentos !== 0;
+            if (hasSubstance && addProgress) {
+                addProgress(randomInRange(PROGRESS_CHAT_RANGE[0], PROGRESS_CHAT_RANGE[1]));
+            }
 
             // 6. Handle Name Discovery
             if (data.playerName && !playerData) {

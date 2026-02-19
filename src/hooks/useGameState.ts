@@ -12,7 +12,12 @@ import {
     migrateLocalToSupabase 
 } from '@/lib/sync';
 import { useStatDecay } from './useStatDecay';
-import { STAT_MIN, STAT_MAX, STAT_INITIAL } from '@/lib/constants';
+import { 
+    STAT_MIN, STAT_MAX, STAT_INITIAL, 
+    CHAT_CRITICAL_THRESHOLD, FRACTURE_THRESHOLDS, PHOTO_HISTORY_MAX,
+    PURIFY_SPIRIT_COST, PURIFY_SPIRIT_GAIN, PURIFY_ESSENCE_COST, PURIFY_ESSENCE_GAIN
+} from '@/lib/constants';
+import { PhotoEntry } from '@/lib/types';
 
 interface UseGameStateProps {
     privyUserId?: string;
@@ -96,6 +101,11 @@ export function useGameState({ privyUserId, isLoggedIn }: UseGameStateProps) {
             tutorialDismissed: false,
             memories: [],
             evolution: { totalMemories: 0, stage: 1, threshold: 10 },
+            progress: 0,
+            photoHistory: [],
+            strikes: { count: 0, lastStrikeAt: null, cooldownUntil: null, blockedUntil: null },
+            lastPhotoAt: null,
+            activeMission: null,
         };
         setRegenmon(newData);
         
@@ -196,6 +206,51 @@ export function useGameState({ privyUserId, isLoggedIn }: UseGameStateProps) {
         });
     };
 
+    const addProgress = useCallback((amount: number) => {
+        if (amount <= 0) return;
+        setRegenmon(prev => {
+            if (!prev) return null;
+            const updated = { ...prev, progress: prev.progress + amount, lastUpdated: new Date().toISOString() };
+            saveRegenmonHybrid(updated, privyUserId).catch(e => console.error('Error saving progress:', e));
+            return updated;
+        });
+    }, [privyUserId]);
+
+    const addPhotoEntry = useCallback((entry: PhotoEntry) => {
+        setRegenmon(prev => {
+            if (!prev) return null;
+            const newHistory = [entry, ...prev.photoHistory].slice(0, PHOTO_HISTORY_MAX);
+            const updated = { ...prev, photoHistory: newHistory, lastUpdated: new Date().toISOString() };
+            saveRegenmonHybrid(updated, privyUserId).catch(e => console.error('Error saving photo entry:', e));
+            return updated;
+        });
+    }, [privyUserId]);
+
+    const getEvolutionStage = useCallback((): number => {
+        if (!regenmon) return 1;
+        const p = regenmon.progress;
+        for (let i = FRACTURE_THRESHOLDS.length - 1; i >= 0; i--) {
+            if (p >= FRACTURE_THRESHOLDS[i]) return i + 2; // stages 2-5
+        }
+        return 1;
+    }, [regenmon]);
+
+    const isEvolutionFrozen = useCallback((): boolean => {
+        if (!regenmon) return false;
+        const { espiritu, pulso, esencia } = regenmon.stats;
+        return espiritu < CHAT_CRITICAL_THRESHOLD && pulso < CHAT_CRITICAL_THRESHOLD && esencia < CHAT_CRITICAL_THRESHOLD;
+    }, [regenmon]);
+
+    const purifySpirit = useCallback(() => {
+        if (!regenmon || regenmon.stats.fragmentos < PURIFY_SPIRIT_COST) return;
+        updateStatsWithDeltas({ fragmentos: -PURIFY_SPIRIT_COST, espiritu: PURIFY_SPIRIT_GAIN });
+    }, [regenmon, updateStatsWithDeltas]);
+
+    const purifyEssence = useCallback(() => {
+        if (!regenmon || regenmon.stats.fragmentos < PURIFY_ESSENCE_COST) return;
+        updateStatsWithDeltas({ fragmentos: -PURIFY_ESSENCE_COST, esencia: PURIFY_ESSENCE_GAIN });
+    }, [regenmon, updateStatsWithDeltas]);
+
     const dismissTutorial = () => {
         if (!regenmon) return;
         const updated = { ...regenmon, tutorialDismissed: true };
@@ -216,5 +271,11 @@ export function useGameState({ privyUserId, isLoggedIn }: UseGameStateProps) {
         markIntroSeen,
         updateRegenmonName,
         dismissTutorial,
+        addProgress,
+        addPhotoEntry,
+        getEvolutionStage,
+        isEvolutionFrozen,
+        purifySpirit,
+        purifyEssence,
     };
 }

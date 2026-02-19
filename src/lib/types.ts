@@ -13,6 +13,31 @@ export interface RegenmonStats {
     fragmentos: number; // 💠 Moneda del juego
 }
 
+export interface PhotoEntry {
+    timestamp: number;
+    resonanceLevel: ResonanceLevel;
+    fragmentsEarned: number;
+    progressEarned: number;
+    diaryEntry: string;
+    resonanceReason: string;
+}
+
+export interface StrikeData {
+    count: number;               // 0-3
+    lastStrikeAt: number | null;
+    cooldownUntil: number | null;
+    blockedUntil: number | null;
+}
+
+export interface Mission {
+    id: string;
+    prompt: string;
+    createdAt: number;
+    expiresAt: number;
+    completed: boolean;
+    bypassUsed: boolean;
+}
+
 export interface RegenmonData {
     // Identidad
     name: string;              // 2-15 caracteres
@@ -37,6 +62,13 @@ export interface RegenmonData {
 
     // Evolution
     evolution: EvolutionData;
+
+    // Evolution S4
+    progress: number;              // 0+, only goes UP, never decreases
+    photoHistory: PhotoEntry[];    // max 20, metadata only, NO images
+    strikes: StrikeData;
+    lastPhotoAt: number | null;
+    activeMission: Mission | null;
 }
 
 export interface AppConfig {

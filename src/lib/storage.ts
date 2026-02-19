@@ -75,6 +75,23 @@ function migrateData(data: any): RegenmonData {
         data.evolution.totalMemories = data.memories.length;
     }
 
+    // 7. Initialize S4 Evolution fields (if needed)
+    if (typeof data.progress === 'undefined') {
+        data.progress = 0;
+    }
+    if (!Array.isArray(data.photoHistory)) {
+        data.photoHistory = [];
+    }
+    if (!data.strikes) {
+        data.strikes = { count: 0, lastStrikeAt: null, cooldownUntil: null, blockedUntil: null };
+    }
+    if (typeof data.lastPhotoAt === 'undefined') {
+        data.lastPhotoAt = null;
+    }
+    if (typeof data.activeMission === 'undefined') {
+        data.activeMission = null;
+    }
+
     return data as RegenmonData;
 }
 

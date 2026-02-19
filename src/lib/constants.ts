@@ -25,9 +25,48 @@ export const INITIAL_STATS: RegenmonStats = {
 };
 
 // Economía
-export const PURIFY_COST = 10;
+export const PURIFY_COST = 10; // @deprecated — use PURIFY_SPIRIT_COST / PURIFY_ESSENCE_COST
 export const SEARCH_FRAGMENTS_REWARD = 15;
 export const SEARCH_FRAGMENTS_THRESHOLD = 0; // Solo aparece si tienes 0
+
+// Photo system
+export const PHOTO_COOLDOWN_MS = 300000;           // 5 minutes
+export const PHOTO_FAILED_COOLDOWN_MS = 120000;    // 2 minutes
+export const PHOTO_MAX_SIZE_MB = 5;
+export const PHOTO_HISTORY_MAX = 20;
+export const PHOTO_RATE_LIMIT = 5;                 // per minute
+
+// Fragment ranges (photos)
+export const FRAGMENT_PHOTO_WEAK: [number, number] = [3, 5];
+export const FRAGMENT_PHOTO_MEDIUM: [number, number] = [5, 8];
+export const FRAGMENT_PHOTO_STRONG: [number, number] = [8, 12];
+export const FRAGMENT_PHOTO_PENALIZING = 0;
+
+// Progress ranges
+export const PROGRESS_CHAT_RANGE: [number, number] = [1, 3];
+export const PROGRESS_PHOTO_WEAK: [number, number] = [2, 4];
+export const PROGRESS_PHOTO_MEDIUM: [number, number] = [4, 7];
+export const PROGRESS_PHOTO_STRONG: [number, number] = [7, 12];
+export const PROGRESS_MISSION_BONUS = 5;
+
+// Fracture thresholds
+export const FRACTURE_THRESHOLDS = [50, 100, 200, 400];
+
+// Purification S4 (split into two buttons)
+export const PURIFY_SPIRIT_COST = 10;    // 10 fragments
+export const PURIFY_SPIRIT_GAIN = 10;    // +10 espíritu only
+export const PURIFY_ESSENCE_COST = 10;   // 10 fragments
+export const PURIFY_ESSENCE_GAIN = 10;   // +10 esencia only
+
+// Strikes
+export const STRIKE_COOLDOWN_DURATION_MS = 1800000;    // 30 min
+export const STRIKE_BLOCK_DURATION_MS = 172800000;      // 48 hrs
+export const STRIKE_RESET_DAYS = 7;
+
+// Missions
+export const MISSION_EXPIRATION_MS = 86400000;          // 24 hrs
+export const MISSION_BYPASS_WINDOW_MS = 1800000;        // 30 min
+export const MISSION_GENERATION_CHANCE = 0.33;          // 33%
 
 // Configuración de LocalStorage Keys
 
