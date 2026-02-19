@@ -540,6 +540,22 @@
 - [x] IMPLEMENTATION_PLAN.md: Fases 49-64 definidas (16 fases)
 - [ ] Implementación de S4 — PENDIENTE
 
+### S4 UI/UX Design Phase — COMPLETADA ✅ (2026-02-19)
+- [x] Full UI/UX design session completed
+- [x] 3-state triangle navigation defined (World ↔ Chat ↔ Photo)
+- [x] Custom breakpoints: Mobile <640px, Tablet 641-1024px, Desktop 1025px+
+- [x] Layout per breakpoint: mobile=fullscreen states, desktop=70/30 split
+- [x] HUD design: 🔮 Fragments, 🎯 Mission, ⚙️ Settings — always visible
+- [x] Photo full flow: pre-camera screen, dual capture, post-photo reactions
+- [x] Purification redesigned: tap sprite → floating buttons
+- [x] Panel redesigned: 📖 Diario with Memorias + Historial tabs
+- [x] Tutorial: 5 steps (new) / 2 steps (returning), "✨ Nuevo" badge
+- [x] Asset preloading: real preloader merged with fullscreen invitation
+- [x] Light theme with Frutero palette (#fffbf5, #383838)
+- [x] Settings: fullscreen overlay (mobile/tablet) / floating window (desktop)
+- [x] Wireframes: public/wireframes-s4.html + reggie-wireframes.pages.dev
+- [x] All canonical files synced with design decisions
+
 ### Fases S4 (49-64):
 
 **Backend (49-54):**

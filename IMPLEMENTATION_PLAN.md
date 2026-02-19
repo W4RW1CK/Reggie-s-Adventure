@@ -1391,127 +1391,164 @@ BACKGROUNDS (commit 1ea9efb):
 
 #### Frontend (Fases 55-62)
 
-##### Fase 55: Fullscreen + Layout
+##### Fase 55: Fullscreen + Layout + 3-State Navigation
+
+> **S4 UI/UX:** Triangle navigation (World ↔ Chat ↔ Photo). Custom breakpoints.
+> Loading screen = real preloader + fullscreen invitation merged.
 
 ```
 55.1  Crear src/hooks/useFullscreen.ts:
       → requestFullscreen(), exitFullscreen(), isFullscreen
       → Detectar soporte del navegador
-      → Botón de fullscreen en UI
-55.2  Mobile-first UI overhaul:
-      → Nuevo layout optimizado para fullscreen mobile
-      → Breakpoints TBD por usuario
-      → Mantener compatibilidad desktop
-55.3  Verificar: fullscreen funciona en Chrome, Firefox, Safari mobile
+      → Merged with loading screen: after assets load → fullscreen invitation
+      → Two options: "Pantalla completa" / "Continuar así"
+      → Always available in ⚙️ Settings toggle
+55.2  Implement 3-state navigation system:
+      → World (default) ↔ Chat ↔ Photo — triangle, all connected
+      → World → Chat: 💬 bubble button in bottom bar
+      → World → Photo: 📷 bubble button in bottom bar
+      → Chat → World: ✕ in chat header
+      → Chat → Photo: 📎 in input bar
+      → Photo → Chat: "Conversar" post-eval
+      → Photo → World: "Volver" post-eval
+      → Vertical only — NO horizontal layout
+55.3  Implement custom breakpoints:
+      → Mobile: <640px — alternating full-screen states
+      → Tablet: 641-1024px — vertical=mobile spacious, horizontal=desktop
+      → Desktop: 1025px+ — 70% world / 30% chat (NOT 50/50), default full world
+55.4  Asset preloading in loading screen:
+      → REAL preloader: sprites, backgrounds for all 5 evolution stages, UI icons
+      → new Image().src during loading + <link rel="preload"> for critical assets
+      → Loading screen → fullscreen invitation → game (no extra screens)
+55.5  Verificar: 3-state navigation, fullscreen, breakpoints, preloader all functional
 ```
 
 ##### Fase 56: HUD Redesign
 
+> **S4 UI/UX:** HUD visible in ALL 3 states. Purification via tap sprite.
+
 ```
-56.1  Actualizar header/HUD para S4:
-      → Agregar indicador de progreso/etapa (sutil, no barra)
-      → Mantener Fragmentos, Memorias count, identidad
-      → Misión activa indicator
-56.2  Ajustar bottom bar:
-      → Agregar botón de 📸 Foto
-      → Mantener Purificar, Settings, Conversar, Historial
-56.3  Verificar: HUD no está saturado, todo cabe en mobile
+56.1  HUD (always visible in World, Chat, Photo):
+      → 🔮 Fragments count
+      → 🎯 Mission indicator (glows/pulses when active)
+      → ⚙️ Settings access (one tap from any state)
+56.2  Stats/Profile overlay:
+      → Tap sprite (world) or info button (any state) → profile overlay
+      → Shows: Pulso ❤️, Esencia 💧, Espíritu ✨, Fragmentos 🔮, Fracturas (dots), Active Mission
+56.3  Purification via tap sprite:
+      → Tap sprite in World → floating buttons: "❤️ Recargar 10🔮" / "💧 Nutrir 10🔮"
+      → Buttons disappear after action
+      → Subtle bounce + color flash animation
+56.4  Critical state visuals:
+      → Sprite dimmed, particles off, darker background
+      → HUD: stats flash/pulse when critical
+56.5  Bottom bar: 💬 Chat bubble + 📷 Photo bubble (World state)
+56.6  Verificar: HUD works in all 3 states, purify via sprite, critical state visuals
 ```
 
 ##### Fase 57: Photo UI
 
+> **S4 UI/UX:** Photo is a FULL STATE. Pre-camera screen. Two capture options.
+
 ```
-57.1  Crear src/components/photo/PhotoUpload.tsx:
-      → Input file (accept="image/*", capture="environment" en mobile)
-      → Preview de la foto antes de enviar
-      → Botón "Compartir Memoria" para enviar
-      → Indicador de cooldown (countdown timer)
-      → Mensaje cuando fotos bloqueadas (strikes)
-57.2  Crear src/components/photo/PhotoResult.tsx:
-      → Muestra resultado de evaluación emocional
-      → Resonancia visual (weak/medium/strong) con colores
-      → Diary entry del Regenmon (frase emocional)
-      → Fragmentos y progreso ganados
-      → Animación de recepción
-57.3  Crear src/hooks/usePhotoEval.ts:
+57.1  Pre-camera screen (full screen, NOT modal):
+      → Explains what Reggie wants to see
+      → Active mission shown if any
+      → TWO options: "📸 Tomar foto" (camera) + "🖼️ Galería" (file picker)
+      → First time: extra text about camera permissions + privacy (photos NOT stored)
+      → Cooldown: shows timer when active
+57.2  From chat: 📎 button opens mini picker (camera/gallery options)
+57.3  Post-photo screen (full screen):
+      → Regenmon reacts with animation + stat deltas shown
+      → Diary entry displayed
+      → Post-photo variants:
+        - Strong resonance: happy bounce, bright particles
+        - Weak: neutral reaction
+        - Penalizing: dimmed sprite, red text, strike warning
+      → TWO buttons: "💬 Conversar" (→ Chat) / "🏠 Volver" (→ World)
+57.4  Crear src/hooks/usePhotoEval.ts:
       → submitPhoto(file): envía a /api/evaluate
       → Maneja cooldown, strikes, mission bypass
       → Estado: isEvaluating, lastResult, cooldownRemaining
-57.4  Verificar: foto se sube, evalúa, resultado se muestra, cooldown funciona
+57.5  Verificar: full photo flow works end-to-end with all variants
 ```
 
-##### Fase 58: Memorias Panel (🧠)
+##### Fase 58: Panel — Diario (📖 Memorias + Historial)
+
+> **S4 UI/UX:** One button (📖 Diario), two tabs. Replaces separate panels.
 
 ```
-58.1  Crear src/components/memorias/MemoriasPanel.tsx:
-      → Panel con diary entries del Regenmon
-      → Cada entrada: frase emocional + timestamp + resonancia
-      → Separado del Historial (📜 = transacciones/números, 🧠 = emociones/frases)
-      → Scroll infinito o paginado
-      → Estilo NES container
-58.2  Integrar en GameScreen:
-      → Botón 🧠 en UI (o expandir el indicador existente)
-      → Se oculta durante chat (como otros paneles)
-58.3  Verificar: memorias se muestran, se actualizan con nuevas fotos
+58.1  Crear Diario panel with two tabs:
+      → Tab "Memorias" = photos + emotional reactions (diaryEntries)
+      → Tab "Historial" = activity log (fragments, purifications, milestones)
+58.2  Breakpoint behavior:
+      → Mobile + Tablet: fullscreen overlay
+      → Desktop: floating window with dimmed backdrop
+58.3  Integrar 📖 Diario button in UI
+58.4  Verificar: both tabs work, entries update with new photos/activities
 ```
 
 ##### Fase 59: Evolution Visual
 
 ```
-59.1  Crear src/components/evolution/EvolutionVisual.tsx:
-      → 5 variantes de sprite por tipo (15 sprites total mínimo)
-      → Transición visual al evolucionar (Fractura)
-      → Partículas y efectos aumentan con cada etapa
-59.2  Generar sprites de evolución con Gemini:
+59.1  Crear 5 variantes de sprite por tipo (15 sprites total mínimo):
       → Stage 1: base actual
       → Stage 2: ligeros cambios (más detalle, partículas)
       → Stage 3: cambios notables (forma más definida)
       → Stage 4: cambios significativos (forma madura)
       → Stage 5: forma final (máxima expresión del tipo)
-59.3  Implementar Fracture animation:
-      → Efecto visual especial al cruzar umbral
+59.2  Implementar Fracture animation:
+      → Flash brillante, shake sutil, partículas explotan
       → Texto narrativo del Regenmon sobre su evolución
-      → Sonido/música opcional
-59.4  Sprite dormido cuando evolution frozen (todos stats < 10)
-59.5  Verificar: sprites cambian por etapa, fracturas tienen animación
+59.3  Sprite dormido cuando evolution frozen (all stats < 10):
+      → Sprite dimmed, particles off, darker background
+59.4  Verificar: sprites cambian por etapa, fracturas tienen animación
 ```
 
 ##### Fase 60: Missions UI
 
-```
-60.1  Crear src/components/missions/MissionCard.tsx:
-      → Muestra misión activa (descripción, objetivo, estado)
-      → Botón "Completar" o "Abandonar"
-      → Indicador de bonus (+5 progress)
-      → Estilo NES card
-60.2  Integrar en GameScreen:
-      → Misión visible en HUD o como sección expandible
-      → Misión bypass: si pide foto, muestra "📸 Tu Regenmon te pidió una foto"
-60.3  Verificar: misiones se muestran, completan, abandonan correctamente
-```
-
-##### Fase 61: Theme Adaptation
+> **S4 UI/UX:** Triple reinforcement — HUD + Chat + Profile.
 
 ```
-61.1  Adaptar nuevos componentes S4 a ambos temas (Dark/Light):
-      → PhotoUpload, PhotoResult, MemoriasPanel, MissionCard, EvolutionVisual
-      → Usar CSS custom properties existentes
-61.2  Verificar: todos los componentes S4 se ven bien en ambos temas
+60.1  Mission indicator in HUD: 🎯 glows/pulses when active
+60.2  Regenmon mentions mission naturally in Chat
+60.3  Full mission description in Profile overlay
+60.4  Mission bypass: si pide foto, muestra bypass option on Photo state
+60.5  Verificar: triple reinforcement works, missions complete/abandon correctly
 ```
 
-##### Fase 62: Transitions + Polish
+##### Fase 61: Theme Adaptation + Settings
+
+> **S4 UI/UX:** Both Dark and Light themes. Settings accessible from all states.
 
 ```
-62.1  Transiciones entre estados de evolución:
-      → Smooth morphing al cambiar de etapa
+61.1  Settings panel per breakpoint:
+      → Mobile + Tablet: fullscreen overlay
+      → Desktop: floating window
+      → Options: Fullscreen toggle, Dark/Light theme, Music, Effects, Tutorial restart, Version
+61.2  Light theme with Frutero palette:
+      → Background: #fffbf5, Text: #383838, warm gradients
+61.3  Adapt ALL S4 components to both themes
+61.4  Verificar: themes toggle correctly, settings accessible from all 3 states
+```
+
+##### Fase 62: Tutorial + Transitions + Polish
+
+> **S4 UI/UX:** Different onboarding for new vs returning players.
+
+```
+62.1  Tutorial / Onboarding:
+      → New players: 5 steps (1-Regenmon, 2-Chat, 3-Care/Purify, 4-Photos NEW, 5-Evolution NEW)
+      → S3 returning players: 2 steps only (Photos + Evolution), badge "✨ Nuevo"
+      → Steps 4-5 marked as NEW
+      → "Saltar tutorial" always visible
+      → Can restart from Settings
+62.2  State transitions:
+      → World ↔ Chat ↔ Photo smooth transitions
       → Fracture effect (flash, shake, particles)
-62.2  Photo evaluation transitions:
-      → Loading state mientras se evalúa
-      → Reveal animation del resultado
-62.3  Mission transitions:
-      → Appear/disappear animations
-      → Completion celebration
-62.4  Verificar: todas las transiciones son fluidas y lore-appropriate
+      → Photo evaluation: loading → reveal animation
+      → Mission appear/disappear animations
+62.3  Verificar: tutorial flows for new + returning, all transitions fluid
 ```
 
 #### Close (Fases 63-64)

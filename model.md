@@ -672,6 +672,127 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 - **Constants audit**: Added `STAT_CHANGE_DISPLAY_MS`, `MUSIC_CHAT_VOLUME`, `MUSIC_FADE_MS`, `PULSE_REGEN_RATE_PER_HOUR` to `constants.ts`. No magic numbers found in hooks/lib (audio frequencies in `useChiptuneAudio.ts` are appropriate as inline values). Legacy constants `CHAT_PULSE_CHANGE` and `CHAT_ESENCIA_COST` kept for backward compat but unused.
 - **Build**: ✅ passes clean
 
+---
+
+## S4 UI/UX Design Decisions (2026-02-19)
+
+> Fuente: Sesión de diseño UI/UX completa del 2026-02-19.
+> Wireframes: `public/wireframes-s4.html` (main) + `reggie-wireframes.pages.dev`
+> Extras: `reggie-wireframes.pages.dev/extras.html` (photo flow, light theme, tutorial)
+
+### Navigation — 3-State Triangle
+
+- **3 estados:** World (default) ↔ Chat ↔ Photo — navegación triangular, todos conectados
+- **World → Chat:** bubble button 💬 en bottom bar
+- **World → Photo:** bubble button 📷 en bottom bar
+- **Chat → World:** ✕ button en chat header
+- **Chat → Photo:** 📎 button en input bar
+- **Photo → Chat:** "Conversar" button post-evaluación
+- **Photo → World:** "Volver" button post-evaluación
+- **Vertical only** — NO horizontal layout
+
+### Breakpoints (CUSTOM, not generic)
+
+| Nombre | Rango | Comportamiento |
+|--------|-------|----------------|
+| Mobile | <640px | Alternating states (world/chat/photo take full screen) |
+| Tablet | 641-1024px | Vertical: same as mobile, more spacious. Horizontal: side-by-side like desktop |
+| Desktop | 1025px+ | 70% world / 30% chat (NOT 50/50). Default full world, opens 70/30 on interaction |
+
+### HUD (always visible in all 3 states)
+
+- 🔮 Fragments count
+- 🎯 Mission indicator (glows/pulses when active)
+- ⚙️ Settings access
+
+### Stats/Profile
+
+- **Trigger:** Tap sprite (world) or info button (any state) → opens profile overlay
+- **Shows:** Pulso ❤️, Esencia 💧, Espíritu ✨, Fragmentos 🔮, Fracturas (dots), Active Mission
+
+### Panel (Memorias/Historial)
+
+- One button (📖 Diario), two tabs inside
+- Tab "Memorias" = photos + emotional reactions (diaryEntries)
+- Tab "Historial" = activity log (fragments, purifications, milestones)
+- Mobile + Tablet: fullscreen overlay
+- Desktop: floating window with dimmed backdrop
+
+### Photos — Full Flow
+
+1. **Pre-camera screen** (NOT modal, full screen): explains what Reggie wants
+2. **TWO options:** "📸 Tomar foto" (camera) + "🖼️ Galería" (file picker)
+3. **First time:** extra text about camera permissions + privacy (photos NOT stored)
+4. **Active mission** shown on pre-camera screen
+5. **Cooldown:** shows timer when active
+6. **From chat:** 📎 button opens mini picker (camera/gallery options)
+7. **Post-photo:** Regenmon reacts + deltas shown + two buttons: "💬 Conversar" / "🏠 Volver"
+8. **Post-photo variants:**
+   - Strong resonance: happy bounce animation
+   - Weak: neutral reaction
+   - Penalizing: dimmed sprite, red text, strike warning
+
+### Missions — Triple Reinforcement
+
+- **HUD:** 🎯 glows/pulses when mission active
+- **Chat:** Regenmon mentions mission naturally in conversation
+- **Profile:** Full mission description visible
+
+### Purification — Tap Sprite Interaction
+
+- **Trigger:** Tap sprite in World → floating buttons appear
+- **Buttons:** "❤️ Recargar 10🔮" / "💧 Nutrir 10🔮"
+- **After action:** Buttons disappear
+- **Animation:** Subtle bounce + color flash on purify
+
+### Critical State / Freeze
+
+- **Visual:** Sprite dimmed, particles off, darker background
+- **Chat:** Regenmon speaks from emotional state (lore-reactive)
+- **HUD:** Stats flash/pulse when critical
+
+### Fullscreen
+
+- **Merged with loading screen:** after assets load → fullscreen invitation (not separate screen)
+- **Two options:** "Pantalla completa" / "Continuar así"
+- **Always available** in ⚙️ Settings toggle
+
+### Settings
+
+- ⚙️ in HUD, accessible from all 3 states (one tap)
+- **Mobile + Tablet:** fullscreen overlay
+- **Desktop:** floating window
+- **Options:** Fullscreen toggle, Dark/Light theme, Music, Effects, Tutorial restart, Version
+
+### Themes
+
+- **Dark AND Light** theme both supported in S4
+- **Light palette:** warm background (#fffbf5), dark text (#383838), warm gradients
+- **Frutero color palette integration** for Light theme
+
+### Tutorial / Onboarding
+
+- **New players:** 5 steps (1-Regenmon, 2-Chat, 3-Care/Purify, 4-Photos NEW, 5-Evolution NEW)
+- **S3 returning players:** 2 steps only (Photos + Evolution), badge "✨ Nuevo"
+- **Steps 4-5** marked as NEW
+- **"Saltar tutorial"** always visible
+- **Can restart** from Settings
+
+### Asset Preloading
+
+- Loading screen is a **REAL preloader** (not cosmetic spinner)
+- **Preloads:** sprites, backgrounds for all 5 evolution stages, UI icons
+- **Method:** `new Image().src` during loading + `<link rel="preload">` for critical assets
+- **Flow:** Loading screen → fullscreen invitation → game (no extra screens)
+
+### Wireframes
+
+- **Main:** `public/wireframes-s4.html`
+- **Deployed:** `reggie-wireframes.pages.dev`
+- **Extras** (photo flow, light theme, tutorial): `reggie-wireframes.pages.dev/extras.html`
+
+---
+
 ### 📌 Rules & Lessons Learned
 - **Docs/ folder is UNTOUCHABLE** — never modify files in the Docs/ directory
 - **9 canonical files** at root: PRD.md, TECH_STACK.md, IMPLEMENTATION_PLAN.md, FRONTEND_GUIDELINES.md, BACKEND_STRUCTURE.md, APP_FLOW.md, LORE.md, progress.txt, model.md

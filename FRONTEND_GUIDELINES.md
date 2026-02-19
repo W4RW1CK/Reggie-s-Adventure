@@ -171,15 +171,95 @@ Escala: 4px base
 └─────────────────────────────────────┘
 ```
 
-### Breakpoints
+### Breakpoints (S4 — CUSTOM, not generic)
 
-| Nombre | Ancho | Comportamiento |
-|--------|-------|----------------|
-| `mobile` | `< 480px` | Layout vertical compacto, Regenmon mediano |
-| `tablet` | `480px - 768px` | Layout vertical holgado, Regenmon más grande |
-| `desktop` | `> 768px` | Fondo llena viewport completo, UI centrada, Regenmon grande |
+> ⚠️ **S4 Update:** Breakpoints redefinidos con valores custom. Ya no usan los genéricos de S3.
 
-**Desktop:** El fondo (paisaje) cubre el viewport completo. Los elementos de UI (stats, botones) se centran con `max-width: 500px`. El Regenmon se escala a `1.2x`. Ya no se simula una pantalla móvil.
+| Nombre | Rango | Layout |
+|--------|-------|--------|
+| `mobile` | `< 640px` | Alternating states — world/chat/photo take full screen |
+| `tablet` | `641px - 1024px` | Vertical: same as mobile, more spacious. Horizontal: side-by-side like desktop |
+| `desktop` | `1025px+` | 70% world / 30% chat. Default full world, opens 70/30 on interaction |
+
+**Mobile:** Each state (World, Chat, Photo) occupies the full viewport. Navigation via bubble buttons.
+**Tablet vertical:** Same as mobile but with more generous spacing and larger elements.
+**Tablet horizontal:** Side-by-side layout matching desktop behavior.
+**Desktop:** Default shows full world. On interaction (chat/photo), splits to 70% world / 30% panel. NOT 50/50.
+
+---
+
+## S4 Navigation — 3-State Triangle
+
+> **S4 replaces the single-screen approach with a triangle navigation pattern.**
+> All 3 states are connected. Vertical only — NO horizontal layout.
+
+```
+        World (default)
+       /              \
+   💬 Chat ──────── 📷 Photo
+```
+
+| Transition | Trigger |
+|-----------|---------|
+| World → Chat | 💬 bubble button in bottom bar |
+| World → Photo | 📷 bubble button in bottom bar |
+| Chat → World | ✕ button in chat header |
+| Chat → Photo | 📎 button in input bar |
+| Photo → Chat | "Conversar" button post-evaluation |
+| Photo → World | "Volver" button post-evaluation |
+
+## S4 HUD (always visible in ALL 3 states)
+
+| Element | Icon | Behavior |
+|---------|------|----------|
+| Fragments | 🔮 | Shows current fragment count |
+| Mission | 🎯 | Glows/pulses when mission is active |
+| Settings | ⚙️ | One-tap access from any state |
+
+## S4 Stats/Profile Overlay
+
+- **Trigger:** Tap sprite (world) or info button (any state)
+- **Shows:** Pulso ❤️, Esencia 💧, Espíritu ✨, Fragmentos 🔮, Fracturas (dots), Active Mission
+- **Style:** Overlay on current state
+
+## S4 Panel — Diario (📖)
+
+> One button (📖 Diario), two tabs inside. Replaces separate Historial and Memorias.
+
+| Tab | Content |
+|-----|---------|
+| Memorias | Photos + emotional reactions (diaryEntries) |
+| Historial | Activity log (fragments, purifications, milestones) |
+
+| Breakpoint | Panel behavior |
+|-----------|---------------|
+| Mobile + Tablet | Fullscreen overlay |
+| Desktop | Floating window with dimmed backdrop |
+
+## S4 Settings Panel
+
+- ⚙️ in HUD, accessible from all 3 states (one tap)
+- **Mobile + Tablet:** fullscreen overlay
+- **Desktop:** floating window
+- **Options:** Fullscreen toggle, Dark/Light theme, Music, Effects, Tutorial restart, Version
+
+## S4 Purification — Tap Sprite
+
+- Tap sprite in World → floating buttons appear: "❤️ Recargar 10🔮" / "💧 Nutrir 10🔮"
+- Buttons disappear after action
+- Animation: subtle bounce + color flash on purify
+
+## S4 Light Theme (Frutero palette)
+
+| Element | Value |
+|---------|-------|
+| Background | `#fffbf5` (warm white) |
+| Text | `#383838` (dark gray) |
+| Primary | `#ff9500` (mango orange) |
+| Secondary | `#f6464f` (red) |
+| Accent | `#9ed22d` (green) |
+
+> Both Dark AND Light themes supported in S4. Light theme uses warm gradients.
 
 ---
 

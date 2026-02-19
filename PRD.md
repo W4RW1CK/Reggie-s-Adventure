@@ -180,7 +180,15 @@ Al completar las 5 sesiones, el jugador tiene:
 | F4.9 | Fullscreen API | Modo inmersivo fullscreen para máxima experiencia. Mobile-first UI overhaul |
 | F4.10 | Evolución visual | Sprites evolucionan en 5 etapas por tipo. Cambios visibles en forma, partículas, ambiente |
 | F4.11 | Anti-spam chat | Sistema anti-spam para mensajes de chat con sustancia requerida para ganar progreso |
-| F4.12 | Purificación (posible S4 change) | Actual: 1 botón, 10💠, +30 Esencia +5 Espíritu +10 Pulso. TBD: posible split en 2 botones |
+| F4.12 | Purificación redesigned | Tap sprite in World → floating buttons: "❤️ Recargar 10🔮" (Pulso) / "💧 Nutrir 10🔮" (Esencia). Buttons disappear after action. Bounce + color flash animation |
+| F4.13 | 3-State Triangle Navigation | World ↔ Chat ↔ Photo — all connected. Bubble buttons (💬📷) in World, ✕/📎 in Chat, Conversar/Volver post-photo. Vertical only |
+| F4.14 | Custom breakpoints | Mobile <640px (full-screen states), Tablet 641-1024px (vertical=mobile, horizontal=desktop), Desktop 1025px+ (70/30 split) |
+| F4.15 | HUD always visible | 🔮 Fragments, 🎯 Mission (glows), ⚙️ Settings — visible in all 3 states |
+| F4.16 | Diario panel (📖) | One button, two tabs: Memorias (photos+reactions) + Historial (activity log). Mobile/tablet=fullscreen overlay, desktop=floating window |
+| F4.17 | Photo full flow | Pre-camera screen (full, not modal) with "📸 Tomar foto" + "🖼️ Galería". First-time privacy text. Post-photo: react + deltas + "Conversar"/"Volver" |
+| F4.18 | Tutorial S4 | New: 5 steps (1-5, steps 4-5 NEW). Returning S3: 2 steps (Photos+Evolution). "Saltar tutorial" always visible. Restart from Settings |
+| F4.19 | Asset preloading | Real preloader (not spinner). Sprites + backgrounds for 5 stages + icons. Loading → fullscreen invitation → game |
+| F4.20 | Light theme (Frutero) | Warm bg #fffbf5, dark text #383838, warm gradients. Both Dark+Light supported |
 
 ### Sesión 5 — El Encuentro (v0.5) `PENDIENTE`
 
