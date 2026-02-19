@@ -793,6 +793,15 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 
 ---
 
+### Fase 57: Photo UI — Full Flow (2026-02-19)
+- **PreCamera.tsx**: Full-screen pre-camera with title, privacy notice (first-time via localStorage), active mission card, cooldown timer with live countdown, two capture buttons (camera with `capture="environment"` + gallery without capture), "← Volver" back link
+- **PostPhoto.tsx**: Shows sprite with emotion-based animation (happy bounce/neutral/grayscale), resonance label (strong ✨/medium/weak/⚠️ penalizing), diary entry quote, stat deltas, conditional action buttons (no chat on penalizing)
+- **PhotoFlow.tsx**: Orchestrator component managing pre-camera → loading → result flow. Calls `/api/evaluate`, applies fragments + stat deltas + progress (randomized per resonance range), handles mission completion + strike on penalizing, manages `lastPhotoAt` timestamp
+- **ChatPhotoPicker.tsx**: Mini overlay at bottom of chat with 📸 Cámara / 🖼️ Galería options + dismiss overlay
+- **CSS**: ~250 lines in globals.css — all components styled with NES aesthetic, light theme overrides, responsive, animations (sprite-bounce, spin, result-reveal)
+- **Privacy**: Photos converted to base64, sent to API, then discarded. Never stored in state or localStorage
+- **Build**: ✅ Clean (TypeScript + Next.js build)
+
 ### 📌 Rules & Lessons Learned
 - **Docs/ folder is UNTOUCHABLE** — never modify files in the Docs/ directory
 - **9 canonical files** at root: PRD.md, TECH_STACK.md, IMPLEMENTATION_PLAN.md, FRONTEND_GUIDELINES.md, BACKEND_STRUCTURE.md, APP_FLOW.md, LORE.md, progress.txt, model.md

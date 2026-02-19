@@ -569,7 +569,7 @@
 **Frontend (55-62):**
 - [x] Fase 55: Fullscreen + Layout (useFullscreen, mobile-first overhaul)
 - [x] Fase 56: HUD Redesign + Settings Panel + Theme System
-- [ ] Fase 57: Photo UI (PhotoUpload, PhotoResult, usePhotoEval)
+- [x] Fase 57: Photo UI (PreCamera, PostPhoto, PhotoFlow, ChatPhotoPicker)
 - [ ] Fase 58: Memorias Panel (MemoriasPanel, diary entries)
 - [ ] Fase 59: Evolution Visual (5 stages × 3 types sprites, fracture animation)
 - [ ] Fase 60: Missions UI (MissionCard, mission flow)
