@@ -3,13 +3,9 @@ import {
   PHOTO_FAILED_COOLDOWN_MS,
   MISSION_BYPASS_WINDOW_MS,
 } from './constants';
-import { Mission, StrikeData } from './types';
+import { Mission, StrikeData, CooldownStatus } from './types';
 
-export interface CooldownStatus {
-  canTakePhoto: boolean;
-  remainingMs: number;
-  reason: 'ready' | 'cooldown' | 'strike_cooldown' | 'blocked';
-}
+export type { CooldownStatus };
 
 /**
  * Check if the user can take a photo right now.

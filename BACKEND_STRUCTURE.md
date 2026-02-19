@@ -928,6 +928,41 @@ Bloque 15 — MISIONES (S4):
 - Ejemplo Hielo: "¿Hay algo sereno cerca de ti ahora?"
 ```
 
+### System Prompt S4 Additions (`lib/ai/prompts.ts`)
+
+The system prompt now accepts an optional `context` parameter with S4-specific data:
+
+```typescript
+interface SystemPromptContext {
+  name: string;
+  type: RegenmonType;
+  stats: RegenmonStats;
+  daysAlive: number;
+  playerName?: string;
+  memories?: RegenmonMemory[];
+  progress?: number;           // S4: lifetime progress
+  diaryEntries?: DiaryEntry[]; // S4: recent diary entries for context
+  activeMissionPrompt?: string; // S4: active mission text
+}
+```
+
+**Three new blocks appended to the prompt:**
+- **Block 13 — Evolution & World State**: Describes current evolution feel (stage 1-5), fractures closed, world health description, evolution freeze state. The Regenmon acts more confident/defined at higher stages without explicitly mentioning "evolution".
+- **Block 14 — Photos & Real-World Memories**: Type-specific resonance guidance (Rayo=movement/tech, Flama=connections/warmth, Hielo=knowledge/nature). References recent diary entries. Instructs emotional (not technical) evaluation.
+- **Block 15 — Missions**: Type-specific mission suggestions. References active mission if present. Always optional and friendly.
+
+### Consolidated S4 Types (`lib/types.ts`)
+
+All S4 types are exported from a single canonical source:
+- `EvolutionStage` — 1-5 type alias
+- `EvaluationResult` — photo evaluation output
+- `FragmentTransaction` — activity log entry (replaces S3 ActivityEntry)
+- `DiaryEntry` — emotional diary from Regenmon
+- `WorldHealth` — world state enum
+- `WorldState` — full world state metadata
+- `CooldownStatus` — photo cooldown check result
+- `MissionData` — alias for Mission
+
 ### Purification (S4 — Split Dual Purify)
 
 **S3 (deprecated):** One button, 10💠, +30 Esencia +5 Espíritu +10 Pulso

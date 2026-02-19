@@ -663,6 +663,15 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 - **useMissions.ts**: Mission hook with type-specific templates (5 per type). 1 active max, +5 progress bonus, 24hr expiration. Mission bypass: 1 photo within 30min window during cooldown. Abandon without penalty.
 - **Integration**: All three modules use existing types (StrikeData, Mission) from types.ts and constants from constants.ts. No changes to useGameState needed — these are composable hooks that frontend phases (55-62) will wire in.
 
+### Fase 54: Canonical Files Sync (2026-02-19)
+- **System prompt update** (`prompts.ts`): Added 3 new S4 blocks — Evolution & World State (block 13), Photos & Real-World Memories (block 14), Missions (block 15). Each block is type-specific. Evolution block references world health from `worldState.ts` and freeze state. Photo block describes type-specific resonance. Mission block includes active mission context.
+- **New `SystemPromptContext` interface**: Extended `buildSystemPrompt()` with optional `context` param carrying `progress`, `diaryEntries`, `activeMissionPrompt` — backward compatible, old callers unaffected.
+- **Types consolidation** (`types.ts`): Added 8 new exported types: `EvolutionStage`, `EvaluationResult`, `FragmentTransaction`, `DiaryEntry`, `WorldHealth`, `CooldownStatus`, `MissionData`, `WorldState`. These consolidate scattered definitions from phases 49-53 into a single canonical source.
+- **Type deduplication**: `CooldownStatus` moved from `photoCooldown.ts` to `types.ts` (re-exported for backward compat). `WorldHealth`/`WorldStateMetadata` moved from `worldState.ts` to `types.ts` (`WorldState` type, re-exported as `WorldStateMetadata` alias).
+- **Storage migration verified**: S3→S4 migration in `storage.ts` already handles all S4 fields (progress, photoHistory, strikes, lastPhotoAt, activeMission) with proper defaults. No changes needed — Phase 51 did this correctly.
+- **Constants audit**: Added `STAT_CHANGE_DISPLAY_MS`, `MUSIC_CHAT_VOLUME`, `MUSIC_FADE_MS`, `PULSE_REGEN_RATE_PER_HOUR` to `constants.ts`. No magic numbers found in hooks/lib (audio frequencies in `useChiptuneAudio.ts` are appropriate as inline values). Legacy constants `CHAT_PULSE_CHANGE` and `CHAT_ESENCIA_COST` kept for backward compat but unused.
+- **Build**: ✅ passes clean
+
 ### 📌 Rules & Lessons Learned
 - **Docs/ folder is UNTOUCHABLE** — never modify files in the Docs/ directory
 - **9 canonical files** at root: PRD.md, TECH_STACK.md, IMPLEMENTATION_PLAN.md, FRONTEND_GUIDELINES.md, BACKEND_STRUCTURE.md, APP_FLOW.md, LORE.md, progress.txt, model.md

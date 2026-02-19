@@ -1,14 +1,9 @@
-export type WorldHealth = 'corrupted' | 'healing' | 'recovering' | 'flourishing' | 'regenerated';
+import { WorldHealth, WorldState } from './types';
 
-export interface WorldStateMetadata {
-  health: WorldHealth;
-  description: string;
-  backgroundIntensity: number;
-  particleFrequency: number;
-  corruptionLevel: number;
-}
+export type WorldStateMetadata = WorldState;
+export type { WorldHealth };
 
-export function getWorldState(stage: number): WorldStateMetadata {
+export function getWorldState(stage: number): WorldState {
   switch (stage) {
     case 1:
       return {

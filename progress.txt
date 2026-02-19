@@ -548,7 +548,7 @@
 - [x] Fase 51: Dual Economy — Fragmentos + Progreso (split purify, S4 types/constants, storage migration S3→S4, Supabase sync)
 - [x] Fase 52: Fracture System + Evolution Stages (data layer: evolution.ts, worldState.ts, useGameState refactor)
 - [x] Fase 53: Missions + Anti-Abuse (useMissions, useStrikes, photoCooldown, mission bypass, anti-spam)
-- [ ] Fase 54: Canonical Files Sync (system prompt update, types, storage)
+- [x] Fase 54: Canonical Files Sync (system prompt update, types consolidation, storage migration, constants audit)
 
 **Frontend (55-62):**
 - [ ] Fase 55: Fullscreen + Layout (useFullscreen, mobile-first overhaul)

@@ -135,3 +135,59 @@ export interface RegenmonMemory {
     type: MemoryType;      // Categoría de memoria
     discoveredAt: number;  // Timestamp
 }
+
+// --- S4 Consolidated Types ---
+
+/** Evolution stage (1-5), derived from progress via FRACTURE_THRESHOLDS */
+export type EvolutionStage = 1 | 2 | 3 | 4 | 5;
+
+/** Evaluation result from photo Vision API */
+export interface EvaluationResult {
+    fragments: number;
+    progress: number;
+    spiritChange: number;
+    pulseChange: number;
+    essenceChange: number;
+    diaryEntry: string;
+    resonanceLevel: ResonanceLevel;
+    resonanceReason: string;
+}
+
+/** Fragment transaction for activity history */
+export interface FragmentTransaction {
+    action: 'purify_spirit' | 'purify_essence' | 'chat' | 'photo' | 'search_fragments' | 'mission';
+    fragmentChange: number;
+    progressChange: number;
+    timestamp: number;
+    detail?: string;
+}
+
+/** Diary entry from Regenmon's emotional perspective */
+export interface DiaryEntry {
+    text: string;
+    timestamp: number;
+    resonance: ResonanceLevel;
+    source: 'photo' | 'fracture' | 'mission';
+}
+
+/** World health level mapped from evolution stage */
+export type WorldHealth = 'corrupted' | 'healing' | 'recovering' | 'flourishing' | 'regenerated';
+
+/** Cooldown status for photo system */
+export interface CooldownStatus {
+    canTakePhoto: boolean;
+    remainingMs: number;
+    reason: 'ready' | 'cooldown' | 'strike_cooldown' | 'blocked';
+}
+
+/** Mission data (alias for Mission, used in BACKEND_STRUCTURE) */
+export type MissionData = Mission;
+
+/** World state metadata for UI rendering */
+export interface WorldState {
+    health: WorldHealth;
+    description: string;
+    backgroundIntensity: number;
+    particleFrequency: number;
+    corruptionLevel: number;
+}

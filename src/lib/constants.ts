@@ -89,3 +89,11 @@ export const CHAT_ESENCIA_COST = -2; // Hablar gasta esencia
 export const CHAT_FRAGMENT_REWARD_RANGE = [0, 5];
 export const CHAT_CRITICAL_THRESHOLD = 10;
 
+// UI Constants
+export const STAT_CHANGE_DISPLAY_MS = 3000;    // How long floating stat deltas show
+export const MUSIC_CHAT_VOLUME = 0.6;          // Music volume during chat
+export const MUSIC_FADE_MS = 1500;             // Music fade transition duration
+
+// Pulse passive regen
+export const PULSE_REGEN_RATE_PER_HOUR = 3;
+
