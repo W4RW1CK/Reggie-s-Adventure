@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { VisionRequest, VisionResponse, ResonanceLevel } from '@/lib/types';
+import { VisionRequest, VisionResponse, ResonanceLevel, RegenmonMemory } from '@/lib/types';
 import { getVisionProvider } from '@/lib/ai/vision-provider';
+import { buildVisionPrompt } from '@/lib/ai/vision-prompts';
 
 // Rate limiting: max 5 evaluations per minute per IP
 const rateLimit = new Map<string, number[]>();
@@ -53,6 +54,32 @@ function getFallbackResponse(): VisionResponse {
         resonanceLevel: 'weak',
         resonanceReason: 'evaluation_fallback',
     };
+}
+
+function extractKeywords(text: string): string[] {
+    return text.toLowerCase().split(/\s+/).filter(w => w.length > 3);
+}
+
+function calculateCoherenceBonus(memories: RegenmonMemory[], currentReason: string): number {
+    // Look at recent memories for recurring theme keywords
+    const recentMemories = memories.slice(-5);
+    if (recentMemories.length < 3) return 0;
+
+    const memoryTexts = recentMemories.map(m => m.value.toLowerCase());
+    const currentWords = extractKeywords(currentReason);
+
+    // Count how many memory values share keywords with the current reason
+    let matchCount = 0;
+    for (const memText of memoryTexts) {
+        const memWords = extractKeywords(memText);
+        const hasOverlap = currentWords.some(w => memWords.includes(w));
+        if (hasOverlap) matchCount++;
+    }
+
+    // 3+ matching memories = +1, 4+ = +2
+    if (matchCount >= 4) return 2;
+    if (matchCount >= 3) return 1;
+    return 0;
 }
 
 export async function POST(req: NextRequest) {
@@ -111,31 +138,8 @@ export async function POST(req: NextRequest) {
         }
 
         // 5. Build system prompt for vision evaluation
-        const memorySummary = (memories || [])
-            .map(m => `${m.key}: ${m.value}`)
-            .join('; ');
-
-        const systemPrompt = `You are ${regenmonName}, a Regenmon of type "${regenmonType}".
-Your current stats: Espíritu ${stats.espiritu}, Pulso ${stats.pulso}, Esencia ${stats.esencia}.
-${memorySummary ? `Memories about your human: ${memorySummary}` : ''}
-
-Evaluate the image your human is showing you. Respond ONLY with valid JSON matching this schema:
-{
-  "fragments": <number 0-12, how many fragments this image is worth>,
-  "spiritChange": <number -5 to 5, how this affects your spirit>,
-  "pulseChange": <number -3 to 3, energy change>,
-  "essenceChange": <number -2 to -1, always negative, essence cost>,
-  "diaryEntry": "<string ~100 chars, your reaction from first person>",
-  "resonanceLevel": "<weak|medium|strong|penalizing>",
-  "resonanceReason": "<brief explanation of why this resonance level>"
-}
-
-Guidelines:
-- Nature, art, creativity → strong resonance, more fragments
-- Regenmon-related, meaningful → medium resonance
-- Generic/boring → weak resonance
-- Inappropriate, dark, harmful → penalizing resonance, 0 fragments, negative spirit
-- Write diaryEntry in Spanish, from your perspective as ${regenmonName}`;
+        const safeMemories = memories || [];
+        const systemPrompt = buildVisionPrompt(regenmonType, regenmonName, stats, safeMemories);
 
         // 6. Call Vision API
         let response: VisionResponse;
@@ -152,8 +156,14 @@ Guidelines:
         // 7. Clamp and validate response
         const clamped = clampResponse(response);
 
+        // 8. Coherence bonus: reward consistent memory themes
+        const coherenceBonus = calculateCoherenceBonus(safeMemories, clamped.resonanceReason);
+        if (coherenceBonus > 0 && clamped.resonanceLevel !== 'penalizing') {
+            clamped.fragments = clamp(clamped.fragments + coherenceBonus, 0, 12);
+        }
+
         if (process.env.NODE_ENV === 'development') {
-            console.log('Vision evaluation:', { raw: response, clamped });
+            console.log('Vision evaluation:', { raw: response, clamped, coherenceBonus });
         }
 
         return NextResponse.json(clamped);
