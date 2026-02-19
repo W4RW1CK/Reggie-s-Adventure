@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reggie S4 — Wireframes</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #1a1a2e; color: #eee; padding: 20px; }
+  
+  h1 { text-align: center; margin-bottom: 8px; font-size: 1.5rem; }
+  .subtitle { text-align: center; color: #888; margin-bottom: 30px; font-size: 0.9rem; }
+  
+  .breakpoints { text-align: center; margin-bottom: 30px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .bp-tag { background: #2a2a4a; border: 1px solid #444; border-radius: 8px; padding: 6px 14px; font-size: 0.8rem; }
+  
+  .section-title { 
+    font-size: 1.2rem; margin: 40px 0 20px; padding-bottom: 8px; 
+    border-bottom: 2px solid #ff9500; display: inline-block; 
+  }
+  
+  .states-row { 
+    display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; 
+    margin-bottom: 40px;
+  }
+  
+  /* Phone frame */
+  .phone-frame {
+    width: 280px; height: 560px;
+    border: 3px solid #555; border-radius: 24px;
+    background: #0d0d1a; overflow: hidden;
+    position: relative; flex-shrink: 0;
+  }
+  .phone-label {
+    text-align: center; font-size: 0.75rem; color: #888; 
+    margin-top: 8px; margin-bottom: 4px;
+  }
+  
+  /* Tablet frame */
+  .tablet-frame {
+    width: 400px; height: 560px;
+    border: 3px solid #555; border-radius: 20px;
+    background: #0d0d1a; overflow: hidden;
+    position: relative; flex-shrink: 0;
+  }
+  
+  /* Desktop frame */
+  .desktop-frame {
+    width: 700px; height: 460px;
+    border: 3px solid #555; border-radius: 12px;
+    background: #0d0d1a; overflow: hidden;
+    position: relative; flex-shrink: 0;
+  }
+
+  /* === COMMON ELEMENTS === */
+  
+  /* HUD */
+  .hud {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 12px; background: rgba(0,0,0,0.6);
+    border-bottom: 1px solid #333; font-size: 0.7rem; z-index: 10;
+    position: relative;
+  }
+  .hud-left { display: flex; gap: 8px; align-items: center; }
+  .hud-right { display: flex; gap: 8px; align-items: center; }
+  .hud-item { display: flex; align-items: center; gap: 3px; }
+  .hud-icon { font-size: 0.85rem; }
+  .hud-mission { 
+    width: 20px; height: 20px; border-radius: 50%; 
+    background: #ff9500; display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; animation: pulse-glow 2s infinite;
+  }
+  .hud-settings { opacity: 0.7; font-size: 0.85rem; cursor: pointer; }
+  
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 4px #ff9500; }
+    50% { box-shadow: 0 0 12px #ff9500; }
+  }
+  
+  /* World background */
+  .world-bg {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: linear-gradient(180deg, #0d0d2a 0%, #1a0a2e 40%, #2d1a3e 100%);
+    position: relative;
+  }
+  
+  /* Fractures */
+  .fracture { 
+    position: absolute; width: 60px; height: 3px; 
+    background: #9ed22d; border-radius: 2px; opacity: 0.4;
+    box-shadow: 0 0 8px #9ed22d;
+  }
+  .fracture.closed { background: #555; box-shadow: none; opacity: 0.2; }
+  .f1 { top: 15%; left: 10%; transform: rotate(-15deg); }
+  .f2 { top: 30%; right: 8%; transform: rotate(25deg); }
+  .f3 { bottom: 35%; left: 15%; transform: rotate(-8deg); }
+  .f4 { bottom: 20%; right: 12%; transform: rotate(18deg); }
+  
+  /* Sprite */
+  .sprite {
+    width: 100px; height: 100px; border-radius: 50%;
+    background: radial-gradient(circle, #4a9eff 0%, #2a5a9f 60%, transparent 70%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.5rem; cursor: pointer; position: relative; z-index: 2;
+    box-shadow: 0 0 30px rgba(74, 158, 255, 0.3);
+    transition: transform 0.2s;
+  }
+  .sprite:hover { transform: scale(1.05); }
+  .sprite-label { font-size: 0.65rem; color: #888; margin-top: 6px; text-align: center; }
+  
+  /* Purify buttons (hidden by default) */
+  .purify-buttons {
+    display: flex; gap: 12px; margin-top: 12px; z-index: 2;
+  }
+  .purify-btn {
+    background: rgba(0,0,0,0.7); border: 1px solid #666;
+    border-radius: 12px; padding: 6px 12px; color: #eee;
+    font-size: 0.65rem; cursor: pointer; text-align: center;
+  }
+  .purify-btn:hover { border-color: #ff9500; }
+  
+  /* Bottom bar */
+  .bottom-bar {
+    display: flex; justify-content: center; gap: 16px;
+    padding: 10px 16px; background: rgba(0,0,0,0.7);
+    border-top: 1px solid #333;
+  }
+  .bubble {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; cursor: pointer; border: 2px solid #555;
+    background: rgba(255,255,255,0.05);
+    transition: border-color 0.2s;
+  }
+  .bubble:hover { border-color: #ff9500; }
+  .bubble-label { font-size: 0.55rem; color: #888; text-align: center; margin-top: 2px; }
+  
+  /* === CHAT STATE === */
+  .chat-area {
+    flex: 1; display: flex; flex-direction: column;
+    background: #0d0d1a;
+  }
+  .chat-header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px; background: rgba(0,0,0,0.5);
+    border-bottom: 1px solid #333;
+  }
+  .chat-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: radial-gradient(circle, #4a9eff, #2a5a9f);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem;
+  }
+  .chat-name { font-size: 0.8rem; font-weight: 600; }
+  .chat-close { margin-left: auto; cursor: pointer; opacity: 0.6; }
+  
+  .chat-messages {
+    flex: 1; padding: 12px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .msg {
+    max-width: 80%; padding: 8px 12px; border-radius: 12px;
+    font-size: 0.7rem; line-height: 1.4;
+  }
+  .msg-bot { background: #1e1e3a; align-self: flex-start; border-bottom-left-radius: 4px; }
+  .msg-user { background: #2a4a1a; align-self: flex-end; border-bottom-right-radius: 4px; }
+  
+  .chat-input-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px; background: rgba(0,0,0,0.5);
+    border-top: 1px solid #333;
+  }
+  .chat-input {
+    flex: 1; background: #1a1a2e; border: 1px solid #444;
+    border-radius: 20px; padding: 8px 14px; color: #eee;
+    font-size: 0.75rem; outline: none;
+  }
+  .chat-photo-btn {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: none; border: 1px solid #555; color: #888;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; cursor: pointer;
+  }
+  .chat-send-btn {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #ff9500; border: none; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; cursor: pointer;
+  }
+  
+  /* === PHOTO STATE === */
+  .photo-area {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: #000; position: relative;
+  }
+  .camera-viewfinder {
+    width: 200px; height: 200px; border: 2px dashed #555;
+    border-radius: 16px; display: flex; align-items: center;
+    justify-content: center; color: #555; font-size: 2rem;
+  }
+  .photo-hint { font-size: 0.7rem; color: #666; margin-top: 12px; }
+  .photo-capture {
+    width: 56px; height: 56px; border-radius: 50%;
+    border: 3px solid #fff; background: transparent;
+    margin-top: 20px; cursor: pointer; position: relative;
+  }
+  .photo-capture-inner {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: #fff; position: absolute; top: 3px; left: 3px;
+    transition: transform 0.1s;
+  }
+  .photo-capture:hover .photo-capture-inner { transform: scale(0.9); }
+  
+  /* Post-photo evaluation */
+  .post-photo {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: linear-gradient(180deg, #0d0d2a 0%, #1a2a1a 100%);
+    padding: 20px; gap: 16px;
+  }
+  .eval-sprite {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: radial-gradient(circle, #4a9eff 0%, #2a5a9f 60%, transparent 70%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+    animation: happy-bounce 0.6s ease infinite alternate;
+  }
+  @keyframes happy-bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-6px); }
+  }
+  .eval-text {
+    font-size: 0.8rem; text-align: center; color: #ccc;
+    max-width: 220px; line-height: 1.5; font-style: italic;
+  }
+  .eval-deltas {
+    display: flex; gap: 16px; font-size: 0.75rem;
+  }
+  .delta { color: #9ed22d; font-weight: 600; }
+  .post-actions {
+    display: flex; gap: 12px; margin-top: 8px;
+  }
+  .post-btn {
+    padding: 8px 20px; border-radius: 20px; border: 1px solid #555;
+    background: rgba(255,255,255,0.05); color: #eee; font-size: 0.75rem;
+    cursor: pointer;
+  }
+  .post-btn.primary { background: #ff9500; border-color: #ff9500; color: #fff; }
+  
+  /* === PANEL (Memorias/Historial) === */
+  .panel-overlay {
+    position: absolute; inset: 0; background: rgba(0,0,0,0.85);
+    z-index: 20; display: flex; flex-direction: column;
+  }
+  .panel-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 16px; border-bottom: 1px solid #333;
+  }
+  .panel-tabs {
+    display: flex; gap: 0;
+  }
+  .panel-tab {
+    padding: 8px 16px; font-size: 0.75rem; cursor: pointer;
+    border-bottom: 2px solid transparent; color: #888;
+  }
+  .panel-tab.active { color: #ff9500; border-bottom-color: #ff9500; }
+  .panel-close { cursor: pointer; opacity: 0.6; font-size: 1.1rem; }
+  .panel-content {
+    flex: 1; padding: 12px 16px; overflow-y: auto;
+  }
+  .panel-entry {
+    padding: 10px 0; border-bottom: 1px solid #222; font-size: 0.7rem;
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+  .panel-icon { font-size: 0.9rem; flex-shrink: 0; }
+  .panel-text { color: #aaa; line-height: 1.4; }
+  .panel-meta { font-size: 0.6rem; color: #555; margin-top: 2px; }
+  
+  /* === PROFILE (Stats) === */
+  .profile-overlay {
+    position: absolute; inset: 0; background: rgba(0,0,0,0.9);
+    z-index: 20; display: flex; flex-direction: column;
+    align-items: center; padding: 30px 20px; gap: 16px;
+  }
+  .profile-sprite {
+    width: 70px; height: 70px; border-radius: 50%;
+    background: radial-gradient(circle, #4a9eff 0%, #2a5a9f 60%, transparent 70%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem;
+  }
+  .profile-name { font-size: 1rem; font-weight: 600; }
+  .profile-stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%;
+    max-width: 250px;
+  }
+  .stat-card {
+    background: #1a1a2e; border: 1px solid #333; border-radius: 10px;
+    padding: 10px; text-align: center;
+  }
+  .stat-icon { font-size: 1.1rem; }
+  .stat-value { font-size: 1rem; font-weight: 600; margin: 2px 0; }
+  .stat-label { font-size: 0.6rem; color: #888; }
+  .profile-fractures {
+    display: flex; gap: 8px; align-items: center;
+  }
+  .fracture-dot {
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid #9ed22d; background: transparent;
+  }
+  .fracture-dot.closed { background: #9ed22d; }
+  .profile-mission {
+    background: #1a1a2e; border: 1px solid #ff9500;
+    border-radius: 10px; padding: 10px 14px; width: 100%;
+    max-width: 250px; font-size: 0.7rem;
+  }
+  .profile-mission-title { color: #ff9500; font-weight: 600; margin-bottom: 4px; }
+  .profile-close {
+    position: absolute; top: 12px; right: 16px;
+    cursor: pointer; opacity: 0.6; font-size: 1.2rem;
+  }
+
+  /* === DESKTOP LAYOUT === */
+  .desktop-layout {
+    display: flex; height: 100%; 
+  }
+  .desktop-world-panel {
+    flex: 1; display: flex; flex-direction: column;
+  }
+  .desktop-chat-panel {
+    width: 320px; border-left: 1px solid #333;
+    display: flex; flex-direction: column;
+  }
+  
+  /* === ANNOTATIONS === */
+  .annotation {
+    position: absolute; font-size: 0.55rem; color: #ff9500;
+    background: rgba(255, 149, 0, 0.1); border: 1px solid #ff9500;
+    border-radius: 4px; padding: 2px 6px; white-space: nowrap;
+    pointer-events: none;
+  }
+  
+  /* === LEGEND === */
+  .legend {
+    max-width: 700px; margin: 40px auto; padding: 20px;
+    background: #1a1a2e; border: 1px solid #333; border-radius: 12px;
+  }
+  .legend h3 { margin-bottom: 12px; font-size: 1rem; }
+  .legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .legend-item { font-size: 0.75rem; display: flex; gap: 6px; align-items: center; }
+  .legend-color { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+  
+  /* Responsive for this page itself */
+  @media (max-width: 768px) {
+    .states-row { flex-direction: column; align-items: center; }
+    .desktop-frame { width: 100%; min-width: 0; }
+    .tablet-frame { width: 100%; max-width: 400px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>🎮 Reggie's Adventure S4 — Wireframes</h1>
+<p class="subtitle">Mobile-first UI Design — Vertical Only</p>
+
+<div class="breakpoints">
+  <span class="bp-tag">📱 Mobile: &lt;640px</span>
+  <span class="bp-tag">📋 Tablet: 641-1024px</span>
+  <span class="bp-tag">🖥️ Desktop: 1025px+</span>
+</div>
+
+<!-- ==================== MOBILE ==================== -->
+<h2 class="section-title">📱 Mobile (&lt;640px)</h2>
+
+<div class="states-row">
+  
+  <!-- WORLD STATE -->
+  <div>
+    <div class="phone-label">🏠 Mundo (default)</div>
+    <div class="phone-frame" style="display:flex;flex-direction:column;">
+      <!-- HUD -->
+      <div class="hud">
+        <div class="hud-left">
+          <div class="hud-item"><span class="hud-icon">🔮</span> 24</div>
+        </div>
+        <div class="hud-right">
+          <div class="hud-mission">🎯</div>
+          <span class="hud-settings">⚙️</span>
+        </div>
+      </div>
+      <!-- World -->
+      <div class="world-bg">
+        <div class="fracture f1"></div>
+        <div class="fracture f2 closed"></div>
+        <div class="fracture f3 closed"></div>
+        <div class="fracture f4 closed"></div>
+        <div style="text-align:center;">
+          <div class="sprite">⚡</div>
+          <div class="sprite-label">Toca para stats / purificar</div>
+        </div>
+        <div class="purify-buttons">
+          <div class="purify-btn">❤️ Recargar<br><span style="color:#ff9500;">10🔮</span></div>
+          <div class="purify-btn">💧 Nutrir<br><span style="color:#ff9500;">10🔮</span></div>
+        </div>
+      </div>
+      <!-- Bottom bar -->
+      <div class="bottom-bar">
+        <div style="text-align:center;">
+          <div class="bubble">💬</div>
+          <div class="bubble-label">Chat</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="bubble">📷</div>
+          <div class="bubble-label">Foto</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="bubble">📖</div>
+          <div class="bubble-label">Diario</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAT STATE -->
+  <div>
+    <div class="phone-label">💬 Chat</div>
+    <div class="phone-frame" style="display:flex;flex-direction:column;">
+      <div class="hud">
+        <div class="hud-left">
+          <div class="hud-item"><span class="hud-icon">🔮</span> 24</div>
+        </div>
+        <div class="hud-right">
+          <div class="hud-mission">🎯</div>
+          <span class="hud-settings">⚙️</span>
+        </div>
+      </div>
+      <div class="chat-header">
+        <div class="chat-avatar">⚡</div>
+        <span class="chat-name">Rayo</span>
+        <span class="chat-close">✕ Mundo</span>
+      </div>
+      <div class="chat-messages">
+        <div class="msg msg-bot">¡Hey! ¿Qué tal tu día? Siento que hoy tienes energía...</div>
+        <div class="msg msg-user">Sí, fui al parque a correr un rato</div>
+        <div class="msg msg-bot">¡Genial! El movimiento libre me llena de energía ⚡ ¿Viste algo interesante?</div>
+        <div class="msg msg-user">Vi un atardecer increíble</div>
+        <div class="msg msg-bot">Ojalá pudieras mostrarme... si tienes una foto, me encantaría verla 📷</div>
+      </div>
+      <div class="chat-input-bar">
+        <div class="chat-photo-btn">📎</div>
+        <input class="chat-input" placeholder="Escribe algo..." readonly>
+        <div class="chat-send-btn">→</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POST-PHOTO STATE -->
+  <div>
+    <div class="phone-label">📷 Post-Foto (evaluación)</div>
+    <div class="phone-frame" style="display:flex;flex-direction:column;">
+      <div class="hud">
+        <div class="hud-left">
+          <div class="hud-item"><span class="hud-icon">🔮</span> 24</div>
+        </div>
+        <div class="hud-right">
+          <div class="hud-mission">🎯</div>
+          <span class="hud-settings">⚙️</span>
+        </div>
+      </div>
+      <div class="post-photo">
+        <div class="eval-sprite">⚡</div>
+        <div class="eval-text">"¡Ese atardecer! Siento la energía del cielo fluyendo... la luz moviéndose libre, como yo quiero ser."</div>
+        <div class="eval-deltas">
+          <span class="delta">+10 🔮</span>
+          <span class="delta">+8 progreso</span>
+        </div>
+        <div style="font-size:0.65rem;color:#9ed22d;">Resonancia fuerte ✨</div>
+        <div class="post-actions">
+          <button class="post-btn primary">💬 Conversar</button>
+          <button class="post-btn">🏠 Volver</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MOBILE: Panel & Profile -->
+<div class="states-row">
+  
+  <!-- PANEL (Memorias/Historial) -->
+  <div>
+    <div class="phone-label">📖 Panel — Tab Memorias</div>
+    <div class="phone-frame" style="display:flex;flex-direction:column;position:relative;">
+      <div class="panel-overlay">
+        <div class="panel-header">
+          <div class="panel-tabs">
+            <div class="panel-tab active">Memorias</div>
+            <div class="panel-tab">Historial</div>
+          </div>
+          <span class="panel-close">✕</span>
+        </div>
+        <div class="panel-content">
+          <div class="panel-entry">
+            <span class="panel-icon">🌅</span>
+            <div>
+              <div class="panel-text">"El atardecer del parque — sentí la energía del cielo libre"</div>
+              <div class="panel-meta">Hace 2h · Resonancia fuerte · +8 progreso</div>
+            </div>
+          </div>
+          <div class="panel-entry">
+            <span class="panel-icon">🐕</span>
+            <div>
+              <div class="panel-text">"Un perro jugando en la calle — la velocidad pura, el movimiento sin plan"</div>
+              <div class="panel-meta">Ayer · Resonancia media · +5 progreso</div>
+            </div>
+          </div>
+          <div class="panel-entry">
+            <span class="panel-icon">📚</span>
+            <div>
+              <div class="panel-text">"Tu escritorio con libros abiertos — información fluyendo en todas direcciones"</div>
+              <div class="panel-meta">Hace 3 días · Resonancia media · +6 progreso</div>
+            </div>
+          </div>
+          <div class="panel-entry">
+            <span class="panel-icon">🌧️</span>
+            <div>
+              <div class="panel-text">"Lluvia en la ventana — cada gota es un dato cayendo libre"</div>
+              <div class="panel-meta">Hace 5 días · Resonancia débil · +3 progreso</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL Historial tab -->
+  <div>
+    <div class="phone-label">📖 Panel — Tab Historial</div>
+    <div class="phone-frame" style="display:flex;flex-direction:column;position:relative;">
+      <div class="panel-overlay">
+        <div class="panel-header">
+          <div class="panel-tabs">
+            <div class="panel-tab">Memorias</div>
+            <div class="panel-tab active">Historial</div>
+          </div>
+          <span class="panel-close">✕</span>
+        </div>
+        <div class="panel-content">
+          <div class="panel-entry">
+            <span class="panel-icon">🖼️</span>
+            <div>
+              <div class="panel-text">Compartiste una memoria — resonancia fuerte</div>
+              <div class="panel-meta">Hace 2h · +10🔮 · +8 progreso</div>
+            </div>
+          </div>
+          <div class="panel-entry">
+            <span class="panel-icon">💬</span>
+            <div>
+              <div class="panel-text">Conversación sobre el parque</div>
+              <div class="panel-meta">Hace 2h · +3🔮</div>
+            </div>
+          </div>
+          <div class="panel-entry">
+            <span class="panel-icon">🔮</span>
+            <div>
+              <div class="panel-text">Recargaste pulso ❤️</div>
+              <div class="panel-meta">Hace 5h · -10🔮</div>
+            </div>
+          </div>
+          <div class="panel-entry">
+            <span class="panel-icon">⚡</span>
+            <div>
+              <div class="panel-text">¡Segunda fractura cerrada!</div>
+              <div class="panel-meta">Ayer · Milestone alcanzado</div>
+            </div>
+          </div>
+          <div class="panel-entry">
+            <span class="panel-icon">🎯</span>
+            <div>
+              <div class="panel-text">Misión completada: "Muéstrame algo que se mueva"</div>
+              <div class="panel-meta">Ayer · +5 progreso bonus</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div>
+    <div class="phone-label">👤 Perfil / Stats</div>
+    <div class="phone-frame" style="display:flex;flex-direction:column;position:relative;">
+      <div class="profile-overlay">
+        <span class="profile-close">✕</span>
+        <div class="profile-sprite">⚡</div>
+        <div class="profile-name">Rayo</div>
+        <div class="profile-stats">
+          <div class="stat-card">
+            <div class="stat-icon">❤️</div>
+            <div class="stat-value">78</div>
+            <div class="stat-label">Pulso</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">💧</div>
+            <div class="stat-value">65</div>
+            <div class="stat-label">Esencia</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">✨</div>
+            <div class="stat-value">82</div>
+            <div class="stat-label">Espíritu</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🔮</div>
+            <div class="stat-value">24</div>
+            <div class="stat-label">Fragmentos</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:0.7rem;color:#888;margin-bottom:6px;text-align:center;">Fracturas</div>
+          <div class="profile-fractures">
+            <div class="fracture-dot closed"></div>
+            <div class="fracture-dot closed"></div>
+            <div class="fracture-dot"></div>
+            <div class="fracture-dot"></div>
+          </div>
+        </div>
+        <div class="profile-mission">
+          <div class="profile-mission-title">🎯 Misión activa</div>
+          "Muéstrame algo que fluya libremente — agua, viento, datos, lo que encuentres"
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ==================== TABLET ==================== -->
+<h2 class="section-title">📋 Tablet (641-1024px)</h2>
+<p style="color:#888;font-size:0.85rem;margin-bottom:16px;">Mismo layout que mobile pero más espacioso. Sprite más grande, más padding, chat messages más anchos.</p>
+
+<div class="states-row">
+  <div>
+    <div class="phone-label">🏠 Mundo</div>
+    <div class="tablet-frame" style="display:flex;flex-direction:column;">
+      <div class="hud" style="padding:10px 20px;font-size:0.8rem;">
+        <div class="hud-left">
+          <div class="hud-item"><span class="hud-icon">🔮</span> 24</div>
+        </div>
+        <div class="hud-right">
+          <div class="hud-mission">🎯</div>
+          <span class="hud-settings">⚙️</span>
+        </div>
+      </div>
+      <div class="world-bg">
+        <div class="fracture f1" style="width:80px;"></div>
+        <div class="fracture f2 closed" style="width:80px;"></div>
+        <div class="fracture f3 closed" style="width:80px;"></div>
+        <div class="fracture f4 closed" style="width:80px;"></div>
+        <div style="text-align:center;">
+          <div class="sprite" style="width:130px;height:130px;font-size:3.5rem;">⚡</div>
+        </div>
+        <div class="purify-buttons" style="gap:16px;">
+          <div class="purify-btn" style="padding:8px 16px;font-size:0.75rem;">❤️ Recargar<br><span style="color:#ff9500;">10🔮</span></div>
+          <div class="purify-btn" style="padding:8px 16px;font-size:0.75rem;">💧 Nutrir<br><span style="color:#ff9500;">10🔮</span></div>
+        </div>
+      </div>
+      <div class="bottom-bar" style="gap:24px;padding:12px 20px;">
+        <div style="text-align:center;">
+          <div class="bubble" style="width:50px;height:50px;font-size:1.3rem;">💬</div>
+          <div class="bubble-label">Chat</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="bubble" style="width:50px;height:50px;font-size:1.3rem;">📷</div>
+          <div class="bubble-label">Foto</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="bubble" style="width:50px;height:50px;font-size:1.3rem;">📖</div>
+          <div class="bubble-label">Diario</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="phone-label">💬 Chat</div>
+    <div class="tablet-frame" style="display:flex;flex-direction:column;">
+      <div class="hud" style="padding:10px 20px;font-size:0.8rem;">
+        <div class="hud-left">
+          <div class="hud-item"><span class="hud-icon">🔮</span> 24</div>
+        </div>
+        <div class="hud-right">
+          <div class="hud-mission">🎯</div>
+          <span class="hud-settings">⚙️</span>
+        </div>
+      </div>
+      <div class="chat-header">
+        <div class="chat-avatar">⚡</div>
+        <span class="chat-name">Rayo</span>
+        <span class="chat-close">✕ Mundo</span>
+      </div>
+      <div class="chat-messages" style="padding:16px 20px;">
+        <div class="msg msg-bot" style="font-size:0.8rem;">¡Hey! ¿Qué tal tu día? Siento que hoy tienes energía...</div>
+        <div class="msg msg-user" style="font-size:0.8rem;">Sí, fui al parque a correr un rato</div>
+        <div class="msg msg-bot" style="font-size:0.8rem;">¡Genial! El movimiento libre me llena de energía ⚡</div>
+        <div class="msg msg-user" style="font-size:0.8rem;">Vi un atardecer increíble</div>
+        <div class="msg msg-bot" style="font-size:0.8rem;">Ojalá pudieras mostrarme... si tienes una foto, me encantaría verla 📷</div>
+      </div>
+      <div class="chat-input-bar" style="padding:10px 16px;">
+        <div class="chat-photo-btn" style="width:36px;height:36px;">📎</div>
+        <input class="chat-input" placeholder="Escribe algo..." readonly style="font-size:0.85rem;padding:10px 16px;">
+        <div class="chat-send-btn" style="width:36px;height:36px;">→</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== DESKTOP ==================== -->
+<h2 class="section-title">🖥️ Desktop (1025px+)</h2>
+<p style="color:#888;font-size:0.85rem;margin-bottom:16px;">Mundo + Chat side by side. No state switching needed — both visible simultaneously.</p>
+
+<div class="states-row">
+  <div>
+    <div class="phone-label">🏠 Mundo + 💬 Chat (simultáneo)</div>
+    <div class="desktop-frame">
+      <div class="desktop-layout">
+        <!-- World panel -->
+        <div class="desktop-world-panel" style="display:flex;flex-direction:column;">
+          <div class="hud" style="padding:10px 20px;">
+            <div class="hud-left">
+              <div class="hud-item"><span class="hud-icon">🔮</span> 24</div>
+              <div class="hud-item"><span class="hud-icon">📖</span> Diario</div>
+            </div>
+            <div class="hud-right">
+              <div class="hud-mission">🎯</div>
+              <span class="hud-settings">⚙️</span>
+            </div>
+          </div>
+          <div class="world-bg">
+            <div class="fracture f1" style="width:90px;"></div>
+            <div class="fracture f2 closed" style="width:90px;"></div>
+            <div class="fracture f3 closed" style="width:90px;"></div>
+            <div class="fracture f4 closed" style="width:90px;"></div>
+            <div style="text-align:center;">
+              <div class="sprite" style="width:120px;height:120px;font-size:3rem;">⚡</div>
+              <div class="sprite-label">Toca para stats / purificar</div>
+            </div>
+            <div class="purify-buttons">
+              <div class="purify-btn">❤️ Recargar<br><span style="color:#ff9500;">10🔮</span></div>
+              <div class="purify-btn">💧 Nutrir<br><span style="color:#ff9500;">10🔮</span></div>
+            </div>
+          </div>
+        </div>
+        <!-- Chat panel -->
+        <div class="desktop-chat-panel">
+          <div class="chat-header">
+            <div class="chat-avatar">⚡</div>
+            <span class="chat-name">Rayo</span>
+          </div>
+          <div class="chat-messages">
+            <div class="msg msg-bot">¡Hey! ¿Qué tal tu día?</div>
+            <div class="msg msg-user">Fui al parque a correr</div>
+            <div class="msg msg-bot">¡El movimiento libre me llena de energía! ⚡</div>
+            <div class="msg msg-user">Vi un atardecer increíble</div>
+            <div class="msg msg-bot">Ojalá pudieras mostrarme... 📷</div>
+          </div>
+          <div class="chat-input-bar">
+            <div class="chat-photo-btn">📎</div>
+            <input class="chat-input" placeholder="Escribe algo..." readonly>
+            <div class="chat-send-btn">→</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== NAVIGATION FLOW ==================== -->
+<h2 class="section-title">🔄 Flujo de Navegación</h2>
+<div style="max-width:600px;margin:0 auto 40px;text-align:center;">
+  <div style="background:#1a1a2e;border:1px solid #333;border-radius:16px;padding:30px;">
+    <div style="font-size:2rem;margin-bottom:16px;">
+      🏠 ↔ 💬 ↔ 📷
+    </div>
+    <div style="font-size:0.85rem;color:#aaa;line-height:2;">
+      <strong style="color:#ff9500;">Mundo → Chat:</strong> Burbuja 💬 en bottom bar<br>
+      <strong style="color:#ff9500;">Mundo → Foto:</strong> Burbuja 📷 en bottom bar<br>
+      <strong style="color:#ff9500;">Chat → Mundo:</strong> Botón ✕ en chat header<br>
+      <strong style="color:#ff9500;">Chat → Foto:</strong> Botón 📎 en input bar<br>
+      <strong style="color:#ff9500;">Foto → Chat:</strong> Botón "Conversar" post-evaluación<br>
+      <strong style="color:#ff9500;">Foto → Mundo:</strong> Botón "Volver" post-evaluación<br>
+      <br>
+      <strong style="color:#9ed22d;">Accesible desde cualquier estado:</strong><br>
+      ⚙️ Settings · 🎯 Misión · 📖 Diario · 👤 Perfil (tocar sprite/avatar)
+    </div>
+  </div>
+</div>
+
+<!-- ==================== LEGEND ==================== -->
+<div class="legend">
+  <h3>📐 Breakpoints & Comportamiento</h3>
+  <div class="legend-grid">
+    <div class="legend-item">
+      <div class="legend-color" style="background:#ff9500;"></div>
+      <span><strong>Mobile &lt;640px:</strong> Estados alternados (mundo/chat/foto). Bottom bar con burbujas.</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background:#f6464f;"></div>
+      <span><strong>Tablet 641-1024px:</strong> Igual que mobile, más espacioso. Mismo flujo de estados.</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background:#9ed22d;"></div>
+      <span><strong>Desktop 1025px+:</strong> Side-by-side (mundo + chat). Sin cambio de estados. Panel como sidebar.</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background:#c4b5fd;"></div>
+      <span><strong>Fullscreen:</strong> Sugerido al abrir en mobile. Toggle en ⚙️ Settings.</span>
+    </div>
+  </div>
+</div>
+
+<p style="text-align:center;color:#555;font-size:0.75rem;margin-top:40px;padding-bottom:20px;">
+  Reggie's Adventure S4 — Wireframes v1 — Aibus Dumbleclaw 🧙‍♀️
+</p>
+
+</body>
+</html>
