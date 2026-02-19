@@ -678,3 +678,28 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 - **Lesson**: Always update canonical files BEFORE (or immediately after) pushing code changes. Code and docs must stay in sync.
 - **Audit methodology**: S1 (35 items), S2 (30 items), S3 (31 items) = 96 total verification points
 
+
+---
+
+## S4 Backend Audit Log (2026-02-19)
+
+**Full audit of phases 49-54 backend code.**
+
+### Files Audited
+- `src/lib/ai/vision-provider.ts`, `gemini-vision.ts`, `openai-vision.ts`, `vision-interface.ts`, `vision-prompts.ts`, `prompts.ts`
+- `src/app/api/evaluate/route.ts`
+- `src/lib/types.ts`, `constants.ts`, `evolution.ts`, `worldState.ts`, `photoCooldown.ts`
+- `src/hooks/useGameState.ts`, `useMissions.ts`, `useStrikes.ts`
+
+### Decisions Validated
+- **Dual economy** (fragments + progress) correctly separated — fragments are spendable currency, progress only goes up
+- **Fracture thresholds** [50, 100, 200, 400] map to 5 evolution stages correctly
+- **Strike system** (1=warning, 2=30min cooldown, 3=48hr block, 7-day auto-reset) implemented correctly
+- **Photo cooldown** respects strike state hierarchy: blocked > strike_cooldown > standard cooldown > mission bypass
+- **S3→S4 migration** in storage.ts handles all new fields with sensible defaults
+- **API /evaluate** validates all inputs, clamps AI responses, has rate limiting and fallback
+- **Vision prompts** include anti-jailbreak protections and type-specific resonance
+
+### Fixes Applied
+- Centralized `STRIKES` and `MISSION` storage keys into `STORAGE_KEYS` constant
+- Added `[number, number]` type to `CHAT_FRAGMENT_REWARD_RANGE`

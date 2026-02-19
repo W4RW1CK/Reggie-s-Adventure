@@ -592,3 +592,16 @@ Este archivo registra **el estado** del proyecto. Los otros documentos canónico
 | [BACKEND_STRUCTURE.md](./BACKEND_STRUCTURE.md) | La arquitectura técnica implementada |
 
 > **Regla:** Al completar una fase, actualizar este archivo Y los documentos que correspondan.
+
+### S4 Backend Audit (2026-02-19)
+**Auditor:** Subagent  
+**Scope:** Phases 49-54 (all S4 backend code)  
+**Build:** ✅ Clean  
+**Fixes committed:** `cc1c1f1` — centralized storage keys (STRIKES, MISSION) into STORAGE_KEYS, added type annotation to CHAT_FRAGMENT_REWARD_RANGE  
+**Issues found:**
+- 🟡 Storage keys for strikes/missions were hardcoded outside STORAGE_KEYS → **FIXED**
+- 🟡 CHAT_FRAGMENT_REWARD_RANGE missing [number, number] type annotation → **FIXED**
+- 🔵 addStrike() mutates outer variable from setState updater (works but fragile pattern)
+- 🔵 FALLBACK_RESPONSE in vision providers uses Math.random() at module init (cosmetic)
+- 🔵 In-memory rate limit map resets on serverless cold starts (acceptable at scale)
+**Verdict:** S4 backend is solid. Types, constants, logic, edge cases, migration, and integration all clean.
