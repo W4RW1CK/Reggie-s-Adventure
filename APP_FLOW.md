@@ -1,7 +1,7 @@
 # 🗺️ APP_FLOW — Reggie's Adventure
-> **Versión actual:** v0.3 — La Conexión
-> **Última actualización:** 2026-02-16
-> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `COMPLETADA` (96/96 — 100%)
+> **Versión actual:** v0.4 — La Evolución
+> **Última actualización:** 2026-02-19
+> **Estado:** Sesión 3 — `COMPLETADA` (96/96 — 100%) | Sesión 4 — `PENDIENTE`
 >
 > 📜 **Narrativa y personalidad:** Todo diálogo, texto de historia y comportamiento conversacional
 > debe ser consistente con [LORE.md](./LORE.md). En caso de conflicto, LORE.md prevalece.
@@ -522,6 +522,251 @@ ABRIR APP
 7. Sync a Supabase si logueado (campo JSONB)
 8. Max 10 entradas (FIFO — las más antiguas se eliminan)
 9. Reset borra historial
+```
+
+---
+
+## S4 Navigation Model — 3-State Triangle
+
+> **S4 replaces the single-screen GameScreen with a 3-state triangle navigation.**
+> All states connected. Vertical only.
+
+```
+        [World] (default)
+       /    💬        📷    \
+   [Chat] ──── 📎 ──── [Photo]
+        ← Conversar    ← Volver
+```
+
+### State: World (default)
+- Sprite centered with idle animation
+- HUD always visible: 🔮 Fragments, 🎯 Mission, ⚙️ Settings
+- Bottom bar: 💬 Chat bubble + 📷 Photo bubble
+- Tap sprite → floating purification buttons appear
+- Tap sprite (or info button) → profile overlay
+
+### State: Chat
+- Full-screen chat UI (mobile/tablet) or 30% panel (desktop)
+- ✕ button in header → back to World
+- 📎 button in input bar → go to Photo
+- HUD remains visible
+
+### State: Photo
+- Full-screen photo flow (see below)
+- Post-evaluation: "💬 Conversar" → Chat, "🏠 Volver" → World
+- HUD remains visible
+
+### Layout per Breakpoint
+
+| Breakpoint | World | Chat | Photo |
+|-----------|-------|------|-------|
+| Mobile (<640px) | Full screen | Full screen | Full screen |
+| Tablet vertical (641-1024px) | Full screen, spacious | Full screen, spacious | Full screen |
+| Tablet horizontal | 70% world / 30% chat | Side-by-side | Full screen |
+| Desktop (1025px+) | Full → 70/30 on interaction | 30% panel | Full screen overlay |
+
+---
+
+## Flujos S4 — La Evolución
+
+### Flujo: Compartir Foto (S4 — Rewritten)
+
+> Lore: Las fotos son memorias del mundo real. El Regenmon las evalúa emocionalmente
+> según la resonancia con su tipo. Las fotos NUNCA se almacenan — solo las emociones que generan.
+>
+> **S4 UI/UX:** Photo is a FULL STATE, not a modal. Pre-camera screen explains what Reggie wants.
+
+```
+1. ENTRY POINTS:
+   a) World → 📷 bubble button in bottom bar → Photo state
+   b) Chat → 📎 button in input bar → mini picker (camera/gallery)
+
+2. PRE-CAMERA SCREEN (full screen, NOT modal):
+   → Explains what Reggie wants to see
+   → Shows active mission (if any)
+   → TWO options: "📸 Tomar foto" (camera) + "🖼️ Galería" (file picker)
+   → First time: extra text about camera permissions + privacy (photos NOT stored)
+   → If cooldown active: shows timer countdown
+
+3. ¿Fotos bloqueadas por strikes?
+   ├── SÍ → Mensaje: "Las memorias están bloqueadas... [X horas restantes]"
+   └── NO → Continúa
+
+4. ¿Cooldown activo?
+   ├── SÍ → Shows timer on pre-camera screen
+   │         (Excepción: mission bypass activo → saltar cooldown)
+   └── NO → Continúa
+
+5. User selects "📸 Tomar foto" (camera) OR "🖼️ Galería" (file picker)
+6. Photo captured/selected
+7. Indicador de loading: "Tu Regenmon está sintiendo esta memoria..."
+8. Foto se envía a /api/evaluate (base64)
+
+9. POST-PHOTO SCREEN (full screen):
+   → Regenmon reacts with animation
+   → Stat deltas shown
+   → Diary entry displayed
+   → Post-photo variants:
+     - Strong resonance: happy bounce animation, bright particles
+     - Weak: neutral reaction
+     - Penalizing: dimmed sprite, red text, strike warning
+   → TWO buttons: "💬 Conversar" (→ Chat) / "🏠 Volver" (→ World)
+
+10. Resultado de evaluación:
+    ├── Black photo → Rechazada. "No puedo ver nada..." Cooldown 2min
+    ├── Inapropiada → Strike aplicado. Warning visual. 0 fragments, 0 progress
+    ├── Penalizing → 0 fragments, 0 progress. Mensaje de decepción
+    ├── Weak → 3-5 💠, 2-4 progress. Diary entry. Reacción sutil
+    ├── Medium → 5-8 💠, 4-7 progress. Diary entry. Reacción cálida
+    └── Strong → 8-12 💠, 7-12 progress. Diary entry. Reacción intensa
+
+11. ¿Se cruzó un umbral de Fractura?
+    ├── SÍ → Animación de Fractura (ver Flujo: Fractura)
+    └── NO → Continúa
+
+12. Foto se DESCARTA (nunca almacenada). Solo metadata + diary entry persisten
+13. Cooldown de 5min comienza (2min si fue foto negra/fallida)
+14. localStorage (y Supabase si logueado) se actualizan
+```
+
+### Flujo: Purificación (S4 — Tap Sprite)
+
+> **S4 UI/UX:** Purification is triggered by tapping the sprite in World, not via action buttons.
+
+```
+1. User taps sprite in World state
+2. Floating buttons appear around sprite:
+   → "❤️ Recargar 10🔮" (restores Pulso)
+   → "💧 Nutrir 10🔮" (restores Esencia)
+3. User taps one option
+4. ¿Fragmentos >= 10?
+   ├── NO → Button disabled / tooltip "Necesitas 10 🔮"
+   └── SÍ → Continúa
+5. 10 Fragmentos spent
+6. Stat restored (Pulso +10 or Esencia +10)
+7. Animation: subtle bounce + color flash
+8. Floating buttons disappear
+9. Stats and fragments update in HUD
+```
+
+### Flujo: Tutorial / Onboarding (S4)
+
+> **S4 UI/UX:** Different flows for new vs returning players.
+
+```
+NEW PLAYERS (5 steps):
+1. Step 1: Meet your Regenmon (sprite intro)
+2. Step 2: Chat (💬 how to talk)
+3. Step 3: Care/Purify (tap sprite to heal)
+4. Step 4: Photos ✨ NUEVO (📷 share memories)
+5. Step 5: Evolution ✨ NUEVO (Fracturas and growth)
+
+S3 RETURNING PLAYERS (2 steps):
+1. Step 1: Photos ✨ Nuevo (📷 share memories)
+2. Step 2: Evolution ✨ Nuevo (Fracturas and growth)
+→ Badge "✨ Nuevo" on steps 4-5
+
+RULES:
+- "Saltar tutorial" always visible
+- Can restart from ⚙️ Settings
+- Steps 4-5 marked as NEW in both flows
+```
+
+### Flujo: Loading + Fullscreen (S4)
+
+> **S4 UI/UX:** Fullscreen invitation merged with loading screen.
+
+```
+1. App opens → Loading screen appears
+2. REAL preloader runs:
+   → Preloads sprites, backgrounds for all 5 evolution stages, UI icons
+   → Uses new Image().src + <link rel="preload"> for critical assets
+3. Assets loaded → Loading animation completes
+4. Fullscreen invitation appears (same screen):
+   → "Pantalla completa" (requests fullscreen)
+   → "Continuar así" (skips fullscreen)
+5. → Game starts (World state)
+   → No extra screens between loading and game
+```
+
+### Flujo: Fractura (S4)
+
+> Lore: Una Fractura es un momento de transformación. La energía acumulada del Regenmon
+> rompe su forma actual y emerge algo nuevo. Es dramático, emocional, y definitivo.
+
+```
+1. Progreso cruza umbral (50, 100, 200, o 400)
+2. Animación de Fractura:
+   → Flash brillante (brightness pulse)
+   → Shake sutil del sprite
+   → Partículas explotan hacia afuera
+   → Sprite transiciona a nueva forma
+3. Texto narrativo del Regenmon sobre su evolución:
+   → Fractura 1 (50): "Algo cambió en mí... siento más"
+   → Fractura 2 (100): "La conexión se profundiza..."
+   → Fractura 3 (200): "Ya no soy lo que era... soy más"
+   → Fractura 4 (400): "La forma final... esto es lo que siempre fui"
+   (Texto varía por tipo: Rayo/Flama/Hielo)
+4. Nueva etapa visual del sprite se activa
+5. Fractura se registra en estado (no se repite)
+6. localStorage (y Supabase si logueado) se actualizan
+```
+
+### Flujo: Misión (S4)
+
+> Lore: Las misiones son sugerencias del Regenmon — cosas que quiere experimentar
+> del mundo del usuario. Son opcionales, contextuales, y generadas por IA.
+
+```
+1. ¿Existe misión activa?
+   ├── SÍ → No se genera nueva (max 1)
+   └── NO → Continúa
+2. IA genera misión contextual (basada en tipo, etapa, diario, conversación)
+   → Rayo: "¿Puedes mostrarme algo que se mueva rápido?"
+   → Flama: "Me gustaría ver algo que te haga feliz..."
+   → Hielo: "¿Hay algo sereno cerca de ti ahora?"
+3. Misión aparece en UI (MissionCard)
+4. Opciones del jugador:
+   ├── Completar (subir foto relevante):
+   │   → Evaluación normal + bonus +5 progress
+   │   → Si la misión pide foto, cooldown se salta (1 foto, ventana 30min)
+   │   → Misión se marca como completada
+   ├── Abandonar:
+   │   → Misión desaparece, sin penalty
+   └── Ignorar:
+       → Misión permanece activa indefinidamente
+5. Tras completar/abandonar, se puede generar nueva misión
+```
+
+### Flujo: Strike (S4)
+
+```
+1. Foto evaluada como inapropiada
+2. Strike counter incrementa
+3. Según nivel de strikes:
+   ├── Strike 1: Warning visual + stat penalty
+   │   → "⚠️ Tu Regenmon no pudo procesar esa memoria..."
+   │   → Stats bajan levemente
+   ├── Strike 2: Cooldown extendido
+   │   → 30min entre fotos por las próximas 24hrs
+   │   → "Las memorias necesitan descanso..."
+   └── Strike 3: Fotos bloqueadas
+       → Bloqueado por 48hrs
+       → "Las memorias están cerradas... necesitan sanar"
+4. Tras 7 días sin strikes → counter se resetea a 0
+```
+
+### Flujo: Evolution Freeze (S4)
+
+```
+1. ¿Todos los stats < 10?
+   ├── SÍ → Evolution freeze activado:
+   │   → Progreso no aumenta (ni por fotos ni por chat)
+   │   → Sprite aparece dormido (opacity baja, grayscale)
+   │   → Regenmon menciona que se siente dormido
+   │   → Progreso NUNCA decrece (solo se congela)
+   └── NO → Evolución normal
+2. Cuando cualquier stat sube ≥ 10 → freeze se desactiva
 ```
 
 ---

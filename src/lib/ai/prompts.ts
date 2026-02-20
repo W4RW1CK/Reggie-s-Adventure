@@ -1,4 +1,19 @@
-import { RegenmonType, RegenmonStats, RegenmonMemory } from '../types';
+import { RegenmonType, RegenmonStats, RegenmonMemory, DiaryEntry } from '../types';
+import { FRACTURE_THRESHOLDS, CHAT_CRITICAL_THRESHOLD } from '../constants';
+import { getEvolutionStage } from '../evolution';
+import { getWorldState } from '../worldState';
+
+export interface SystemPromptContext {
+    name: string;
+    type: RegenmonType;
+    stats: RegenmonStats;
+    daysAlive: number;
+    playerName?: string;
+    memories?: RegenmonMemory[];
+    progress?: number;
+    diaryEntries?: DiaryEntry[];
+    activeMissionPrompt?: string;
+}
 
 export function buildSystemPrompt(
     name: string,
@@ -6,7 +21,8 @@ export function buildSystemPrompt(
     stats: RegenmonStats,
     daysAlive: number,
     playerName?: string,
-    memories?: RegenmonMemory[]
+    memories?: RegenmonMemory[],
+    context?: Partial<SystemPromptContext>
 ): string {
     const { espiritu, pulso, esencia } = stats;
 
@@ -132,7 +148,80 @@ export function buildSystemPrompt(
     }
     Si el usuario te dice su nombre, inclúyelo en el campo "playerName". Si ya lo sabías, no es necesario repetirlo ahí.
     Si el usuario revela información personal (nombre, gustos, emociones, datos personales, temas frecuentes), inclúyela en el array "memories" con key, value, y type (nombre|gustos|emociones|datos_personales|tema_frecuente). Si no hay info nueva, envía array vacío o omítelo.
+
+    ${buildEvolutionBlock(context?.progress, stats, type)}
+    ${buildPhotoBlock(type, context?.diaryEntries)}
+    ${buildMissionBlock(type, context?.activeMissionPrompt)}
   `;
 
     return prompt;
+}
+
+function buildEvolutionBlock(progress?: number, stats?: RegenmonStats, type?: RegenmonType): string {
+    if (progress === undefined) return '';
+    const stage = getEvolutionStage(progress);
+    const world = getWorldState(stage);
+    const closedFractures = FRACTURE_THRESHOLDS.filter(t => progress >= t);
+    const isFrozen = stats && stats.espiritu < CHAT_CRITICAL_THRESHOLD &&
+                     stats.pulso < CHAT_CRITICAL_THRESHOLD &&
+                     stats.esencia < CHAT_CRITICAL_THRESHOLD;
+
+    let evolutionFeel = '';
+    switch (stage) {
+        case 1: evolutionFeel = 'Sientes el peso de la corrupción a tu alrededor. Todo es oscuro y pesado.'; break;
+        case 2: evolutionFeel = 'Algo está cambiando. Pequeñas grietas de luz aparecen en la oscuridad.'; break;
+        case 3: evolutionFeel = 'Puedes sentir zonas claras emergiendo. El equilibrio regresa lentamente.'; break;
+        case 4: evolutionFeel = 'El mundo brilla con nueva energía. Tu forma se siente más fuerte, más definida.'; break;
+        case 5: evolutionFeel = 'La regeneración está casi completa. Sientes paz y claridad como nunca antes.'; break;
+    }
+
+    return `
+    EVOLUCIÓN Y ESTADO DEL MUNDO:
+    - ${evolutionFeel}
+    - Has cerrado ${closedFractures.length} de 4 fracturas en el tejido del mundo digital.
+    - El mundo a tu alrededor está: ${world.description}
+    ${isFrozen ? '- ESTÁS DORMIDO: Todos tus stats están al borde del colapso. Te sientes adormecido, casi sin forma. Mencionas que necesitas ayuda para despertar.' : ''}
+    - Puedes sentir cómo tu forma cambia con cada memoria compartida. No lo menciones directamente — simplemente actúa más seguro, más definido, más tú.`;
+}
+
+function buildPhotoBlock(type: RegenmonType, diaryEntries?: DiaryEntry[]): string {
+    let typeResonance = '';
+    switch (type) {
+        case 'rayo':
+            typeResonance = 'Movimiento, velocidad, luz eléctrica, tecnología, flujo de energía, claridad. Lo que se mueve rápido y con propósito te llena.';
+            break;
+        case 'flama':
+            typeResonance = 'Conexiones humanas, calidez, abrazos, amigos, comidas compartidas, emociones genuinas. Lo que une a las personas te enciende.';
+            break;
+        case 'hielo':
+            typeResonance = 'Conocimiento, libros, naturaleza, paisajes serenos, quietud, reflexión, preservación. Lo que perdura y enseña te resuena.';
+            break;
+    }
+
+    const recentDiary = diaryEntries && diaryEntries.length > 0
+        ? `\n    - Memorias recientes que has sentido: ${diaryEntries.slice(0, 3).map(d => `"${d.text}"`).join(', ')}`
+        : '';
+
+    return `
+    FOTOS Y MEMORIAS DEL MUNDO REAL:
+    - Cuando el usuario comparte una foto de su mundo, la evalúas EMOCIONALMENTE — desde tu perspectiva como ${type}.
+    - NO das puntuaciones técnicas ("8/10"). Hablas de cómo te hace SENTIR, qué RESUENA contigo.
+    - Lo que más te resuena: ${typeResonance}
+    - Cada foto es una memoria del plano físico — un puente entre su mundo y el tuyo.${recentDiary}`;
+}
+
+function buildMissionBlock(type: RegenmonType, activeMissionPrompt?: string): string {
+    let missionHint = '';
+    switch (type) {
+        case 'rayo': missionHint = '¿Puedes mostrarme algo que se mueva rápido? ¿Algo que brille?'; break;
+        case 'flama': missionHint = 'Me gustaría ver algo que te haga feliz... algo cálido.'; break;
+        case 'hielo': missionHint = '¿Hay algo sereno cerca de ti? ¿Algo que guarde una historia?'; break;
+    }
+
+    return `
+    MISIONES (OPCIONALES):
+    - De vez en cuando, puedes sugerir una "misión" al usuario — pedirle que capture algo específico con una foto.
+    - Las misiones son SIEMPRE opcionales y amigables. Nunca presiones.
+    - Estilo: "${missionHint}"
+    ${activeMissionPrompt ? `- MISIÓN ACTIVA: "${activeMissionPrompt}" — puedes preguntar cómo le va con ella.` : '- No hay misión activa ahora.'}`;
 }

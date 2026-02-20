@@ -1,7 +1,7 @@
 # 📊 PROGRESS — Reggie's Adventure
-> **Versión actual:** v0.3 — La Conexión
-> **Última actualización:** 2026-02-17
-> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `COMPLETADA` (96/96 — 100%)
+> **Versión actual:** v0.4 — La Evolución
+> **Última actualización:** 2026-02-19
+> **Estado:** Sesión 3 — `COMPLETADA` (96/96 — 100%) | Sesión 4 — `PENDIENTE`
 >
 > 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — biblia narrativa del universo
 > 🔨 **Fases detalladas:** [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) — qué construir y en qué orden
@@ -506,6 +506,82 @@
 
 ---
 
+---
+
+## Planificación Sesión 4 — La Evolución (2026-02-19)
+
+> **Nota S4:** Sistema de fotos como memorias del mundo real, dual economy,
+> Fracturas como milestones de evolución, misiones IA, strike system.
+> Fotos NUNCA se almacenan. Dual Vision API: Gemini Vision (dev) / GPT-4o Vision (prod).
+
+- [x] Diseño de S4 completado — documentado en model.md
+- [x] Archivos canónicos actualizados: PRD, TECH_STACK, IMPLEMENTATION_PLAN, FRONTEND_GUIDELINES, BACKEND_STRUCTURE, APP_FLOW, LORE, model.md, progress.txt
+- [x] Decisiones clave tomadas:
+  - Fotos de MEMORIAS del mundo real (NO código/técnico)
+  - Evaluación emocional por resonancia de tipo (weak/medium/strong/penalizing)
+  - Dual economy: Fragmentos (gastable) + Progreso (lifetime, NUNCA baja)
+  - Fragmentos por foto: weak 3-5, medium 5-8, strong 8-12, penalizing 0
+  - Progreso por foto: weak 2-4, medium 4-7, strong 7-12, penalizing 0
+  - Chat con sustancia: 1-3 progreso
+  - Mission bonus: +5 progreso
+  - 4 Fracturas: umbrales 50, 100, 200, 400 progreso
+  - 5 etapas de evolución invisibles (sin barra visible)
+  - Total max evolución: 750 progreso (~42 días activo, ~15 días hardcore)
+  - Photo cooldown: 5min standard, 2min failed/black
+  - Mission bypass: cooldown skip, 1 foto, ventana 30min
+  - Strike system: 1=warning, 2=30min cooldown 24hrs, 3=blocked 48hrs, reset 7 días
+  - Fotos NUNCA almacenadas (privacidad absoluta)
+  - Dual Vision API: Gemini Vision (dev) / GPT-4o Vision (prod)
+  - Fullscreen API para inmersión
+  - Evolution freeze: si todos stats < 10, progreso congelado (nunca decrece)
+  - Purificación: mantener actual (posible split TBD)
+  - Dos paneles: 📜 Historial = transacciones, 🧠 Memorias = diario emocional
+  - Resonancia por tipo: Rayo=movimiento/tech, Flama=conexiones/emociones, Hielo=naturaleza/conocimiento
+- [x] IMPLEMENTATION_PLAN.md: Fases 49-64 definidas (16 fases)
+- [ ] Implementación de S4 — PENDIENTE
+
+### S4 UI/UX Design Phase — COMPLETADA ✅ (2026-02-19)
+- [x] Full UI/UX design session completed
+- [x] 3-state triangle navigation defined (World ↔ Chat ↔ Photo)
+- [x] Custom breakpoints: Mobile <640px, Tablet 641-1024px, Desktop 1025px+
+- [x] Layout per breakpoint: mobile=fullscreen states, desktop=70/30 split
+- [x] HUD design: 🔮 Fragments, 🎯 Mission, ⚙️ Settings — always visible
+- [x] Photo full flow: pre-camera screen, dual capture, post-photo reactions
+- [x] Purification redesigned: tap sprite → floating buttons
+- [x] Panel redesigned: 📖 Diario with Memorias + Historial tabs
+- [x] Tutorial: 5 steps (new) / 2 steps (returning), "✨ Nuevo" badge
+- [x] Asset preloading: real preloader merged with fullscreen invitation
+- [x] Light theme with Frutero palette (#fffbf5, #383838)
+- [x] Settings: fullscreen overlay (mobile/tablet) / floating window (desktop)
+- [x] Wireframes: public/wireframes-s4.html + reggie-wireframes.pages.dev
+- [x] All canonical files synced with design decisions
+
+### Fases S4 (49-64):
+
+**Backend (49-54):**
+- [x] Fase 49: Vision API — Infraestructura (vision-provider, adaptadores, prompts, /api/evaluate)
+- [x] Fase 50: Emotional Evaluation System (vision-prompts, type-specific resonance, anti-jailbreak, coherence bonus)
+- [x] Fase 51: Dual Economy — Fragmentos + Progreso (split purify, S4 types/constants, storage migration S3→S4, Supabase sync)
+- [x] Fase 52: Fracture System + Evolution Stages (data layer: evolution.ts, worldState.ts, useGameState refactor)
+- [x] Fase 53: Missions + Anti-Abuse (useMissions, useStrikes, photoCooldown, mission bypass, anti-spam)
+- [x] Fase 54: Canonical Files Sync (system prompt update, types consolidation, storage migration, constants audit)
+
+**Frontend (55-62):**
+- [x] Fase 55: Fullscreen + Layout (useFullscreen, mobile-first overhaul)
+- [x] Fase 56: HUD Redesign + Settings Panel + Theme System
+- [x] Fase 57: Photo UI (PreCamera, PostPhoto, PhotoFlow, ChatPhotoPicker)
+- [x] Fase 58: Diario Panel (DiarioPanel with Memorias + Historial tabs, useActivityLog, useDiaryEntries)
+- [x] Fase 59: Evolution Visual (FractureOverlay, WorldBackground, FractureDots, sprite adaptation, fracture closing animation)
+- [x] Fase 60: Missions UI (MissionPopup, mission flow, completion celebration, HUD wiring, PostPhoto mission bonus)
+- [x] Fase 61: Theme Adaptation + Sprite Polish + Transition Smoothing
+- [ ] Fase 62: Transitions + Polish (evolution morph, photo reveal, mission animations)
+
+**Close (63-64):**
+- [ ] Fase 63: User Adjustments Pre-Deploy (full playtest)
+- [ ] Fase 64: Testing + Audit + Deploy (a11y, security, lore, edge cases, v0.4 tag)
+
+---
+
 ## NOTAS
 
 - Sesión 1 completada y desplegada (v0.1.16) - 2026-02-13
@@ -532,3 +608,33 @@ Este archivo registra **el estado** del proyecto. Los otros documentos canónico
 | [BACKEND_STRUCTURE.md](./BACKEND_STRUCTURE.md) | La arquitectura técnica implementada |
 
 > **Regla:** Al completar una fase, actualizar este archivo Y los documentos que correspondan.
+
+### S4 Backend Audit (2026-02-19)
+**Auditor:** Subagent  
+**Scope:** Phases 49-54 (all S4 backend code)  
+**Build:** ✅ Clean  
+**Fixes committed:** `cc1c1f1` — centralized storage keys (STRIKES, MISSION) into STORAGE_KEYS, added type annotation to CHAT_FRAGMENT_REWARD_RANGE  
+**Issues found:**
+- 🟡 Storage keys for strikes/missions were hardcoded outside STORAGE_KEYS → **FIXED**
+- 🟡 CHAT_FRAGMENT_REWARD_RANGE missing [number, number] type annotation → **FIXED**
+- 🔵 addStrike() mutates outer variable from setState updater (works but fragile pattern)
+- 🔵 FALLBACK_RESPONSE in vision providers uses Math.random() at module init (cosmetic)
+- 🔵 In-memory rate limit map resets on serverless cold starts (acceptable at scale)
+**Verdict:** S4 backend is solid. Types, constants, logic, edge cases, migration, and integration all clean.
+
+### S4 UI Restructure (2026-02-20)
+**Scope:** GameScreen major layout restructure to match wireframes
+**Changes:**
+- ✅ Compact HUD top bar: 🔮 fragments + 📖 Diario button | 🎯 mission + ⚙️ settings
+- ✅ Stat bars removed from HUD — accessible via sprite tap overlay
+- ✅ Sprite tap interaction: floating purify buttons (❤️ Recargar / 💧 Nutrir) + stat summary
+- ✅ Bottom nav: icon-only buttons (💬 Chat + 📷 Foto) with small labels
+- ✅ Desktop 70/30 chat layout (≥1025px): world 70% left, chat panel 30% right
+- ✅ Mobile/tablet: chat remains full overlay
+- ✅ Diario panel wired to HUD 📖 button
+- ✅ Light theme support for all new elements
+- ✅ prefers-reduced-motion respected
+- ✅ ChatBox refactored: desktop side panel vs mobile overlay
+- ✅ Removed: old stat-heavy HUD, PURIFICAR/BUSCAR/CONVERSAR text buttons, history toggle from bottom bar
+- ✅ Build: clean
+**Commit:** `feat(s4): major UI restructure — wireframe-accurate layout, 70/30 desktop, compact HUD, icon nav`

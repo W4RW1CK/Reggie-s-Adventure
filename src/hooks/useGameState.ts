@@ -12,7 +12,14 @@ import {
     migrateLocalToSupabase 
 } from '@/lib/sync';
 import { useStatDecay } from './useStatDecay';
-import { STAT_MIN, STAT_MAX, STAT_INITIAL } from '@/lib/constants';
+import { 
+    STAT_MIN, STAT_MAX, STAT_INITIAL, 
+    CHAT_CRITICAL_THRESHOLD, PHOTO_HISTORY_MAX,
+    PURIFY_SPIRIT_COST, PURIFY_SPIRIT_GAIN, PURIFY_ESSENCE_COST, PURIFY_ESSENCE_GAIN
+} from '@/lib/constants';
+import { getEvolutionStage as calcEvolutionStage, isNewFracture } from '@/lib/evolution';
+import { getWorldState, WorldStateMetadata } from '@/lib/worldState';
+import { PhotoEntry } from '@/lib/types';
 
 interface UseGameStateProps {
     privyUserId?: string;
@@ -24,6 +31,7 @@ export function useGameState({ privyUserId, isLoggedIn }: UseGameStateProps) {
     const [config, setConfig] = useState<AppConfig>({ musicEnabled: false, isFirstTime: true });
     const [loading, setLoading] = useState(true);
     const [migrationComplete, setMigrationComplete] = useState(false);
+    const [newFractureJustClosed, setNewFractureJustClosed] = useState(false);
     const pendingUpdatesRef = useRef<Partial<RegenmonStats>[]>([]);
     const previousPrivyUserId = useRef<string | undefined>(privyUserId);
 
@@ -96,6 +104,11 @@ export function useGameState({ privyUserId, isLoggedIn }: UseGameStateProps) {
             tutorialDismissed: false,
             memories: [],
             evolution: { totalMemories: 0, stage: 1, threshold: 10 },
+            progress: 0,
+            photoHistory: [],
+            strikes: { count: 0, lastStrikeAt: null, cooldownUntil: null, blockedUntil: null },
+            lastPhotoAt: null,
+            activeMission: null,
         };
         setRegenmon(newData);
         
@@ -196,6 +209,66 @@ export function useGameState({ privyUserId, isLoggedIn }: UseGameStateProps) {
         });
     };
 
+    const addProgress = useCallback((amount: number) => {
+        if (amount <= 0) return;
+        setRegenmon(prev => {
+            if (!prev) return null;
+            // Evolution freeze: if all stats < critical threshold, pause progress
+            const { espiritu, pulso, esencia } = prev.stats;
+            if (espiritu < CHAT_CRITICAL_THRESHOLD && pulso < CHAT_CRITICAL_THRESHOLD && esencia < CHAT_CRITICAL_THRESHOLD) {
+                return prev; // Frozen — do not add progress
+            }
+            const oldProgress = prev.progress;
+            const newProgress = oldProgress + amount;
+            // Detect new fracture for animation trigger
+            if (isNewFracture(oldProgress, newProgress)) {
+                setNewFractureJustClosed(true);
+            }
+            const updated = { ...prev, progress: newProgress, lastUpdated: new Date().toISOString() };
+            saveRegenmonHybrid(updated, privyUserId).catch(e => console.error('Error saving progress:', e));
+            return updated;
+        });
+    }, [privyUserId]);
+
+    const addPhotoEntry = useCallback((entry: PhotoEntry) => {
+        setRegenmon(prev => {
+            if (!prev) return null;
+            const newHistory = [entry, ...prev.photoHistory].slice(0, PHOTO_HISTORY_MAX);
+            const updated = { ...prev, photoHistory: newHistory, lastUpdated: new Date().toISOString() };
+            saveRegenmonHybrid(updated, privyUserId).catch(e => console.error('Error saving photo entry:', e));
+            return updated;
+        });
+    }, [privyUserId]);
+
+    const getEvolutionStage = useCallback((): number => {
+        if (!regenmon) return 1;
+        return calcEvolutionStage(regenmon.progress);
+    }, [regenmon]);
+
+    const getWorldHealth = useCallback((): WorldStateMetadata => {
+        return getWorldState(getEvolutionStage());
+    }, [getEvolutionStage]);
+
+    const clearNewFracture = useCallback(() => {
+        setNewFractureJustClosed(false);
+    }, []);
+
+    const isEvolutionFrozen = useCallback((): boolean => {
+        if (!regenmon) return false;
+        const { espiritu, pulso, esencia } = regenmon.stats;
+        return espiritu < CHAT_CRITICAL_THRESHOLD && pulso < CHAT_CRITICAL_THRESHOLD && esencia < CHAT_CRITICAL_THRESHOLD;
+    }, [regenmon]);
+
+    const purifySpirit = useCallback(() => {
+        if (!regenmon || regenmon.stats.fragmentos < PURIFY_SPIRIT_COST) return;
+        updateStatsWithDeltas({ fragmentos: -PURIFY_SPIRIT_COST, espiritu: PURIFY_SPIRIT_GAIN });
+    }, [regenmon, updateStatsWithDeltas]);
+
+    const purifyEssence = useCallback(() => {
+        if (!regenmon || regenmon.stats.fragmentos < PURIFY_ESSENCE_COST) return;
+        updateStatsWithDeltas({ fragmentos: -PURIFY_ESSENCE_COST, esencia: PURIFY_ESSENCE_GAIN });
+    }, [regenmon, updateStatsWithDeltas]);
+
     const dismissTutorial = () => {
         if (!regenmon) return;
         const updated = { ...regenmon, tutorialDismissed: true };
@@ -216,5 +289,14 @@ export function useGameState({ privyUserId, isLoggedIn }: UseGameStateProps) {
         markIntroSeen,
         updateRegenmonName,
         dismissTutorial,
+        addProgress,
+        addPhotoEntry,
+        getEvolutionStage,
+        isEvolutionFrozen,
+        getWorldHealth,
+        newFractureJustClosed,
+        clearNewFracture,
+        purifySpirit,
+        purifyEssence,
     };
 }

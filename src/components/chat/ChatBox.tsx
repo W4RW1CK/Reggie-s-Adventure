@@ -15,7 +15,9 @@ interface ChatBoxProps {
     isLoading: boolean;
     regenmonType: RegenmonType;
     regenmonName: string;
-    stats: RegenmonStats; // For compact display (Session 2 requirement)
+    stats: RegenmonStats;
+    isDesktop?: boolean;
+    onPhotoClick?: () => void;
 }
 
 export function ChatBox({
@@ -26,20 +28,20 @@ export function ChatBox({
     isLoading,
     regenmonType,
     regenmonName,
-    stats
+    stats,
+    isDesktop = false,
+    onPhotoClick,
 }: ChatBoxProps) {
     const [inputValue, setInputValue] = useState('');
     const [memoryCount, setMemoryCount] = useState(0);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    // Update memory count when messages change (new memories may have been saved)
     useEffect(() => {
         if (typeof window !== 'undefined') {
             setMemoryCount(loadMemories().length);
         }
     }, [messages]);
 
-    // Auto-scroll to bottom on new messages
     useEffect(() => {
         if (isOpen) {
             messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -53,8 +55,57 @@ export function ChatBox({
         }
     };
 
-    if (!isOpen) return null;
+    // Mobile: require isOpen
+    if (!isOpen && !isDesktop) return null;
 
+    // Desktop: side panel (always visible when rightPanel=chat)
+    if (isDesktop) {
+        return (
+            <div className="game-screen__chat-panel" role="dialog" aria-label={`Chat con ${regenmonName}`}>
+                {/* Header */}
+                <div className="chat-panel__header">
+                    <span className="chat-panel__header-info">
+                        <span className="chat-panel__type-icon">
+                            {regenmonType === 'rayo' ? '⚡' : regenmonType === 'flama' ? '🔥' : '❄️'}
+                        </span>
+                        <span className="chat-panel__name">{regenmonName}</span>
+                    </span>
+                </div>
+
+                {/* Messages */}
+                <div className="chat-panel__messages">
+                    {messages.length === 0 && (
+                        <div className="chat-panel__empty">
+                            {regenmonName} te está mirando con curiosidad...
+                        </div>
+                    )}
+                    {messages.map((msg, idx) => (
+                        <ChatBubble
+                            key={`${msg.timestamp}-${idx}`}
+                            message={msg}
+                            regenmonType={regenmonType}
+                        />
+                    ))}
+                    {isLoading && <TypingIndicator />}
+                    <div ref={messagesEndRef} />
+                </div>
+
+                {/* Input bar */}
+                <div className="chat-panel__input-bar">
+                    <ChatInput
+                        value={inputValue}
+                        onChange={setInputValue}
+                        onSend={handleSend}
+                        onPhotoClick={onPhotoClick}
+                        isLoading={isLoading}
+                        placeholder="Escribe algo..."
+                    />
+                </div>
+            </div>
+        );
+    }
+
+    // Mobile/Tablet: full overlay (existing behavior)
     return (
         <div
             className="fixed inset-x-0 bottom-0 z-50 flex justify-center p-4 pointer-events-none"
@@ -62,9 +113,12 @@ export function ChatBox({
             aria-label={`Chat con ${regenmonName}`}
         >
             <div className="w-full max-w-[600px] pointer-events-auto animate-fade-in-up">
-                {/* Header / Config Bar */}
+                {/* Header */}
                 <div className="flex justify-between items-center text-white p-2 border-b-4 border-black font-['Press_Start_2P'] text-[10px]" style={{ backgroundColor: 'var(--theme-chat-header)' }}>
-                    <span>Conversando con {regenmonName}</span>
+                    <span>
+                        {regenmonType === 'rayo' ? '⚡' : regenmonType === 'flama' ? '🔥' : '❄️'}{' '}
+                        {regenmonName}
+                    </span>
                     <button
                         onClick={onClose}
                         className="text-white hover:text-black"
@@ -76,15 +130,6 @@ export function ChatBox({
 
                 {/* Main Container */}
                 <div className="border-4 p-4 flex flex-col gap-4 max-h-[70vh]" style={{ backgroundColor: 'var(--theme-chat-bg)', borderColor: 'var(--theme-border)' }}>
-
-                    {/* Compact Stats (Session 2 Requirement) */}
-                    <div className="flex justify-center gap-4 text-[8px] pb-2 font-['Press_Start_2P']" style={{ color: 'var(--theme-text-secondary)', borderBottom: '1px solid var(--theme-border)' }}>
-                        <span>🔮 {stats.espiritu.toFixed(0)}</span>
-                        <span>💛 {stats.pulso.toFixed(0)}</span>
-                        <span>🌱 {stats.esencia.toFixed(0)}</span>
-                        {memoryCount > 0 && <span title={`${memoryCount} memorias guardadas`}>🧠 {memoryCount}</span>}
-                    </div>
-
                     {/* Messages Area */}
                     <div className="flex-1 overflow-y-auto min-h-[200px] max-h-[400px] pr-2 scrollbar-nes flex flex-col">
                         {messages.length === 0 && (
@@ -92,7 +137,6 @@ export function ChatBox({
                                 {regenmonName} te está mirando con curiosidad...
                             </div>
                         )}
-
                         {messages.map((msg, idx) => (
                             <ChatBubble
                                 key={`${msg.timestamp}-${idx}`}
@@ -100,7 +144,6 @@ export function ChatBox({
                                 regenmonType={regenmonType}
                             />
                         ))}
-
                         {isLoading && <TypingIndicator />}
                         <div ref={messagesEndRef} />
                     </div>
@@ -110,8 +153,9 @@ export function ChatBox({
                         value={inputValue}
                         onChange={setInputValue}
                         onSend={handleSend}
+                        onPhotoClick={onPhotoClick}
                         isLoading={isLoading}
-                        placeholder={`Dile algo a ${regenmonName}...`}
+                        placeholder="Escribe algo..."
                     />
                 </div>
             </div>

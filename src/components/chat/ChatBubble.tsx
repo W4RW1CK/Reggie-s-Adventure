@@ -21,7 +21,7 @@ export function ChatBubble({ message, regenmonType }: ChatBubbleProps) {
     return (
         <div
             className={classNames(
-                'font-["Press_Start_2P"] text-[8px] p-2 my-1 max-w-[80%] image-pixelated border-2',
+                'chat-bubble font-["Press_Start_2P"] p-2 my-1 max-w-[80%] image-pixelated border-2',
                 isUser ? 'ml-auto text-right' : 'mr-auto text-left',
             )}
             style={{
@@ -29,6 +29,8 @@ export function ChatBubble({ message, regenmonType }: ChatBubbleProps) {
                 backgroundColor: isUser ? 'var(--theme-surface)' : 'var(--theme-overlay)',
                 color: 'var(--theme-text)',
                 borderColor: borderColorValue || 'var(--theme-border)',
+                overflowWrap: 'break-word',
+                wordBreak: 'break-word',
             }}
         >
             {message.content}

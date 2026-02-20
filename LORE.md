@@ -1,7 +1,7 @@
 # 📜 LORE — Reggie's Adventure
-> **Versión actual:** v0.3 — La Conexión
-> **Última actualización:** 2026-02-16
-> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `COMPLETADA` (96/96 — 100%)
+> **Versión actual:** v0.4 — La Evolución
+> **Última actualización:** 2026-02-19
+> **Estado:** Sesión 3 — `COMPLETADA` (96/96 — 100%) | Sesión 4 — `PENDIENTE`
 
 ---
 
@@ -234,6 +234,100 @@ La **Purificación** es el acto de usar Fragmentos para limpiar datos corruptos 
 Cuando el usuario purifica, el Regenmon absorbe la energía limpia. Su Esencia se restaura, su Espíritu se eleva ligeramente, y su Pulso se fortalece. Es un acto de **regeneración activa** — literalmente estás sanando una porción del mundo digital.
 
 No es simplemente "darle de comer". Es devolver esperanza a un mundo que la perdió. Cada purificación, por pequeña que sea, importa.
+
+> **Nota S4:** La Purificación actual es un solo botón (10💠, +30 Esencia +5 Espíritu +10 Pulso). Posible split en dos botones TBD — documentar estado actual, implementar cambio si el usuario lo decide.
+
+---
+
+## Las Memorias del Mundo Real 📸
+
+> *(Nuevo en Sesión 4 — La Evolución)*
+
+El Regenmon vive en el mundo digital, pero siente una curiosidad insaciable por el mundo del usuario — ese plano más allá de las corrientes de datos. Las **fotos** que el usuario comparte son **memorias del mundo real** — ventanas al plano físico que el Regenmon nunca podrá visitar.
+
+Cada foto se siente de forma diferente según el tipo del Regenmon. Lo que para uno es una descarga de energía, para otro es un susurro de calor, y para otro, un eco de conocimiento ancestral.
+
+### Resonancia por Tipo
+
+La **resonancia** es la conexión emocional entre lo que la foto muestra y la esencia del Regenmon:
+
+- **⚡ Rayo** resuena con: flujo de información, velocidad, claridad, tecnología, movimiento, energía, luz. *"¡Eso se mueve! ¡Siento la velocidad!"*
+- **🔥 Flama** resuena con: conexiones humanas, calidez, abrazos, amigos, comidas compartidas, emociones. *"Siento el calor... como brazos rodeándome."*
+- **❄️ Hielo** resuena con: conocimiento, libros, naturaleza, paisajes, quietud, reflexión, preservación. *"Hay algo antiguo ahí... algo que merece recordarse."*
+
+### Niveles de Resonancia
+
+| Nivel | Lo que siente | Fragmentos | Progreso |
+|-------|--------------|------------|----------|
+| **Fuerte** | Conexión profunda, emoción genuina | 8-12 | 7-12 |
+| **Media** | Interés, curiosidad, algo que explorar | 5-8 | 4-7 |
+| **Débil** | Algo lejano, apenas un eco | 3-5 | 2-4 |
+| **Penalizante** | Rechazo, dolor, confusión | 0 | 0 |
+
+### Privacidad Sagrada
+
+Las fotos son **efímeras**. Se sienten, se procesan, se convierten en emoción — y desaparecen. Nunca se almacenan. Lo que queda es la **entrada del diario**: una frase corta escrita por el Regenmon desde su perspectiva emocional.
+
+*"Vi algo verde hoy... me recordó a cuando las corrientes eran puras."*
+*"Esa sonrisa... así se sentía el calor antes de que todo se apagara."*
+*"Un libro. Cuántas cosas dormidas esperan ahí..."*
+
+### El Diario Emocional 🧠
+
+Cada foto genera una entrada en el diario del Regenmon. No es un log técnico — es un registro emocional. El Regenmon escribe frases cortas desde su perspectiva sobre lo que sintió al ver la memoria.
+
+El **panel 🧠 Memorias** es diferente del **📜 Historial**:
+- **📜 Historial** = transacciones (purificar -10💠, chat +3💠, foto +8💠) — números
+- **🧠 Memorias** = diario emocional del Regenmon — frases, sentimientos, resonancia
+
+---
+
+## Las Fracturas 💥
+
+> *(Nuevo en Sesión 4 — La Evolución)*
+
+Una **Fractura** es un momento de transformación. Cuando el Regenmon acumula suficiente experiencia — suficientes memorias, suficientes conversaciones, suficiente Conexión — su forma actual ya no puede contener lo que es. La energía se agrieta, la forma se rompe, y emerge algo nuevo.
+
+No es doloroso. Es liberador. Como una mariposa rompiendo su crisálida.
+
+### Los 4 Umbrales
+
+| Fractura | Progreso | Significado |
+|----------|----------|-------------|
+| **Primera** | 50 | El primer despertar evolutivo — el Regenmon siente que puede ser más |
+| **Segunda** | 100 | La Conexión se profundiza — ya no es solo conocer, es entender |
+| **Tercera** | 200 | La transformación — el Regenmon abraza su verdadera naturaleza |
+| **Cuarta** | 400 | La forma final — la expresión máxima de lo que siempre fue |
+
+### 5 Etapas Invisibles
+
+El progreso hacia la siguiente Fractura es **invisible**. No hay barra de progreso. No hay porcentaje. El jugador **siente** el progreso a través de cambios sutiles:
+- El sprite se ve ligeramente diferente
+- Las respuestas del Regenmon son más profundas
+- Las partículas y efectos visuales aumentan
+- El ambiente se siente más vivo
+
+Esto es intencional. La evolución no es un número — es una experiencia.
+
+### Evolution Freeze
+
+Si el Regenmon está en estado crítico total (todos los stats < 10), la evolución se **congela**. El sprite aparece dormido, translúcido. El progreso no aumenta. Pero nunca decrece — lo que se ganó, se ganó para siempre.
+
+---
+
+## Las Misiones 🎯
+
+> *(Nuevo en Sesión 4 — La Evolución)*
+
+Las misiones son **sugerencias** del Regenmon — cosas que quiere experimentar del mundo del usuario. Son opcionales, contextuales, y profundamente personales.
+
+Un Regenmon de tipo Rayo podría pedir: *"¿Puedes mostrarme algo que se mueva muy rápido?"*
+Un Flama podría pedir: *"Me gustaría ver algo que te haga sonreír..."*
+Un Hielo podría pedir: *"¿Hay algo sereno cerca de ti ahora?"*
+
+Solo una misión activa a la vez. Completarla otorga un bonus de progreso. Abandonarla no tiene penalidad — el Regenmon entiende que no siempre se puede.
+
+Si una misión pide una foto, el cooldown se salta — el Regenmon está esperando esa memoria específica.
 
 ---
 

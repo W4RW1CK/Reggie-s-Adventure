@@ -1,7 +1,7 @@
 # 📋 PRD — Reggie's Adventure
-> **Versión actual:** v0.3 — La Conexión
-> **Última actualización:** 2026-02-16
-> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `COMPLETADA` (96/96 — 100%)
+> **Versión actual:** v0.4 — La Evolución
+> **Última actualización:** 2026-02-19
+> **Estado:** Sesión 3 — `COMPLETADA` (96/96 — 100%) | Sesión 4 — `PENDIENTE`
 >
 > 📜 **Narrativa completa:** [LORE.md](./LORE.md) — biblia narrativa del universo
 > 🗺️ **Flujos de usuario:** [APP_FLOW.md](./APP_FLOW.md) — cómo navega el jugador
@@ -162,15 +162,33 @@ Al completar las 5 sesiones, el jugador tiene:
 
 ### Sesión 4 — La Evolución (v0.4) `PENDIENTE`
 
-> El Regenmon crece y evoluciona basándose en las memorias acumuladas.
-> Su forma cambia según lo que aprende del usuario — hiper-personalizable.
+> Las memorias del mundo real alimentan al Regenmon. Fotos de la vida cotidiana
+> se evalúan emocionalmente según resonancia de tipo. El Regenmon evoluciona
+> a través de 4 Fracturas, escribe un diario emocional, y genera misiones contextuales.
+> La privacidad es sagrada: las fotos NUNCA se almacenan. (Ver [LORE.md](./LORE.md))
 
 | # | Feature | Criterio de éxito |
 |---|---------|-------------------|
-| F4.1 | Evolución visual por memorias | Mínimo 3 etapas por tipo, basadas en memorias acumuladas |
-| F4.2 | Entrenamiento (fotos) | Subir fotos de código, IA evalúa, da score + Fragmentos + stats |
-| F4.3 | Misiones | Lista completable con recompensas |
-| F4.4 | Personalización IA profunda | Regenmon se adapta visual y conversacionalmente por memorias |
+| F4.1 | Fotos de memorias | Subir fotos del mundo real (NO código). Evaluación emocional por resonancia de tipo. Cooldown 5min (2min para fallidas). Fotos NUNCA almacenadas — solo metadata y diary entry |
+| F4.2 | Dual Vision API | Gemini Vision (dev) / GPT-4o Vision (prod). Evaluación desde perspectiva emocional del Regenmon, no técnica. Resonancia: weak/medium/strong/penalizing |
+| F4.3 | Dual economy: Fragmentos + Progreso | Fragmentos = moneda gastable (3-12 por foto). Progreso = valor lifetime (2-12 por foto, NUNCA decrece). Chat da 1-3 progreso. Mission bonus +5 progreso |
+| F4.4 | 4 Fracturas (milestones de evolución) | Umbrales de progreso: 50, 100, 200, 400. Total para max evolución: 750 (~42 días activo, ~15 días hardcore) |
+| F4.5 | 5 etapas de evolución invisibles | Sin barra de progreso visible — el jugador SIENTE el progreso a través de cambios visuales y narrativos. Freeze si todos los stats < 10 |
+| F4.6 | Misiones IA (contextuales, opcionales) | Máximo 1 activa. Generadas por IA según contexto. Bonus de +5 progreso al completar. Mission bypass: si Regenmon pide foto, cooldown se salta (1 foto, ventana 30min) |
+| F4.7 | Anti-abuse: strikes para fotos | Strike 1: warning + stat penalty. Strike 2: 30min cooldown por 24hrs. Strike 3: fotos bloqueadas 48hrs. Reset tras 7 días limpios |
+| F4.8 | Memorias panel (🧠) | Diario emocional del Regenmon — frases cortas desde su perspectiva por cada foto. Separado del Historial (📜 = transacciones, 🧠 = emociones) |
+| F4.9 | Fullscreen API | Modo inmersivo fullscreen para máxima experiencia. Mobile-first UI overhaul |
+| F4.10 | Evolución visual | Sprites evolucionan en 5 etapas por tipo. Cambios visibles en forma, partículas, ambiente |
+| F4.11 | Anti-spam chat | Sistema anti-spam para mensajes de chat con sustancia requerida para ganar progreso |
+| F4.12 | Purificación redesigned | Tap sprite in World → floating buttons: "❤️ Recargar 10🔮" (Pulso) / "💧 Nutrir 10🔮" (Esencia). Buttons disappear after action. Bounce + color flash animation |
+| F4.13 | 3-State Triangle Navigation | World ↔ Chat ↔ Photo — all connected. Bubble buttons (💬📷) in World, ✕/📎 in Chat, Conversar/Volver post-photo. Vertical only |
+| F4.14 | Custom breakpoints | Mobile <640px (full-screen states), Tablet 641-1024px (vertical=mobile, horizontal=desktop), Desktop 1025px+ (70/30 split) |
+| F4.15 | HUD always visible | 🔮 Fragments, 🎯 Mission (glows), ⚙️ Settings — visible in all 3 states |
+| F4.16 | Diario panel (📖) | One button, two tabs: Memorias (photos+reactions) + Historial (activity log). Mobile/tablet=fullscreen overlay, desktop=floating window |
+| F4.17 | Photo full flow | Pre-camera screen (full, not modal) with "📸 Tomar foto" + "🖼️ Galería". First-time privacy text. Post-photo: react + deltas + "Conversar"/"Volver" |
+| F4.18 | Tutorial S4 | New: 5 steps (1-5, steps 4-5 NEW). Returning S3: 2 steps (Photos+Evolution). "Saltar tutorial" always visible. Restart from Settings |
+| F4.19 | Asset preloading | Real preloader (not spinner). Sprites + backgrounds for 5 stages + icons. Loading → fullscreen invitation → game |
+| F4.20 | Light theme (Frutero) | Warm bg #fffbf5, dark text #383838, warm gradients. Both Dark+Light supported |
 
 ### Sesión 5 — El Encuentro (v0.5) `PENDIENTE`
 
@@ -243,6 +261,23 @@ US-42: Como jugador sin Fragmentos, quiero una forma de conseguir algunos para n
 US-43: Como jugador, quiero ver un historial de mis acciones recientes para entender qué he hecho.
 ```
 
+## 5d. User Stories — Sesión 4
+
+```
+US-44: Como jugador, quiero subir fotos de mi vida real para que mi Regenmon las evalúe emocionalmente.
+US-45: Como jugador, quiero que mi Regenmon reaccione a mis fotos según su tipo (Rayo=movimiento/tech, Flama=conexiones/emociones, Hielo=naturaleza/conocimiento).
+US-46: Como jugador, quiero ganar Fragmentos y Progreso basado en la resonancia de mis fotos.
+US-47: Como jugador, quiero ver a mi Regenmon evolucionar visualmente sin saber exactamente cuánto falta (progreso invisible).
+US-48: Como jugador, quiero que mi Regenmon escriba un diario emocional con frases sobre cada foto que comparto.
+US-49: Como jugador, quiero recibir misiones opcionales generadas por IA que me motiven a explorar.
+US-50: Como jugador, quiero que mis fotos NUNCA se almacenen — solo las emociones que generan.
+US-51: Como jugador, quiero que el juego detecte fotos inapropiadas o spam y me advierta con un sistema de strikes.
+US-52: Como jugador, quiero una experiencia fullscreen inmersiva en mi móvil.
+US-53: Como jugador, quiero ver las memorias emocionales de mi Regenmon en un panel dedicado (🧠 Memorias).
+US-54: Como jugador, quiero que mi Regenmon pase por 4 Fracturas que marquen momentos épicos de su evolución.
+US-55: Como jugador, quiero que si mi Regenmon me pide una foto en una misión, el cooldown se salte.
+```
+
 ## 6. Requisitos de Accesibilidad (Fix It Phase)
 
 - **A1. Contraste:** Todos los textos deben cumplir WCAG AA (ratio 4.5:1).
@@ -279,6 +314,18 @@ US-43: Como jugador, quiero ver un historial de mis acciones recientes para ente
 - [x] Memory indicator 🧠 N in HUD (S3 bonus)
 - [x] Character counter in CreationScreen (S3 bonus)
 - [x] History button 📜 compact toggle on right side of bottom bar (S3 bonus)
+- [ ] Photo upload with emotional evaluation by type-resonance (S4)
+- [ ] Dual Vision API: Gemini Vision (dev) / GPT-4o Vision (prod) (S4)
+- [ ] Dual economy: Fragmentos (spendable) + Progreso (lifetime, never decreases) (S4)
+- [ ] 4 Fracturas at progress thresholds 50/100/200/400 (S4)
+- [ ] 5 invisible evolution stages per type (S4)
+- [ ] AI-generated contextual missions (1 active max) (S4)
+- [ ] Privacy: photos never stored, only metadata + diary entries (S4)
+- [ ] Strike system for photo abuse (3 strikes, 7-day reset) (S4)
+- [ ] Memorias panel (🧠) — emotional diary separate from Historial (📜) (S4)
+- [ ] Fullscreen API for immersive experience (S4)
+- [ ] Evolution visual changes across 5 stages (S4)
+- [ ] Evolution freeze when all stats < 10 (S4)
 
 ---
 

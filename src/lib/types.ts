@@ -13,6 +13,31 @@ export interface RegenmonStats {
     fragmentos: number; // 💠 Moneda del juego
 }
 
+export interface PhotoEntry {
+    timestamp: number;
+    resonanceLevel: ResonanceLevel;
+    fragmentsEarned: number;
+    progressEarned: number;
+    diaryEntry: string;
+    resonanceReason: string;
+}
+
+export interface StrikeData {
+    count: number;               // 0-3
+    lastStrikeAt: number | null;
+    cooldownUntil: number | null;
+    blockedUntil: number | null;
+}
+
+export interface Mission {
+    id: string;
+    prompt: string;
+    createdAt: number;
+    expiresAt: number;
+    completed: boolean;
+    bypassUsed: boolean;
+}
+
 export interface RegenmonData {
     // Identidad
     name: string;              // 2-15 caracteres
@@ -37,6 +62,13 @@ export interface RegenmonData {
 
     // Evolution
     evolution: EvolutionData;
+
+    // Evolution S4
+    progress: number;              // 0+, only goes UP, never decreases
+    photoHistory: PhotoEntry[];    // max 20, metadata only, NO images
+    strikes: StrikeData;
+    lastPhotoAt: number | null;
+    activeMission: Mission | null;
 }
 
 export interface AppConfig {
@@ -75,6 +107,26 @@ export interface PlayerData {
     discoveredAt: number;  // Timestamp de descubrimiento
 }
 
+export type ResonanceLevel = 'weak' | 'medium' | 'strong' | 'penalizing';
+
+export interface VisionRequest {
+    imageBase64: string;
+    regenmonType: RegenmonType;
+    regenmonName: string;
+    stats: { espiritu: number; pulso: number; esencia: number };
+    memories: RegenmonMemory[];
+}
+
+export interface VisionResponse {
+    fragments: number;            // 0-12
+    spiritChange: number;         // -5 to +5
+    pulseChange: number;          // -3 to +3
+    essenceChange: number;        // -2 to -1 (always negative)
+    diaryEntry: string;           // ~100 chars, from Regenmon's perspective
+    resonanceLevel: ResonanceLevel;
+    resonanceReason: string;      // brief explanation
+}
+
 export type MemoryType = 'nombre' | 'gustos' | 'emociones' | 'datos_personales' | 'tema_frecuente';
 
 export interface RegenmonMemory {
@@ -82,4 +134,60 @@ export interface RegenmonMemory {
     value: string;         // Dato recordado (ej: "El usuario ama la pizza")
     type: MemoryType;      // Categoría de memoria
     discoveredAt: number;  // Timestamp
+}
+
+// --- S4 Consolidated Types ---
+
+/** Evolution stage (1-5), derived from progress via FRACTURE_THRESHOLDS */
+export type EvolutionStage = 1 | 2 | 3 | 4 | 5;
+
+/** Evaluation result from photo Vision API */
+export interface EvaluationResult {
+    fragments: number;
+    progress: number;
+    spiritChange: number;
+    pulseChange: number;
+    essenceChange: number;
+    diaryEntry: string;
+    resonanceLevel: ResonanceLevel;
+    resonanceReason: string;
+}
+
+/** Fragment transaction for activity history */
+export interface FragmentTransaction {
+    action: 'purify_spirit' | 'purify_essence' | 'chat' | 'photo' | 'search_fragments' | 'mission';
+    fragmentChange: number;
+    progressChange: number;
+    timestamp: number;
+    detail?: string;
+}
+
+/** Diary entry from Regenmon's emotional perspective */
+export interface DiaryEntry {
+    text: string;
+    timestamp: number;
+    resonance: ResonanceLevel;
+    source: 'photo' | 'fracture' | 'mission';
+}
+
+/** World health level mapped from evolution stage */
+export type WorldHealth = 'corrupted' | 'healing' | 'recovering' | 'flourishing' | 'regenerated';
+
+/** Cooldown status for photo system */
+export interface CooldownStatus {
+    canTakePhoto: boolean;
+    remainingMs: number;
+    reason: 'ready' | 'cooldown' | 'strike_cooldown' | 'blocked';
+}
+
+/** Mission data (alias for Mission, used in BACKEND_STRUCTURE) */
+export type MissionData = Mission;
+
+/** World state metadata for UI rendering */
+export interface WorldState {
+    health: WorldHealth;
+    description: string;
+    backgroundIntensity: number;
+    particleFrequency: number;
+    corruptionLevel: number;
 }

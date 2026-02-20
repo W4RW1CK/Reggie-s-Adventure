@@ -1,7 +1,7 @@
 # 🧠 MODEL — Reggie's Adventure
-> **Versión actual:** v0.3 — La Conexión
-> **Última actualización:** 2026-02-17
-> **Estado:** Sesión 2 — `COMPLETADA` | Sesión 3 — `COMPLETADA` (96/96 — 100%)
+> **Versión actual:** v0.4 — La Evolución
+> **Última actualización:** 2026-02-19
+> **Estado:** Sesión 3 — `COMPLETADA` (96/96 — 100%) | Sesión 4 — `PENDIENTE`
 >
 > 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — toda decisión de personalidad, tono o diálogo se valida contra LORE
 > 📋 **Spec del producto:** [PRD.md](./PRD.md) — toda decisión de features se refleja ahí
@@ -16,7 +16,7 @@
 | S1: El Despertar | v0.1.16 | `COMPLETADA` |
 | S2: La Voz | v0.2 | `COMPLETADA` |
 | S3: La Conexión | v0.3 | `COMPLETADA` (96/96 — 100%) |
-| S4: La Evolución | — | `PENDIENTE` |
+| S4: La Evolución | v0.4 | `PENDIENTE` |
 | S5: El Encuentro | — | `PENDIENTE` |
 
 ---
@@ -486,9 +486,416 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 - **S3 audit fixes**: B2 fragments "💎 ---" when not logged in, D4 purify toast "¡Me siento renovado!", F1/F2/F3 toast system with loading/success/error states
 - **Aesthetic vision in LORE.md**: Documented cypherpunk arcana, pixel art rules, sprites/scenarios per type, HUD layout, toast system, settings panel, audio, game actions table (commit bb931f9)
 
+---
+
+## Sesión 4: La Evolución — Decisiones de Diseño
+
+> Fuente: Diseño documentado el 2026-02-19.
+> Principio rector: **Las memorias del mundo real alimentan la evolución del Regenmon.**
+> Privacidad absoluta: fotos NUNCA se almacenan.
+>
+> 📜 **Narrativa S4:** [LORE.md → Las Memorias](./LORE.md), [Las Fracturas](./LORE.md), [Las Misiones](./LORE.md)
+> 🛠️ **Implementación:** [BACKEND_STRUCTURE.md → Sesión 4](./BACKEND_STRUCTURE.md)
+> 🗺️ **Flujos:** [APP_FLOW.md → Flujos S4](./APP_FLOW.md)
+> 🔨 **Fases:** [IMPLEMENTATION_PLAN.md → Sesión 4](./IMPLEMENTATION_PLAN.md) (Fases 49-64)
+
+### Cambios Mayores vs S3
+
+| Área | S3 (antes) | S4 (ahora) |
+|------|------------|------------|
+| Fotos | No existían | **Memorias del mundo real** — evaluación emocional por resonancia de tipo |
+| Economía | Solo Fragmentos (gastable) | **Dual**: Fragmentos (gastable) + Progreso (lifetime, NUNCA baja) |
+| Evolución | Infraestructura sin visual | **5 etapas invisibles** + **4 Fracturas** como milestones |
+| Misiones | No existían | **IA-generated**, contextuales, opcionales, 1 activa max |
+| Memorias | Infraestructura básica | **Diario emocional** — Regenmon escribe frases por foto |
+| Anti-abuse | Rate limit en chat | **Strike system** para fotos + anti-spam chat |
+| Vision API | No existía | **Dual**: Gemini Vision (dev) / GPT-4o Vision (prod) |
+| UI | Estática | **Fullscreen API** + mobile-first overhaul |
+
+### Fotos como Memorias (NO código/técnico)
+
+- **Concepto:** El usuario sube fotos de su VIDA REAL — momentos, lugares, personas, cosas
+- **NO:** fotos de código, screenshots de apps, memes, contenido técnico
+- **Evaluación:** EMOCIONAL, no técnica. Sin "score 85/100" — resonancia (weak/medium/strong/penalizing)
+- **Perspectiva:** Desde el Regenmon. "Siento la velocidad..." no "La foto tiene buena composición"
+- **Privacidad:** La foto se envía a Vision API, se procesa, se genera respuesta, se DESCARTA. NUNCA almacenada
+
+### Dual Economy: Fragmentos + Progreso
+
+- **Fragmentos 💠:** Moneda gastable (ya existente). Se ganan por fotos y chat. Se gastan en Purificar
+- **Progreso:** Valor lifetime. NUNCA decrece. Determina etapa de evolución
+- **Por qué dual:** Los Fragmentos crean gameplay loop (ganar → gastar → ganar). El Progreso crea sensación de avance permanente
+- **Progreso por actividad:**
+  - Chat con sustancia: 1-3 (IA evalúa)
+  - Photo weak: 2-4
+  - Photo medium: 4-7
+  - Photo strong: 7-12
+  - Mission bonus: +5
+  - Penalizing: 0
+
+### Fracturas y Evolución Invisible
+
+- **4 Fracturas:** Umbrales de progreso (50, 100, 200, 400)
+- **5 Etapas:** Sin barra de progreso visible. El jugador SIENTE el cambio
+- **Total para max:** ~750 progreso (~42 días activo, ~15 días hardcore)
+- **Por qué invisible:** La evolución no es un grind — es una experiencia. Ver un número subir mata la magia
+- **Freeze:** Si todos los stats < 10, progreso se congela (nunca baja). Sprite dormido
+- **Fractura como momento:** Dramático, emocional, con narrativa por tipo
+
+### Photo Cooldown y Mission Bypass
+
+- **Standard:** 5 min entre fotos
+- **Failed/black:** 2 min (menos frustración por error)
+- **Mission bypass:** Si el Regenmon pidió foto en misión → cooldown se salta
+  - Límite: 1 foto por bypass
+  - Ventana: 30 min para entregar
+- **Por qué 5min:** Evita spam, fuerza al jugador a ser intencional con sus fotos
+
+### Strike System
+
+- **Strike 1:** Warning + stat penalty. "Tu Regenmon no pudo procesar esa memoria..."
+- **Strike 2:** 30min cooldown por 24hrs
+- **Strike 3:** Fotos bloqueadas 48hrs
+- **Reset:** 7 días limpios → strikes a 0
+- **Triggers:** Foto inapropiada (detectada por Vision API)
+
+### Photo Edge Cases
+
+| Case | Decision |
+|------|----------|
+| Borrosa | Reduced eval, capped at medium |
+| Inapropiada | Strike + 0 rewards |
+| Spam/repetitiva | Decreasing resonance |
+| Screenshot | Capped at medium |
+| Selfie | Normal eval |
+| Black photo | Rejected, 2min cooldown |
+| Text manipulation | Anti-jailbreak ignores |
+
+### Resonancia por Tipo
+
+- **Rayo:** Flujo de info, velocidad, claridad, tech, movimiento, energía, luz
+- **Flama:** Conexiones humanas, calidez, abrazos, amigos, comidas compartidas, emociones
+- **Hielo:** Conocimiento, libros, naturaleza, paisajes, quietud, reflexión, preservación
+
+### Dos Paneles, Dos Propósitos
+
+- **📜 Historial:** Transaction log — purify -10💠, chat +3💠, photo +8💠. Números
+- **🧠 Memorias:** Emotional diary — frases del Regenmon sobre cada foto. Sentimientos
+
+### Vision API Approach
+
+- **Dual:** Gemini Vision (dev) / GPT-4o Vision (prod). Mismo patrón que chat
+- **Prompt:** Desde perspectiva emocional del Regenmon
+- **Output:** { resonance, fragments, progress, diaryEntry, reason }
+- **Diary entry:** Frase corta del Regenmon. "Vi algo verde hoy... me recordó a cuando..."
+
+### Misiones IA
+
+- **Contextuales:** Basadas en tipo, etapa, diario, conversación
+- **Opcionales:** Abandonar sin penalty
+- **1 activa max:** No acumular
+- **Bonus:** +5 progreso al completar
+- **Photo bypass:** Si pide foto, cooldown se salta
+
+### Fullscreen API
+
+- **Browser native:** `document.documentElement.requestFullscreen()`
+- **Mobile-first:** Diseñado para máxima inmersión en portrait
+- **Breakpoints:** TBD por usuario
+
+### Purificación (posible cambio S4)
+
+- **Actual (S3):** 1 botón, 10💠, +30 Esencia +5 Espíritu +10 Pulso
+- **Posible S4:** Split en 2 botones — TBD por usuario
+- **Documentar estado actual, implementar cambio si se decide**
+
+### Implementation Phases (16 total, 49-64)
+
+**Backend (49-54):** Vision API → Emotional Evaluation → Dual Economy → Fractures → Missions+Anti-abuse → Canonical Files Sync
+**Frontend (55-62):** Fullscreen+Layout → HUD Redesign → Photo UI → Memorias Panel → Evolution Visual → Missions UI → Theme Adaptation → Transitions
+**Close (63-64):** User adjustments pre-deploy → Testing+Audit+Deploy
+
+---
+
+## Log de Implementación Sesión 4
+
+### Fase 49: Vision API — Infraestructura (2026-02-19)
+- **vision-provider.ts**: Auto-switch Gemini Vision / GPT-4o Vision (same pattern as chat provider)
+- **vision-interface.ts**: `VisionProvider` interface + `VisionResult` type
+- **gemini-vision.ts**: Adaptador Gemini Vision (gemini-2.0-flash model)
+- **openai-vision.ts**: Adaptador GPT-4o Vision
+- **/api/evaluate route.ts**: POST handler with validation, rate limiting (5/min), range clamping, fallback values
+- **Types added**: `VisionRequest`, `VisionResponse`, `ResonanceLevel` in types.ts
+
+### Fase 50: Emotional Evaluation System (2026-02-19)
+- **vision-prompts.ts**: `buildVisionPrompt()` with 9 prompt blocks (role, story, personality, nature, resonance, diary examples, stats context, anti-jailbreak, response format)
+- **Type-specific resonance**: Rayo=speed/light/movement/tech, Flama=warmth/connection/emotions, Hielo=knowledge/nature/reflection
+- **Anti-jailbreak block**: Text manipulation in photos ignored by prompt instruction
+- **Coherence bonus**: +1-2 extra fragments for photos that resonate with existing memory themes
+
+### Fase 51: Dual Economy (2026-02-19)
+- **New types**: `PhotoEntry`, `StrikeData`, `Mission` interfaces added to types.ts
+- **RegenmonData extended**: S4 fields — `progress`, `photoHistory` (max 20), `strikes`, `lastPhotoAt`, `activeMission`
+- **S4 constants**: All cooldowns (`PHOTO_COOLDOWN_MS=300000`, `PHOTO_FAILED_COOLDOWN_MS=120000`), fragment ranges, progress ranges, `FRACTURE_THRESHOLDS=[50,100,200,400]`
+- **Split purification**: `purifySpirit` (10💠→+10 Espíritu) + `purifyEssence` (10💠→+10 Esencia). Old single purify deprecated with `@deprecated` tag on `PURIFY_COST`
+- **Progress from chat**: 1-3 per substantive message (IA evaluates substance)
+- **Evolution stage calc**: 5 stages derived from fracture thresholds (50, 100, 200, 400)
+- **Evolution freeze**: When all stats < 10, progress doesn't increase (never decreases)
+- **Storage migration**: S3→S4 automatic migration adds new S4 fields with defaults
+- **Supabase sync**: Updated to include new S4 columns (progress, strikes, diary_entries, active_mission, etc.)
+
+### Design Decisions (Phases 49-51)
+- **VisionRequest includes memories**: Allows coherence bonus calculation — photos that match existing memory themes get extra fragments
+- **VisionResponse includes stat changes**: Photos affect all 3 stats (spirit, pulse, essence), not just fragments/progress
+- **Split purify over single purify**: More strategic choice for player — target the stat that needs it most
+- **File naming**: `gemini-vision.ts` / `openai-vision.ts` (provider-first naming, consistent with existing `gemini.ts` / `openai.ts` for chat)
+
+### Fase 52: Fracture System + Evolution Stages Data Layer (2026-02-19)
+- **evolution.ts**: Pure functions for stage calc (1-5), fracture detection, next fracture info — separated from hooks for testability
+- **worldState.ts**: Maps evolution stage → WorldStateMetadata (health label, description, backgroundIntensity, particleFrequency, corruptionLevel) — 5 stages from 'corrupted' to 'regenerated'
+- **useGameState refactor**: `getEvolutionStage()` now delegates to `evolution.ts` instead of inline logic; added `getWorldHealth()` returning `WorldStateMetadata`
+- **newFractureJustClosed flag**: Boolean state set when `addProgress()` crosses a fracture threshold; `clearNewFracture()` resets it (frontend calls after animation)
+- **Evolution freeze verified**: `addProgress()` checks all stats < CHAT_CRITICAL_THRESHOLD (10) and early-returns without adding progress; progress NEVER decreases
+
+### Fase 53: Missions + Anti-Abuse System (2026-02-19)
+- **photoCooldown.ts**: Centralized cooldown logic — checks standard 5min cooldown, failed 2min cooldown, strike blocks, and mission bypass in one function. Returns `CooldownStatus` with reason and remaining time.
+- **useStrikes.ts**: Strike hook with localStorage persistence. Strike 1=warning, Strike 2=30min cooldown for 24hrs, Strike 3=blocked 48hrs. Auto-reset after 7 days clean. Periodic cleanup of expired cooldowns/blocks.
+- **useMissions.ts**: Mission hook with type-specific templates (5 per type). 1 active max, +5 progress bonus, 24hr expiration. Mission bypass: 1 photo within 30min window during cooldown. Abandon without penalty.
+- **Integration**: All three modules use existing types (StrikeData, Mission) from types.ts and constants from constants.ts. No changes to useGameState needed — these are composable hooks that frontend phases (55-62) will wire in.
+
+### Fase 54: Canonical Files Sync (2026-02-19)
+- **System prompt update** (`prompts.ts`): Added 3 new S4 blocks — Evolution & World State (block 13), Photos & Real-World Memories (block 14), Missions (block 15). Each block is type-specific. Evolution block references world health from `worldState.ts` and freeze state. Photo block describes type-specific resonance. Mission block includes active mission context.
+- **New `SystemPromptContext` interface**: Extended `buildSystemPrompt()` with optional `context` param carrying `progress`, `diaryEntries`, `activeMissionPrompt` — backward compatible, old callers unaffected.
+- **Types consolidation** (`types.ts`): Added 8 new exported types: `EvolutionStage`, `EvaluationResult`, `FragmentTransaction`, `DiaryEntry`, `WorldHealth`, `CooldownStatus`, `MissionData`, `WorldState`. These consolidate scattered definitions from phases 49-53 into a single canonical source.
+- **Type deduplication**: `CooldownStatus` moved from `photoCooldown.ts` to `types.ts` (re-exported for backward compat). `WorldHealth`/`WorldStateMetadata` moved from `worldState.ts` to `types.ts` (`WorldState` type, re-exported as `WorldStateMetadata` alias).
+- **Storage migration verified**: S3→S4 migration in `storage.ts` already handles all S4 fields (progress, photoHistory, strikes, lastPhotoAt, activeMission) with proper defaults. No changes needed — Phase 51 did this correctly.
+- **Constants audit**: Added `STAT_CHANGE_DISPLAY_MS`, `MUSIC_CHAT_VOLUME`, `MUSIC_FADE_MS`, `PULSE_REGEN_RATE_PER_HOUR` to `constants.ts`. No magic numbers found in hooks/lib (audio frequencies in `useChiptuneAudio.ts` are appropriate as inline values). Legacy constants `CHAT_PULSE_CHANGE` and `CHAT_ESENCIA_COST` kept for backward compat but unused.
+- **Build**: ✅ passes clean
+
+---
+
+## S4 UI/UX Design Decisions (2026-02-19)
+
+> Fuente: Sesión de diseño UI/UX completa del 2026-02-19.
+> Wireframes: `public/wireframes-s4.html` (main) + `reggie-wireframes.pages.dev`
+> Extras: `reggie-wireframes.pages.dev/extras.html` (photo flow, light theme, tutorial)
+
+### Navigation — 3-State Triangle
+
+- **3 estados:** World (default) ↔ Chat ↔ Photo — navegación triangular, todos conectados
+- **World → Chat:** bubble button 💬 en bottom bar
+- **World → Photo:** bubble button 📷 en bottom bar
+- **Chat → World:** ✕ button en chat header
+- **Chat → Photo:** 📎 button en input bar
+- **Photo → Chat:** "Conversar" button post-evaluación
+- **Photo → World:** "Volver" button post-evaluación
+- **Vertical only** — NO horizontal layout
+
+### Breakpoints (CUSTOM, not generic)
+
+| Nombre | Rango | Comportamiento |
+|--------|-------|----------------|
+| Mobile | <640px | Alternating states (world/chat/photo take full screen) |
+| Tablet | 641-1024px | Vertical: same as mobile, more spacious. Horizontal: side-by-side like desktop |
+| Desktop | 1025px+ | 70% world / 30% chat (NOT 50/50). Default full world, opens 70/30 on interaction |
+
+### HUD (always visible in all 3 states)
+
+- 🔮 Fragments count
+- 🎯 Mission indicator (glows/pulses when active)
+- ⚙️ Settings access
+
+### Stats/Profile
+
+- **Trigger:** Tap sprite (world) or info button (any state) → opens profile overlay
+- **Shows:** Pulso ❤️, Esencia 💧, Espíritu ✨, Fragmentos 🔮, Fracturas (dots), Active Mission
+
+### Panel (Memorias/Historial)
+
+- One button (📖 Diario), two tabs inside
+- Tab "Memorias" = photos + emotional reactions (diaryEntries)
+- Tab "Historial" = activity log (fragments, purifications, milestones)
+- Mobile + Tablet: fullscreen overlay
+- Desktop: floating window with dimmed backdrop
+
+### Photos — Full Flow
+
+1. **Pre-camera screen** (NOT modal, full screen): explains what Reggie wants
+2. **TWO options:** "📸 Tomar foto" (camera) + "🖼️ Galería" (file picker)
+3. **First time:** extra text about camera permissions + privacy (photos NOT stored)
+4. **Active mission** shown on pre-camera screen
+5. **Cooldown:** shows timer when active
+6. **From chat:** 📎 button opens mini picker (camera/gallery options)
+7. **Post-photo:** Regenmon reacts + deltas shown + two buttons: "💬 Conversar" / "🏠 Volver"
+8. **Post-photo variants:**
+   - Strong resonance: happy bounce animation
+   - Weak: neutral reaction
+   - Penalizing: dimmed sprite, red text, strike warning
+
+### Missions — Triple Reinforcement
+
+- **HUD:** 🎯 glows/pulses when mission active
+- **Chat:** Regenmon mentions mission naturally in conversation
+- **Profile:** Full mission description visible
+
+### Purification — Tap Sprite Interaction
+
+- **Trigger:** Tap sprite in World → floating buttons appear
+- **Buttons:** "❤️ Recargar 10🔮" / "💧 Nutrir 10🔮"
+- **After action:** Buttons disappear
+- **Animation:** Subtle bounce + color flash on purify
+
+### Critical State / Freeze
+
+- **Visual:** Sprite dimmed, particles off, darker background
+- **Chat:** Regenmon speaks from emotional state (lore-reactive)
+- **HUD:** Stats flash/pulse when critical
+
+### Fullscreen
+
+- **Merged with loading screen:** after assets load → fullscreen invitation (not separate screen)
+- **Two options:** "Pantalla completa" / "Continuar así"
+- **Always available** in ⚙️ Settings toggle
+
+### Settings
+
+- ⚙️ in HUD, accessible from all 3 states (one tap)
+- **Mobile + Tablet:** fullscreen overlay
+- **Desktop:** floating window
+- **Options:** Fullscreen toggle, Dark/Light theme, Music, Effects, Tutorial restart, Version
+
+### Themes
+
+- **Dark AND Light** theme both supported in S4
+- **Light palette:** warm background (#fffbf5), dark text (#383838), warm gradients
+- **Frutero color palette integration** for Light theme
+
+### Tutorial / Onboarding
+
+- **New players:** 5 steps (1-Regenmon, 2-Chat, 3-Care/Purify, 4-Photos NEW, 5-Evolution NEW)
+- **S3 returning players:** 2 steps only (Photos + Evolution), badge "✨ Nuevo"
+- **Steps 4-5** marked as NEW
+- **"Saltar tutorial"** always visible
+- **Can restart** from Settings
+
+### Asset Preloading
+
+- Loading screen is a **REAL preloader** (not cosmetic spinner)
+- **Preloads:** sprites, backgrounds for all 5 evolution stages, UI icons
+- **Method:** `new Image().src` during loading + `<link rel="preload">` for critical assets
+- **Flow:** Loading screen → fullscreen invitation → game (no extra screens)
+
+### Wireframes
+
+- **Main:** `public/wireframes-s4.html`
+- **Deployed:** `reggie-wireframes.pages.dev`
+- **Extras** (photo flow, light theme, tutorial): `reggie-wireframes.pages.dev/extras.html`
+
+---
+
+### Fase 57: Photo UI — Full Flow (2026-02-19)
+- **PreCamera.tsx**: Full-screen pre-camera with title, privacy notice (first-time via localStorage), active mission card, cooldown timer with live countdown, two capture buttons (camera with `capture="environment"` + gallery without capture), "← Volver" back link
+- **PostPhoto.tsx**: Shows sprite with emotion-based animation (happy bounce/neutral/grayscale), resonance label (strong ✨/medium/weak/⚠️ penalizing), diary entry quote, stat deltas, conditional action buttons (no chat on penalizing)
+- **PhotoFlow.tsx**: Orchestrator component managing pre-camera → loading → result flow. Calls `/api/evaluate`, applies fragments + stat deltas + progress (randomized per resonance range), handles mission completion + strike on penalizing, manages `lastPhotoAt` timestamp
+- **ChatPhotoPicker.tsx**: Mini overlay at bottom of chat with 📸 Cámara / 🖼️ Galería options + dismiss overlay
+- **CSS**: ~250 lines in globals.css — all components styled with NES aesthetic, light theme overrides, responsive, animations (sprite-bounce, spin, result-reveal)
+- **Privacy**: Photos converted to base64, sent to API, then discarded. Never stored in state or localStorage
+- **Build**: ✅ Clean (TypeScript + Next.js build)
+
 ### 📌 Rules & Lessons Learned
 - **Docs/ folder is UNTOUCHABLE** — never modify files in the Docs/ directory
 - **9 canonical files** at root: PRD.md, TECH_STACK.md, IMPLEMENTATION_PLAN.md, FRONTEND_GUIDELINES.md, BACKEND_STRUCTURE.md, APP_FLOW.md, LORE.md, progress.txt, model.md
 - **Lesson**: Always update canonical files BEFORE (or immediately after) pushing code changes. Code and docs must stay in sync.
 - **Audit methodology**: S1 (35 items), S2 (30 items), S3 (31 items) = 96 total verification points
 
+
+---
+
+## S4 Backend Audit Log (2026-02-19)
+
+**Full audit of phases 49-54 backend code.**
+
+### Files Audited
+- `src/lib/ai/vision-provider.ts`, `gemini-vision.ts`, `openai-vision.ts`, `vision-interface.ts`, `vision-prompts.ts`, `prompts.ts`
+- `src/app/api/evaluate/route.ts`
+- `src/lib/types.ts`, `constants.ts`, `evolution.ts`, `worldState.ts`, `photoCooldown.ts`
+- `src/hooks/useGameState.ts`, `useMissions.ts`, `useStrikes.ts`
+
+### Decisions Validated
+- **Dual economy** (fragments + progress) correctly separated — fragments are spendable currency, progress only goes up
+- **Fracture thresholds** [50, 100, 200, 400] map to 5 evolution stages correctly
+- **Strike system** (1=warning, 2=30min cooldown, 3=48hr block, 7-day auto-reset) implemented correctly
+- **Photo cooldown** respects strike state hierarchy: blocked > strike_cooldown > standard cooldown > mission bypass
+- **S3→S4 migration** in storage.ts handles all new fields with sensible defaults
+- **API /evaluate** validates all inputs, clamps AI responses, has rate limiting and fallback
+- **Vision prompts** include anti-jailbreak protections and type-specific resonance
+
+### Fixes Applied
+- Centralized `STRIKES` and `MISSION` storage keys into `STORAGE_KEYS` constant
+- Added `[number, number]` type to `CHAT_FRAGMENT_REWARD_RANGE`
+
+### Fase 55: Loading + Fullscreen + Layout Foundation (2026-02-19)
+- **useAssetPreloader**: Real preloader using `new Image().src` for sprites (3) + backgrounds (6) = 9 assets. Progress tracked 0-100%.
+- **LoadingScreen rewrite**: Old 3s timer replaced with actual asset preloading. Progress bar driven by real load state. Fullscreen invitation merged into loading screen (not a separate screen).
+- **useFullscreen**: Browser Fullscreen API wrapper (`document.documentElement.requestFullscreen()`). Supports toggle, isSupported detection, event-driven state.
+- **Fullscreen invitation**: "Todo listo. Para la mejor experiencia:" → [🖥️ Pantalla completa] [Continuar así]. Auto-proceeds if API not supported.
+- **useViewState**: 3-state manager ('world' | 'chat' | 'photo') with navigation callbacks.
+- **GameLayout**: 3-panel layout system with CSS-driven responsive behavior.
+- **HUD component**: Fixed top bar with 🔮 fragments (left), 🎯 mission indicator with pulse animation (right), ⚙️ settings button. Always visible, z-index 50.
+- **BottomBar**: 3 bubbles (💬 Chat, 📷 Foto, 📖 Diario). Mobile/tablet vertical only — hidden on desktop and tablet landscape via CSS.
+- **Custom breakpoints**: Mobile <640px (full-screen states), Tablet vertical 641-1024px portrait (same as mobile, spacious), Tablet horizontal 641-1024px landscape (side-by-side 70/30), Desktop 1025px+ (70/30 split). Uses `@media` with exact values, NOT Tailwind defaults.
+- **Tablet orientation**: `@media (orientation: landscape)` combined with width range for hybrid behavior.
+- **Light theme**: All new components have `.theme-light` variants.
+- **No S3 breakage**: Existing GameScreen.tsx untouched. New components are additive.
+- **Files created**: `useAssetPreloader.ts`, `useFullscreen.ts`, `useViewState.ts`, `HUD.tsx`, `BottomBar.tsx`, `GameLayout.tsx`
+- **Files modified**: `LoadingScreen.tsx` (rewritten), `globals.css` (new S4 layout CSS)
+
+### Fase 56: HUD Redesign + Settings Panel + Theme System (2026-02-19)
+- **HUD.tsx rewrite**: Enhanced with animated fragment deltas (floating +N/-N that fades via CSS keyframe `hud-delta-float`), mission indicator with pulse animation (`s4-hud__mission--active`), critical state flash (`s4-hud__fragments--critical` with `hud-critical-pulse` animation). Wired to real game state props.
+- **SettingsPanel.tsx rewrite**: Complete S4 redesign. Mobile+Tablet: fullscreen overlay covering entire viewport. Desktop (≥1025px): floating window with dimmed backdrop, close via backdrop click. Options: Fullscreen toggle (wired to useFullscreen), Theme (dark/light via useTheme), Music (on/off), Effects (on/off), Tutorial restart, Version display (v0.4.0-S4). Smooth open/close transitions with CSS animations.
+- **GameScreen.tsx updated**: Wired useFullscreen hook, added effectsEnabled state, adapted SettingsPanel props to S4 interface.
+- **globals.css**: Added ~200 lines of S4 settings panel CSS + HUD enhancement CSS. Responsive behavior: fullscreen overlay on mobile/tablet, floating window on desktop. Light theme variants for all new components.
+- **Theme system**: Existing S3 useTheme hook + CSS custom properties system fully adequate for S4. Dark theme (existing NES colors) and Light theme (warm #fffbf5 background, #383838 text per Frutero palette) both supported via `.theme-dark` / `.theme-light` classes on html element with localStorage persistence.
+
+### Fase 58: Diario Panel — Memorias + Historial (2026-02-19)
+- **DiarioPanel.tsx**: Single panel with two tabs ("Memorias" | "Historial"). Mobile+Tablet: fullscreen overlay. Desktop (≥1025px): floating window (480px wide) with dimmed backdrop. Close via ✕ button, Escape key, or backdrop click (desktop). Tab active state: #ff9500 underline (Frutero primary). Smooth open/close animations reusing existing CSS keyframes.
+- **Memorias tab**: Displays DiaryEntry objects from photo evaluations. Each entry shows emoji icon (by resonance level) + Regenmon's reaction text (italic) + metadata (resonance badge, source icon, time ago). Chronological order (newest first). Empty state: "Aún no has compartido memorias. ¡Toma tu primera foto! 📷"
+- **Historial tab**: Displays FragmentTransaction objects as activity log. Entry types: 🖼️ Photo, 💬 Chat, 🔮 Purification (spirit/essence), 🔍 Search fragments, 🎯 Mission. Each entry: icon + description + fragment delta (color-coded +/-) + progress delta + time ago. Empty state: "Tu aventura acaba de comenzar..."
+- **useActivityLog hook**: Manages FragmentTransaction entries in localStorage (max 50, FIFO). Storage key: `STORAGE_KEYS.ACTIVITY_LOG`.
+- **useDiaryEntries hook**: Manages DiaryEntry objects in localStorage (max 50). Storage key: `STORAGE_KEYS.DIARY_ENTRIES`.
+- **constants.ts**: Added `ACTIVITY_LOG` and `DIARY_ENTRIES` to `STORAGE_KEYS`.
+- **CSS**: ~200 lines in globals.css. Responsive: fullscreen on mobile/tablet, floating on desktop. Light theme overrides for all elements. NES pixel aesthetic maintained.
+- **Build**: ✅ Clean
+
+### Fase 59: Fractures Visual System + World Evolution + Sprite Adaptation (2026-02-19)
+- **FractureOverlay.tsx** (`src/components/world/`): 4 SVG crack-like fracture lines positioned around the sprite area. Active fractures: glowing #9ed22d with pulsing animation. Closed fractures: dimmed/faded. Sealing animation: bright flash → seal → fade (2.5s). Particle burst effect (8 particles) on fracture close. Triggered by `newFractureJustClosed` prop, calls `clearNewFracture()` after animation.
+- **WorldBackground.tsx** (`src/components/world/`): Evolution-aware replacement for GameBackground on the game screen. 5 stages mapped to CSS filters: Stage 1 = dark/desaturated (corrupted), Stage 5 = bright/saturated (regenerated). Corruption overlay fades as world heals. Ambient particles appear at higher stages (particleFrequency from worldState.ts). Smooth 2s CSS transitions between stages. Both dark and light theme support.
+- **FractureDots.tsx** (`src/components/world/`): Profile/stats component showing 4 dots for fractures. Closed = filled #9ed22d with glow. Open = outline only. Subtle progress bar toward next fracture threshold.
+- **Sprite visual adaptation**: CSS classes `.sprite-evolution--stage-1` through `--stage-5` modulate brightness/saturation. Stage 1 = dim/muted (0.6 brightness, 0.4 saturate). Stage 5 = bright with radial glow halo. Orbital particles appear at stages 3+. Frozen state: `.sprite-evolution--frozen` with grayscale(0.8) + dormant pulse animation.
+- **GameScreen.tsx updated**: Wired WorldBackground (replaces GameBackground for evolution-aware rendering), FractureOverlay, sprite evolution classes. New props: `progress`, `newFractureJustClosed`, `onClearNewFracture`, `isEvolutionFrozen`.
+- **page.tsx updated**: Passes `progress`, `newFractureJustClosed`, `clearNewFracture`, `isEvolutionFrozen()` to GameScreen.
+- **globals.css**: ~250 lines of Phase 59 CSS — fracture animations (pulse, seal, particle burst), world background transitions, fracture dots, sprite evolution stages (5 filter presets + halo + dormant), orbital particles. Light theme overrides. Reduced motion support.
+- **Build**: ✅ Clean
+
+### Fase 60: Missions UI — Detail Popup, Completion Celebration (2026-02-19)
+- **MissionPopup.tsx**: Lightweight card overlay (not fullscreen). Tapping 🎯 in HUD opens it. Active mission: shows type-specific label (⚡/🔥/❄️), description, time remaining, +5 bonus reminder, "Abandonar" with confirmation. No mission: "Buscar misión" button triggers `useMissions.generateMission()` with reveal animation. Dismiss via ✕ or click outside.
+- **HUD.tsx**: 🎯 changed from `<span>` to `<button>` with `onMissionClick` callback. Pulse animation when mission active.
+- **GameScreen.tsx**: Wired `useMissions` hook. Added `hud-mission-btn` to old-style HUD top bar alongside ⚙️. Mission popup and celebration overlay integrated.
+- **PostPhoto.tsx + PhotoFlow.tsx**: Mission completion now shows "+N progreso bonus 🎯" delta with golden glow animation. `missionCompleted` and `missionBonus` props passed from PhotoFlow to PostPhoto.
+- **Mission Completion Celebration**: 12 sparkle particles (gold/red/blue) burst animation overlaid on screen. Auto-dismisses.
+- **Triple reinforcement wired**: HUD (🎯 glow+tap), Chat (system prompt from Phase 54), Profile (visible in popup).
+- **globals.css**: ~200 lines — popup backdrop/card animations, sparkle burst keyframes, mission bonus glow, light theme overrides, reduced motion support.
+- **Build**: ✅ Clean
+
+### Fase 61: Theme Adaptation + Sprite Polish + Transition Smoothing (2026-02-19)
+- **Light theme palette update**: Migrated from GBC palette (#f5f0e1) to Frutero palette (#fffbf5 bg, #383838 text, #ff9500 primary). All `.theme-light` overrides now reference CSS vars instead of hardcoded hex values.
+- **Theme switching smoothness**: Added `transition: background-color 0.4s, color 0.4s, border-color 0.4s` to all major layout elements. Smooth visual transition when toggling dark↔light.
+- **Sprite idle animation**: `sprite-idle-breathe` keyframe — subtle 3s float/breathe cycle on `.game-screen__regenmon-wrapper`.
+- **Sprite purify bounce**: `sprite-purify-bounce` class triggered on purification — 0.7s bounce with scale. Color flash per stat type.
+- **Sprite chat pulse**: `sprite-chat-pulse` class triggered on chat message response — 0.4s subtle scale pulse.
+- **Critical/frozen state**: Enhanced grayscale(0.9) + brightness(0.35) on frozen sprite images.
+- **Pixel art crisp rendering**: `image-rendering: pixelated` + fallbacks on all sprite img elements.
+- **Light theme full audit**: PreCamera, PostPhoto, PhotoFlow, DiarioPanel, MissionPopup, SettingsPanel, HUD, BottomBar, Toast, FractureDots, WorldBackground — all readable in both themes.
+- **Responsive polish**: Min 44px touch targets on mobile. `overflow-wrap: break-word` on text panels.
+- **Reduced motion**: All Phase 61 animations respect `prefers-reduced-motion`.
+- **Build**: ✅ Clean

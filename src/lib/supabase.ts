@@ -53,6 +53,11 @@ function fromSupabaseFormat(data: SupabaseRegenmon): RegenmonData {
     tutorialDismissed: data.tutorial_dismissed,
     memories: data.memories || [],
     evolution: data.evolution || { totalMemories: 0, stage: 1, threshold: 10 },
+    progress: (data as any).progress ?? 0,
+    photoHistory: (data as any).photo_history ?? [],
+    strikes: (data as any).strikes ?? { count: 0, lastStrikeAt: null, cooldownUntil: null, blockedUntil: null },
+    lastPhotoAt: (data as any).last_photo_at ?? null,
+    activeMission: (data as any).active_mission ?? null,
   };
 }
 
@@ -79,6 +84,12 @@ function toSupabaseFormat(privyUserId: string, data: RegenmonData): Partial<Supa
     chat_greeted: false, // Default
     activity_history: [], // Default
     evolution: data.evolution || { totalMemories: 0, stage: 1, threshold: 10 },
+    // S4 fields stored as JSONB columns (or ignored if columns don't exist yet)
+    ...(data.progress !== undefined && { progress: data.progress } as any),
+    ...(data.photoHistory && { photo_history: data.photoHistory } as any),
+    ...(data.strikes && { strikes: data.strikes } as any),
+    ...(data.lastPhotoAt !== undefined && { last_photo_at: data.lastPhotoAt } as any),
+    ...(data.activeMission !== undefined && { active_mission: data.activeMission } as any),
   };
 }
 
