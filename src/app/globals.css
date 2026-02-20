@@ -6214,9 +6214,13 @@ html, body,
    ============================================= */
 
 /* Chat panel messages: larger font */
-.chat-panel__messages .chat-bubble {
+.chat-panel__messages .chat-bubble,
+.chat-bubble {
   font-size: clamp(0.55rem, 1.4vw, 0.8rem);
   line-height: 1.6;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  min-width: 0;
 }
 
 /* Chat panel header: larger text */
