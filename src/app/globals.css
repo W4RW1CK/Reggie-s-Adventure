@@ -2942,8 +2942,7 @@ html, body {
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-  background: var(--theme-chat-bg, rgba(15, 15, 30, 0.95));
-  border-left: 2px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
   z-index: 20;
 }
 
