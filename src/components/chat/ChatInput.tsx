@@ -20,7 +20,7 @@ export function ChatInput({ value, onChange, onSend, onPhotoClick, isLoading, di
         const el = textareaRef.current;
         if (!el) return;
         el.style.height = 'auto';
-        el.style.height = `${Math.min(el.scrollHeight, 120)}px`;
+        el.style.height = `${Math.min(el.scrollHeight, 100)}px`;
     }, [value]);
 
     const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
