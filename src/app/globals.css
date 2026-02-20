@@ -66,17 +66,16 @@ body {
   overflow: hidden;
 }
 
-/* Custom scrollbar (if needed) */
+/* Hide all scrollbars globally — prevents grey bar flash on mobile */
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 0px !important;
+  height: 0px !important;
+  display: none !important;
 }
 
-::-webkit-scrollbar-track {
-  background: var(--color-bg-medium);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-border-nes);
+* {
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE/Edge */
 }
 
 /* =============================================
@@ -2027,12 +2026,7 @@ body {
 }
 
 /* Light theme scrollbar */
-.theme-light ::-webkit-scrollbar-track {
-  background: var(--theme-panel-bg);
-}
-.theme-light ::-webkit-scrollbar-thumb {
-  background: var(--theme-border);
-}
+/* Light theme scrollbar — hidden globally, no overrides needed */
 
 /* Light theme screen overrides */
 .theme-light .loading-screen {
