@@ -32,7 +32,7 @@ const FRACTURE_PATHS = [
       'M275 200 L295 230 L270 255',
       'M230 270 L200 250 L190 285',
     ],
-    x: '60%', y: '-2%',
+    x: '55%', y: '-2%',
   },
   // Bottom-left: crack erupting from bottom-left
   {
@@ -43,7 +43,7 @@ const FRACTURE_PATHS = [
       'M30 220 L5 190 L30 165',
       'M75 160 L105 180 L115 145',
     ],
-    x: '-1%', y: '40%',
+    x: '-1%', y: '45%',
   },
   // Bottom-right: devastating crack from bottom-right corner
   {
@@ -54,7 +54,7 @@ const FRACTURE_PATHS = [
       'M270 210 L295 185 L270 160',
       'M225 150 L195 170 L185 135',
     ],
-    x: '60%', y: '40%',
+    x: '55%', y: '45%',
   },
 ];
 
@@ -96,12 +96,11 @@ export default function FractureOverlay({
             style={{ left: pos.x, top: pos.y }}
           >
             <svg
-              width="300"
-              height="420"
               viewBox="0 0 300 420"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
               className="fracture-svg"
+              style={{ width: '45vw', height: '55vh' }}
             >
               {/* Main crack — thick, jagged, threatening */}
               <path
