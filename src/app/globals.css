@@ -4179,22 +4179,27 @@ html, body {
   align-items: center;
   justify-content: center;
   min-height: 100%;
-  padding: 48px 16px 24px;
+  padding: clamp(16px, 3vw, 24px);
+  padding-top: clamp(40px, 6vh, 60px);
   text-align: center;
   position: relative;
+  background: var(--theme-panel-bg, #1a1a2e);
 }
 
 .precamera__back {
   position: absolute;
-  top: 48px;
-  left: 16px;
+  top: clamp(12px, 2vw, 20px);
+  left: clamp(12px, 2vw, 20px);
   background: none;
   border: none;
   color: var(--theme-text-secondary, #a0a0a0);
-  font-family: 'Press Start 2P', monospace;
-  font-size: 8px;
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(0.5rem, 1.2vw, 0.7rem);
   cursor: pointer;
   padding: 8px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
 }
 .precamera__back:hover {
   color: var(--theme-text-primary, #e8e8e8);
@@ -4204,71 +4209,73 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: clamp(12px, 2vw, 18px);
   max-width: 400px;
+  width: 100%;
 }
 
 .precamera__title {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 14px;
-  color: var(--theme-text-accent, #ffffff);
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(0.6rem, 1.4vw, 0.85rem);
+  color: var(--theme-text-primary, #e8e8e8);
   margin: 0;
 }
 
 .precamera__desc {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 8px;
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(0.45rem, 1.1vw, 0.65rem);
   color: var(--theme-text-secondary, #a0a0a0);
   line-height: 1.8;
   margin: 0;
 }
 
 .precamera__first-time {
-  background: var(--theme-surface, #0f3460);
+  background: var(--theme-panel-bg, #1a1a2e);
   border: 2px solid var(--theme-border, #4a4a4a);
-  padding: 12px;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 8px;
+  padding: clamp(10px, 2vw, 16px);
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(0.45rem, 1.1vw, 0.65rem);
   color: var(--theme-text-secondary, #a0a0a0);
   line-height: 1.8;
+  width: 100%;
 }
 .precamera__first-time p { margin: 4px 0; }
 
 .precamera__privacy {
-  color: #4caf50 !important;
+  color: #2ecc71 !important;
 }
 
 .precamera__mission {
-  background: var(--theme-surface, #0f3460);
+  background: var(--theme-panel-bg, #1a1a2e);
   border: 2px solid #f5c542;
-  box-shadow: 0 0 8px rgba(245, 197, 66, 0.3);
-  padding: 12px;
+  box-shadow: 0 0 8px rgba(245, 197, 66, 0.2);
+  padding: clamp(10px, 2vw, 16px);
   width: 100%;
 }
 
 .precamera__mission-label {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 8px;
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(0.45rem, 1.1vw, 0.65rem);
   color: #f5c542;
   margin-bottom: 8px;
 }
 
 .precamera__mission-text {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 8px;
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(0.45rem, 1.1vw, 0.65rem);
   color: var(--theme-text-primary, #e8e8e8);
   line-height: 1.8;
   margin: 0;
 }
 
 .precamera__cooldown {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 8px;
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(0.45rem, 1.1vw, 0.65rem);
   color: var(--theme-text-secondary, #a0a0a0);
 }
 
 .precamera__cooldown-timer {
-  font-size: 14px;
+  font-size: clamp(0.6rem, 1.4vw, 0.85rem);
   color: #f5c542;
   margin-top: 4px;
 }
@@ -4276,36 +4283,38 @@ html, body {
 .precamera__buttons {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: clamp(8px, 1.5vw, 14px);
   width: 100%;
   margin-top: 8px;
 }
 
 .precamera__btn {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  padding: 16px 24px;
-  border: 4px solid var(--theme-border, #4a4a4a);
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(0.5rem, 1.2vw, 0.7rem);
+  padding: clamp(10px, 2vw, 16px) clamp(16px, 3vw, 24px);
+  border: 2px solid var(--theme-border, #4a4a4a);
+  border-radius: 0;
   cursor: pointer;
   min-height: 44px;
   transition: background 0.2s, opacity 0.2s;
 }
 
 .precamera__btn--camera {
-  background: #4caf50;
-  color: #fff;
-  border-color: #388e3c;
+  background: rgba(46, 204, 113, 0.2);
+  color: #2ecc71;
+  border-color: rgba(46, 204, 113, 0.4);
 }
 .precamera__btn--camera:hover:not(:disabled) {
-  background: #66bb6a;
+  background: rgba(46, 204, 113, 0.3);
 }
 
 .precamera__btn--gallery {
-  background: var(--theme-surface, #0f3460);
+  background: rgba(255, 255, 255, 0.05);
   color: var(--theme-text-primary, #e8e8e8);
+  border-color: var(--theme-border, #4a4a4a);
 }
 .precamera__btn--gallery:hover:not(:disabled) {
-  background: var(--theme-bg-medium, #16213e);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .precamera__btn:disabled {
