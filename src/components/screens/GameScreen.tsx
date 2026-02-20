@@ -376,7 +376,7 @@ export default function GameScreen({
                                     onClick={(e) => { e.stopPropagation(); handlePurifySpirit(); }}
                                     disabled={regenmon.stats.fragmentos < PURIFY_SPIRIT_COST || regenmon.stats.pulso >= 100}
                                 >
-                                    🔮 Recargar {PURIFY_SPIRIT_COST}💎
+                                    💛 Recargar {PURIFY_SPIRIT_COST}💎
                                 </button>
                                 <button
                                     className="purify-btn purify-btn--essence"
