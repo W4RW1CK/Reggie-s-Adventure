@@ -18,6 +18,14 @@ export default function PreCamera({ cooldownStatus, activeMission, onCapture, on
   const galleryInputRef = useRef<HTMLInputElement>(null);
   const [isFirstTime, setIsFirstTime] = useState(false);
   const [remainingDisplay, setRemainingDisplay] = useState('');
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsDesktop(window.innerWidth >= 1025);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -130,22 +138,35 @@ export default function PreCamera({ cooldownStatus, activeMission, onCapture, on
         )}
 
         <div className="precamera__buttons">
-          <button
-            className="precamera__btn precamera__btn--camera"
-            onClick={() => cameraInputRef.current?.click()}
-            disabled={disabled}
-            aria-label="Tomar foto con cámara"
-          >
-            📸 Tomar foto
-          </button>
-          <button
-            className="precamera__btn precamera__btn--gallery"
-            onClick={() => galleryInputRef.current?.click()}
-            disabled={disabled}
-            aria-label="Seleccionar de galería"
-          >
-            🖼️ Galería
-          </button>
+          {isDesktop ? (
+            <button
+              className="precamera__btn precamera__btn--gallery"
+              onClick={() => galleryInputRef.current?.click()}
+              disabled={disabled}
+              aria-label="Seleccionar imagen"
+            >
+              📁 Seleccionar imagen
+            </button>
+          ) : (
+            <>
+              <button
+                className="precamera__btn precamera__btn--camera"
+                onClick={() => cameraInputRef.current?.click()}
+                disabled={disabled}
+                aria-label="Tomar foto con cámara"
+              >
+                📸 Tomar foto
+              </button>
+              <button
+                className="precamera__btn precamera__btn--gallery"
+                onClick={() => galleryInputRef.current?.click()}
+                disabled={disabled}
+                aria-label="Seleccionar de galería"
+              >
+                🖼️ Galería
+              </button>
+            </>
+          )}
         </div>
       </div>
 
