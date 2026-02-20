@@ -287,6 +287,7 @@ export default function GameScreen({
                         progress={progress}
                         newFractureJustClosed={newFractureJustClosed}
                         onFractureAnimationComplete={onClearNewFracture || (() => {})}
+                        statsAvg={(regenmon.stats.espiritu + regenmon.stats.pulso + regenmon.stats.esencia) / 3}
                     />
                 </div>
 

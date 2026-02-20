@@ -8,6 +8,7 @@ interface FractureOverlayProps {
   progress: number;
   newFractureJustClosed: boolean;
   onFractureAnimationComplete: () => void;
+  statsAvg?: number; // average of all 3 stats (0-100)
 }
 
 // 4 fracture positions — MASSIVE cracks that threaten to shatter the world
@@ -62,8 +63,12 @@ export default function FractureOverlay({
   progress,
   newFractureJustClosed,
   onFractureAnimationComplete,
+  statsAvg = 50,
 }: FractureOverlayProps) {
   const closedFractures = getClosedFractures(progress);
+  // Stats modulate fracture opacity: high stats = fractures fade, low stats = fractures intensify
+  // 0 → 1.0 (full intensity), 50 → 0.5, 100 → 0.1
+  const statsOpacity = Math.max(0.1, 1 - (statsAvg / 100) * 0.9);
   const [animatingIndex, setAnimatingIndex] = useState<number | null>(null);
 
   // When a new fracture closes, animate it
@@ -93,7 +98,7 @@ export default function FractureOverlay({
           <div
             key={threshold}
             className={`fracture-line ${isClosed ? 'fracture-line--closed' : 'fracture-line--active'} ${isAnimating ? 'fracture-line--sealing' : ''}`}
-            style={{ left: pos.x, top: pos.y }}
+            style={{ left: pos.x, top: pos.y, opacity: isClosed ? undefined : statsOpacity }}
           >
             <svg
               viewBox="0 0 300 420"
