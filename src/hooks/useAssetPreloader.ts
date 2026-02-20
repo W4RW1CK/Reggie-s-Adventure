@@ -2,13 +2,15 @@
 
 import { useState, useEffect, useCallback } from 'react';
 
-/** All assets that must be preloaded before the game starts */
-const ASSETS_TO_PRELOAD: string[] = [
-  // Sprites (3 types)
+/** Critical assets loaded first (sprites for creation screen) */
+const CRITICAL_ASSETS: string[] = [
   '/sprites/rayo-base.webp',
   '/sprites/flama-base.webp',
   '/sprites/hielo-base.webp',
-  // Backgrounds (3 types × 2 themes = 6)
+];
+
+/** Secondary assets loaded after critical (backgrounds) */
+const SECONDARY_ASSETS: string[] = [
   '/backgrounds/bg-rayo-dark.webp',
   '/backgrounds/bg-rayo-light.webp',
   '/backgrounds/bg-flama-dark.webp',
@@ -18,9 +20,20 @@ const ASSETS_TO_PRELOAD: string[] = [
 ];
 
 interface PreloaderState {
-  progress: number;   // 0-100
+  progress: number;
   loaded: boolean;
   error: boolean;
+}
+
+function preloadImage(src: string): Promise<void> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve();
+    img.onerror = () => resolve(); // Don't block on error
+    img.src = src;
+    // Timeout fallback — don't wait forever
+    setTimeout(resolve, 5000);
+  });
 }
 
 export function useAssetPreloader(): PreloaderState {
@@ -30,35 +43,16 @@ export function useAssetPreloader(): PreloaderState {
     error: false,
   });
 
-  const preload = useCallback(() => {
-    const total = ASSETS_TO_PRELOAD.length;
-    if (total === 0) {
-      setState({ progress: 100, loaded: true, error: false });
-      return;
-    }
+  const preload = useCallback(async () => {
+    const total = CRITICAL_ASSETS.length + SECONDARY_ASSETS.length;
 
-    let loadedCount = 0;
-    let hasError = false;
+    // Load critical assets first (in parallel)
+    await Promise.all(CRITICAL_ASSETS.map(preloadImage));
+    setState({ progress: 50, loaded: false, error: false });
 
-    const onAssetDone = () => {
-      loadedCount++;
-      const progress = Math.round((loadedCount / total) * 100);
-      if (loadedCount >= total) {
-        setState({ progress: 100, loaded: true, error: hasError });
-      } else {
-        setState(prev => ({ ...prev, progress }));
-      }
-    };
-
-    ASSETS_TO_PRELOAD.forEach((src) => {
-      const img = new Image();
-      img.onload = onAssetDone;
-      img.onerror = () => {
-        hasError = true;
-        onAssetDone();
-      };
-      img.src = src;
-    });
+    // Load secondary assets (in parallel)
+    await Promise.all(SECONDARY_ASSETS.map(preloadImage));
+    setState({ progress: 100, loaded: true, error: false });
   }, []);
 
   useEffect(() => {

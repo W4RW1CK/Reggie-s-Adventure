@@ -23,6 +23,13 @@ export default function RootLayout({
     <html lang="es">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        {/* Preload critical assets — browser starts fetching before JS executes */}
+        <link rel="preload" href="/sprites/rayo-base.webp" as="image" type="image/webp" />
+        <link rel="preload" href="/sprites/flama-base.webp" as="image" type="image/webp" />
+        <link rel="preload" href="/sprites/hielo-base.webp" as="image" type="image/webp" />
+        <link rel="preload" href="/backgrounds/bg-rayo-dark.webp" as="image" type="image/webp" />
+        <link rel="preload" href="/backgrounds/bg-flama-dark.webp" as="image" type="image/webp" />
+        <link rel="preload" href="/backgrounds/bg-hielo-dark.webp" as="image" type="image/webp" />
       </head>
       <body className={`${pressStart2P.variable} antialiased`} suppressHydrationWarning>
         <AppProviders>
