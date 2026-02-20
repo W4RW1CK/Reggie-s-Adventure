@@ -2939,8 +2939,8 @@ html, body {
 }
 
 .theme-light .game-screen__right-panel {
-  background: rgba(255, 251, 245, 0.95);
-  border-left-color: rgba(0, 0, 0, 0.1);
+  background: linear-gradient(180deg, rgba(245, 235, 218, 0.97) 0%, rgba(240, 228, 205, 0.97) 100%);
+  border-left-color: rgba(160, 130, 80, 0.25);
 }
 
 .theme-light .right-panel__name {
@@ -3157,9 +3157,9 @@ html, body {
 }
 
 .theme-light .chat-input-bar__input {
-  background: var(--theme-input-bg);
+  background: rgba(255, 251, 240, 0.9);
   color: var(--theme-input-text);
-  border-color: var(--theme-border);
+  border-color: rgba(160, 130, 80, 0.3);
 }
 
 .theme-light .chat-input-bar__send {
@@ -3193,28 +3193,28 @@ html, body {
 
 /* Light theme adjustments */
 .theme-light .hud-compact {
-  background: rgba(255, 255, 255, 0.7);
-  border-bottom-color: rgba(0, 0, 0, 0.1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: rgba(245, 235, 218, 0.85);
+  border-bottom-color: rgba(160, 130, 80, 0.2);
+  box-shadow: 0 2px 8px rgba(80, 60, 20, 0.12);
 }
 
 .theme-light .hud-compact__fragments {
-  color: #1e40af;
-  background: rgba(30, 64, 175, 0.08);
-  border-color: rgba(30, 64, 175, 0.2);
+  color: #6b3fa0;
+  background: rgba(107, 63, 160, 0.1);
+  border-color: rgba(107, 63, 160, 0.25);
   text-shadow: none;
 }
 
 .theme-light .hud-compact__diario-btn {
-  color: #92400e;
-  background: rgba(146, 64, 14, 0.08);
-  border-color: rgba(146, 64, 14, 0.2);
+  color: #8b5e14;
+  background: rgba(139, 94, 20, 0.1);
+  border-color: rgba(139, 94, 20, 0.25);
   text-shadow: none;
 }
 
 .theme-light .hud-compact__icon-btn {
-  background: rgba(0, 0, 0, 0.06);
-  border-color: rgba(0, 0, 0, 0.15);
+  background: rgba(139, 94, 20, 0.08);
+  border-color: rgba(139, 94, 20, 0.2);
 }
 
 .theme-light .hud-bottom-nav {
@@ -5801,13 +5801,13 @@ html, body,
 
 /* Chat bubbles in light theme */
 .theme-light .chat-bubble--user {
-  background: rgba(255, 149, 0, 0.12);
-  border-color: rgba(255, 149, 0, 0.3);
+  background: rgba(255, 149, 0, 0.15);
+  border-color: rgba(255, 149, 0, 0.35);
 }
 
 .theme-light .chat-bubble--regenmon {
-  background: var(--theme-surface);
-  border-color: var(--theme-border);
+  background: rgba(107, 63, 160, 0.08);
+  border-color: rgba(107, 63, 160, 0.2);
 }
 
 /* World background particles in light theme */
