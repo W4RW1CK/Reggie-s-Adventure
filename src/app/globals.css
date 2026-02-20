@@ -3080,12 +3080,11 @@ html, body {
 .chat-input-bar__counter {
   position: absolute;
   right: 8px;
-  bottom: 4px;
+  bottom: 6px;
   font-family: var(--font-press-start-2p);
-  font-size: clamp(0.3rem, 0.7vw, 0.4rem);
-  color: var(--theme-text-secondary, #666);
+  font-size: clamp(0.45rem, 1vw, 0.6rem);
+  color: var(--theme-text-secondary, #888);
   pointer-events: none;
-  opacity: 0.6;
 }
 
 .chat-input-bar__counter--warn {
