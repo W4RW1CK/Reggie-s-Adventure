@@ -37,6 +37,7 @@ export default function SettingsPanel({
 }: SettingsPanelProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const [isClosing, setIsClosing] = useState(false);
+  const [confirmReset, setConfirmReset] = useState(false);
 
   // Smooth close animation
   const handleClose = useCallback(() => {
@@ -162,16 +163,29 @@ export default function SettingsPanel({
               <div className="s4-settings__divider" />
               <div className="s4-settings__row s4-settings__row--danger">
                 <span className="s4-settings__label">⚠️ Reiniciar Regenmon</span>
-                <button
-                  onClick={() => {
-                    if (window.confirm('¿Estás seguro? Se borrarán todos los datos de tu Regenmon.')) {
-                      onResetGame();
-                    }
-                  }}
-                  className="s4-settings__action-btn s4-settings__action-btn--danger"
-                >
-                  Borrar todo
-                </button>
+                {!confirmReset ? (
+                  <button
+                    onClick={() => setConfirmReset(true)}
+                    className="s4-settings__action-btn s4-settings__action-btn--danger"
+                  >
+                    Borrar todo
+                  </button>
+                ) : (
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      onClick={() => { setConfirmReset(false); onResetGame(); }}
+                      className="s4-settings__action-btn s4-settings__action-btn--danger"
+                    >
+                      ¡Sí, borrar!
+                    </button>
+                    <button
+                      onClick={() => setConfirmReset(false)}
+                      className="s4-settings__action-btn"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                )}
               </div>
             </>
           )}
