@@ -4183,7 +4183,7 @@ html, body {
   padding-top: clamp(40px, 6vh, 60px);
   text-align: center;
   position: relative;
-  background: var(--theme-panel-bg, #1a1a2e);
+  background: transparent;
 }
 
 .precamera__back {
