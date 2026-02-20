@@ -914,7 +914,16 @@ body {
   justify-content: center;
   transition: border-color 0.3s ease;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  overflow: hidden;
+}
+
+.creation-screen__svg-container svg,
+.creation-screen__svg-container img,
+.creation-screen__svg-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain;
 }
 
 .creation-screen__info {
