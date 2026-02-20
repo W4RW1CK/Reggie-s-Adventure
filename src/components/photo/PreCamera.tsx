@@ -140,7 +140,7 @@ export default function PreCamera({ cooldownStatus, activeMission, onCapture, on
         <div className="precamera__buttons">
           {isDesktop ? (
             <button
-              className="precamera__btn precamera__btn--gallery"
+              className="precamera__btn precamera__btn--camera"
               onClick={() => galleryInputRef.current?.click()}
               disabled={disabled}
               aria-label="Seleccionar imagen"
