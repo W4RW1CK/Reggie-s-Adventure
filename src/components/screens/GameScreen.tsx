@@ -309,7 +309,7 @@ export default function GameScreen({
                     {/* === CENTER: Sprite === */}
                     <div className="hud-sprite-area flex-1 flex flex-col items-center justify-center">
                         <div
-                            className={`relative game-screen__regenmon-wrapper sprite-evolution sprite-evolution--stage-${getEvolutionStage(progress)} ${isEvolutionFrozen ? 'sprite-evolution--frozen' : ''} ${spriteAnimClass}`}
+                            className={`relative game-screen__regenmon-wrapper sprite-evolution sprite-evolution--stage-${Math.min(5, Math.max(1, Math.round(1 + ((regenmon.stats.espiritu + regenmon.stats.pulso + regenmon.stats.esencia) / 3) / 25)))} ${isEvolutionFrozen ? 'sprite-evolution--frozen' : ''} ${spriteAnimClass}`}
                         >
                             <RegenmonSVG
                                 type={regenmon.type}
