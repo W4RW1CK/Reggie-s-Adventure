@@ -60,7 +60,7 @@ export default function GameScreen({
     const [showTutorial, setShowTutorial] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
     const [showPhoto, setShowPhoto] = useState(false);
-    const [rightPanel, setRightPanel] = useState<'welcome' | 'chat' | 'photo'>('chat');
+    const [rightPanel, setRightPanel] = useState<'chat' | 'photo'>('chat');
     const [showDiario, setShowDiario] = useState(false);
     const [showMissionPopup, setShowMissionPopup] = useState(false);
     const [missionCelebration, setMissionCelebration] = useState(false);
@@ -228,27 +228,17 @@ export default function GameScreen({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []); // Only on mount
 
-    // Sync rightPanel state with chat/photo
-    const handleOpenChat = () => {
+    // Radio-button toggle: always one of chat/photo active
+    const handleSwitchToChat = () => {
         setShowPhoto(false);
         if (!isChatOpen) toggleChat();
         setRightPanel('chat');
     };
 
-    const handleCloseChat = () => {
-        if (isChatOpen) toggleChat();
-        setRightPanel('welcome');
-    };
-
-    const handleOpenPhoto = () => {
+    const handleSwitchToPhoto = () => {
         if (isChatOpen) toggleChat();
         setShowPhoto(true);
         setRightPanel('photo');
-    };
-
-    const handleClosePhoto = () => {
-        setShowPhoto(false);
-        setRightPanel('welcome');
     };
 
     return (
@@ -401,16 +391,16 @@ export default function GameScreen({
                     {/* === BOTTOM NAV BAR (Icon-based) === */}
                     <div className="hud-bottom-nav">
                         <button
-                            className={`hud-bottom-nav__btn ${isChatOpen ? 'hud-bottom-nav__btn--active' : ''}`}
-                            onClick={isChatOpen ? handleCloseChat : handleOpenChat}
+                            className={`hud-bottom-nav__btn ${rightPanel === 'chat' ? 'hud-bottom-nav__btn--active' : ''}`}
+                            onClick={handleSwitchToChat}
                             aria-label="Chat"
                         >
                             <span className="hud-bottom-nav__icon">💬</span>
                             <span className="hud-bottom-nav__label">Chat</span>
                         </button>
                         <button
-                            className={`hud-bottom-nav__btn ${showPhoto ? 'hud-bottom-nav__btn--active' : ''}`}
-                            onClick={showPhoto ? handleClosePhoto : handleOpenPhoto}
+                            className={`hud-bottom-nav__btn ${rightPanel === 'photo' ? 'hud-bottom-nav__btn--active' : ''}`}
+                            onClick={handleSwitchToPhoto}
                             aria-label="Foto"
                         >
                             <span className="hud-bottom-nav__icon">📷</span>
@@ -480,8 +470,8 @@ export default function GameScreen({
                             onAddStrike={() => ({ newCount: 0, message: '' })}
                             onCompleteMission={() => { if (activeMission) { completeMission(); return 5; } return 0; }}
                             onUseMissionBypass={() => false}
-                            onGoToChat={() => { handleClosePhoto(); handleOpenChat(); }}
-                            onGoToWorld={() => handleClosePhoto()}
+                            onGoToChat={() => handleSwitchToChat}
+                            onGoToWorld={() => handleSwitchToChat()}
                             onSetLastPhotoAt={() => {}}
                         />
                     </div>
@@ -499,20 +489,11 @@ export default function GameScreen({
             {/* === RIGHT PANEL (Desktop: always 30% / Mobile: overlay for chat) === */}
             {isDesktop && (
                 <div className="game-screen__right-panel">
-                    {rightPanel === 'welcome' && (
-                        <div className="right-panel__welcome">
-                            <span className="right-panel__type-icon">
-                                {regenmon.type === 'rayo' ? '⚡' : regenmon.type === 'flama' ? '🔥' : '❄️'}
-                            </span>
-                            <span className="right-panel__name">{regenmon.name}</span>
-                            <span className="right-panel__hint">Habla conmigo 💬</span>
-                        </div>
-                    )}
                     {rightPanel === 'chat' && (
                         <ErrorBoundary>
                             <ChatBox
                                 isOpen={isChatOpen}
-                                onClose={handleCloseChat}
+                                onClose={handleSwitchToChat}
                                 messages={messages}
                                 onSendMessage={handleSendMessage}
                                 isLoading={isChatLoading}
@@ -538,8 +519,8 @@ export default function GameScreen({
                             onAddStrike={() => ({ newCount: 0, message: '' })}
                             onCompleteMission={() => { if (activeMission) { completeMission(); return 5; } return 0; }}
                             onUseMissionBypass={() => false}
-                            onGoToChat={() => { handleClosePhoto(); handleOpenChat(); }}
-                            onGoToWorld={() => handleClosePhoto()}
+                            onGoToChat={() => handleSwitchToChat}
+                            onGoToWorld={() => handleSwitchToChat()}
                             onSetLastPhotoAt={() => {}}
                         />
                     )}
@@ -550,7 +531,7 @@ export default function GameScreen({
                 <ErrorBoundary>
                     <ChatBox
                         isOpen={isChatOpen}
-                        onClose={handleCloseChat}
+                        onClose={handleSwitchToChat}
                         messages={messages}
                         onSendMessage={handleSendMessage}
                         isLoading={isChatLoading}
