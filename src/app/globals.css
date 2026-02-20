@@ -2867,8 +2867,9 @@ html, body {
     width: 30% !important;
     max-width: 30% !important;
     flex: 0 0 30% !important;
-    height: 100vh;
-    max-height: 100vh;
+    height: calc(100vh - 44px);
+    max-height: calc(100vh - 44px);
+    margin-top: 44px;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -3571,7 +3572,7 @@ html, body {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
+  width: 100vw;
   z-index: 50;
   display: flex;
   align-items: center;
@@ -3581,6 +3582,7 @@ html, body {
   backdrop-filter: blur(4px);
   border-bottom: 2px solid rgba(255, 255, 255, 0.1);
   font-family: var(--font-press-start-2p);
+  box-sizing: border-box;
 }
 
 .s4-hud__left {
