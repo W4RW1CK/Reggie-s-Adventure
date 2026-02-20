@@ -4215,29 +4215,31 @@ html, body {
 }
 
 .precamera__title {
-  font-family: var(--font-press-start-2p);
-  font-size: clamp(0.6rem, 1.4vw, 0.85rem);
-  color: var(--theme-text-primary, #e8e8e8);
+  font-family: var(--font-press-start-2p) !important;
+  font-size: clamp(0.6rem, 1.4vw, 0.85rem) !important;
+  color: var(--theme-text-primary, #e8e8e8) !important;
   margin: 0;
 }
 
 .precamera__desc {
-  font-family: var(--font-press-start-2p);
-  font-size: clamp(0.45rem, 1.1vw, 0.65rem);
-  color: var(--theme-text-secondary, #a0a0a0);
+  font-family: var(--font-press-start-2p) !important;
+  font-size: clamp(0.45rem, 1.1vw, 0.65rem) !important;
+  color: var(--theme-text-secondary, #a0a0a0) !important;
   line-height: 1.8;
   margin: 0;
 }
 
 .precamera__first-time {
-  background: var(--theme-panel-bg, #1a1a2e);
-  border: 2px solid var(--theme-border, #4a4a4a);
-  padding: clamp(10px, 2vw, 16px);
-  font-family: var(--font-press-start-2p);
-  font-size: clamp(0.45rem, 1.1vw, 0.65rem);
-  color: var(--theme-text-secondary, #a0a0a0);
+  background: var(--theme-panel-bg, #1a1a2e) !important;
+  border: 2px solid var(--theme-border, #4a4a4a) !important;
+  padding: clamp(10px, 2vw, 16px) !important;
+  font-family: var(--font-press-start-2p) !important;
+  font-size: clamp(0.45rem, 1.1vw, 0.65rem) !important;
+  color: var(--theme-text-secondary, #a0a0a0) !important;
   line-height: 1.8;
   width: 100%;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 .precamera__first-time p { margin: 4px 0; }
 
@@ -4289,32 +4291,33 @@ html, body {
 }
 
 .precamera__btn {
-  font-family: var(--font-press-start-2p);
-  font-size: clamp(0.5rem, 1.2vw, 0.7rem);
-  padding: clamp(10px, 2vw, 16px) clamp(16px, 3vw, 24px);
-  border: 2px solid var(--theme-border, #4a4a4a);
-  border-radius: 0;
+  font-family: var(--font-press-start-2p) !important;
+  font-size: clamp(0.5rem, 1.2vw, 0.7rem) !important;
+  padding: clamp(10px, 2vw, 16px) clamp(16px, 3vw, 24px) !important;
+  border: 2px solid var(--theme-border, #4a4a4a) !important;
+  border-radius: 0 !important;
   cursor: pointer;
   min-height: 44px;
   transition: background 0.2s, opacity 0.2s;
+  box-shadow: none !important;
 }
 
 .precamera__btn--camera {
-  background: rgba(46, 204, 113, 0.2);
-  color: #2ecc71;
-  border-color: rgba(46, 204, 113, 0.4);
+  background: rgba(46, 204, 113, 0.2) !important;
+  color: #2ecc71 !important;
+  border-color: rgba(46, 204, 113, 0.4) !important;
 }
 .precamera__btn--camera:hover:not(:disabled) {
-  background: rgba(46, 204, 113, 0.3);
+  background: rgba(46, 204, 113, 0.3) !important;
 }
 
 .precamera__btn--gallery {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--theme-text-primary, #e8e8e8);
-  border-color: var(--theme-border, #4a4a4a);
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: var(--theme-text-primary, #e8e8e8) !important;
+  border-color: var(--theme-border, #4a4a4a) !important;
 }
 .precamera__btn--gallery:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
 .precamera__btn:disabled {
