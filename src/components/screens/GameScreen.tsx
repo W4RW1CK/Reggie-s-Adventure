@@ -246,6 +246,36 @@ export default function GameScreen({
             className={`game-screen w-full h-screen relative overflow-hidden flex ${isDesktop ? 'game-screen--desktop-split' : ''}`}
             onClick={handleWorldTap}
         >
+            {/* === COMPACT HUD TOP BAR (100vw, above everything) === */}
+            <div className="hud-compact">
+                <div className="hud-compact__left">
+                    <span className="hud-compact__fragments">💎 {regenmon.stats.fragmentos}</span>
+                    <button
+                        className="hud-compact__diario-btn"
+                        onClick={() => setShowDiario(true)}
+                        aria-label="Abrir diario"
+                    >
+                        📖 Diario
+                    </button>
+                </div>
+                <div className="hud-compact__right">
+                    <button
+                        className={`hud-compact__icon-btn ${activeMission && !activeMission.completed && !isExpired ? 'hud-compact__icon-btn--pulse' : ''}`}
+                        onClick={() => setShowMissionPopup(true)}
+                        aria-label={activeMission && !activeMission.completed ? 'Misión activa' : 'Sin misión'}
+                    >
+                        🎯
+                    </button>
+                    <button
+                        className="hud-compact__icon-btn"
+                        onClick={() => setShowSettings(true)}
+                        aria-label="Configuración"
+                    >
+                        ⚙️
+                    </button>
+                </div>
+            </div>
+
             {/* === WORLD AREA === */}
             <div className="game-screen__world-area relative flex flex-col h-full">
                 {/* Background Layer */}
@@ -267,36 +297,6 @@ export default function GameScreen({
 
                 {/* Main Content */}
                 <div className="game-screen__content relative z-10 w-full h-full flex flex-col">
-
-                    {/* === COMPACT HUD TOP BAR === */}
-                    <div className="hud-compact">
-                        <div className="hud-compact__left">
-                            <span className="hud-compact__fragments">💎 {regenmon.stats.fragmentos}</span>
-                            <button
-                                className="hud-compact__diario-btn"
-                                onClick={() => setShowDiario(true)}
-                                aria-label="Abrir diario"
-                            >
-                                📖 Diario
-                            </button>
-                        </div>
-                        <div className="hud-compact__right">
-                            <button
-                                className={`hud-compact__icon-btn ${activeMission && !activeMission.completed && !isExpired ? 'hud-compact__icon-btn--pulse' : ''}`}
-                                onClick={() => setShowMissionPopup(true)}
-                                aria-label={activeMission && !activeMission.completed ? 'Misión activa' : 'Sin misión'}
-                            >
-                                🎯
-                            </button>
-                            <button
-                                className="hud-compact__icon-btn"
-                                onClick={() => setShowSettings(true)}
-                                aria-label="Configuración"
-                            >
-                                ⚙️
-                            </button>
-                        </div>
-                    </div>
 
                     {/* === TOAST FEEDBACK === */}
                     {toast && (
