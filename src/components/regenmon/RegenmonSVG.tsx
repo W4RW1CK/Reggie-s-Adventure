@@ -380,7 +380,7 @@ export default function RegenmonSVG({ type, size = 120, className = '', stats }:
         >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-                src={`/sprites/${type}-base.png`}
+                src={`/sprites/${type}-base.webp`}
                 alt={type}
                 width={size}
                 height={size}

@@ -39,7 +39,7 @@ export default function PostPhoto({ result, regenmonType, regenmonName, missionC
   const spriteClass = getSpriteClass(result.resonanceLevel);
   const isPenalizing = result.resonanceLevel === 'penalizing';
 
-  const spriteFile = `/sprites/${regenmonType}-base.png`;
+  const spriteFile = `/sprites/${regenmonType}-base.webp`;
 
   return (
     <div className="postphoto">

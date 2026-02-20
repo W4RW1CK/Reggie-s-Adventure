@@ -5,16 +5,16 @@ import { useState, useEffect, useCallback } from 'react';
 /** All assets that must be preloaded before the game starts */
 const ASSETS_TO_PRELOAD: string[] = [
   // Sprites (3 types)
-  '/sprites/rayo-base.png',
-  '/sprites/flama-base.png',
-  '/sprites/hielo-base.png',
+  '/sprites/rayo-base.webp',
+  '/sprites/flama-base.webp',
+  '/sprites/hielo-base.webp',
   // Backgrounds (3 types × 2 themes = 6)
-  '/backgrounds/bg-rayo-dark.png',
-  '/backgrounds/bg-rayo-light.png',
-  '/backgrounds/bg-flama-dark.png',
-  '/backgrounds/bg-flama-light.png',
-  '/backgrounds/bg-hielo-dark.png',
-  '/backgrounds/bg-hielo-light.png',
+  '/backgrounds/bg-rayo-dark.webp',
+  '/backgrounds/bg-rayo-light.webp',
+  '/backgrounds/bg-flama-dark.webp',
+  '/backgrounds/bg-flama-light.webp',
+  '/backgrounds/bg-hielo-dark.webp',
+  '/backgrounds/bg-hielo-light.webp',
 ];
 
 interface PreloaderState {

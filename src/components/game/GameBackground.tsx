@@ -20,9 +20,9 @@ function getMood(stats: RegenmonStats): Mood {
 
 // ── Background image paths ──
 const BG_IMAGES: Record<RegenmonType, Record<'dark' | 'light', string>> = {
-    rayo:  { dark: '/backgrounds/bg-rayo-dark.png',  light: '/backgrounds/bg-rayo-light.png' },
-    flama: { dark: '/backgrounds/bg-flama-dark.png', light: '/backgrounds/bg-flama-light.png' },
-    hielo: { dark: '/backgrounds/bg-hielo-dark.png', light: '/backgrounds/bg-hielo-light.png' },
+    rayo:  { dark: '/backgrounds/bg-rayo-dark.webp',  light: '/backgrounds/bg-rayo-light.webp' },
+    flama: { dark: '/backgrounds/bg-flama-dark.webp', light: '/backgrounds/bg-flama-light.webp' },
+    hielo: { dark: '/backgrounds/bg-hielo-dark.webp', light: '/backgrounds/bg-hielo-light.webp' },
 };
 
 // ── CSS filter presets per mood ──
