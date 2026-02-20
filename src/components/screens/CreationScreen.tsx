@@ -73,9 +73,6 @@ export default function CreationScreen({ onDespertar }: CreationScreenProps) {
             } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
                 e.preventDefault();
                 handleNext();
-            } else if (e.key === ' ' && isValid) {
-                e.preventDefault();
-                handleSubmit();
             }
         }
     }, [isValid, handleSubmit, handlePrev, handleNext]);
@@ -86,7 +83,7 @@ export default function CreationScreen({ onDespertar }: CreationScreenProps) {
     }, [handleKeyDown]);
 
     return (
-        <div className="creation-screen" onClick={() => { if (isValid) handleSubmit(); }}>
+        <div className="creation-screen">
             <div className="creation-screen__scanlines" />
 
             <h1 className="creation-screen__title">CREA TU REGENMON</h1>
