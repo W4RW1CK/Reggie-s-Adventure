@@ -5972,6 +5972,8 @@ html, body,
   align-items: center;
   gap: 8px;
   margin-top: 12px;
+  margin-left: auto;
+  margin-right: auto;
   padding: 10px 16px;
   max-width: 90vw;
   width: 250px;
