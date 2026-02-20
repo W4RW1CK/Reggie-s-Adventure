@@ -6283,3 +6283,100 @@ html, body,
 }
 
 /* Chat panel input bar: new inline style — do not override chat-input-bar flex */
+
+/* =============================================
+   PERFORMANCE OPTIMIZATIONS
+   GPU hints, will-change, paint containment
+   ============================================= */
+
+/* --- will-change hints for heavily animated elements --- */
+.fracture-line {
+  will-change: opacity, filter;
+}
+
+.fracture-line--active .fracture-line__path,
+.fracture-line--active .fracture-line__core,
+.fracture-line--active .fracture-line__glow,
+.fracture-line--active .fracture-line__branch {
+  will-change: opacity, filter;
+}
+
+.game-screen__regenmon-wrapper {
+  will-change: transform;
+}
+
+.chat-bubble {
+  will-change: transform, opacity;
+}
+
+.loading-screen__star {
+  will-change: opacity;
+}
+
+.story-screen__particle {
+  will-change: transform, opacity;
+}
+
+.game-background__ash {
+  will-change: background-position;
+}
+
+.game-background__snow {
+  will-change: background-position;
+}
+
+.world-bg__particle {
+  will-change: transform, opacity;
+}
+
+.sprite-particle {
+  will-change: transform, opacity;
+}
+
+/* --- Paint containment to reduce reflow/repaint --- */
+.fracture-overlay {
+  contain: layout paint;
+}
+
+.game-screen__world-area {
+  contain: layout paint;
+}
+
+/* --- backface-visibility: hidden for GPU layer promotion on continuous animations --- */
+.fracture-line--active .fracture-line__path,
+.fracture-line--active .fracture-line__core,
+.fracture-line--active .fracture-line__glow,
+.fracture-line--active .fracture-line__branch,
+.game-screen__regenmon-wrapper,
+.story-screen__particle,
+.world-bg__particle,
+.game-background__ash,
+.game-background__snow,
+.loading-screen__star,
+.animate-pulse-slow,
+.sprite-particle {
+  backface-visibility: hidden;
+}
+
+/* --- will-change for box-shadow animated elements --- */
+.s4-hud__mission-item--active {
+  will-change: box-shadow;
+}
+
+/* =============================================
+   REDUCED MOTION — accessibility
+   Disable decorative animations, keep essential ones
+   ============================================= */
+@media (prefers-reduced-motion: reduce) {
+  .loading-screen__star,
+  .story-screen__particle,
+  .game-background__ash,
+  .game-background__snow,
+  .world-bg__particle,
+  .sprite-particle,
+  .animate-pulse-slow,
+  .sparkle-effect,
+  .sparkle-burst {
+    animation: none !important;
+  }
+}
