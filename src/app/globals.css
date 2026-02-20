@@ -2676,8 +2676,8 @@ html, body {
 
 .purify-btn {
   font-family: var(--font-press-start-2p);
-  font-size: clamp(0.55rem, 1.6vw, 0.8rem);
-  padding: 10px 16px;
+  font-size: clamp(0.5rem, 1.4vw, 0.75rem);
+  padding: clamp(6px, 1.5vw, 12px) clamp(8px, 2vw, 16px);
   border: 2px solid;
   border-radius: 8px;
   cursor: pointer;
@@ -5975,9 +5975,9 @@ html, body,
   margin-top: 12px;
   margin-left: auto;
   margin-right: auto;
-  padding: 10px 16px;
+  padding: 10px clamp(12px, 3vw, 20px);
+  width: clamp(260px, 50vw, 420px);
   max-width: 90vw;
-  width: 340px;
 }
 
 .sprite-stats-fixed__bars {
@@ -6026,26 +6026,23 @@ html, body,
 
 .sprite-stats-fixed__val {
   font-family: var(--font-press-start-2p);
-  font-size: clamp(0.5rem, 1.5vw, 0.75rem);
+  font-size: clamp(0.5rem, 1.2vw, 0.75rem);
   color: rgba(255, 255, 255, 0.8);
-  min-width: 30px;
-  width: 32px;
+  min-width: clamp(24px, 5vw, 36px);
   text-align: right;
   flex-shrink: 0;
 }
 
 .sprite-stats-fixed__purify-btns {
   display: flex;
-  gap: 10px;
+  gap: clamp(6px, 1.5vw, 12px);
   margin-top: 4px;
   width: 100%;
-  overflow: visible;
 }
 
 .sprite-stats-fixed__purify-btns .purify-btn {
   flex: 1;
   min-width: 0;
-  white-space: nowrap;
 }
 
 /* Light theme */
