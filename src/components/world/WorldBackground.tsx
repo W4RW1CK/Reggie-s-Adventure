@@ -86,13 +86,14 @@ function getMoodFilter(stats: RegenmonStats): { overlay: string; filterMod: stri
 export default function WorldBackground({ type, stats, progress, theme = 'dark' }: WorldBackgroundProps) {
   const stage = getEvolutionStage(progress);
   
-  // Blend evolution stage with current stats health
-  // Stats avg (0-100) maps to a "mood boost" that lifts the effective stage
+  // Stats HEAVILY influence world appearance — good stats = beautiful world
+  // Evolution stage is secondary, stats are primary visual driver
   const statsAvg = (stats.espiritu + stats.pulso + stats.esencia) / 3;
-  // statsAvg 50 → boost 1.0, statsAvg 100 → boost 2.0, statsAvg 0 → boost 0
-  const moodBoost = statsAvg / 50;
-  // Effective stage: evolution stage + mood boost, capped at 5
-  const effectiveStage = Math.min(5, Math.max(1, Math.round(stage + moodBoost)));
+  // Map stats directly to stage: 0→1, 25→2, 50→3, 75→4, 100→5
+  const statsStage = 1 + (statsAvg / 25);
+  // Weighted blend: 70% stats, 30% evolution
+  const blended = statsStage * 0.7 + stage * 0.3;
+  const effectiveStage = Math.min(5, Math.max(1, Math.round(blended)));
   
   const worldState = getWorldState(effectiveStage);
   const bgImage = BG_IMAGES[type][theme];
