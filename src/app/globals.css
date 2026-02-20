@@ -2856,8 +2856,10 @@ html, body {
 
   /* World takes 70% on desktop, right panel takes 30% */
   .game-screen--desktop-split .game-screen__world-area {
-    width: 70%;
-    flex-shrink: 0;
+    width: 70% !important;
+    max-width: 70% !important;
+    flex: 0 0 70% !important;
+    overflow: hidden;
   }
 
   /* Right panel overlays on top of world */
