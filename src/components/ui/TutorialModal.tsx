@@ -172,13 +172,40 @@ export default function TutorialModal({ onDismiss }: TutorialModalProps) {
 
     const padding = 12;
     const hasSpotlight = spotlightRect !== null;
+    const tooltipWidth = 280;
+    const tooltipHeight = 180;
+    const arrowSize = 10;
+    const vw = typeof window !== 'undefined' ? window.innerWidth : 1024;
+    const vh = typeof window !== 'undefined' ? window.innerHeight : 768;
 
-    // Position tooltip: below spotlight if in upper half, above if in lower half
-    const tooltipTop = spotlightRect
-        ? spotlightRect.bottom + padding > window.innerHeight * 0.6
-            ? Math.max(8, spotlightRect.top - 180)
-            : spotlightRect.bottom + padding
-        : window.innerHeight * 0.35;
+    // Calculate tooltip position relative to spotlight
+    let tooltipTop: number;
+    let tooltipLeft: number;
+    let arrowDirection: 'up' | 'down' | 'none' = 'none';
+
+    if (hasSpotlight) {
+        const spotCenter = spotlightRect!.left + spotlightRect!.width / 2;
+        // Horizontal: center on target, clamped to viewport
+        tooltipLeft = Math.max(12, Math.min(vw - tooltipWidth - 12, spotCenter - tooltipWidth / 2));
+
+        // Vertical: prefer below, go above if not enough space
+        const spaceBelow = vh - (spotlightRect!.bottom + padding);
+        if (spaceBelow >= tooltipHeight + arrowSize + 8) {
+            tooltipTop = spotlightRect!.bottom + padding + arrowSize;
+            arrowDirection = 'up';
+        } else {
+            tooltipTop = Math.max(8, spotlightRect!.top - padding - arrowSize - tooltipHeight);
+            arrowDirection = 'down';
+        }
+    } else {
+        tooltipTop = vh * 0.35;
+        tooltipLeft = (vw - tooltipWidth) / 2;
+    }
+
+    // Arrow horizontal position (points to center of spotlight)
+    const arrowLeft = hasSpotlight
+        ? Math.max(20, Math.min(tooltipWidth - 20, (spotlightRect!.left + spotlightRect!.width / 2) - tooltipLeft))
+        : tooltipWidth / 2;
 
     return (
         <div
@@ -230,10 +257,24 @@ export default function TutorialModal({ onDismiss }: TutorialModalProps) {
                 className="tutorial-tooltip"
                 style={{
                     top: tooltipTop,
-                    left: '50%',
-                    transform: 'translateX(-50%)',
+                    left: tooltipLeft,
+                    transform: 'none',
+                    maxWidth: tooltipWidth,
                 }}
             >
+                {/* Arrow pointing to target */}
+                {arrowDirection === 'up' && (
+                    <div
+                        className="tutorial-tooltip__arrow tutorial-tooltip__arrow--up"
+                        style={{ left: arrowLeft }}
+                    />
+                )}
+                {arrowDirection === 'down' && (
+                    <div
+                        className="tutorial-tooltip__arrow tutorial-tooltip__arrow--down"
+                        style={{ left: arrowLeft }}
+                    />
+                )}
                 {currentStep.badge && (
                     <span className="tutorial-tooltip__badge">{currentStep.badge}</span>
                 )}
