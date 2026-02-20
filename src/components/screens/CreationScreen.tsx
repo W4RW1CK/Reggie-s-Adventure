@@ -32,6 +32,7 @@ export default function CreationScreen({ onDespertar }: CreationScreenProps) {
     const [name, setName] = useState('');
     const [error, setError] = useState('');
     const inputFocusedRef = useRef(false);
+    const [inputFocused, setInputFocused] = useState(false);
     const vpHeight = useVisualViewportHeight();
 
     const currentType = TYPES[currentIndex];
@@ -97,7 +98,7 @@ export default function CreationScreen({ onDespertar }: CreationScreenProps) {
     }, [handleKeyDown]);
 
     return (
-        <div className="creation-screen" style={{ height: `${vpHeight}px` }}>
+        <div className="creation-screen" style={{ height: `${vpHeight}px`, justifyContent: inputFocused ? 'flex-start' : 'center', paddingTop: inputFocused ? '0' : undefined }}>
             <div className="creation-screen__scanlines" />
             <h1 className="creation-screen__title">CREA TU REGENMON</h1>
 
@@ -133,8 +134,8 @@ export default function CreationScreen({ onDespertar }: CreationScreenProps) {
                         className={`creation-screen__input ${error ? 'creation-screen__input--error' : ''}`}
                         value={name}
                         onChange={handleNameChange}
-                        onFocus={(e) => { inputFocusedRef.current = true; setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300); }}
-                        onBlur={() => { inputFocusedRef.current = false; }}
+                        onFocus={(e) => { inputFocusedRef.current = true; setInputFocused(true); setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 300); }}
+                        onBlur={() => { inputFocusedRef.current = false; setInputFocused(false); }}
                         placeholder="Nombre..."
                         maxLength={15}
                     />
