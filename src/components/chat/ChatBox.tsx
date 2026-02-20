@@ -17,6 +17,7 @@ interface ChatBoxProps {
     regenmonName: string;
     stats: RegenmonStats;
     isDesktop?: boolean;
+    onPhotoClick?: () => void;
 }
 
 export function ChatBox({
@@ -29,6 +30,7 @@ export function ChatBox({
     regenmonName,
     stats,
     isDesktop = false,
+    onPhotoClick,
 }: ChatBoxProps) {
     const [inputValue, setInputValue] = useState('');
     const [memoryCount, setMemoryCount] = useState(0);
@@ -94,8 +96,9 @@ export function ChatBox({
                         value={inputValue}
                         onChange={setInputValue}
                         onSend={handleSend}
+                        onPhotoClick={onPhotoClick}
                         isLoading={isLoading}
-                        placeholder={`Dile algo a ${regenmonName}...`}
+                        placeholder="Escribe algo..."
                     />
                 </div>
             </div>
@@ -150,8 +153,9 @@ export function ChatBox({
                         value={inputValue}
                         onChange={setInputValue}
                         onSend={handleSend}
+                        onPhotoClick={onPhotoClick}
                         isLoading={isLoading}
-                        placeholder={`Dile algo a ${regenmonName}...`}
+                        placeholder="Escribe algo..."
                     />
                 </div>
             </div>

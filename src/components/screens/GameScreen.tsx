@@ -501,6 +501,7 @@ export default function GameScreen({
                                 regenmonName={regenmon.name}
                                 stats={regenmon.stats}
                                 isDesktop={isDesktop}
+                                onPhotoClick={handleSwitchToPhoto}
                             />
                         </ErrorBoundary>
                     )}
@@ -539,6 +540,7 @@ export default function GameScreen({
                         regenmonName={regenmon.name}
                         stats={regenmon.stats}
                         isDesktop={false}
+                        onPhotoClick={handleSwitchToPhoto}
                     />
                 </ErrorBoundary>
             )}

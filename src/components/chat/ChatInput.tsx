@@ -6,14 +6,15 @@ interface ChatInputProps {
     value: string;
     onChange: (value: string) => void;
     onSend: () => void;
+    onPhotoClick?: () => void;
     isLoading: boolean;
     disabled?: boolean;
     placeholder?: string;
 }
 
-export function ChatInput({ value, onChange, onSend, isLoading, disabled, placeholder }: ChatInputProps) {
-    const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
+export function ChatInput({ value, onChange, onSend, onPhotoClick, isLoading, disabled, placeholder }: ChatInputProps) {
+    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
             e.preventDefault();
             if (!disabled && !isLoading && value.trim()) {
                 onSend();
@@ -22,47 +23,55 @@ export function ChatInput({ value, onChange, onSend, isLoading, disabled, placeh
     };
 
     const charCount = value.length;
-    const isOverLimit = charCount > CHAT_MAX_CHARS;
+    const canSend = !disabled && !isLoading && value.trim().length > 0;
 
     return (
-        <div className="flex flex-col gap-2 mt-4">
-            <div className="relative">
-                <textarea
-                    className={classNames(
-                        "nes-textarea w-full h-[80px] text-[10px] resize-none p-2 font-['Press_Start_2P'] leading-relaxed",
-                        "border-2 outline-none",
-                        "focus:border-[#f5c542]"
-                    )}
-                    placeholder={placeholder || "¿Qué le quieres decir?"}
+        <div className="chat-input-bar">
+            {/* Clip/Photo button */}
+            {onPhotoClick && (
+                <button
+                    type="button"
+                    className="chat-input-bar__clip"
+                    onClick={onPhotoClick}
+                    aria-label="Adjuntar foto"
+                >
+                    📎
+                </button>
+            )}
+
+            {/* Input field */}
+            <div className="chat-input-bar__field">
+                <input
+                    type="text"
+                    className="chat-input-bar__input"
+                    placeholder={placeholder || "Escribe algo..."}
                     value={value}
-                    onChange={(e) => onChange(e.target.value)}
+                    onChange={(e) => onChange(e.target.value.slice(0, CHAT_MAX_CHARS))}
                     onKeyDown={handleKeyDown}
                     disabled={disabled || isLoading}
                     maxLength={CHAT_MAX_CHARS}
                     aria-label="Mensaje para tu Regenmon"
-                    style={{ backgroundColor: 'var(--theme-input-bg)', color: 'var(--theme-input-text)', borderColor: 'var(--theme-border)' }}
                 />
                 <span className={classNames(
-                    "absolute bottom-2 right-2 text-[8px]",
-                    isOverLimit ? "text-[#e74c3c]" : "text-[#a0a0a0]"
+                    "chat-input-bar__counter",
+                    charCount > CHAT_MAX_CHARS * 0.9 && "chat-input-bar__counter--warn"
                 )}>
                     {charCount}/{CHAT_MAX_CHARS}
                 </span>
             </div>
 
+            {/* Send button */}
             <button
                 type="button"
                 className={classNames(
-                    "nes-btn w-full text-[10px] py-2",
-                    isLoading || disabled || !value.trim()
-                        ? "is-disabled opacity-50 cursor-not-allowed bg-[#555555] text-[#a0a0a0]"
-                        : "is-success bg-[#4caf50] text-white hover:bg-[#66bb6a]"
+                    "chat-input-bar__send",
+                    canSend && "chat-input-bar__send--active"
                 )}
                 onClick={onSend}
-                disabled={disabled || isLoading || !value.trim()}
+                disabled={!canSend}
                 aria-label="Enviar mensaje"
             >
-                {isLoading ? "Enviando..." : "Enviar >"}
+                {isLoading ? "…" : "→"}
             </button>
         </div>
     );
