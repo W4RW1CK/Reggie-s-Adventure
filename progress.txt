@@ -621,3 +621,20 @@ Este archivo registra **el estado** del proyecto. Los otros documentos canónico
 - 🔵 FALLBACK_RESPONSE in vision providers uses Math.random() at module init (cosmetic)
 - 🔵 In-memory rate limit map resets on serverless cold starts (acceptable at scale)
 **Verdict:** S4 backend is solid. Types, constants, logic, edge cases, migration, and integration all clean.
+
+### S4 UI Restructure (2026-02-20)
+**Scope:** GameScreen major layout restructure to match wireframes
+**Changes:**
+- ✅ Compact HUD top bar: 🔮 fragments + 📖 Diario button | 🎯 mission + ⚙️ settings
+- ✅ Stat bars removed from HUD — accessible via sprite tap overlay
+- ✅ Sprite tap interaction: floating purify buttons (❤️ Recargar / 💧 Nutrir) + stat summary
+- ✅ Bottom nav: icon-only buttons (💬 Chat + 📷 Foto) with small labels
+- ✅ Desktop 70/30 chat layout (≥1025px): world 70% left, chat panel 30% right
+- ✅ Mobile/tablet: chat remains full overlay
+- ✅ Diario panel wired to HUD 📖 button
+- ✅ Light theme support for all new elements
+- ✅ prefers-reduced-motion respected
+- ✅ ChatBox refactored: desktop side panel vs mobile overlay
+- ✅ Removed: old stat-heavy HUD, PURIFICAR/BUSCAR/CONVERSAR text buttons, history toggle from bottom bar
+- ✅ Build: clean
+**Commit:** `feat(s4): major UI restructure — wireframe-accurate layout, 70/30 desktop, compact HUD, icon nav`

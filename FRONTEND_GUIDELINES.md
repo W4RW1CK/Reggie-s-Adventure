@@ -308,24 +308,40 @@ Escala: 4px base
 - Valor a la derecha (`50/100`)
 - Color dinámico según nivel del stat
 
-### Botones de Acción (S3 — Nuevo layout)
+### Bottom Navigation (S4 — Icon Nav)
 
-> **S3:** Los botones Entrenar/Alimentar/Descansar fueron reemplazados.
+> **S4:** Bottom bar uses minimal icon buttons only.
 
-**Layout:** `[🌀 Purificar (10💠)]  [⚙️]  [💬 Conversar]`
+**Layout:** `[💬 Chat]  [📷 Foto]`
 
 | Botón | Estilo | Comportamiento |
 |-------|--------|----------------|
-| Purificar | NES btn, color púrpura/cyan | Cuesta 10 Fragmentos. Disabled si <10💠 o Esencia=100. Tooltip: "Necesitas 10 💠" |
-| ⚙️ | NES btn, pequeño (icono solo) | Abre/cierra panel Settings |
-| Conversar | NES btn verde | Toggle chat. Cambia a "✕ Cerrar" cuando abierto |
+| 💬 Chat | Icon + small label, rounded | Toggle chat. Active state when chat open |
+| 📷 Foto | Icon + small label, rounded | Opens photo flow |
 
-- Estilo NES.css (`nes-btn`)
-- Padding: `12px 16px`
-- Fuente: Press Start 2P a `10px`
-- Estados: normal / hover / active / disabled
-- Disabled: gris, cursor not-allowed, opacidad 0.5
-- **Se ocultan durante chat** (Purificar y ⚙️)
+- Min touch target: 44px
+- Two centered buttons with `gap: 32px`
+- Small uppercase label below icon (Press Start 2P, 0.45rem)
+- Semi-transparent dark background with blur
+- Purify buttons moved to sprite-tap overlay
+
+### Compact HUD Top Bar (S4)
+
+**Layout:** `[🔮 count] [📖 Diario]  ···  [🎯] [⚙️]`
+
+- Left: Fragment counter + Diario button
+- Right: Mission icon (pulses when active) + Settings icon
+- No stat bars in HUD — stats accessible via sprite tap
+- Semi-transparent dark background with `backdrop-filter: blur(8px)`
+
+### Sprite Tap Interaction (S4)
+
+- Tapping the sprite reveals floating overlay with:
+  - Compact stat summary (🔮 espiritu, 💛 pulso, ✨ esencia)
+  - Name editor + user identity
+  - Two purify buttons: "❤️ Recargar 10🔮" / "💧 Nutrir 10🔮"
+- Auto-hides after 5 seconds or tap elsewhere
+- Hint text "Toca → stats / purificar" shown when overlay is hidden
 
 ### Identidad del Usuario en Header (S3)
 
