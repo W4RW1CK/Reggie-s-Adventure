@@ -85,7 +85,6 @@ export default function CreationScreen({ onDespertar }: CreationScreenProps) {
     return (
         <div className="creation-screen">
             <div className="creation-screen__scanlines" />
-            <div className="creation-screen__spacer" />
             <h1 className="creation-screen__title">CREA TU REGENMON</h1>
 
             {/* Carousel */}
@@ -145,7 +144,6 @@ export default function CreationScreen({ onDespertar }: CreationScreenProps) {
             >
                 ¡DESPERTAR!
             </button>
-            <div className="creation-screen__spacer" />
         </div>
     );
 }
