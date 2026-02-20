@@ -17,6 +17,7 @@ interface SettingsPanelProps {
   onToggleEffects: () => void;
   // Info
   onRestartTutorial: () => void;
+  onResetGame?: () => void;
 }
 
 export default function SettingsPanel({
@@ -32,6 +33,7 @@ export default function SettingsPanel({
   effectsEnabled,
   onToggleEffects,
   onRestartTutorial,
+  onResetGame,
 }: SettingsPanelProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const [isClosing, setIsClosing] = useState(false);
@@ -153,6 +155,26 @@ export default function SettingsPanel({
               Reiniciar
             </button>
           </div>
+
+          {/* Danger zone */}
+          {onResetGame && (
+            <>
+              <div className="s4-settings__divider" />
+              <div className="s4-settings__row s4-settings__row--danger">
+                <span className="s4-settings__label">⚠️ Reiniciar Regenmon</span>
+                <button
+                  onClick={() => {
+                    if (window.confirm('¿Estás seguro? Se borrarán todos los datos de tu Regenmon.')) {
+                      onResetGame();
+                    }
+                  }}
+                  className="s4-settings__action-btn s4-settings__action-btn--danger"
+                >
+                  Borrar todo
+                </button>
+              </div>
+            </>
+          )}
 
           {/* Version */}
           <div className="s4-settings__version">

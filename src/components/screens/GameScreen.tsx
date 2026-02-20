@@ -24,6 +24,7 @@ import { useChiptuneAudio } from '@/hooks/useChiptuneAudio';
 import { useMissions } from '@/hooks/useMissions';
 import MissionPopup from '../missions/MissionPopup';
 import { ErrorBoundary } from '../ErrorBoundary';
+import PhotoFlow from '../photo/PhotoFlow';
 
 interface GameScreenProps {
     regenmon: RegenmonData;
@@ -60,6 +61,7 @@ export default function GameScreen({
 }: GameScreenProps) {
     const [showTutorial, setShowTutorial] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
+    const [showPhoto, setShowPhoto] = useState(false);
     const [showHistory, setShowHistory] = useState(false);
     const [showMissionPopup, setShowMissionPopup] = useState(false);
     const [missionCelebration, setMissionCelebration] = useState(false);
@@ -284,7 +286,7 @@ export default function GameScreen({
                             </div>
                             <span className="hud-stat-val">{Math.round(regenmon.stats.esencia)}</span>
                         </div>
-                        <div className="hud-fragments">💎 {isLoggedIn ? regenmon.stats.fragmentos : '---'}</div>
+                        <div className="hud-fragments">💎 {regenmon.stats.fragmentos}</div>
                         {isLoggedIn && memoryCount > 0 && (
                             <div className="hud-memories">🧠 {memoryCount}</div>
                         )}
@@ -365,6 +367,12 @@ export default function GameScreen({
                         🔮 PURIFICAR ({PURIFY_COST}💎)
                     </button>
                     <button
+                        className="hud-action-btn hud-btn-foto"
+                        onClick={() => setShowPhoto(true)}
+                    >
+                        📷 FOTO
+                    </button>
+                    <button
                         className={`hud-action-btn ${isChatOpen ? 'hud-btn-close' : 'hud-btn-conversar'}`}
                         onClick={toggleChat}
                     >
@@ -411,6 +419,7 @@ export default function GameScreen({
                     effectsEnabled={effectsEnabled}
                     onToggleEffects={() => setEffectsEnabled(prev => !prev)}
                     onRestartTutorial={() => { setShowSettings(false); setShowTutorial(true); }}
+                    onResetGame={onReset}
                 />
 
                 {/* Mission Popup */}
@@ -437,6 +446,30 @@ export default function GameScreen({
                                 }}
                             />
                         ))}
+                    </div>
+                )}
+
+                {/* Photo Flow Overlay */}
+                {showPhoto && (
+                    <div className="photo-flow-overlay" style={{ position: 'fixed', inset: 0, zIndex: 100 }}>
+                        <PhotoFlow
+                            regenmonType={regenmon.type}
+                            regenmonName={regenmon.name}
+                            stats={regenmon.stats}
+                            memories={regenmon.memories}
+                            lastPhotoAt={regenmon.lastPhotoAt ?? null}
+                            strikes={regenmon.strikes ?? { count: 0, lastStrikeAt: null }}
+                            activeMission={activeMission && !activeMission.completed && !isExpired ? activeMission : null}
+                            onAddFragments={onUpdateStats}
+                            onAddProgress={(amount) => onUpdateStats({ fragmentos: 0 })}
+                            onAddPhotoEntry={() => {}}
+                            onAddStrike={() => ({ newCount: 0, message: '' })}
+                            onCompleteMission={() => { if (activeMission) { completeMission(); return 5; } return 0; }}
+                            onUseMissionBypass={() => false}
+                            onGoToChat={() => { setShowPhoto(false); toggleChat(); }}
+                            onGoToWorld={() => setShowPhoto(false)}
+                            onSetLastPhotoAt={() => {}}
+                        />
                     </div>
                 )}
 

@@ -10,16 +10,16 @@ interface FractureOverlayProps {
   onFractureAnimationComplete: () => void;
 }
 
-// 4 fracture positions around the sprite area (crack-like SVG paths)
+// 4 fracture positions — BIG dramatic cracks spanning from edges toward center
 const FRACTURE_PATHS = [
-  // Top-left diagonal crack
-  { d: 'M5 0 L12 18 L8 25 L15 40 L10 48', x: '8%', y: '15%' },
-  // Top-right diagonal crack
-  { d: 'M45 0 L38 15 L42 28 L35 42 L40 50', x: '82%', y: '12%' },
-  // Bottom-left crack
-  { d: 'M0 10 L10 22 L5 35 L14 45 L8 55', x: '5%', y: '60%' },
-  // Bottom-right crack
-  { d: 'M50 8 L40 20 L45 32 L36 44 L42 52', x: '85%', y: '58%' },
+  // Top-left: large crack from top-left edge inward
+  { d: 'M0 0 L25 35 L15 55 L40 90 L30 120 L50 160 L35 180', x: '2%', y: '2%' },
+  // Top-right: large crack from top-right edge inward
+  { d: 'M150 0 L125 30 L135 60 L110 95 L125 130 L100 165 L115 180', x: '72%', y: '2%' },
+  // Bottom-left: large crack from bottom-left edge inward
+  { d: 'M0 180 L20 145 L10 110 L35 80 L20 50 L45 20 L30 0', x: '2%', y: '55%' },
+  // Bottom-right: large crack from bottom-right edge inward
+  { d: 'M150 180 L130 140 L140 105 L115 70 L130 40 L105 10 L120 0', x: '72%', y: '55%' },
 ];
 
 export default function FractureOverlay({
@@ -60,15 +60,15 @@ export default function FractureOverlay({
             style={{ left: pos.x, top: pos.y }}
           >
             <svg
-              width="50"
-              height="60"
-              viewBox="0 0 50 60"
+              width="150"
+              height="180"
+              viewBox="0 0 150 180"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
                 d={pos.d}
-                strokeWidth="2.5"
+                strokeWidth="4.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 className="fracture-line__path"

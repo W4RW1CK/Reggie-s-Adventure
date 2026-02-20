@@ -730,15 +730,16 @@ body {
 
 /* NES Dialog Box */
 .story-screen__dialog {
-  background-color: #050510;
-  border: none;
-  box-shadow: none;
+  background-color: transparent;
+  border: none !important;
+  box-shadow: none !important;
   position: relative;
-  padding: 4px;
+  padding: 0;
 }
 
 .story-screen__dialog-inner {
-  border: none;
+  border: none !important;
+  background-color: #050510;
   padding: 24px;
   min-height: 220px;
   max-height: 60vh;
@@ -956,10 +957,17 @@ body {
   color: #fff;
 }
 
+.creation-screen__input-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
 .creation-screen__input {
   font-family: var(--font-press-start-2p);
   font-size: clamp(12px, 2.5vw, 18px);
   padding: clamp(8px, 2vh, 16px);
+  padding-bottom: clamp(20px, 3vh, 28px);
   text-align: center;
   width: 100%;
   border: 4px solid #4a4a4a;
@@ -967,6 +975,11 @@ body {
   color: #fff;
   outline: none;
   transition: border-color 0.2s;
+}
+
+.creation-screen__input::placeholder {
+  font-size: clamp(8px, 1.8vw, 14px);
+  opacity: 0.5;
 }
 
 .creation-screen__input:focus {
@@ -988,8 +1001,10 @@ body {
 .creation-screen__char-count {
   font-family: var(--font-press-start-2p);
   font-size: clamp(7px, 1.2vw, 10px);
-  text-align: right;
-  margin-top: 4px;
+  position: absolute;
+  bottom: 6px;
+  right: 10px;
+  pointer-events: none;
 }
 
 .creation-screen__error {
@@ -3648,6 +3663,20 @@ html, body {
   background: rgba(59, 130, 246, 0.3);
 }
 
+.s4-settings__row--danger .s4-settings__label {
+  color: #ef4444;
+}
+
+.s4-settings__action-btn--danger {
+  border-color: #ef4444;
+  color: #ef4444;
+  background: transparent;
+}
+
+.s4-settings__action-btn--danger:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
 .theme-light .s4-settings__action-btn {
   border-color: #2563eb;
   background: rgba(37, 99, 235, 0.1);
@@ -4356,23 +4385,23 @@ html, body {
 }
 
 .fracture-line--active .fracture-line__path {
-  stroke: #9ed22d;
-  filter: drop-shadow(0 0 4px rgba(158, 210, 45, 0.6));
-  animation: fracture-pulse 2.5s ease-in-out infinite;
+  stroke: rgba(180, 40, 60, 0.7);
+  filter: drop-shadow(0 0 8px rgba(200, 50, 50, 0.6));
+  animation: fracture-pulse 2s ease-in-out infinite;
 }
 
 .fracture-line--active .fracture-line__glow {
-  stroke: rgba(158, 210, 45, 0.3);
-  filter: drop-shadow(0 0 8px rgba(158, 210, 45, 0.4));
+  stroke: rgba(180, 40, 60, 0.3);
+  filter: drop-shadow(0 0 12px rgba(200, 50, 50, 0.4));
 }
 
 .fracture-line--closed .fracture-line__path {
-  stroke: rgba(158, 210, 45, 0.15);
-  filter: none;
+  stroke: rgba(212, 175, 55, 0.2);
+  filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.3));
 }
 
 .fracture-line--closed .fracture-line__glow {
-  stroke: rgba(158, 210, 45, 0.05);
+  stroke: rgba(212, 175, 55, 0.1);
   filter: none;
 }
 
@@ -4386,8 +4415,8 @@ html, body {
 }
 
 @keyframes fracture-pulse {
-  0%, 100% { opacity: 0.7; filter: drop-shadow(0 0 4px rgba(158, 210, 45, 0.5)); }
-  50% { opacity: 1; filter: drop-shadow(0 0 8px rgba(158, 210, 45, 0.8)); }
+  0%, 100% { opacity: 0.5; filter: drop-shadow(0 0 6px rgba(200, 50, 50, 0.4)); }
+  50% { opacity: 1; filter: drop-shadow(0 0 12px rgba(200, 50, 50, 0.8)); }
 }
 
 @keyframes fracture-seal {
@@ -4671,6 +4700,7 @@ html, body {
 .hud-mission-btn--active {
   opacity: 1;
   animation: mission-pulse 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 6px rgba(245, 197, 66, 0.7));
 }
 
 .hud-mission-btn:hover {

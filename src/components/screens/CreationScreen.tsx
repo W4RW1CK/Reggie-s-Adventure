@@ -117,20 +117,22 @@ export default function CreationScreen({ onDespertar }: CreationScreenProps) {
             <div className="creation-screen__form" onClick={(e) => e.stopPropagation()}>
                 <label className="creation-screen__label">NOMBRE:</label>
                 <p className="creation-screen__helper-text">Dale un nombre a tu Regenmon</p>
-                <input
-                    type="text"
-                    className={`creation-screen__input ${error ? 'creation-screen__input--error' : ''}`}
-                    value={name}
-                    onChange={handleNameChange}
-                    onFocus={() => { inputFocusedRef.current = true; }}
-                    onBlur={() => { inputFocusedRef.current = false; }}
-                    placeholder="Nombre..."
-                    maxLength={15}
-                />
-                <div className="creation-screen__char-count">
-                    <span style={{ color: name.length > 15 ? '#ef4444' : name.length >= 2 ? '#4ade80' : 'rgba(255,255,255,0.4)' }}>
-                        {name.length}/15
-                    </span>
+                <div className="creation-screen__input-wrapper">
+                    <input
+                        type="text"
+                        className={`creation-screen__input ${error ? 'creation-screen__input--error' : ''}`}
+                        value={name}
+                        onChange={handleNameChange}
+                        onFocus={() => { inputFocusedRef.current = true; }}
+                        onBlur={() => { inputFocusedRef.current = false; }}
+                        placeholder="Nombre..."
+                        maxLength={15}
+                    />
+                    <div className="creation-screen__char-count">
+                        <span style={{ color: name.length > 15 ? '#ef4444' : name.length >= 2 ? '#4ade80' : 'rgba(255,255,255,0.4)' }}>
+                            {name.length}/15
+                        </span>
+                    </div>
                 </div>
                 {error && <p className="creation-screen__error">{error}</p>}
             </div>
