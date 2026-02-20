@@ -2789,13 +2789,13 @@ html, body {
 }
 
 .hud-bottom-nav__icon {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   line-height: 1;
 }
 
 .hud-bottom-nav__label {
   font-family: var(--font-press-start-2p);
-  font-size: 0.6rem;
+  font-size: clamp(0.55rem, 1.5vw, 0.75rem);
   color: rgba(255, 255, 255, 0.7);
   text-transform: uppercase;
   position: absolute;
@@ -2855,16 +2855,17 @@ html, body {
   }
 
   .game-screen--desktop-split .game-screen__world-area {
-    width: 70%;
+    width: 65%;
     flex-shrink: 0;
   }
 
   .game-screen__right-panel {
-    width: 30%;
+    width: 35%;
     height: 100%;
     display: flex;
     flex-direction: column;
     background: var(--theme-chat-bg, rgba(15, 15, 30, 0.95));
+    backdrop-filter: blur(4px);
     border-left: 2px solid rgba(255, 255, 255, 0.1);
     z-index: 20;
     overflow: hidden;
@@ -5081,9 +5082,9 @@ html, body {
 
 /* Mission Popup */
 .mission-popup-backdrop {
-  position: fixed;
+  position: fixed !important;
   inset: 0;
-  z-index: 60;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -5962,7 +5963,7 @@ html, body,
   margin-top: 12px;
   padding: 10px 16px;
   max-width: 90vw;
-  width: 280px;
+  width: 250px;
 }
 
 .sprite-stats-fixed__bars {
@@ -5988,11 +5989,11 @@ html, body,
 
 .sprite-stats-fixed__track {
   flex: 1;
-  height: 10px;
-  border-radius: 5px;
+  height: 12px;
+  border-radius: 0;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .sprite-stats-fixed__track--espiritu { border-color: rgba(155, 89, 182, 0.4); }
@@ -6001,8 +6002,8 @@ html, body,
 
 .sprite-stats-fixed__fill {
   height: 100%;
-  border-radius: 5px;
-  transition: width 0.5s ease-out;
+  border-radius: 0;
+  transition: width 0.3s ease-out;
 }
 
 .sprite-stats-fixed__fill--espiritu { background: #9b59b6; }
@@ -6011,8 +6012,9 @@ html, body,
 
 .sprite-stats-fixed__val {
   font-family: var(--font-press-start-2p);
-  font-size: clamp(0.55rem, 1.6vw, 0.8rem);
+  font-size: clamp(0.5rem, 1.5vw, 0.75rem);
   color: rgba(255, 255, 255, 0.8);
+  min-width: 30px;
   width: 32px;
   text-align: right;
   flex-shrink: 0;
@@ -6042,4 +6044,39 @@ html, body,
   inset: 0;
   pointer-events: none;
   transition: background-color 2s ease-in-out, opacity 2s ease-in-out;
+}
+
+/* =============================================
+   PHASE 63 Round 4 — Chat panel improvements
+   ============================================= */
+
+/* Chat panel messages: larger font */
+.chat-panel__messages .chat-bubble {
+  font-size: clamp(0.55rem, 1.4vw, 0.8rem);
+  line-height: 1.6;
+}
+
+/* Chat panel header: larger text */
+.chat-panel__name {
+  font-size: clamp(0.6rem, 1.2vw, 0.8rem) !important;
+}
+
+.chat-panel__type-icon {
+  font-size: 1.4rem !important;
+}
+
+/* Chat panel input bar: larger */
+.chat-panel__input-bar textarea,
+.chat-panel__input-bar input {
+  width: 100%;
+  font-size: clamp(0.55rem, 1.3vw, 0.75rem);
+  padding: 10px 12px;
+}
+
+/* Chat send button: larger */
+.chat-panel__input-bar button[type="submit"],
+.chat-panel__input-bar .chat-input__send {
+  font-size: clamp(0.55rem, 1.3vw, 0.75rem);
+  padding: 10px 16px;
+  min-height: 40px;
 }
