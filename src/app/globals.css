@@ -2513,7 +2513,7 @@ html, body {
 
 .hud-compact__fragments {
   font-family: var(--font-press-start-2p);
-  font-size: clamp(0.55rem, 1.6vw, 0.8rem);
+  font-size: clamp(0.7rem, 2.2vw, 1.1rem);
   color: #93c5fd;
   white-space: nowrap;
   background: rgba(147, 197, 253, 0.12);
@@ -2525,7 +2525,7 @@ html, body {
 
 .hud-compact__diario-btn {
   font-family: var(--font-press-start-2p);
-  font-size: clamp(0.45rem, 1.2vw, 0.65rem);
+  font-size: clamp(0.6rem, 1.7vw, 0.9rem);
   color: #fde68a;
   background: rgba(253, 232, 138, 0.1);
   border: 2px solid rgba(253, 232, 138, 0.25);
@@ -2595,7 +2595,7 @@ html, body {
   left: 50%;
   transform: translateX(-50%);
   font-family: var(--font-press-start-2p);
-  font-size: clamp(0.5rem, 1.5vw, 0.75rem);
+  font-size: clamp(0.7rem, 2vw, 1rem);
   font-weight: bold;
   color: #fde68a;
   text-shadow: 0 0 6px rgba(0, 0, 0, 0.8), 0 0 12px rgba(253, 224, 71, 0.4);
@@ -2676,7 +2676,7 @@ html, body {
 
 .purify-btn {
   font-family: var(--font-press-start-2p);
-  font-size: clamp(0.4rem, 1.2vw, 0.6rem);
+  font-size: clamp(0.55rem, 1.6vw, 0.8rem);
   padding: 10px 16px;
   border: 2px solid;
   border-radius: 8px;
@@ -2795,7 +2795,7 @@ html, body {
 
 .hud-bottom-nav__label {
   font-family: var(--font-press-start-2p);
-  font-size: 0.4rem;
+  font-size: 0.6rem;
   color: rgba(255, 255, 255, 0.7);
   text-transform: uppercase;
   position: absolute;
@@ -2843,21 +2843,72 @@ html, body {
   100% { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
-/* === DESKTOP 70/30 CHAT LAYOUT === */
+/* === DESKTOP 70/30 LAYOUT (always split) === */
 .game-screen__world-area {
   width: 100%;
   transition: width 0.3s ease;
 }
 
 @media (min-width: 1025px) {
-  .game-screen--chat-open {
+  .game-screen--desktop-split {
     flex-direction: row;
   }
 
-  .game-screen--chat-open .game-screen__world-area {
+  .game-screen--desktop-split .game-screen__world-area {
     width: 70%;
     flex-shrink: 0;
   }
+
+  .game-screen__right-panel {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--theme-chat-bg, rgba(15, 15, 30, 0.95));
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+    z-index: 20;
+    overflow: hidden;
+  }
+
+  .right-panel__welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    height: 100%;
+    opacity: 0.6;
+  }
+
+  .right-panel__type-icon {
+    font-size: 3rem;
+  }
+
+  .right-panel__name {
+    font-family: var(--font-press-start-2p);
+    font-size: clamp(0.7rem, 1.2vw, 1rem);
+    color: var(--theme-text, #e8e8e8);
+  }
+
+  .right-panel__hint {
+    font-family: var(--font-press-start-2p);
+    font-size: clamp(0.55rem, 1vw, 0.75rem);
+    color: var(--theme-text-secondary, #a0a0a0);
+    animation: sprite-hint-fade 3s ease-in-out infinite;
+  }
+}
+
+.theme-light .game-screen__right-panel {
+  background: rgba(255, 251, 245, 0.95);
+  border-left-color: rgba(0, 0, 0, 0.1);
+}
+
+.theme-light .right-panel__name {
+  color: var(--theme-text);
+}
+
+.theme-light .right-panel__hint {
+  color: var(--theme-text-secondary);
 }
 
 /* Desktop chat side panel */
@@ -5034,10 +5085,10 @@ html, body {
   inset: 0;
   z-index: 60;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  padding-top: 60px;
-  background: rgba(0, 0, 0, 0.3);
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.5);
   animation: fade-in 0.15s ease-out;
 }
 
@@ -5897,4 +5948,98 @@ html, body,
     animation: none !important;
     transition: none !important;
   }
+}
+
+/* =============================================
+   PHASE 63 Round 3 — Always-visible stats below sprite
+   ============================================= */
+
+.sprite-stats-fixed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px 16px;
+  max-width: 90vw;
+  width: 280px;
+}
+
+.sprite-stats-fixed__bars {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.sprite-stats-fixed__bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.sprite-stats-fixed__label {
+  font-size: clamp(0.7rem, 2vw, 1rem);
+  width: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.sprite-stats-fixed__track {
+  flex: 1;
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.sprite-stats-fixed__track--espiritu { border-color: rgba(155, 89, 182, 0.4); }
+.sprite-stats-fixed__track--pulso    { border-color: rgba(241, 196, 15, 0.4); }
+.sprite-stats-fixed__track--esencia  { border-color: rgba(46, 204, 113, 0.4); }
+
+.sprite-stats-fixed__fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.5s ease-out;
+}
+
+.sprite-stats-fixed__fill--espiritu { background: #9b59b6; }
+.sprite-stats-fixed__fill--pulso    { background: #f1c40f; }
+.sprite-stats-fixed__fill--esencia  { background: #2ecc71; }
+
+.sprite-stats-fixed__val {
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(0.55rem, 1.6vw, 0.8rem);
+  color: rgba(255, 255, 255, 0.8);
+  width: 32px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.sprite-stats-fixed__purify-btns {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+/* Light theme */
+.theme-light .sprite-stats-fixed__track {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.theme-light .sprite-stats-fixed__val {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* =============================================
+   PHASE 63 Round 3 — Mood-based background filter
+   ============================================= */
+
+.world-bg__mood-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transition: background-color 2s ease-in-out, opacity 2s ease-in-out;
 }

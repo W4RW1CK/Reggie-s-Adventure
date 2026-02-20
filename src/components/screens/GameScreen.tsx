@@ -60,10 +60,11 @@ export default function GameScreen({
     const [showTutorial, setShowTutorial] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
     const [showPhoto, setShowPhoto] = useState(false);
+    const [rightPanel, setRightPanel] = useState<'welcome' | 'chat' | 'photo'>('welcome');
     const [showDiario, setShowDiario] = useState(false);
     const [showMissionPopup, setShowMissionPopup] = useState(false);
     const [missionCelebration, setMissionCelebration] = useState(false);
-    const [showSpriteInfo, setShowSpriteInfo] = useState(false);
+    // showSpriteInfo removed — stats are always visible now
     const [toast, setToast] = useState<{ text: string; type: 'loading' | 'success' | 'error' } | null>(null);
     const [floatingDelta, setFloatingDelta] = useState<string | null>(null);
     const [spriteAnimClass, setSpriteAnimClass] = useState('');
@@ -126,25 +127,8 @@ export default function GameScreen({
         }
     };
 
-    // Sprite tap — show purify buttons + stats
-    const handleSpriteTap = () => {
-        setShowSpriteInfo(prev => !prev);
-    };
-
-    // Auto-hide sprite info after 5 seconds
-    useEffect(() => {
-        if (showSpriteInfo) {
-            const timer = setTimeout(() => setShowSpriteInfo(false), 5000);
-            return () => clearTimeout(timer);
-        }
-    }, [showSpriteInfo]);
-
-    // Close sprite info when tapping elsewhere
-    const handleWorldTap = (e: React.MouseEvent) => {
-        if (showSpriteInfo && !(e.target as HTMLElement).closest('.sprite-tap-zone')) {
-            setShowSpriteInfo(false);
-        }
-    };
+    // No-op world tap (stats are always visible now)
+    const handleWorldTap = (_e: React.MouseEvent) => {};
 
     const handlePurifySpirit = () => {
         if (regenmon.stats.fragmentos < PURIFY_SPIRIT_COST) {
@@ -216,7 +200,7 @@ export default function GameScreen({
             const parts: string[] = [];
             if (sc.espiritu && sc.espiritu !== 0) parts.push(`${sc.espiritu > 0 ? '+' : ''}${sc.espiritu} 🔮`);
             if (sc.pulso && sc.pulso !== 0) parts.push(`${sc.pulso > 0 ? '+' : ''}${sc.pulso} 💛`);
-            if (sc.esencia && sc.esencia !== 0) parts.push(`${sc.esencia > 0 ? '+' : ''}${sc.esencia} ✨`);
+            if (sc.esencia && sc.esencia !== 0) parts.push(`${sc.esencia > 0 ? '+' : ''}${sc.esencia} 🌱`);
             if (sc.fragmentos && sc.fragmentos !== 0) parts.push(`${sc.fragmentos > 0 ? '+' : ''}${sc.fragmentos} 💎`);
             if (parts.length > 0) showFloatingDelta(parts.join('  '));
             triggerSpriteAnim('sprite-chat-pulse');
@@ -236,9 +220,32 @@ export default function GameScreen({
 
     const isDesktop = windowWidth >= 1025;
 
+    // Sync rightPanel state with chat/photo
+    const handleOpenChat = () => {
+        setShowPhoto(false);
+        if (!isChatOpen) toggleChat();
+        setRightPanel('chat');
+    };
+
+    const handleCloseChat = () => {
+        if (isChatOpen) toggleChat();
+        setRightPanel('welcome');
+    };
+
+    const handleOpenPhoto = () => {
+        if (isChatOpen) toggleChat();
+        setShowPhoto(true);
+        setRightPanel('photo');
+    };
+
+    const handleClosePhoto = () => {
+        setShowPhoto(false);
+        setRightPanel('welcome');
+    };
+
     return (
         <div
-            className={`game-screen w-full h-screen relative overflow-hidden flex ${isDesktop && isChatOpen ? 'game-screen--chat-open' : ''}`}
+            className={`game-screen w-full h-screen relative overflow-hidden flex ${isDesktop ? 'game-screen--desktop-split' : ''}`}
             onClick={handleWorldTap}
         >
             {/* === WORLD AREA === */}
@@ -266,7 +273,7 @@ export default function GameScreen({
                     {/* === COMPACT HUD TOP BAR === */}
                     <div className="hud-compact">
                         <div className="hud-compact__left">
-                            <span className="hud-compact__fragments">🔮 {regenmon.stats.fragmentos}</span>
+                            <span className="hud-compact__fragments">💎 {regenmon.stats.fragmentos}</span>
                             <button
                                 className="hud-compact__diario-btn"
                                 onClick={() => setShowDiario(true)}
@@ -303,11 +310,7 @@ export default function GameScreen({
                     {/* === CENTER: Sprite === */}
                     <div className="hud-sprite-area flex-1 flex flex-col items-center justify-center">
                         <div
-                            className={`sprite-tap-zone relative game-screen__regenmon-wrapper sprite-evolution sprite-evolution--stage-${getEvolutionStage(progress)} ${isEvolutionFrozen ? 'sprite-evolution--frozen' : ''} ${spriteAnimClass}`}
-                            onClick={handleSpriteTap}
-                            role="button"
-                            tabIndex={0}
-                            aria-label={`${regenmon.name} — toca para ver stats`}
+                            className={`relative game-screen__regenmon-wrapper sprite-evolution sprite-evolution--stage-${getEvolutionStage(progress)} ${isEvolutionFrozen ? 'sprite-evolution--frozen' : ''} ${spriteAnimClass}`}
                         >
                             <RegenmonSVG
                                 type={regenmon.type}
@@ -341,67 +344,65 @@ export default function GameScreen({
                             </div>
                         )}
 
-                        {/* Hint text (only when sprite info is NOT showing) */}
-                        {!showSpriteInfo && (
-                            <div className="sprite-hint">Toca → stats / purificar</div>
-                        )}
-
-                        {/* === SPRITE TAP OVERLAY: Stats + Purify Buttons === */}
-                        {showSpriteInfo && (
-                            <div className="sprite-info-overlay sprite-tap-zone">
-                                {/* Compact stat summary */}
-                                <div className="sprite-info__stats">
-                                    <span>🔮 {Math.round(regenmon.stats.espiritu)}</span>
-                                    <span>💛 {Math.round(regenmon.stats.pulso)}</span>
-                                    <span>✨ {Math.round(regenmon.stats.esencia)}</span>
-                                </div>
-                                {/* Name + Identity */}
-                                <div className="sprite-info__name">
-                                    <NameEditor
-                                        currentName={regenmon.name}
-                                        onSave={onUpdateName}
-                                        canRename={!regenmon.nameChangeUsed}
-                                    />
-                                </div>
-                                {isLoggedIn && (
-                                    <div className="sprite-info__identity">
-                                        <UserIdentity isLoggedIn={isLoggedIn} email={email} playerName={playerName} />
+                        {/* === ALWAYS-VISIBLE STATS + PURIFY BUTTONS === */}
+                        <div className="sprite-stats-fixed">
+                            {/* Compact stat bars */}
+                            <div className="sprite-stats-fixed__bars">
+                                <div className="sprite-stats-fixed__bar">
+                                    <span className="sprite-stats-fixed__label">🔮</span>
+                                    <div className="sprite-stats-fixed__track sprite-stats-fixed__track--espiritu">
+                                        <div className="sprite-stats-fixed__fill sprite-stats-fixed__fill--espiritu" style={{ width: `${Math.round(regenmon.stats.espiritu)}%` }} />
                                     </div>
-                                )}
-                                {/* Purify buttons */}
-                                <div className="sprite-info__purify-btns">
-                                    <button
-                                        className="purify-btn purify-btn--spirit"
-                                        onClick={(e) => { e.stopPropagation(); handlePurifySpirit(); }}
-                                        disabled={regenmon.stats.fragmentos < PURIFY_SPIRIT_COST || regenmon.stats.espiritu >= 100}
-                                    >
-                                        ❤️ Recargar {PURIFY_SPIRIT_COST}🔮
-                                    </button>
-                                    <button
-                                        className="purify-btn purify-btn--essence"
-                                        onClick={(e) => { e.stopPropagation(); handlePurifyEssence(); }}
-                                        disabled={regenmon.stats.fragmentos < PURIFY_ESSENCE_COST || regenmon.stats.esencia >= 100}
-                                    >
-                                        💧 Nutrir {PURIFY_ESSENCE_COST}🔮
-                                    </button>
+                                    <span className="sprite-stats-fixed__val">{Math.round(regenmon.stats.espiritu)}</span>
+                                </div>
+                                <div className="sprite-stats-fixed__bar">
+                                    <span className="sprite-stats-fixed__label">💛</span>
+                                    <div className="sprite-stats-fixed__track sprite-stats-fixed__track--pulso">
+                                        <div className="sprite-stats-fixed__fill sprite-stats-fixed__fill--pulso" style={{ width: `${Math.round(regenmon.stats.pulso)}%` }} />
+                                    </div>
+                                    <span className="sprite-stats-fixed__val">{Math.round(regenmon.stats.pulso)}</span>
+                                </div>
+                                <div className="sprite-stats-fixed__bar">
+                                    <span className="sprite-stats-fixed__label">🌱</span>
+                                    <div className="sprite-stats-fixed__track sprite-stats-fixed__track--esencia">
+                                        <div className="sprite-stats-fixed__fill sprite-stats-fixed__fill--esencia" style={{ width: `${Math.round(regenmon.stats.esencia)}%` }} />
+                                    </div>
+                                    <span className="sprite-stats-fixed__val">{Math.round(regenmon.stats.esencia)}</span>
                                 </div>
                             </div>
-                        )}
+                            {/* Purify buttons */}
+                            <div className="sprite-stats-fixed__purify-btns">
+                                <button
+                                    className="purify-btn purify-btn--spirit"
+                                    onClick={(e) => { e.stopPropagation(); handlePurifySpirit(); }}
+                                    disabled={regenmon.stats.fragmentos < PURIFY_SPIRIT_COST || regenmon.stats.espiritu >= 100}
+                                >
+                                    🔮 Recargar {PURIFY_SPIRIT_COST}💎
+                                </button>
+                                <button
+                                    className="purify-btn purify-btn--essence"
+                                    onClick={(e) => { e.stopPropagation(); handlePurifyEssence(); }}
+                                    disabled={regenmon.stats.fragmentos < PURIFY_ESSENCE_COST || regenmon.stats.esencia >= 100}
+                                >
+                                    🌱 Nutrir {PURIFY_ESSENCE_COST}💎
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     {/* === BOTTOM NAV BAR (Icon-based) === */}
                     <div className="hud-bottom-nav">
                         <button
                             className={`hud-bottom-nav__btn ${isChatOpen ? 'hud-bottom-nav__btn--active' : ''}`}
-                            onClick={toggleChat}
+                            onClick={isChatOpen ? handleCloseChat : handleOpenChat}
                             aria-label="Chat"
                         >
                             <span className="hud-bottom-nav__icon">💬</span>
                             <span className="hud-bottom-nav__label">Chat</span>
                         </button>
                         <button
-                            className="hud-bottom-nav__btn"
-                            onClick={() => setShowPhoto(true)}
+                            className={`hud-bottom-nav__btn ${showPhoto ? 'hud-bottom-nav__btn--active' : ''}`}
+                            onClick={showPhoto ? handleClosePhoto : handleOpenPhoto}
                             aria-label="Foto"
                         >
                             <span className="hud-bottom-nav__icon">📷</span>
@@ -454,8 +455,8 @@ export default function GameScreen({
                     </div>
                 )}
 
-                {/* Photo Flow Overlay */}
-                {showPhoto && (
+                {/* Photo Flow Overlay (mobile only) */}
+                {showPhoto && !isDesktop && (
                     <div className="photo-flow-overlay" style={{ position: 'fixed', inset: 0, zIndex: 100 }}>
                         <PhotoFlow
                             regenmonType={regenmon.type}
@@ -471,8 +472,8 @@ export default function GameScreen({
                             onAddStrike={() => ({ newCount: 0, message: '' })}
                             onCompleteMission={() => { if (activeMission) { completeMission(); return 5; } return 0; }}
                             onUseMissionBypass={() => false}
-                            onGoToChat={() => { setShowPhoto(false); toggleChat(); }}
-                            onGoToWorld={() => setShowPhoto(false)}
+                            onGoToChat={() => { handleClosePhoto(); handleOpenChat(); }}
+                            onGoToWorld={() => handleClosePhoto()}
                             onSetLastPhotoAt={() => {}}
                         />
                     </div>
@@ -487,20 +488,71 @@ export default function GameScreen({
                 />
             </div>
 
-            {/* === CHAT AREA (Desktop: 30% right panel / Mobile: overlay) === */}
-            <ErrorBoundary>
-                <ChatBox
-                    isOpen={isChatOpen}
-                    onClose={toggleChat}
-                    messages={messages}
-                    onSendMessage={handleSendMessage}
-                    isLoading={isChatLoading}
-                    regenmonType={regenmon.type}
-                    regenmonName={regenmon.name}
-                    stats={regenmon.stats}
-                    isDesktop={isDesktop}
-                />
-            </ErrorBoundary>
+            {/* === RIGHT PANEL (Desktop: always 30% / Mobile: overlay for chat) === */}
+            {isDesktop && (
+                <div className="game-screen__right-panel">
+                    {rightPanel === 'welcome' && (
+                        <div className="right-panel__welcome">
+                            <span className="right-panel__type-icon">
+                                {regenmon.type === 'rayo' ? '⚡' : regenmon.type === 'flama' ? '🔥' : '❄️'}
+                            </span>
+                            <span className="right-panel__name">{regenmon.name}</span>
+                            <span className="right-panel__hint">Habla conmigo 💬</span>
+                        </div>
+                    )}
+                    {rightPanel === 'chat' && (
+                        <ErrorBoundary>
+                            <ChatBox
+                                isOpen={isChatOpen}
+                                onClose={handleCloseChat}
+                                messages={messages}
+                                onSendMessage={handleSendMessage}
+                                isLoading={isChatLoading}
+                                regenmonType={regenmon.type}
+                                regenmonName={regenmon.name}
+                                stats={regenmon.stats}
+                                isDesktop={isDesktop}
+                            />
+                        </ErrorBoundary>
+                    )}
+                    {rightPanel === 'photo' && showPhoto && (
+                        <PhotoFlow
+                            regenmonType={regenmon.type}
+                            regenmonName={regenmon.name}
+                            stats={regenmon.stats}
+                            memories={regenmon.memories}
+                            lastPhotoAt={regenmon.lastPhotoAt ?? null}
+                            strikes={regenmon.strikes ?? { count: 0, lastStrikeAt: null }}
+                            activeMission={activeMission && !activeMission.completed && !isExpired ? activeMission : null}
+                            onAddFragments={onUpdateStats}
+                            onAddProgress={(amount) => onUpdateStats({ fragmentos: 0 })}
+                            onAddPhotoEntry={() => {}}
+                            onAddStrike={() => ({ newCount: 0, message: '' })}
+                            onCompleteMission={() => { if (activeMission) { completeMission(); return 5; } return 0; }}
+                            onUseMissionBypass={() => false}
+                            onGoToChat={() => { handleClosePhoto(); handleOpenChat(); }}
+                            onGoToWorld={() => handleClosePhoto()}
+                            onSetLastPhotoAt={() => {}}
+                        />
+                    )}
+                </div>
+            )}
+            {/* Mobile: chat overlay */}
+            {!isDesktop && (
+                <ErrorBoundary>
+                    <ChatBox
+                        isOpen={isChatOpen}
+                        onClose={handleCloseChat}
+                        messages={messages}
+                        onSendMessage={handleSendMessage}
+                        isLoading={isChatLoading}
+                        regenmonType={regenmon.type}
+                        regenmonName={regenmon.name}
+                        stats={regenmon.stats}
+                        isDesktop={false}
+                    />
+                </ErrorBoundary>
+            )}
         </div>
     );
 }

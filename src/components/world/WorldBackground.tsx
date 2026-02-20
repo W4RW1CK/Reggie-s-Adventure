@@ -55,6 +55,34 @@ function getCorruptionOverlay(stage: number, theme: 'dark' | 'light'): string {
   }
 }
 
+// Mood-based filter from current stats
+function getMoodFilter(stats: RegenmonStats): { overlay: string; filterMod: string } {
+  const avg = (stats.espiritu + stats.pulso + stats.esencia) / 3;
+  const anyLow = Math.min(stats.espiritu, stats.pulso, stats.esencia) < 30;
+  const allHigh = stats.espiritu > 70 && stats.pulso > 70 && stats.esencia > 70;
+
+  if (anyLow) {
+    // Suffering: darker, desaturated
+    const darkness = Math.max(0, (30 - Math.min(stats.espiritu, stats.pulso, stats.esencia)) / 30);
+    return {
+      overlay: `rgba(10, 5, 20, ${(0.15 + darkness * 0.25).toFixed(2)})`,
+      filterMod: `brightness(${(0.85 - darkness * 0.2).toFixed(2)}) saturate(${(0.7 - darkness * 0.3).toFixed(2)})`,
+    };
+  }
+  if (allHigh) {
+    // Vibrant and alive
+    return {
+      overlay: 'rgba(158, 210, 45, 0.04)',
+      filterMod: 'brightness(1.08) saturate(1.15)',
+    };
+  }
+  // Neutral
+  return {
+    overlay: 'transparent',
+    filterMod: 'brightness(1) saturate(1)',
+  };
+}
+
 export default function WorldBackground({ type, stats, progress, theme = 'dark' }: WorldBackgroundProps) {
   const stage = getEvolutionStage(progress);
   const worldState = getWorldState(stage);
@@ -62,6 +90,7 @@ export default function WorldBackground({ type, stats, progress, theme = 'dark' 
   const filter = getEvolutionFilter(stage, theme);
   const overlayColor = getCorruptionOverlay(stage, theme);
   const showParticles = worldState.particleFrequency > 0;
+  const mood = getMoodFilter(stats);
 
   return (
     <div
@@ -81,6 +110,12 @@ export default function WorldBackground({ type, stats, progress, theme = 'dark' 
       <div
         className="world-bg__corruption"
         style={{ backgroundColor: overlayColor }}
+      />
+
+      {/* Mood overlay (stat-based) */}
+      <div
+        className="world-bg__mood-overlay"
+        style={{ backgroundColor: mood.overlay, filter: mood.filterMod }}
       />
 
       {/* Ambient particles based on world health */}
