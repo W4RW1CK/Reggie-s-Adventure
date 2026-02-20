@@ -2884,6 +2884,11 @@ html, body {
     height: 100%;
   }
 
+  /* Hide bottom nav on desktop — navigation via right panel */
+  .game-screen--desktop-split .hud-bottom-nav {
+    display: none !important;
+  }
+
   /* Right panel overlays on top of world */
   .game-screen__right-panel {
     width: 30% !important;
