@@ -247,7 +247,7 @@ export default function GameScreen({
             onClick={handleWorldTap}
         >
             {/* === WORLD AREA === */}
-            <div className="game-screen__world-area flex-1 relative flex flex-col h-full">
+            <div className="game-screen__world-area relative flex flex-col h-full">
                 {/* Background Layer */}
                 <WorldBackground type={regenmon.type} stats={regenmon.stats} progress={progress} theme={theme} />
 
