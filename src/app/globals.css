@@ -2854,30 +2854,24 @@ html, body {
     flex-direction: row;
   }
 
-  /* World NEVER compresses — always 100% */
+  /* World takes 70% on desktop, right panel takes 30% */
   .game-screen--desktop-split .game-screen__world-area {
-    width: 100%;
+    width: 70%;
     flex-shrink: 0;
   }
 
   /* Right panel overlays on top of world */
   .game-screen__right-panel {
-    position: fixed;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 35%;
-    min-width: 300px;
-    max-width: 480px;
+    width: 30%;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: stretch;
     background: var(--theme-chat-bg, rgba(15, 15, 30, 0.95));
-    backdrop-filter: blur(8px);
     border-left: 2px solid rgba(255, 255, 255, 0.15);
     z-index: 30;
     overflow: hidden;
-    animation: panel-slide-in 0.25s ease-out;
+    flex-shrink: 0;
   }
 
   @keyframes panel-slide-in {
