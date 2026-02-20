@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         {/* Preload critical assets — browser starts fetching before JS executes */}
         <link rel="preload" href="/sprites/rayo-base.webp" as="image" type="image/webp" />
         <link rel="preload" href="/sprites/flama-base.webp" as="image" type="image/webp" />

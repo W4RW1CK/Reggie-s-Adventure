@@ -3550,13 +3550,13 @@ html, body {
 }
 
 .loading-screen__fs-btn--primary {
-  background-color: #4caf50;
-  border-color: #66bb6a;
+  background-color: #2e7d32;
+  border-color: #388e3c;
   color: #fff;
 }
 
 .loading-screen__fs-btn--primary:hover {
-  background-color: #66bb6a;
+  background-color: #388e3c;
   transform: translateY(-2px);
   box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
 }
