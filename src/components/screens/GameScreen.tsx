@@ -409,33 +409,6 @@ export default function GameScreen({
                     </div>
                 </div>
 
-                {/* Settings Panel */}
-                <SettingsPanel
-                    isOpen={showSettings}
-                    onClose={() => setShowSettings(false)}
-                    isFullscreen={isFullscreen}
-                    isFullscreenSupported={isFullscreenSupported}
-                    onToggleFullscreen={toggleFullscreen}
-                    theme={theme}
-                    onToggleTheme={toggleTheme}
-                    musicEnabled={musicEnabled}
-                    onToggleMusic={onToggleMusic}
-                    effectsEnabled={effectsEnabled}
-                    onToggleEffects={() => setEffectsEnabled(prev => !prev)}
-                    onRestartTutorial={() => { setShowSettings(false); setShowTutorial(true); }}
-                    onResetGame={onReset}
-                />
-
-                {/* Mission Popup */}
-                <MissionPopup
-                    isOpen={showMissionPopup}
-                    onClose={() => setShowMissionPopup(false)}
-                    activeMission={isExpired ? null : activeMission}
-                    regenmonType={regenmon.type}
-                    onActivateNew={generateMission}
-                    onAbandon={abandonMission}
-                />
-
                 {/* Mission Celebration */}
                 {missionCelebration && (
                     <div className="mission-celebration" aria-hidden="true">
@@ -477,13 +450,6 @@ export default function GameScreen({
                     </div>
                 )}
 
-                {/* Diario Panel */}
-                <DiarioPanel
-                    isOpen={showDiario}
-                    onClose={() => setShowDiario(false)}
-                    diaryEntries={[]}
-                    activityLog={[]}
-                />
             </div>
 
             {/* === RIGHT PANEL (Desktop: always 30% / Mobile: overlay for chat) === */}
@@ -544,6 +510,37 @@ export default function GameScreen({
                     />
                 </ErrorBoundary>
             )}
+
+            {/* === MODALS (viewport-level, outside world-area) === */}
+            <SettingsPanel
+                isOpen={showSettings}
+                onClose={() => setShowSettings(false)}
+                isFullscreen={isFullscreen}
+                isFullscreenSupported={isFullscreenSupported}
+                onToggleFullscreen={toggleFullscreen}
+                theme={theme}
+                onToggleTheme={toggleTheme}
+                musicEnabled={musicEnabled}
+                onToggleMusic={onToggleMusic}
+                effectsEnabled={effectsEnabled}
+                onToggleEffects={() => setEffectsEnabled(prev => !prev)}
+                onRestartTutorial={() => { setShowSettings(false); setShowTutorial(true); }}
+                onResetGame={onReset}
+            />
+            <MissionPopup
+                isOpen={showMissionPopup}
+                onClose={() => setShowMissionPopup(false)}
+                activeMission={isExpired ? null : activeMission}
+                regenmonType={regenmon.type}
+                onActivateNew={generateMission}
+                onAbandon={abandonMission}
+            />
+            <DiarioPanel
+                isOpen={showDiario}
+                onClose={() => setShowDiario(false)}
+                diaryEntries={[]}
+                activityLog={[]}
+            />
         </div>
     );
 }
