@@ -836,8 +836,7 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  height: 100dvh;
-  height: 100vh; /* fallback */
+  /* height set by JS via visualViewport API */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -847,12 +846,6 @@ body {
   padding: clamp(12px, 3vh, 24px);
   overflow-y: auto;
   overflow-x: hidden;
-}
-
-@supports (height: 100dvh) {
-  .creation-screen {
-    height: 100dvh;
-  }
 }
 
 .creation-screen__scanlines {

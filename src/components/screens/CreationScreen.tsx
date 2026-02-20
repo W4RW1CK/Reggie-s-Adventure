@@ -1,8 +1,21 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { RegenmonType } from '@/lib/types';
 import RegenmonSVG from '@/components/regenmon/RegenmonSVG';
+
+function useVisualViewportHeight() {
+    const [height, setHeight] = useState<number>(typeof window !== 'undefined' ? window.innerHeight : 800);
+    useEffect(() => {
+        const vv = window.visualViewport;
+        if (!vv) return;
+        const update = () => setHeight(vv.height);
+        update();
+        vv.addEventListener('resize', update);
+        return () => vv.removeEventListener('resize', update);
+    }, []);
+    return height;
+}
 
 interface CreationScreenProps {
     onDespertar: (name: string, type: RegenmonType) => void;
@@ -19,6 +32,7 @@ export default function CreationScreen({ onDespertar }: CreationScreenProps) {
     const [name, setName] = useState('');
     const [error, setError] = useState('');
     const inputFocusedRef = useRef(false);
+    const vpHeight = useVisualViewportHeight();
 
     const currentType = TYPES[currentIndex];
 
@@ -83,7 +97,7 @@ export default function CreationScreen({ onDespertar }: CreationScreenProps) {
     }, [handleKeyDown]);
 
     return (
-        <div className="creation-screen">
+        <div className="creation-screen" style={{ height: `${vpHeight}px` }}>
             <div className="creation-screen__scanlines" />
             <h1 className="creation-screen__title">CREA TU REGENMON</h1>
 
