@@ -2864,7 +2864,9 @@ html, body {
 
   /* Right panel overlays on top of world */
   .game-screen__right-panel {
-    width: 30%;
+    width: 30% !important;
+    max-width: 30% !important;
+    flex: 0 0 30% !important;
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -2873,7 +2875,6 @@ html, body {
     border-left: 2px solid rgba(255, 255, 255, 0.15);
     z-index: 30;
     overflow: hidden;
-    flex-shrink: 0;
   }
 
   @keyframes panel-slide-in {
