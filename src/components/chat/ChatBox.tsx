@@ -53,9 +53,10 @@ export function ChatBox({
         }
     };
 
-    if (!isOpen) return null;
+    // Mobile: require isOpen
+    if (!isOpen && !isDesktop) return null;
 
-    // Desktop: side panel (30% right)
+    // Desktop: side panel (always visible when rightPanel=chat)
     if (isDesktop) {
         return (
             <div className="game-screen__chat-panel" role="dialog" aria-label={`Chat con ${regenmonName}`}>
