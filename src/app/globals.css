@@ -5977,7 +5977,7 @@ html, body,
   margin-right: auto;
   padding: 10px 16px;
   max-width: 90vw;
-  width: 250px;
+  width: 340px;
 }
 
 .sprite-stats-fixed__bars {
@@ -6039,10 +6039,13 @@ html, body,
   gap: 10px;
   margin-top: 4px;
   width: 100%;
+  overflow: visible;
 }
 
 .sprite-stats-fixed__purify-btns .purify-btn {
   flex: 1;
+  min-width: 0;
+  white-space: nowrap;
 }
 
 /* Light theme */
