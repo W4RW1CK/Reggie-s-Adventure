@@ -6037,12 +6037,12 @@ html, body,
   display: flex;
   gap: clamp(6px, 1.5vw, 12px);
   margin-top: 4px;
-  width: 100%;
+  justify-content: center;
 }
 
 .sprite-stats-fixed__purify-btns .purify-btn {
-  flex: 1;
-  min-width: 0;
+  width: fit-content;
+  flex: none;
 }
 
 /* Light theme */
