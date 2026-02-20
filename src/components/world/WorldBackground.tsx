@@ -86,19 +86,16 @@ function getMoodFilter(stats: RegenmonStats): { overlay: string; filterMod: stri
 export default function WorldBackground({ type, stats, progress, theme = 'dark' }: WorldBackgroundProps) {
   const stage = getEvolutionStage(progress);
   
-  // Stats HEAVILY influence world appearance — good stats = beautiful world
-  // Evolution stage is secondary, stats are primary visual driver
+  // Background = EMOTIONAL STATE (stats only)
+  // Fracturas = PROGRESS (handled separately by FractureOverlay)
   const statsAvg = (stats.espiritu + stats.pulso + stats.esencia) / 3;
-  // Map stats directly to stage: 0→1, 25→2, 50→3, 75→4, 100→5
-  const statsStage = 1 + (statsAvg / 25);
-  // Weighted blend: 70% stats, 30% evolution
-  const blended = statsStage * 0.7 + stage * 0.3;
-  const effectiveStage = Math.min(5, Math.max(1, Math.round(blended)));
+  // Map stats directly to visual stage: 0→1 (corrupted), 50→3 (recovering), 100→5 (regenerated)
+  const emotionalStage = Math.min(5, Math.max(1, Math.round(1 + (statsAvg / 25))));
   
-  const worldState = getWorldState(effectiveStage);
+  const worldState = getWorldState(emotionalStage);
   const bgImage = BG_IMAGES[type][theme];
-  const filter = getEvolutionFilter(effectiveStage, theme);
-  const overlayColor = getCorruptionOverlay(effectiveStage, theme);
+  const filter = getEvolutionFilter(emotionalStage, theme);
+  const overlayColor = getCorruptionOverlay(emotionalStage, theme);
   const showParticles = worldState.particleFrequency > 0;
   const mood = getMoodFilter(stats);
 

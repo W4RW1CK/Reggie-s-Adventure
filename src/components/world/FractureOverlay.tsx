@@ -66,12 +66,6 @@ export default function FractureOverlay({
   statsAvg = 50,
 }: FractureOverlayProps) {
   const closedFractures = getClosedFractures(progress);
-  // Stats modulate fracture visibility:
-  // Bad stats (0-25): full fractures (opacity 0.7-1.0)
-  // Neutral stats (25-50): subtle fractures (opacity 0.15-0.7)  
-  // Good stats (50+): nearly invisible (opacity 0-0.15)
-  // With stats 83+, fractures completely hidden
-  const statsOpacity = statsAvg >= 80 ? 0 : statsAvg >= 50 ? Math.max(0, 0.15 - (statsAvg - 50) / 200) : statsAvg >= 25 ? 0.15 + (1 - statsAvg / 25) * 0.55 : 0.7 + (1 - statsAvg / 25) * 0.3;
   const [animatingIndex, setAnimatingIndex] = useState<number | null>(null);
 
   // When a new fracture closes, animate it
@@ -101,7 +95,7 @@ export default function FractureOverlay({
           <div
             key={threshold}
             className={`fracture-line ${isClosed ? 'fracture-line--closed' : 'fracture-line--active'} ${isAnimating ? 'fracture-line--sealing' : ''}`}
-            style={{ left: pos.x, top: pos.y, opacity: isClosed ? undefined : statsOpacity }}
+            style={{ left: pos.x, top: pos.y }}
           >
             <svg
               viewBox="0 0 300 420"
