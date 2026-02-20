@@ -85,7 +85,7 @@ export const STORAGE_KEYS = {
 
 // Chat Constants
 export const CHAT_MAX_MESSAGES = 50;
-export const CHAT_MAX_CHARS = 280;
+export const CHAT_MAX_CHARS = 140;
 export const CHAT_COOLDOWN_MS = 3000;
 export const CHAT_RATE_LIMIT = 15;
 export const CHAT_SPIRIT_MAX_CHANGE = 5; // Maximo cambio de espíritu
