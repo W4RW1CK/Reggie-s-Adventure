@@ -24,10 +24,17 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         return () => clearInterval(interval);
     }, []);
 
-    // When assets are loaded, show fullscreen invitation
+    const [barComplete, setBarComplete] = useState(false);
+
+    // When assets are loaded, force bar to 100%, hold 0.8s, THEN show fullscreen invite
     useEffect(() => {
         if (loaded) {
-            setShowFullscreenInvite(true);
+            // Let the bar visually reach 100%
+            setBarComplete(true);
+            const timer = setTimeout(() => {
+                setShowFullscreenInvite(true);
+            }, 800);
+            return () => clearTimeout(timer);
         }
     }, [loaded]);
 
@@ -96,7 +103,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
                         <div className="loading-screen__progress-container">
                             <div
                                 className="loading-screen__progress-bar loading-screen__progress-bar--real"
-                                style={{ width: `${progress}%` }}
+                                style={{ width: `${barComplete ? 100 : progress}%` }}
                             />
                         </div>
                     </>

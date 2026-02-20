@@ -730,17 +730,15 @@ body {
 
 /* NES Dialog Box */
 .story-screen__dialog {
-  background-color: #000;
-  border: 4px solid #fff;
-  box-shadow: 0 0 0 4px #000;
-  /* Outer black border for definition */
+  background-color: #050510;
+  border: none;
+  box-shadow: none;
   position: relative;
   padding: 4px;
 }
 
 .story-screen__dialog-inner {
-  border: 2px solid #000;
-  /* Inner spacing border */
+  border: none;
   padding: 24px;
   min-height: 220px;
   max-height: 60vh;
@@ -977,6 +975,14 @@ body {
 
 .creation-screen__input--error {
   border-color: #e74c3c;
+}
+
+.creation-screen__helper-text {
+  font-family: var(--font-press-start-2p);
+  font-size: clamp(7px, 1.3vw, 10px);
+  color: #a0a0a0;
+  text-align: center;
+  margin: 0;
 }
 
 .creation-screen__char-count {
@@ -2597,6 +2603,12 @@ html, body {
   background: rgba(255, 255, 255, 0.2);
 }
 
+/* === Game Screen Content === */
+.game-screen__content {
+  height: 100%;
+  min-height: 0;
+}
+
 /* === HUD Sprite Area === */
 .hud-sprite-area {
   position: relative;
@@ -2606,6 +2618,8 @@ html, body {
   justify-content: center;
   flex-direction: column;
   gap: 1vh;
+  flex: 1;
+  min-height: 0;
 }
 
 /* === HUD Bottom Bar === */
@@ -2998,6 +3012,10 @@ html, body {
   align-items: center;
   gap: 16px;
   animation: fadeIn 0.5s ease-out;
+  background: rgba(0, 0, 0, 0.6);
+  border: 4px solid #4a4a4a;
+  box-shadow: 0 0 20px rgba(76, 175, 80, 0.15), inset 0 0 30px rgba(0, 0, 0, 0.3);
+  padding: 24px 32px;
 }
 
 .loading-screen__ready-text {
@@ -4423,6 +4441,8 @@ html, body {
 .world-bg {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
   z-index: 0;
   overflow: hidden;
 }
@@ -4430,6 +4450,8 @@ html, body {
 .world-bg__image {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
   background-size: cover;
   background-position: center bottom;
   background-repeat: no-repeat;

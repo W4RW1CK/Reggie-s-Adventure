@@ -116,6 +116,7 @@ export default function CreationScreen({ onDespertar }: CreationScreenProps) {
             {/* Form */}
             <div className="creation-screen__form" onClick={(e) => e.stopPropagation()}>
                 <label className="creation-screen__label">NOMBRE:</label>
+                <p className="creation-screen__helper-text">Dale un nombre a tu Regenmon</p>
                 <input
                     type="text"
                     className={`creation-screen__input ${error ? 'creation-screen__input--error' : ''}`}
@@ -123,7 +124,7 @@ export default function CreationScreen({ onDespertar }: CreationScreenProps) {
                     onChange={handleNameChange}
                     onFocus={() => { inputFocusedRef.current = true; }}
                     onBlur={() => { inputFocusedRef.current = false; }}
-                    placeholder="Escribe un nombre..."
+                    placeholder="Nombre..."
                     maxLength={15}
                 />
                 <div className="creation-screen__char-count">
