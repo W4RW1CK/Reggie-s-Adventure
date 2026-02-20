@@ -837,12 +837,17 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   background-color: #1a1a2e;
   z-index: 70;
   padding: clamp(12px, 3vh, 24px);
+  padding-top: 0;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+.creation-screen__spacer {
+  flex: 1 1 0;
 }
 
 .creation-screen__scanlines {
