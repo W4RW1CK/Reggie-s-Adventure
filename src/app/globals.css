@@ -2854,21 +2854,33 @@ html, body {
     flex-direction: row;
   }
 
+  /* World NEVER compresses — always 100% */
   .game-screen--desktop-split .game-screen__world-area {
-    width: 65%;
+    width: 100%;
     flex-shrink: 0;
   }
 
+  /* Right panel overlays on top of world */
   .game-screen__right-panel {
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
     width: 35%;
-    height: 100%;
+    max-width: 480px;
     display: flex;
     flex-direction: column;
     background: var(--theme-chat-bg, rgba(15, 15, 30, 0.95));
-    backdrop-filter: blur(4px);
-    border-left: 2px solid rgba(255, 255, 255, 0.1);
-    z-index: 20;
+    backdrop-filter: blur(8px);
+    border-left: 2px solid rgba(255, 255, 255, 0.15);
+    z-index: 30;
     overflow: hidden;
+    animation: panel-slide-in 0.25s ease-out;
+  }
+
+  @keyframes panel-slide-in {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
   }
 
   .right-panel__welcome {
