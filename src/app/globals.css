@@ -3064,7 +3064,7 @@ html, body {
   box-sizing: border-box !important;
   margin: 0 !important;
   resize: none !important;
-  overflow-y: auto !important;
+  overflow-y: hidden !important;
   display: block !important;
 }
 
