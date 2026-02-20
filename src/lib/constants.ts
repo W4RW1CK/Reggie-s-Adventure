@@ -9,7 +9,7 @@ export const STAT_INITIAL = 50;
 export const ACTION_AMOUNT = 10; // Cantidad que sube/baja por acción
 
 // Decaimiento
-export const DECAY_RATE_PER_HOUR = 2; // Puntos que bajan por hora
+export const DECAY_RATE_PER_HOUR = 3; // Puntos que bajan por hora — 33h to empty from full
 export const DECAY_INTERVAL_MS = 60000; // Intervalo de chequeo en vivo (1 min)
 
 // Validación de Nombre
@@ -53,10 +53,10 @@ export const PROGRESS_MISSION_BONUS = 5;
 export const FRACTURE_THRESHOLDS = [50, 100, 200, 400];
 
 // Purification S4 (split into two buttons)
-export const PURIFY_SPIRIT_COST = 10;    // 10 fragments
-export const PURIFY_SPIRIT_GAIN = 10;    // +10 espíritu only
-export const PURIFY_ESSENCE_COST = 10;   // 10 fragments
-export const PURIFY_ESSENCE_GAIN = 10;   // +10 esencia only
+export const PURIFY_SPIRIT_COST = 15;    // 15 fragments — meaningful trade-off
+export const PURIFY_SPIRIT_GAIN = 12;    // +12 pulso — ~2.5 good chats worth
+export const PURIFY_ESSENCE_COST = 15;   // 15 fragments
+export const PURIFY_ESSENCE_GAIN = 12;   // +12 esencia — ~2.5 good chats worth
 
 // Strikes
 export const STRIKE_COOLDOWN_DURATION_MS = 1800000;    // 30 min

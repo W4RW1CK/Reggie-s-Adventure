@@ -138,9 +138,9 @@ export function buildSystemPrompt(
     {
       "message": "Tu respuesta aquí (string)",
       "statsChange": {
-        "espiritu": "integer -5 to 5",
-        "pulso": "integer -5 to 5 (calm conversations = positive, intense = negative)",
-        "esencia": "integer -4 to -1 (talking always costs esencia)",
+        "espiritu": "integer -3 to 5 (deep/meaningful = positive, shallow/spam = negative. Hardest to raise)",
+        "pulso": "integer -2 to 3 (calm/kind = positive, intense/aggressive = negative. Moderate range)",
+        "esencia": "integer -3 to -1 (talking ALWAYS costs esencia. Only recovery: Nutrir purification)",
         "fragmentos": "integer 0 to 5 (reward for conversing, harder near 100)"
       },
       "playerName": "El nombre del usuario si lo acabas de descubrir en este mensaje (string, opcional)",

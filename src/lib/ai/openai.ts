@@ -29,9 +29,9 @@ export function createOpenAIProvider(apiKey: string): AIProvider {
                     const data = JSON.parse(responseText) as ChatResponse;
                     if (data.statsChange) {
                         const s = data.statsChange;
-                        s.espiritu = Math.max(-5, Math.min(5, s.espiritu ?? 0));
-                        s.pulso = Math.max(-5, Math.min(5, s.pulso ?? 0));
-                        s.esencia = Math.max(-4, Math.min(-1, s.esencia ?? -1));
+                        s.espiritu = Math.max(-3, Math.min(5, s.espiritu ?? 0));
+                        s.pulso = Math.max(-2, Math.min(3, s.pulso ?? 0));
+                        s.esencia = Math.max(-3, Math.min(-1, s.esencia ?? -1));
                         s.fragmentos = Math.max(0, Math.min(5, s.fragmentos ?? 0));
                     }
                     return data;
