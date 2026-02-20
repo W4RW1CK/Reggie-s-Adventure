@@ -1019,6 +1019,7 @@ body {
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
+  z-index: 2;
 }
 
 .creation-screen__error {
