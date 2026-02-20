@@ -60,7 +60,7 @@ export default function GameScreen({
     const [showTutorial, setShowTutorial] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
     const [showPhoto, setShowPhoto] = useState(false);
-    const [rightPanel, setRightPanel] = useState<'welcome' | 'chat' | 'photo'>('welcome');
+    const [rightPanel, setRightPanel] = useState<'welcome' | 'chat' | 'photo'>('chat');
     const [showDiario, setShowDiario] = useState(false);
     const [showMissionPopup, setShowMissionPopup] = useState(false);
     const [missionCelebration, setMissionCelebration] = useState(false);
@@ -135,15 +135,15 @@ export default function GameScreen({
             showToast('❌ No tienes suficientes fragmentos', 'error');
             return;
         }
-        if (regenmon.stats.espiritu >= 100) {
-            showToast('✨ ¡Espíritu al máximo!', 'error');
+        if (regenmon.stats.pulso >= 100) {
+            showToast('✨ ¡Pulso al máximo!', 'error');
             return;
         }
         showToast('❤️ Recargando…', 'loading');
         setTimeout(() => {
-            onUpdateStats({ fragmentos: -PURIFY_SPIRIT_COST, espiritu: PURIFY_SPIRIT_GAIN });
+            onUpdateStats({ fragmentos: -PURIFY_SPIRIT_COST, pulso: PURIFY_SPIRIT_GAIN });
             addActivity('purify', -PURIFY_SPIRIT_COST);
-            showToast('✨ ¡Espíritu restaurado!', 'success');
+            showToast('✨ ¡Pulso restaurado!', 'success');
             showFloatingDelta(`-${PURIFY_SPIRIT_COST} 🔮`);
             triggerSpriteAnim('sprite-purify-bounce');
         }, 600);
@@ -219,6 +219,14 @@ export default function GameScreen({
     });
 
     const isDesktop = windowWidth >= 1025;
+
+    // Auto-open chat on desktop
+    useEffect(() => {
+        if (isDesktop && !isChatOpen) {
+            toggleChat();
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // Only on mount
 
     // Sync rightPanel state with chat/photo
     const handleOpenChat = () => {
@@ -375,7 +383,7 @@ export default function GameScreen({
                                 <button
                                     className="purify-btn purify-btn--spirit"
                                     onClick={(e) => { e.stopPropagation(); handlePurifySpirit(); }}
-                                    disabled={regenmon.stats.fragmentos < PURIFY_SPIRIT_COST || regenmon.stats.espiritu >= 100}
+                                    disabled={regenmon.stats.fragmentos < PURIFY_SPIRIT_COST || regenmon.stats.pulso >= 100}
                                 >
                                     🔮 Recargar {PURIFY_SPIRIT_COST}💎
                                 </button>
