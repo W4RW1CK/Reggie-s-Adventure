@@ -4331,16 +4331,19 @@ html, body {
   align-items: center;
   justify-content: center;
   min-height: 100%;
-  padding: 48px 16px 24px;
+  padding: clamp(16px, 3vw, 24px);
+  padding-top: clamp(40px, 6vh, 60px);
   animation: result-reveal 0.5s ease;
+  background: transparent;
 }
 
 .postphoto__content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: clamp(12px, 2vw, 18px);
   max-width: 400px;
+  width: 100%;
   text-align: center;
 }
 
@@ -4350,8 +4353,8 @@ html, body {
 
 .postphoto__sprite-img {
   image-rendering: pixelated;
-  width: 120px;
-  height: 120px;
+  width: clamp(80px, 15vw, 120px);
+  height: clamp(80px, 15vw, 120px);
 }
 
 .postphoto__sprite--happy {
@@ -4373,26 +4376,26 @@ html, body {
 }
 
 .postphoto__name {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-family: var(--font-press-start-2p) !important;
+  font-size: clamp(0.5rem, 1.2vw, 0.7rem) !important;
   color: var(--theme-text-primary, #e8e8e8);
   margin: 0;
 }
 
 .postphoto__resonance {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-family: var(--font-press-start-2p) !important;
+  font-size: clamp(0.5rem, 1.2vw, 0.7rem) !important;
   padding: 4px 12px;
 }
 
-.postphoto__resonance--strong { color: #4caf50; }
+.postphoto__resonance--strong { color: #2ecc71; }
 .postphoto__resonance--medium { color: #f5c542; }
-.postphoto__resonance--weak { color: #a0a0a0; }
+.postphoto__resonance--weak { color: var(--theme-text-secondary, #a0a0a0); }
 .postphoto__resonance--penalizing { color: #e74c3c; }
 
 .postphoto__diary {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 8px;
+  font-family: var(--font-press-start-2p) !important;
+  font-size: clamp(0.45rem, 1.1vw, 0.65rem) !important;
   font-style: italic;
   color: var(--theme-text-secondary, #a0a0a0);
   line-height: 1.8;
@@ -4403,49 +4406,53 @@ html, body {
 .postphoto__deltas {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: clamp(6px, 1vw, 10px);
   justify-content: center;
 }
 
 .postphoto__delta {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-family: var(--font-press-start-2p) !important;
+  font-size: clamp(0.5rem, 1.2vw, 0.7rem) !important;
 }
 
-.postphoto__delta--fragments { color: #80deea; }
-.postphoto__delta--positive { color: #4caf50; }
+.postphoto__delta--fragments { color: #93c5fd; }
+.postphoto__delta--positive { color: #2ecc71; }
 .postphoto__delta--negative { color: #e74c3c; }
 
 .postphoto__actions {
   display: flex;
-  gap: 12px;
+  gap: clamp(8px, 1.5vw, 14px);
   margin-top: 8px;
 }
 
 .postphoto__btn {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  padding: 12px 20px;
-  border: 4px solid var(--theme-border, #4a4a4a);
+  font-family: var(--font-press-start-2p) !important;
+  font-size: clamp(0.5rem, 1.2vw, 0.7rem) !important;
+  padding: clamp(10px, 2vw, 16px) clamp(16px, 3vw, 24px) !important;
+  border: 2px solid var(--theme-border, #4a4a4a) !important;
+  border-radius: 0 !important;
   cursor: pointer;
   min-height: 44px;
+  box-shadow: none !important;
+  transition: background 0.2s;
 }
 
 .postphoto__btn--chat {
-  background: #4caf50;
-  color: #fff;
-  border-color: #388e3c;
+  background: rgba(46, 204, 113, 0.2) !important;
+  color: #2ecc71 !important;
+  border-color: rgba(46, 204, 113, 0.4) !important;
 }
 .postphoto__btn--chat:hover {
-  background: #66bb6a;
+  background: rgba(46, 204, 113, 0.3) !important;
 }
 
 .postphoto__btn--world {
-  background: var(--theme-surface, #0f3460);
-  color: var(--theme-text-primary, #e8e8e8);
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: var(--theme-text-primary, #e8e8e8) !important;
+  border-color: var(--theme-border, #4a4a4a) !important;
 }
 .postphoto__btn--world:hover {
-  background: var(--theme-bg-medium, #16213e);
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Photo loading state */

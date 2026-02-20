@@ -470,7 +470,7 @@ export default function GameScreen({
                             onAddStrike={() => ({ newCount: 0, message: '' })}
                             onCompleteMission={() => { if (activeMission) { completeMission(); return 5; } return 0; }}
                             onUseMissionBypass={() => false}
-                            onGoToChat={() => handleSwitchToChat}
+                            onGoToChat={() => handleSwitchToChat()}
                             onGoToWorld={() => handleSwitchToChat()}
                             onSetLastPhotoAt={() => {}}
                         />
@@ -520,7 +520,7 @@ export default function GameScreen({
                             onAddStrike={() => ({ newCount: 0, message: '' })}
                             onCompleteMission={() => { if (activeMission) { completeMission(); return 5; } return 0; }}
                             onUseMissionBypass={() => false}
-                            onGoToChat={() => handleSwitchToChat}
+                            onGoToChat={() => handleSwitchToChat()}
                             onGoToWorld={() => handleSwitchToChat()}
                             onSetLastPhotoAt={() => {}}
                         />
