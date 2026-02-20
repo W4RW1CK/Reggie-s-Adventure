@@ -4635,28 +4635,66 @@ html, body {
   transition: opacity 0.8s ease, filter 0.8s ease;
 }
 
+.fracture-svg {
+  overflow: visible;
+}
+
+/* === ACTIVE FRACTURES — threatening, world-breaking === */
 .fracture-line--active .fracture-line__path {
-  stroke: rgba(180, 40, 60, 0.7);
-  filter: drop-shadow(0 0 8px rgba(200, 50, 50, 0.6));
-  animation: fracture-pulse 2s ease-in-out infinite;
+  stroke: rgba(220, 30, 50, 0.85);
+  filter: drop-shadow(0 0 6px rgba(255, 40, 40, 0.7));
+  animation: fracture-pulse 2.5s ease-in-out infinite;
+}
+
+.fracture-line--active .fracture-line__core {
+  stroke: rgba(255, 120, 100, 0.9);
+  filter: drop-shadow(0 0 3px rgba(255, 200, 150, 0.8));
+  animation: fracture-core-flicker 1.5s ease-in-out infinite alternate;
 }
 
 .fracture-line--active .fracture-line__glow {
-  stroke: rgba(180, 40, 60, 0.3);
-  filter: drop-shadow(0 0 12px rgba(200, 50, 50, 0.4));
+  stroke: rgba(200, 30, 30, 0.15);
+  filter: drop-shadow(0 0 20px rgba(255, 50, 50, 0.4)) drop-shadow(0 0 40px rgba(200, 0, 0, 0.2));
+  animation: fracture-glow-breathe 3s ease-in-out infinite;
 }
 
+.fracture-line--active .fracture-line__branch {
+  stroke: rgba(200, 40, 50, 0.6);
+  filter: drop-shadow(0 0 4px rgba(255, 50, 50, 0.5));
+  animation: fracture-branch-pulse 2s ease-in-out infinite;
+}
+
+.fracture-line--active .fracture-line__branch-glow {
+  stroke: rgba(180, 30, 30, 0.1);
+  filter: drop-shadow(0 0 12px rgba(255, 40, 40, 0.3));
+}
+
+/* === CLOSED FRACTURES — healed, golden scars === */
 .fracture-line--closed .fracture-line__path {
-  stroke: rgba(212, 175, 55, 0.2);
-  filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.3));
+  stroke: rgba(212, 175, 55, 0.15);
+  filter: drop-shadow(0 0 2px rgba(212, 175, 55, 0.2));
 }
 
-.fracture-line--closed .fracture-line__glow {
+.fracture-line--closed .fracture-line__core {
   stroke: rgba(212, 175, 55, 0.1);
   filter: none;
 }
 
-/* Sealing animation */
+.fracture-line--closed .fracture-line__glow {
+  stroke: rgba(212, 175, 55, 0.05);
+  filter: none;
+}
+
+.fracture-line--closed .fracture-line__branch {
+  stroke: rgba(212, 175, 55, 0.1);
+  filter: none;
+}
+
+.fracture-line--closed .fracture-line__branch-glow {
+  stroke: transparent;
+}
+
+/* === SEALING ANIMATION === */
 .fracture-line--sealing .fracture-line__path {
   animation: fracture-seal 2.5s ease forwards;
 }
@@ -4665,9 +4703,33 @@ html, body {
   animation: fracture-seal-glow 2.5s ease forwards;
 }
 
+.fracture-line--sealing .fracture-line__core {
+  animation: fracture-seal-core 2.5s ease forwards;
+}
+
+.fracture-line--sealing .fracture-line__branch {
+  animation: fracture-seal 2.5s ease 0.3s forwards;
+}
+
+/* === FRACTURE ANIMATIONS === */
 @keyframes fracture-pulse {
-  0%, 100% { opacity: 0.5; filter: drop-shadow(0 0 6px rgba(200, 50, 50, 0.4)); }
-  50% { opacity: 1; filter: drop-shadow(0 0 12px rgba(200, 50, 50, 0.8)); }
+  0%, 100% { opacity: 0.6; stroke-width: 4.5; }
+  50% { opacity: 1; stroke-width: 5.5; filter: drop-shadow(0 0 10px rgba(255, 40, 40, 0.9)); }
+}
+
+@keyframes fracture-core-flicker {
+  0% { opacity: 0.7; stroke-width: 1.5; }
+  100% { opacity: 1; stroke-width: 2.5; }
+}
+
+@keyframes fracture-glow-breathe {
+  0%, 100% { opacity: 0.3; stroke-width: 10; }
+  50% { opacity: 0.6; stroke-width: 14; }
+}
+
+@keyframes fracture-branch-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
 }
 
 @keyframes fracture-seal {
