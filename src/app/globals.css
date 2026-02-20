@@ -2933,7 +2933,6 @@ html, body {
   background: var(--theme-chat-bg, rgba(15, 15, 30, 0.95));
   border-left: 2px solid rgba(255, 255, 255, 0.1);
   z-index: 20;
-  animation: chat-panel-slide-in 0.3s ease-out;
 }
 
 @keyframes chat-panel-slide-in {
