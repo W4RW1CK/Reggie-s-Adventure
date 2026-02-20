@@ -1,6 +1,6 @@
 import { CHAT_MAX_CHARS } from '@/lib/constants';
 import classNames from 'classnames';
-import { KeyboardEvent } from 'react';
+import { KeyboardEvent, useRef, useEffect } from 'react';
 
 interface ChatInputProps {
     value: string;
@@ -13,8 +13,18 @@ interface ChatInputProps {
 }
 
 export function ChatInput({ value, onChange, onSend, onPhotoClick, isLoading, disabled, placeholder }: ChatInputProps) {
-    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    // Auto-resize textarea to fit content
+    useEffect(() => {
+        const el = textareaRef.current;
+        if (!el) return;
+        el.style.height = 'auto';
+        el.style.height = `${Math.min(el.scrollHeight, 120)}px`;
+    }, [value]);
+
+    const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             if (!disabled && !isLoading && value.trim()) {
                 onSend();
@@ -41,8 +51,8 @@ export function ChatInput({ value, onChange, onSend, onPhotoClick, isLoading, di
 
             {/* Input field */}
             <div className="chat-input-bar__field">
-                <input
-                    type="text"
+                <textarea
+                    ref={textareaRef}
                     className="chat-input-bar__input"
                     placeholder={placeholder || "Escribe algo..."}
                     value={value}
@@ -50,6 +60,7 @@ export function ChatInput({ value, onChange, onSend, onPhotoClick, isLoading, di
                     onKeyDown={handleKeyDown}
                     disabled={disabled || isLoading}
                     maxLength={CHAT_MAX_CHARS}
+                    rows={1}
                     aria-label="Mensaje para tu Regenmon"
                 />
                 <span className={classNames(

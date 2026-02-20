@@ -3007,7 +3007,7 @@ html, body {
 /* === Chat Input Bar (wireframe style: [📎] [input] [→]) === */
 .chat-input-bar {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: clamp(6px, 1vw, 10px);
   width: 100%;
 }
@@ -3041,10 +3041,13 @@ html, body {
 
 .chat-input-bar__input {
   width: 100% !important;
-  height: 44px !important;
-  padding: 0 50px 0 clamp(8px, 1.5vw, 14px) !important;
+  min-height: 44px !important;
+  max-height: 120px !important;
+  height: auto !important;
+  padding: clamp(8px, 1vw, 12px) 50px clamp(8px, 1vw, 12px) clamp(8px, 1.5vw, 14px) !important;
   font-family: var(--font-press-start-2p) !important;
   font-size: clamp(0.5rem, 1.2vw, 0.7rem) !important;
+  line-height: 1.5 !important;
   background: var(--theme-input-bg, rgba(0, 0, 0, 0.4)) !important;
   color: var(--theme-input-text, #e0e0e0) !important;
   border: 2px solid var(--theme-border, #4a4a4a) !important;
@@ -3053,6 +3056,8 @@ html, body {
   transition: border-color 0.15s;
   box-sizing: border-box;
   margin: 0;
+  resize: none !important;
+  overflow-y: auto !important;
 }
 
 .chat-input-bar__input::placeholder {
