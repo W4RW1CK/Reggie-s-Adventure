@@ -5,7 +5,7 @@ import { RegenmonType } from '@/lib/types';
 
 interface RegenmonSVGProps {
     type: RegenmonType;
-    size?: number;
+    size?: number | string;
     className?: string;
     stats?: {
         espiritu: number;

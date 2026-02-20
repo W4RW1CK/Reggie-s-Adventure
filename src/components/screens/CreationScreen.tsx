@@ -97,7 +97,7 @@ export default function CreationScreen({ onDespertar }: CreationScreenProps) {
 
                 <div className="creation-screen__showcase">
                     <div className="creation-screen__svg-container" style={{ borderColor: currentType.color }}>
-                        <RegenmonSVG type={currentType.type} size={150} />
+                        <RegenmonSVG type={currentType.type} size="100%" />
                     </div>
                     <div className="creation-screen__info">
                         <h2 className="creation-screen__type-label" style={{ color: currentType.color }}>
