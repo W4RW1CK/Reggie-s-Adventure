@@ -996,6 +996,8 @@ body {
 
 .creation-screen__input:focus {
   border-color: #f5c542;
+  z-index: 0 !important;
+  isolation: auto !important;
 }
 
 .creation-screen__input--error {
@@ -1019,7 +1021,7 @@ body {
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-  z-index: 2;
+  z-index: 10;
 }
 
 .creation-screen__error {
