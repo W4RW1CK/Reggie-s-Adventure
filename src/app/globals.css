@@ -4170,6 +4170,20 @@ html, body {
   color: #2563eb;
 }
 
+.theme-light .s4-settings__action-btn--danger {
+  border-color: #dc2626;
+  background: rgba(220, 38, 38, 0.08);
+  color: #dc2626;
+}
+
+.theme-light .s4-settings__action-btn--danger:hover {
+  background: rgba(220, 38, 38, 0.2);
+}
+
+.theme-light .s4-settings__row--danger .s4-settings__label {
+  color: #dc2626;
+}
+
 /* Divider */
 .s4-settings__divider {
   height: 1px;
