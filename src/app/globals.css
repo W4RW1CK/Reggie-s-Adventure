@@ -2928,7 +2928,7 @@ html, body {
 .game-screen__chat-panel {
   display: flex;
   flex-direction: column;
-  width: 30%;
+  width: 100%;
   height: 100%;
   background: var(--theme-chat-bg, rgba(15, 15, 30, 0.95));
   border-left: 2px solid rgba(255, 255, 255, 0.1);
