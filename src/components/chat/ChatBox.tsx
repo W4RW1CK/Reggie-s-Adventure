@@ -67,13 +67,6 @@ export function ChatBox({
                         </span>
                         <span className="chat-panel__name">{regenmonName}</span>
                     </span>
-                    <button
-                        className="chat-panel__close"
-                        onClick={onClose}
-                        aria-label="Cerrar chat"
-                    >
-                        ✕
-                    </button>
                 </div>
 
                 {/* Messages */}
