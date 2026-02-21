@@ -1,7 +1,7 @@
 # 📊 PROGRESS — Reggie's Adventure
 > **Versión actual:** v0.4 — La Evolución
-> **Última actualización:** 2026-02-19
-> **Estado:** Sesión 3 — `COMPLETADA` (96/96 — 100%) | Sesión 4 — `PENDIENTE`
+> **Última actualización:** 2026-02-21
+> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PENDIENTE`
 >
 > 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — biblia narrativa del universo
 > 🔨 **Fases detalladas:** [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) — qué construir y en qué orden
@@ -9,7 +9,7 @@
 
 ---
 
-## ESTADO ACTUAL: SESIÓN 3 `COMPLETADA` (Fases 1-48) — 96/96 (100%)
+## ESTADO ACTUAL: SESIÓN 4 `COMPLETADA` (Fases 1-64) — v0.4
 
 ---
 
@@ -538,7 +538,7 @@
   - Dos paneles: 📜 Historial = transacciones, 🧠 Memorias = diario emocional
   - Resonancia por tipo: Rayo=movimiento/tech, Flama=conexiones/emociones, Hielo=naturaleza/conocimiento
 - [x] IMPLEMENTATION_PLAN.md: Fases 49-64 definidas (16 fases)
-- [ ] Implementación de S4 — PENDIENTE
+- [x] Implementación de S4 — COMPLETADA (2026-02-21)
 
 ### S4 UI/UX Design Phase — COMPLETADA ✅ (2026-02-19)
 - [x] Full UI/UX design session completed
@@ -574,11 +574,11 @@
 - [x] Fase 59: Evolution Visual (FractureOverlay, WorldBackground, FractureDots, sprite adaptation, fracture closing animation)
 - [x] Fase 60: Missions UI (MissionPopup, mission flow, completion celebration, HUD wiring, PostPhoto mission bonus)
 - [x] Fase 61: Theme Adaptation + Sprite Polish + Transition Smoothing
-- [ ] Fase 62: Transitions + Polish (evolution morph, photo reveal, mission animations)
+- [x] Fase 62: Tutorial + Transitions + Polish — DONE (commit 1b2bba1). Smart tooltip positioning with arrows pointing to targets, transition animations on all state changes, tutorial for new (5 steps) and returning (2 steps) players
 
 **Close (63-64):**
-- [ ] Fase 63: User Adjustments Pre-Deploy (full playtest)
-- [ ] Fase 64: Testing + Audit + Deploy (a11y, security, lore, edge cases, v0.4 tag)
+- [x] Fase 63: User Adjustments — DONE. Multiple fix commits: tutorial tooltips, light theme with warm parchment palette (#fffbf5), WebP asset conversion (94% size reduction), CSS GPU acceleration, fracture visual fixes, stats separation (always visible below sprite), chat limit reduced to 140 chars, split purification (Recargar 💛 pulso + Nutrir 🌱 esencia), Diario panel with Memorias + Historial tabs
+- [x] Fase 64: Testing + Audit + Deploy — DONE (2026-02-21). Final audit passed, v0.4 tagged
 
 ---
 
@@ -586,6 +586,9 @@
 
 - Sesión 1 completada y desplegada (v0.1.16) - 2026-02-13
 - Sesión 2 completada y desplegada (v0.2) - 2026-02-15
+- Sesión 3 completada y desplegada (v0.3) - 2026-02-18
+- Sesión 4 completada (v0.4) - 2026-02-21 — La Evolución
+- **S5 "El Encuentro" es NEXT** — social features: public profiles, feed, interactions
 - Archivos canónicos son documentos vivos — se actualizan conforme avanza el proyecto
 - Dev server: `npm run dev` → http://localhost:3000
 - API keys: .env.local (Gemini dev) / Vercel env vars (OpenAI prod)

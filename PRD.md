@@ -1,7 +1,7 @@
 # 📋 PRD — Reggie's Adventure
 > **Versión actual:** v0.4 — La Evolución
-> **Última actualización:** 2026-02-19
-> **Estado:** Sesión 3 — `COMPLETADA` (96/96 — 100%) | Sesión 4 — `PENDIENTE`
+> **Última actualización:** 2026-02-21
+> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PENDIENTE`
 >
 > 📜 **Narrativa completa:** [LORE.md](./LORE.md) — biblia narrativa del universo
 > 🗺️ **Flujos de usuario:** [APP_FLOW.md](./APP_FLOW.md) — cómo navega el jugador
@@ -160,7 +160,7 @@ Al completar las 5 sesiones, el jugador tiene:
 - Interacciones sociales (S5)
 - Feed de descubrimiento (S5)
 
-### Sesión 4 — La Evolución (v0.4) `PENDIENTE`
+### Sesión 4 — La Evolución (v0.4) `COMPLETADA`
 
 > Las memorias del mundo real alimentan al Regenmon. Fotos de la vida cotidiana
 > se evalúan emocionalmente según resonancia de tipo. El Regenmon evoluciona
@@ -314,18 +314,29 @@ US-55: Como jugador, quiero que si mi Regenmon me pide una foto en una misión, 
 - [x] Memory indicator 🧠 N in HUD (S3 bonus)
 - [x] Character counter in CreationScreen (S3 bonus)
 - [x] History button 📜 compact toggle on right side of bottom bar (S3 bonus)
-- [ ] Photo upload with emotional evaluation by type-resonance (S4)
-- [ ] Dual Vision API: Gemini Vision (dev) / GPT-4o Vision (prod) (S4)
-- [ ] Dual economy: Fragmentos (spendable) + Progreso (lifetime, never decreases) (S4)
-- [ ] 4 Fracturas at progress thresholds 50/100/200/400 (S4)
-- [ ] 5 invisible evolution stages per type (S4)
-- [ ] AI-generated contextual missions (1 active max) (S4)
-- [ ] Privacy: photos never stored, only metadata + diary entries (S4)
-- [ ] Strike system for photo abuse (3 strikes, 7-day reset) (S4)
-- [ ] Memorias panel (🧠) — emotional diary separate from Historial (📜) (S4)
-- [ ] Fullscreen API for immersive experience (S4)
-- [ ] Evolution visual changes across 5 stages (S4)
-- [ ] Evolution freeze when all stats < 10 (S4)
+- [x] Photo upload with emotional evaluation by type-resonance (S4)
+- [x] Dual Vision API: Gemini Vision (dev) / GPT-4o Vision (prod) (S4)
+- [x] Dual economy: Fragmentos (spendable) + Progreso (lifetime, never decreases) (S4)
+- [x] 4 Fracturas at progress thresholds 50/100/200/400 (S4)
+- [x] 5 invisible evolution stages per type (S4)
+- [x] AI-generated contextual missions (1 active max) (S4)
+- [x] Privacy: photos never stored, only metadata + diary entries (S4)
+- [x] Strike system for photo abuse (3 strikes, 7-day reset) (S4)
+- [x] Memorias panel (🧠) — emotional diary separate from Historial (📜) (S4)
+- [x] Fullscreen API for immersive experience (S4)
+- [x] Evolution visual changes across 5 stages (S4)
+- [x] Evolution freeze when all stats < 10 (S4)
+- [x] Mobile-first UI overhaul: compact HUD, icon bottom nav, 3-state navigation (S4)
+- [x] Desktop 70/30 split layout (S4)
+- [x] Light theme with warm parchment palette (S4)
+- [x] WebP assets with 94% size reduction (S4)
+- [x] CSS GPU acceleration + performance optimizations (S4)
+- [x] Tutorial with smart tooltip positioning (S4)
+- [x] Transition animations on all state changes (S4)
+- [x] Chat limit 140 chars (S4)
+- [x] Split purification: Recargar (💛 pulso) + Nutrir (🌱 esencia) (S4)
+- [x] Always-visible stats below sprite (S4)
+- [x] Diario panel with Memorias + Historial tabs (S4)
 
 ---
 

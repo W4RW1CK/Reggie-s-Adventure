@@ -1,7 +1,7 @@
 # 🗺️ APP_FLOW — Reggie's Adventure
 > **Versión actual:** v0.4 — La Evolución
-> **Última actualización:** 2026-02-19
-> **Estado:** Sesión 3 — `COMPLETADA` (96/96 — 100%) | Sesión 4 — `PENDIENTE`
+> **Última actualización:** 2026-02-21
+> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PENDIENTE`
 >
 > 📜 **Narrativa y personalidad:** Todo diálogo, texto de historia y comportamiento conversacional
 > debe ser consistente con [LORE.md](./LORE.md). En caso de conflicto, LORE.md prevalece.

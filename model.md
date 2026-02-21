@@ -1,7 +1,7 @@
 # 🧠 MODEL — Reggie's Adventure
 > **Versión actual:** v0.4 — La Evolución
-> **Última actualización:** 2026-02-19
-> **Estado:** Sesión 3 — `COMPLETADA` (96/96 — 100%) | Sesión 4 — `PENDIENTE`
+> **Última actualización:** 2026-02-21
+> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PENDIENTE`
 >
 > 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — toda decisión de personalidad, tono o diálogo se valida contra LORE
 > 📋 **Spec del producto:** [PRD.md](./PRD.md) — toda decisión de features se refleja ahí
@@ -16,7 +16,7 @@
 | S1: El Despertar | v0.1.16 | `COMPLETADA` |
 | S2: La Voz | v0.2 | `COMPLETADA` |
 | S3: La Conexión | v0.3 | `COMPLETADA` (96/96 — 100%) |
-| S4: La Evolución | v0.4 | `PENDIENTE` |
+| S4: La Evolución | v0.4 | `COMPLETADA` |
 | S5: El Encuentro | — | `PENDIENTE` |
 
 ---
@@ -801,6 +801,57 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 - **CSS**: ~250 lines in globals.css — all components styled with NES aesthetic, light theme overrides, responsive, animations (sprite-bounce, spin, result-reveal)
 - **Privacy**: Photos converted to base64, sent to API, then discarded. Never stored in state or localStorage
 - **Build**: ✅ Clean (TypeScript + Next.js build)
+
+### Fase 62: Tutorial + Transitions + Polish (2026-02-20)
+- **Smart tooltip positioning**: Tutorial tooltips with CSS arrows pointing to their target elements. Position computed dynamically based on element bounding rect.
+- **Transition animations**: All state changes (World ↔ Chat ↔ Photo) have smooth CSS transitions. Fracture effect: flash + shake + particle burst.
+- **Tutorial differentiation**: New players get 5 steps, S3 returning players get 2 steps (Photos + Evolution only) with "✨ Nuevo" badge.
+- **"Saltar tutorial" always visible**: User can skip at any point. Restartable from Settings.
+
+### Fase 63: User Adjustments (2026-02-20/21)
+- **Tutorial tooltip arrows**: Smart positioning with CSS arrows pointing to target elements
+- **Light theme overhaul**: Migrated to warm parchment palette (#fffbf5 background, #383838 text) matching Frutero brand
+- **WebP asset conversion**: All PNG sprites and backgrounds converted to WebP — 94% file size reduction
+- **CSS GPU acceleration**: `will-change` and `transform: translateZ(0)` on animated elements for smoother rendering
+- **Fracture visual fixes**: Corrected fracture dot rendering and sealing animation timing
+- **Stats separation**: Stats always visible below sprite (not hidden behind tap interaction). Removed stat overlay in favor of persistent display
+- **Chat limit reduced**: 280 → 140 characters per message (more concise, mobile-friendly)
+- **Split purification**: Single Purificar button replaced with two options: "❤️ Recargar 10🔮" (Pulso +10) and "💧 Nutrir 10🔮" (Esencia +10). More strategic player choice
+- **Diario panel**: Unified panel with Memorias (emotional diary) + Historial (transaction log) tabs
+- **Bottom nav icons**: Minimal icon-only buttons (💬 📷) with small labels
+
+### Fase 64: Testing + Audit + Deploy (2026-02-21)
+- **Final audit**: All S4 features verified working
+- **Version**: v0.4 — La Evolución
+- **All canonical files updated**
+
+### S4 Completion Summary (2026-02-21)
+
+**Key S4 features delivered:**
+- Vision API (Gemini dev / GPT-4o prod) for emotional photo evaluation
+- Emotional resonance system (type-specific: Rayo=movement/tech, Flama=connections/emotions, Hielo=nature/knowledge)
+- Dual economy: Fragments (spendable) + Progress (lifetime, never decreases)
+- 4 Fractures as evolution milestones (thresholds: 50, 100, 200, 400 progress)
+- 5 invisible evolution stages (no visible level names)
+- Mission system (AI-generated, context-aware, 1 active max)
+- Strike system (1=warning, 2=30min cooldown 24hrs, 3=blocked 48hrs)
+- Photo cooldown (5min standard, 2min failed)
+- Photos NEVER stored (privacy)
+- Fullscreen API for immersion
+- Mobile-first UI overhaul: compact HUD, icon bottom nav, 3-state navigation (World ↔ Chat ↔ Photo)
+- Desktop 70/30 split layout
+- Custom breakpoints: Mobile <640px, Tablet 641-1024px, Desktop 1025px+
+- Light theme with warm parchment palette (#fffbf5)
+- WebP assets (94% size reduction)
+- CSS GPU acceleration + performance optimizations
+- Tutorial with smart tooltip positioning
+- Transition animations on all state changes
+- Chat limit 140 chars
+- Split purification: Recargar (💛 pulso) + Nutrir (🌱 esencia)
+- Always-visible stats below sprite
+- Diario panel (Memorias + Historial tabs)
+
+**S5 "El Encuentro" is NEXT:** Social features — public profiles, feed, interactions between Regenmons.
 
 ### 📌 Rules & Lessons Learned
 - **Docs/ folder is UNTOUCHABLE** — never modify files in the Docs/ directory
