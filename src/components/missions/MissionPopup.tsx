@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { Mission, RegenmonType } from '@/lib/types';
 import { MISSION_EXPIRATION_MS } from '@/lib/constants';
 
@@ -39,7 +40,10 @@ export default function MissionPopup({
   onAbandon,
 }: MissionPopupProps) {
   const popupRef = useRef<HTMLDivElement>(null);
+  const backdropRef = useRef<HTMLDivElement>(null);
   const [isClosing, setIsClosing] = useState(false);
+
+  useFocusTrap(backdropRef, isOpen && !isClosing);
   const [isRevealing, setIsRevealing] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState('');
   const [confirmAbandon, setConfirmAbandon] = useState(false);
@@ -104,7 +108,7 @@ export default function MissionPopup({
   const hasActiveMission = activeMission && !activeMission.completed && Date.now() < activeMission.expiresAt;
 
   return (
-    <div className={`mission-popup-backdrop ${isClosing ? 'mission-popup-backdrop--closing' : ''}`}>
+    <div ref={backdropRef} className={`mission-popup-backdrop ${isClosing ? 'mission-popup-backdrop--closing' : ''}`}>
       <div
         ref={popupRef}
         className={`mission-popup ${isClosing ? 'mission-popup--closing' : ''} ${isRevealing ? 'mission-popup--revealing' : ''}`}

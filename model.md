@@ -950,3 +950,9 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 - **Responsive polish**: Min 44px touch targets on mobile. `overflow-wrap: break-word` on text panels.
 - **Reduced motion**: All Phase 61 animations respect `prefers-reduced-motion`.
 - **Build**: ✅ Clean
+
+### Known Limitations (S4 Audit)
+
+**3. Client-side strike storage:** Strikes stored in localStorage can be manipulated via DevTools. Acceptable for a game context. Future fix: server-side validation in /api/evaluate with session tokens or signed payloads.
+
+**4. In-memory rate limiting:** Rate limit map resets on Vercel serverless cold starts and doesn't share state across instances. Client-side cooldown provides primary protection. Future fix: Vercel KV (Upstash Redis) for persistent rate limiting.

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 interface SettingsPanelProps {
   isOpen: boolean;
@@ -36,8 +37,11 @@ export default function SettingsPanel({
   onResetGame,
 }: SettingsPanelProps) {
   const panelRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
   const [isClosing, setIsClosing] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
+
+  useFocusTrap(overlayRef, isOpen && !isClosing);
 
   // Smooth close animation
   const handleClose = useCallback(() => {
@@ -74,6 +78,7 @@ export default function SettingsPanel({
 
   return (
     <div
+      ref={overlayRef}
       className={`s4-settings-overlay ${isClosing ? 's4-settings-overlay--closing' : ''}`}
       role="dialog"
       aria-modal="true"

@@ -2027,7 +2027,7 @@ body {
   --theme-modal-overlay: rgba(56, 56, 56, 0.45);
   --theme-input-bg: #fffbf5;
   --theme-input-text: #383838;
-  --theme-muted: #a09888;
+  --theme-muted: #736658;
   --theme-stat-bar-bg: #e0d8c8;
 }
 
@@ -4276,6 +4276,10 @@ html, body {
 .precamera__first-time p { margin: 4px 0; }
 
 .precamera__privacy {
+  color: #1a8a4a !important;
+}
+
+.theme-dark .precamera__privacy {
   color: #2ecc71 !important;
 }
 

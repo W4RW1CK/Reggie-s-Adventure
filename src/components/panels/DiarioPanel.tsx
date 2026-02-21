@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { DiaryEntry, FragmentTransaction } from '@/lib/types';
 
 type DiarioTab = 'memorias' | 'historial';
@@ -70,8 +71,11 @@ function activityLabel(action: FragmentTransaction['action']): string {
 }
 
 export default function DiarioPanel({ isOpen, onClose, diaryEntries, activityLog }: DiarioPanelProps) {
+  const overlayRef = useRef<HTMLDivElement>(null);
   const [activeTab, setActiveTab] = useState<DiarioTab>('memorias');
   const [closing, setClosing] = useState(false);
+
+  useFocusTrap(overlayRef, isOpen && !closing);
 
   // Handle Escape key
   useEffect(() => {
@@ -95,6 +99,7 @@ export default function DiarioPanel({ isOpen, onClose, diaryEntries, activityLog
 
   return (
     <div
+      ref={overlayRef}
       className={`diario-overlay ${closing ? 'diario-overlay--closing' : ''}`}
       onClick={(e) => {
         // Only close on backdrop click (desktop)

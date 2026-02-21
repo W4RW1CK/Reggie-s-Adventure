@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { STORAGE_KEYS } from '@/lib/constants';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 interface TutorialModalProps {
     onDismiss: (dontShowAgain: boolean) => void;
@@ -98,6 +99,9 @@ export default function TutorialModal({ onDismiss }: TutorialModalProps) {
     const [spotlightRect, setSpotlightRect] = useState<DOMRect | null>(null);
     const [isExiting, setIsExiting] = useState(false);
     const steps = useRef<TutorialStep[]>([]);
+    const overlayRef = useRef<HTMLDivElement>(null);
+
+    useFocusTrap(overlayRef, !isExiting);
 
     // Determine steps on mount
     useEffect(() => {
@@ -209,6 +213,7 @@ export default function TutorialModal({ onDismiss }: TutorialModalProps) {
 
     return (
         <div
+            ref={overlayRef}
             className={`tutorial-overlay ${isExiting ? 'tutorial-overlay--exiting' : ''}`}
             role="dialog"
             aria-modal="true"

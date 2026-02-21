@@ -64,8 +64,9 @@ export default function PhotoFlow({
   const [loadingText, setLoadingText] = useState('Tu Regenmon está sintiendo esta memoria...');
   const [missionCompleted, setMissionCompleted] = useState(false);
   const [missionBonusAmount, setMissionBonusAmount] = useState(0);
+  const [lastPhotoFailed, setLastPhotoFailed] = useState(false);
 
-  const cooldownStatus = getPhotoCooldownStatus(lastPhotoAt, strikes, activeMission);
+  const cooldownStatus = getPhotoCooldownStatus(lastPhotoAt, strikes, activeMission, lastPhotoFailed);
 
   const handleCapture = useCallback(async (base64: string) => {
     setStep('loading');
@@ -131,11 +132,17 @@ export default function PhotoFlow({
       // Handle penalizing
       if (visionResult.resonanceLevel === 'penalizing') {
         onAddStrike();
+        setLastPhotoFailed(true);
+      } else {
+        setLastPhotoFailed(false);
       }
 
       setResult(visionResult);
       setStep('result');
     } catch {
+      // Mark as failed for shorter cooldown
+      setLastPhotoFailed(true);
+      onSetLastPhotoAt(Date.now());
       // Fallback: go back to pre-camera
       setStep('pre-camera');
     }
