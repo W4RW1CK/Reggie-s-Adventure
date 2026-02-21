@@ -26,23 +26,26 @@ export default function ChatPhotoPicker({ onCapture, onClose }: ChatPhotoPickerP
 
   return (
     <div className="chat-photo-picker">
-      <div className="chat-photo-picker__overlay" onClick={onClose} />
-      <div className="chat-photo-picker__menu">
+      <div className="chat-photo-picker__overlay" onClick={onClose} role="presentation" />
+      <div className="chat-photo-picker__menu" role="dialog" aria-label="Seleccionar foto">
         <button
           className="chat-photo-picker__option"
           onClick={() => cameraRef.current?.click()}
+          aria-label="Tomar foto con cámara"
         >
           📸 Cámara
         </button>
         <button
           className="chat-photo-picker__option"
           onClick={() => galleryRef.current?.click()}
+          aria-label="Seleccionar imagen de galería"
         >
           🖼️ Galería
         </button>
         <button
           className="chat-photo-picker__close"
           onClick={onClose}
+          aria-label="Cerrar selector de foto"
         >
           ✕
         </button>
