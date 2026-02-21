@@ -6109,7 +6109,7 @@ html, body,
 }
 
 .fracture-new-effect {
-  animation: fracture-shake 0.5s ease-out;
+  animation: fracture-shake 0.5s ease-out, fracture-flash 0.8s ease-out;
 }
 
 @keyframes fracture-shake {
@@ -6119,6 +6119,13 @@ html, body,
   45% { transform: translate(-2px, -1px); }
   60% { transform: translate(2px, 1px); }
   75% { transform: translate(-1px, 1px); }
+}
+
+@keyframes fracture-flash {
+  0% { filter: brightness(1); }
+  15% { filter: brightness(1.8); }
+  40% { filter: brightness(1.2); }
+  100% { filter: brightness(1); }
 }
 
 /* ============================================

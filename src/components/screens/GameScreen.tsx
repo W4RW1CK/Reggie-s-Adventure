@@ -429,7 +429,7 @@ export default function GameScreen({
 
                 {/* Photo Flow Overlay (mobile only) */}
                 {showPhoto && !isDesktop && (
-                    <div className="photo-flow-overlay" style={{ position: 'fixed', inset: 0, zIndex: 100 }}>
+                    <div className="photo-flow-overlay photoflow-enter" style={{ position: 'fixed', inset: 0, zIndex: 100 }}>
                         <PhotoFlow
                             regenmonType={regenmon.type}
                             regenmonName={regenmon.name}

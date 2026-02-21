@@ -42,7 +42,7 @@ export default function PostPhoto({ result, regenmonType, regenmonName, missionC
   const spriteFile = `/sprites/${regenmonType}-base.webp`;
 
   return (
-    <div className="postphoto">
+    <div className="postphoto photo-result-reveal">
       <div className="postphoto__content">
         {/* Sprite */}
         <div className={`postphoto__sprite ${spriteClass}`}>

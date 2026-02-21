@@ -112,7 +112,7 @@ export function ChatBox({
             role="dialog"
             aria-label={`Chat con ${regenmonName}`}
         >
-            <div className="w-full max-w-[600px] pointer-events-auto animate-fade-in-up">
+            <div className="w-full max-w-[600px] pointer-events-auto chat-overlay-enter">
                 {/* Header */}
                 <div className="flex justify-between items-center text-white p-2 border-b-4 border-black font-['Press_Start_2P'] text-[10px]" style={{ backgroundColor: 'var(--theme-chat-header)' }}>
                     <span>
@@ -161,13 +161,6 @@ export function ChatBox({
             </div>
 
             <style jsx global>{`
-                @keyframes fade-in-up {
-                    from { opacity: 0; transform: translateY(20px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                .animate-fade-in-up {
-                    animation: fade-in-up 0.3s ease-out forwards;
-                }
                 .scrollbar-nes::-webkit-scrollbar {
                     width: 8px;
                 }
