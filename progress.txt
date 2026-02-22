@@ -1,7 +1,7 @@
 # 📊 PROGRESS — Reggie's Adventure
 > **Versión actual:** v0.5 — El Encuentro
 > **Última actualización:** 2026-02-22
-> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `IN PROGRESS` (Level 1-3 done)
+> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `IN PROGRESS` (Level 1-4 done, pending audit+deploy)
 >
 > 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — biblia narrativa del universo
 > 🔨 **Fases detalladas:** [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) — qué construir y en qué orden
@@ -627,10 +627,10 @@
 - [x] Fase 76: Activity Feed — already implemented in RegisterHub (L1), messages section on profile serves as social persistence
 
 **LEVEL 4 — BONUS (77-80):**
-- [ ] Fase 77: Silent Notifications
-- [ ] Fase 78: Privacy Toggle
-- [ ] Fase 79: Lore-Friendly Naming + Polish
-- [ ] Fase 80: Full Audit + Deploy v0.5
+- [x] Fase 77: Leaderboard sorting (⭐ Puntos / 🍊 $FRUTA / 🆕 Nuevos) + stage filtering (Todos/Huevo/Cría/Joven/Adulto) + "tú" highlight
+- [x] Fase 78: Celebration animations — confetti particles (🍎/🎁) on feed/gift interactions, 12 emojis falling with rotation
+- [x] Fase 79: Social Summary on own profile — 📊 grid with Visitas, $FRUTA, Puntos, Mensajes
+- [ ] Fase 80: Full Audit + Deploy v0.5 — PENDING
 
 ---
 

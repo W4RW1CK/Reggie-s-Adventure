@@ -1102,3 +1102,11 @@ totalPoints → evolution.totalProgress
 - **Balance indicator**: "Tu balance: 🍊 N $FRUTA" shown above interaction buttons so user knows what they can afford
 - **Toast notifications**: All interactions show brief feedback (3s auto-dismiss), non-invasive fixed-top toast
 - **Persistence**: All interactions go through HUB API — data persists server-side. Balance synced to localStorage for client display.
+
+### Level 4 Implementation Notes (2026-02-22)
+
+- **Leaderboard sorting**: Client-side sort by ⭐ Puntos (default), 🍊 $FRUTA, 🆕 Nuevos. Fetches 20 entries per page for filtering headroom.
+- **Stage filtering**: Buttons for Todos/🥚 Huevo/🐣 Cría/🌟 Joven/👑 Adulto. Client-side filter on fetched data.
+- **"Tú" highlight**: Own entry gets orange border + "(tú)" tag via myHubId comparison
+- **Celebration animations**: 12 emoji confetti particles on feed (🍎) and gift (🎁) interactions. CSS keyframe `confetti-fall` with rotation + scale + opacity. 1.5s duration, pointer-events: none.
+- **Social Summary**: 2x2 grid on own profile showing 👀 Visitas, 🍊 $FRUTA, ⭐ Puntos, 💬 Mensajes. Only visible on isMyProfile.

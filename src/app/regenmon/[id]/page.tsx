@@ -54,6 +54,7 @@ export default function RegenmonProfilePage() {
   const [greetLoading, setGreetLoading] = useState(false);
   const [feedLoading, setFeedLoading] = useState(false);
   const [giftLoading, setGiftLoading] = useState<number | null>(null);
+  const [celebration, setCelebration] = useState<string | null>(null);
 
   // Messages
   const [messages, setMessages] = useState<HubMessage[]>([]);
@@ -66,6 +67,11 @@ export default function RegenmonProfilePage() {
   const showToast = useCallback((msg: string) => {
     setToastMsg(msg);
     setTimeout(() => setToastMsg(null), 3000);
+  }, []);
+
+  const showCelebration = useCallback((emoji: string) => {
+    setCelebration(emoji);
+    setTimeout(() => setCelebration(null), 1500);
   }, []);
 
   // Load registration state + balance
@@ -129,6 +135,7 @@ export default function RegenmonProfilePage() {
       localStorage.setItem(STORAGE_KEYS.HUB_BALANCE, String(newBalance));
       setMyBalance(newBalance);
       showToast(`¡Le diste de comer a ${profile.name}! 🍎 -10 $FRUTA`);
+      showCelebration('🍎');
     } else {
       showToast('No se pudo alimentar. Intenta después 🍎');
     }
@@ -145,6 +152,7 @@ export default function RegenmonProfilePage() {
       localStorage.setItem(STORAGE_KEYS.HUB_BALANCE, String(newBalance));
       setMyBalance(newBalance);
       showToast(`¡Enviaste ${amount} $FRUTA a ${profile.name}! 🎁`);
+      showCelebration('🎁');
     } else {
       showToast('No se pudo enviar el regalo. Intenta después 🎁');
     }
@@ -199,6 +207,19 @@ export default function RegenmonProfilePage() {
     <div className="profile-page">
       {toastMsg && <div className="profile-page__toast">{toastMsg}</div>}
 
+      {/* Celebration particles (Level 4 J) */}
+      {celebration && (
+        <div className="profile-page__celebration" aria-hidden="true">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <span key={i} className="profile-page__confetti" style={{
+              left: `${10 + Math.random() * 80}%`,
+              animationDelay: `${Math.random() * 0.4}s`,
+              fontSize: `${1.2 + Math.random() * 1}rem`,
+            }}>{celebration}</span>
+          ))}
+        </div>
+      )}
+
       <div className="profile-page__header">
         <Link href="/leaderboard" className="profile-page__back">← Ranking</Link>
         {isMyProfile && <span className="profile-page__my-badge">🏠 Tu Perfil</span>}
@@ -249,6 +270,31 @@ export default function RegenmonProfilePage() {
         <span>👀 {profile.totalVisits} visitas</span>
         <span>📅 {timeAgo(profile.registeredAt)}</span>
       </div>
+
+      {/* Social Summary for own profile (Level 4 K) */}
+      {isMyProfile && (
+        <div className="profile-page__social-summary">
+          <h2 className="profile-page__summary-title">📊 Resumen Social</h2>
+          <div className="profile-page__summary-grid">
+            <div className="profile-page__summary-item">
+              <span className="profile-page__summary-val">👀 {profile.totalVisits}</span>
+              <span className="profile-page__summary-label">Visitas</span>
+            </div>
+            <div className="profile-page__summary-item">
+              <span className="profile-page__summary-val">🍊 {profile.balance}</span>
+              <span className="profile-page__summary-label">$FRUTA</span>
+            </div>
+            <div className="profile-page__summary-item">
+              <span className="profile-page__summary-val">⭐ {profile.totalPoints}</span>
+              <span className="profile-page__summary-label">Puntos</span>
+            </div>
+            <div className="profile-page__summary-item">
+              <span className="profile-page__summary-val">💬 {messages.length}</span>
+              <span className="profile-page__summary-label">Mensajes</span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* === INTERACTIONS (Level 2 + Level 3) === */}
       {!isMyProfile && isRegistered && (

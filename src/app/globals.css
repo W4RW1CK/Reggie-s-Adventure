@@ -7211,3 +7211,116 @@ html, body,
 .theme-light .profile-page__messages {
   border-top-color: rgba(0,0,0,0.08);
 }
+
+/* ========== LEADERBOARD FILTERS (Level 4 I) ========== */
+.leaderboard-page__filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.leaderboard-page__sort,
+.leaderboard-page__stage-filter {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+.leaderboard-page__filter-btn {
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: transparent;
+  color: rgba(255,255,255,0.5);
+  font-family: var(--font-press-start-2p), monospace;
+  font-size: 0.38rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.leaderboard-page__filter-btn:hover {
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.8);
+}
+.leaderboard-page__filter-btn--active {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  border-color: var(--color-primary, #ff9500);
+}
+.leaderboard-card--me {
+  border-color: var(--color-primary, #ff9500) !important;
+  background: rgba(255,149,0,0.08) !important;
+}
+.leaderboard-card__me-tag {
+  color: var(--color-primary, #ff9500);
+  font-size: 0.4rem;
+}
+
+/* ========== CELEBRATION (Level 4 J) ========== */
+.profile-page__celebration {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1000;
+  overflow: hidden;
+}
+.profile-page__confetti {
+  position: absolute;
+  top: -20px;
+  animation: confetti-fall 1.5s ease-out forwards;
+}
+@keyframes confetti-fall {
+  0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg) scale(0.3); opacity: 0; }
+}
+
+/* ========== SOCIAL SUMMARY (Level 4 K) ========== */
+.profile-page__social-summary {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(255,255,255,0.05);
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.profile-page__summary-title {
+  font-size: 0.6rem;
+  margin: 0 0 0.75rem;
+  text-align: center;
+}
+.profile-page__summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+.profile-page__summary-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+.profile-page__summary-val {
+  font-size: 0.6rem;
+}
+.profile-page__summary-label {
+  font-size: 0.38rem;
+  opacity: 0.5;
+}
+
+/* Light theme L4 */
+.theme-light .leaderboard-page__filter-btn {
+  border-color: rgba(0,0,0,0.08);
+  color: rgba(0,0,0,0.4);
+}
+.theme-light .leaderboard-page__filter-btn:hover {
+  background: rgba(0,0,0,0.04);
+  color: rgba(0,0,0,0.7);
+}
+.theme-light .leaderboard-page__filter-btn--active {
+  background: rgba(0,0,0,0.06);
+  color: #383838;
+}
+.theme-light .leaderboard-card--me {
+  background: rgba(255,149,0,0.06) !important;
+}
+.theme-light .profile-page__social-summary {
+  background: rgba(0,0,0,0.03);
+  border-color: rgba(0,0,0,0.06);
+}
