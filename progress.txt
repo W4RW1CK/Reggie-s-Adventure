@@ -609,10 +609,10 @@
 ### Fases S5 (65-80):
 
 **LEVEL 1 — CORE (65-68):**
-- [ ] Fase 65: useHub Hook — HUB API communication layer
-- [ ] Fase 66: Register — Registrar Regenmon en HUB
-- [ ] Fase 67: Sync — Sincronizar stats al HUB
-- [ ] Fase 68: Social Tab 🌍 — UI base + bottom nav
+- [x] Fase 65: useHub Hook — HUB API communication layer (useHub.ts with all 9 API functions, retry logic, typed responses)
+- [x] Fase 66: Register — RegisterHub.tsx component (auto-detect name/owner/sprite, preview, alreadyRegistered handling, social panel post-register)
+- [x] Fase 67: Sync — useHubSync.ts hook (auto-sync every 5min, stats mapping espiritu→happiness/pulso→energy/esencia→hunger, balance save)
+- [x] Fase 68: Social Tab 🌍 — 3rd button in bottom nav, mobile overlay + desktop panel, social CSS in globals.css, theme-aware
 
 **LEVEL 2 — COMPLETE (69-72):**
 - [ ] Fase 69: Leaderboard "Regeneración Global"

@@ -23,6 +23,7 @@ import { useMissions } from '@/hooks/useMissions';
 import MissionPopup from '../missions/MissionPopup';
 import { ErrorBoundary } from '../ErrorBoundary';
 import PhotoFlow from '../photo/PhotoFlow';
+import RegisterHub from '../social/RegisterHub';
 
 interface GameScreenProps {
     regenmon: RegenmonData;
@@ -60,7 +61,8 @@ export default function GameScreen({
     const [showTutorial, setShowTutorial] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
     const [showPhoto, setShowPhoto] = useState(false);
-    const [rightPanel, setRightPanel] = useState<'chat' | 'photo'>('chat');
+    const [showSocial, setShowSocial] = useState(false);
+    const [rightPanel, setRightPanel] = useState<'chat' | 'photo' | 'social'>('chat');
     const [showDiario, setShowDiario] = useState(false);
     const [showMissionPopup, setShowMissionPopup] = useState(false);
     const [missionCelebration, setMissionCelebration] = useState(false);
@@ -231,6 +233,7 @@ export default function GameScreen({
     // Radio-button toggle: always one of chat/photo active
     const handleSwitchToChat = () => {
         setShowPhoto(false);
+        setShowSocial(false);
         if (!isChatOpen) toggleChat();
         setRightPanel('chat');
     };
@@ -238,7 +241,15 @@ export default function GameScreen({
     const handleSwitchToPhoto = () => {
         if (isChatOpen) toggleChat();
         setShowPhoto(true);
+        setShowSocial(false);
         setRightPanel('photo');
+    };
+
+    const handleSwitchToSocial = () => {
+        if (isChatOpen) toggleChat();
+        setShowPhoto(false);
+        setShowSocial(true);
+        setRightPanel('social');
     };
 
     return (
@@ -407,6 +418,14 @@ export default function GameScreen({
                             <span className="hud-bottom-nav__icon">📷</span>
                             <span className="hud-bottom-nav__label">Foto</span>
                         </button>
+                        <button
+                            className={`hud-bottom-nav__btn ${rightPanel === 'social' ? 'hud-bottom-nav__btn--active' : ''}`}
+                            onClick={handleSwitchToSocial}
+                            aria-label="Social"
+                        >
+                            <span className="hud-bottom-nav__icon">🌍</span>
+                            <span className="hud-bottom-nav__label">Social</span>
+                        </button>
                     </div>
                 </div>
 
@@ -424,6 +443,13 @@ export default function GameScreen({
                                 }}
                             />
                         ))}
+                    </div>
+                )}
+
+                {/* Social Overlay (mobile only) */}
+                {showSocial && !isDesktop && (
+                    <div className="social-flow-overlay photoflow-enter" style={{ position: 'fixed', inset: 0, zIndex: 100 }}>
+                        <RegisterHub onClose={handleSwitchToChat} />
                     </div>
                 )}
 
@@ -471,6 +497,9 @@ export default function GameScreen({
                                 onPhotoClick={handleSwitchToPhoto}
                             />
                         </ErrorBoundary>
+                    )}
+                    {rightPanel === 'social' && showSocial && (
+                        <RegisterHub onClose={handleSwitchToChat} />
                     )}
                     {rightPanel === 'photo' && showPhoto && (
                         <PhotoFlow

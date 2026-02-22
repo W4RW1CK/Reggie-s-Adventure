@@ -6451,3 +6451,252 @@ html, body,
     animation: none !important;
   }
 }
+
+/* ========================================
+   S5 — SOCIAL PANEL
+   ======================================== */
+
+.social-flow-overlay {
+  background: var(--theme-bg, #1a1a2e);
+  overflow-y: auto;
+}
+
+.social-panel {
+  font-family: 'Press Start 2P', monospace;
+  padding: 16px;
+  min-height: 100%;
+  color: var(--theme-text, #e8e8e8);
+  background: var(--theme-bg, #1a1a2e);
+}
+
+.social-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--theme-border, #4a4a4a);
+}
+
+.social-panel__title {
+  font-size: 12px;
+  margin: 0;
+}
+
+.social-panel__close {
+  background: none;
+  border: none;
+  color: var(--theme-text, #e8e8e8);
+  font-size: 16px;
+  cursor: pointer;
+  font-family: 'Press Start 2P', monospace;
+  padding: 4px 8px;
+}
+
+.social-panel__badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.social-badge {
+  font-size: 8px;
+  padding: 4px 12px;
+  background: rgba(0, 229, 255, 0.15);
+  border: 2px solid #00e5ff;
+  color: #00e5ff;
+  display: inline-block;
+}
+
+.social-panel__name {
+  font-size: 12px;
+  color: var(--theme-text-accent, #ffffff);
+}
+
+.social-panel__balance {
+  text-align: center;
+  font-size: 10px;
+  margin-bottom: 16px;
+  color: #ff9500;
+}
+
+.social-panel__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.social-panel__btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  padding: 10px 12px;
+  background: var(--theme-surface, #0f3460);
+  border: 2px solid var(--theme-border, #4a4a4a);
+  color: var(--theme-text, #e8e8e8);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s;
+}
+
+.social-panel__btn:hover {
+  background: rgba(0, 229, 255, 0.1);
+  border-color: #00e5ff;
+}
+
+.social-panel__subtitle {
+  font-size: 9px;
+  margin: 0 0 8px 0;
+  color: var(--theme-text-secondary, #a0a0a0);
+}
+
+.social-panel__activity {
+  margin-top: 8px;
+}
+
+.social-panel__activity-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.social-panel__activity-item {
+  display: flex;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--theme-border, #4a4a4a);
+  font-size: 7px;
+  line-height: 1.6;
+}
+
+.social-panel__activity-icon {
+  flex-shrink: 0;
+}
+
+.social-panel__activity-text {
+  color: var(--theme-text-secondary, #a0a0a0);
+}
+
+.social-panel__empty {
+  font-size: 7px;
+  color: var(--theme-text-secondary, #a0a0a0);
+  text-align: center;
+  padding: 16px 0;
+}
+
+/* --- Registration Invitation --- */
+
+.social-panel__invite {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+}
+
+.social-panel__preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--theme-surface, #0f3460);
+  border: 2px solid var(--theme-border, #4a4a4a);
+  width: 100%;
+}
+
+.social-panel__sprite {
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}
+
+.social-panel__preview-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.social-panel__preview-name {
+  font-size: 10px;
+  color: var(--theme-text-accent, #ffffff);
+}
+
+.social-panel__preview-type {
+  font-size: 8px;
+  color: var(--theme-text-secondary, #a0a0a0);
+}
+
+.social-panel__preview-stats {
+  font-size: 7px;
+  color: var(--theme-text-secondary, #a0a0a0);
+}
+
+.social-panel__invite-text {
+  font-size: 8px;
+  text-align: center;
+  line-height: 1.8;
+  color: var(--theme-text-secondary, #a0a0a0);
+  max-width: 280px;
+}
+
+.social-panel__error {
+  font-size: 7px;
+  color: #e74c3c;
+  text-align: center;
+}
+
+.social-panel__register-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  padding: 12px 20px;
+  background: #4caf50;
+  border: 2px solid #388e3c;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.social-panel__register-btn:hover {
+  background: #66bb6a;
+}
+
+.social-panel__register-btn:disabled {
+  background: #555555;
+  border-color: #444;
+  cursor: not-allowed;
+}
+
+.social-panel__later-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  color: var(--theme-text-secondary, #a0a0a0);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* --- Light theme overrides --- */
+
+.theme-light .social-panel {
+  background: var(--theme-bg, #fffbf5);
+  color: var(--theme-text, #383838);
+}
+
+.theme-light .social-badge {
+  background: rgba(0, 229, 255, 0.08);
+}
+
+.theme-light .social-panel__btn {
+  background: var(--theme-surface, #f5f0e1);
+}
+
+.theme-light .social-panel__btn:hover {
+  background: rgba(0, 229, 255, 0.05);
+}
+
+.theme-light .social-flow-overlay {
+  background: var(--theme-bg, #fffbf5);
+}
