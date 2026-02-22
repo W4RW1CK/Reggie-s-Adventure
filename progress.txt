@@ -1,7 +1,7 @@
 # 📊 PROGRESS — Reggie's Adventure
 > **Versión actual:** v0.5 — El Encuentro
 > **Última actualización:** 2026-02-22
-> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `IN PROGRESS` (Level 1-4 done, pending audit+deploy)
+> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `COMPLETADA` ✅ (v0.5)
 >
 > 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — biblia narrativa del universo
 > 🔨 **Fases detalladas:** [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) — qué construir y en qué orden
@@ -629,8 +629,14 @@
 **LEVEL 4 — BONUS (77-80):**
 - [x] Fase 77: Leaderboard sorting (⭐ Puntos / 🍊 $FRUTA / 🆕 Nuevos) + stage filtering (Todos/Huevo/Cría/Joven/Adulto) + "tú" highlight
 - [x] Fase 78: Celebration animations — confetti particles (🍎/🎁) on feed/gift interactions, 12 emojis falling with rotation
-- [x] Fase 79: Social Summary on own profile — 📊 grid with Visitas, $FRUTA, Puntos, Mensajes
-- [ ] Fase 80: Full Audit + Deploy v0.5 — PENDING
+- [x] Fase 79: Social Summary on own profile — 📊 grid with Visitas, Fragmentos, Progreso, Mensajes
+- [x] Fase 80: Full Audit + Deploy v0.5
+  - Translation Layer (×2.5 conversion, Fracturas, unified Reggie vocabulary)
+  - Unified Economy (1 $FRUTA = 1 Fragmento, single pool)
+  - Progress cap at 600 (= 1500 HUB pts)
+  - Privacy Mode (🔒 hides stats from HUB + full privacy wall for visitors)
+  - 🪬 Canalizar action, leaderboard scroll + pagination (10/page)
+  - Build clean, 0 errors, 0 warnings
 
 ---
 
