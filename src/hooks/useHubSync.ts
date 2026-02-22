@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useCallback } from 'react';
-import { STORAGE_KEYS } from '@/lib/constants';
+import { STORAGE_KEYS, PROGRESS_MAX } from '@/lib/constants';
 import { useHub } from './useHub';
 
 interface UseHubSyncOptions {
@@ -38,9 +38,10 @@ function mapStatsToHub(stats: { espiritu: number; pulso: number; esencia: number
 
 const HUB_CONVERSION_FACTOR = 2.5;
 
-/** Convert Reggie progress to HUB totalPoints */
+/** Convert Reggie progress to HUB totalPoints (capped at PROGRESS_MAX) */
 export function progressToHubPoints(progress: number): number {
-  return Math.round(progress * HUB_CONVERSION_FACTOR);
+  const capped = Math.min(progress, PROGRESS_MAX);
+  return Math.round(capped * HUB_CONVERSION_FACTOR);
 }
 
 /** Convert HUB totalPoints back to Reggie-equivalent progress */

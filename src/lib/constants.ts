@@ -51,6 +51,7 @@ export const PROGRESS_MISSION_BONUS = 5;
 
 // Fracture thresholds
 export const FRACTURE_THRESHOLDS = [50, 100, 200, 400];
+export const PROGRESS_MAX = 600; // Cap: 600 × 2.5 = 1500 HUB pts (exact HUB ceiling)
 
 // Purification S4 (split into two buttons)
 export const PURIFY_SPIRIT_COST = 15;    // 15 fragments — meaningful trade-off
