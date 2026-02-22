@@ -100,24 +100,12 @@ export default function RegisterHub({ onClose }: RegisterHubProps) {
         </div>
 
         <div className="social-panel__actions">
-          <button
-            className="social-panel__btn"
-            onClick={() => {
-              if (typeof window !== 'undefined')
-                window.open(`https://regenmon-final.vercel.app/leaderboard`, '_blank');
-            }}
-          >
+          <a href="/leaderboard" className="social-panel__btn">
             🏆 Regeneración Global
-          </button>
-          <button
-            className="social-panel__btn"
-            onClick={() => {
-              if (typeof window !== 'undefined' && hubId)
-                window.open(`https://regenmon-final.vercel.app/regenmon/${hubId}`, '_blank');
-            }}
-          >
+          </a>
+          <a href={`/regenmon/${hubId}`} className="social-panel__btn">
             👤 Mi Perfil
-          </button>
+          </a>
         </div>
 
         <div className="social-panel__activity">
