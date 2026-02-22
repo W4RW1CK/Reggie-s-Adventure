@@ -31,7 +31,7 @@ export default function LeaderboardPage() {
     setLoading(true);
     setError(false);
     // Fetch more to allow client-side filtering
-    getLeaderboard(page, 20).then(res => {
+    getLeaderboard(page, 10).then(res => {
       if (res?.data) {
         setAllEntries(res.data);
         setTotalPages(res.pagination?.totalPages ?? 1);
