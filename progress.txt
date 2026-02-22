@@ -1,7 +1,7 @@
 # 📊 PROGRESS — Reggie's Adventure
 > **Versión actual:** v0.5 — El Encuentro
 > **Última actualización:** 2026-02-22
-> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PLANNING`
+> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `IN PROGRESS` (Level 1-2 done)
 >
 > 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — biblia narrativa del universo
 > 🔨 **Fases detalladas:** [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) — qué construir y en qué orden
@@ -615,10 +615,10 @@
 - [x] Fase 68: Social Tab 🌍 — 3rd button in bottom nav, mobile overlay + desktop panel, social CSS in globals.css, theme-aware
 
 **LEVEL 2 — COMPLETE (69-72):**
-- [ ] Fase 69: Leaderboard "Regeneración Global"
-- [ ] Fase 70: Public Profile — Mini-World
-- [ ] Fase 71: Visit Mode — Read-Only
-- [ ] Fase 72: Dual Currency Display (💎 + 🍊)
+- [x] Fase 69: Leaderboard "Regeneración Global" — /leaderboard page inside Reggie, paginated, ranked entries with sprites, links to profiles
+- [x] Fase 70: Public Profile — /regenmon/[id] page with sprite, stats bars, points, $FRUTA balance, visit counter, registration date
+- [x] Fase 71: Visit Mode — Read-Only with "👁️ Modo Visita" badge, "🏠 Tu Perfil" for own, greet interaction (👋), unregistered CTA
+- [x] Fase 72: RegisterHub internal links — Regeneración Global and Mi Perfil now route to internal pages, desktop tab switcher (💬📷🌍)
 
 **LEVEL 3 — EXCELLENT (73-76):**
 - [ ] Fase 73: Feed Interaction — Alimentar otro Regenmon

@@ -1084,3 +1084,12 @@ totalPoints → evolution.totalProgress
 | COMPLETE | 69-72 | Leaderboard + Public profile + Visit mode + Dual currency |
 | EXCELLENT | 73-76 | Feed interaction + Gift + Messages + Activity feed |
 | BONUS | 77-80 | Silent notifications + Privacy toggle + Lore naming + Polish+audit |
+
+### Level 2 Implementation Notes (2026-02-22)
+
+- **Leaderboard** (`/leaderboard`): Internal page consuming HUB API, paginated (10/page), rank icons (🥇🥈🥉), sprite fallback to rayo-base.webp, links to internal profile pages
+- **Profile** (`/regenmon/[id]`): Full profile with sprite, stats bars (happiness/energy/hunger), points, $FRUTA, visit counter, registration date
+- **Visit Mode**: "👁️ Modo Visita" badge for others, "🏠 Tu Perfil" for own. Greet interaction sends message via HUB API. Unregistered users see CTA
+- **Desktop tab switcher**: 💬 Chat | 📷 Foto | 🌍 Social tabs at top of right panel (small pixel font, active indicator)
+- **Internal routing**: RegisterHub links now route to `/leaderboard` and `/regenmon/{id}` instead of external HUB URLs
+- **Aesthetic note**: Desktop tab switcher is functional but needs visual polish (noted for later)
