@@ -31,10 +31,10 @@ function timeAgo(dateStr: string): string {
 }
 
 function stageName(stage: number): string {
-  if (stage <= 1) return '🥚 Huevo';
-  if (stage === 2) return '🐣 Cría';
-  if (stage === 3) return '🌟 Joven';
-  return '👑 Adulto';
+  if (stage <= 1) return '🥚 Bebé';
+  if (stage === 2) return '🐣 Joven';
+  if (stage === 3) return '🐉 Adulto';
+  return '🐉 Adulto';
 }
 
 export default function RegenmonProfilePage() {

@@ -6,13 +6,13 @@ import { STORAGE_KEYS } from '@/lib/constants';
 import Link from 'next/link';
 
 type SortMode = 'points' | 'balance' | 'newest';
-type StageFilter = 'all' | '1' | '2' | '3' | '4';
+type StageFilter = 'all' | '1' | '2' | '3';
 
 function stageName(stage: number): string {
-  if (stage <= 1) return '🥚 Huevo';
-  if (stage === 2) return '🐣 Cría';
-  if (stage === 3) return '🌟 Joven';
-  return '👑 Adulto';
+  if (stage <= 1) return '🥚 Bebé';
+  if (stage === 2) return '🐣 Joven';
+  if (stage === 3) return '🐉 Adulto';
+  return '🐉 Adulto';
 }
 
 export default function LeaderboardPage() {
@@ -96,7 +96,7 @@ export default function LeaderboardPage() {
           ))}
         </div>
         <div className="leaderboard-page__stage-filter">
-          {(['all', '1', '2', '3', '4'] as StageFilter[]).map(sf => (
+          {(['all', '1', '2', '3'] as StageFilter[]).map(sf => (
             <button
               key={sf}
               className={`leaderboard-page__filter-btn ${stageFilter === sf ? 'leaderboard-page__filter-btn--active' : ''}`}
