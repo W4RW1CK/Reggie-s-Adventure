@@ -314,7 +314,7 @@ export default function RegenmonProfilePage() {
             disabled={feedLoading || myBalance < 10}
             title={myBalance < 10 ? 'Necesitas al menos 10 Fragmentos' : ''}
           >
-            {feedLoading ? '🔄...' : '🌀 Purificar (-10 💎)'}
+            {feedLoading ? '🔄...' : '🪬 Canalizar (-10 💎)'}
           </button>
 
           {/* Gift (L3 F) */}

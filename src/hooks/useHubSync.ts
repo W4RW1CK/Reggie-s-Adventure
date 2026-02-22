@@ -66,7 +66,7 @@ export function hubPointsToFractura(hubPoints: number): number {
 /** Fractura display name */
 export function fracturaName(fractura: number): string {
   switch (fractura) {
-    case 0: return '🌍 Mundo Intacto';
+    case 0: return '🫧 Mundo Intacto';
     case 1: return '⚡ Primera Grieta';
     case 2: return '🔥 Grieta Profunda';
     case 3: return '💎 Mundo Fragmentado';
