@@ -268,13 +268,22 @@ export default function RegenmonProfilePage() {
         <p className="profile-page__stage">{fracturaName(hubPointsToFractura(profile.totalPoints))}</p>
       </div>
 
-      {/* Stats — hidden in privacy mode for visitors */}
+      {/* === PRIVACY WALL — visitors see nothing but the card === */}
       {privacyMode && !isMyProfile ? (
-        <div className="profile-page__privacy-notice">
-          🔒 Este perfil tiene el modo privado activado
-        </div>
+        <>
+          <div className="profile-page__privacy-notice">
+            🔒 Este Regenmon prefiere mantenerse en las sombras
+          </div>
+          <div className="profile-page__privacy-notice" style={{ marginTop: '0.5rem' }}>
+            Solo puedes ver que existe. Stats, progreso, mensajes y acciones están ocultos.
+          </div>
+          <Link href="/leaderboard" className="profile-page__back" style={{ display: 'block', textAlign: 'center', marginTop: '1.5rem' }}>
+            ← Volver al Ranking
+          </Link>
+        </>
       ) : (
         <>
+          {/* Stats */}
           <div className="profile-page__stats-grid">
             <div className="profile-page__stat">
               <span className="profile-page__stat-label">🔮 Espíritu</span>
@@ -305,43 +314,43 @@ export default function RegenmonProfilePage() {
             <span>👀 {profile.totalVisits} visitas</span>
             <span>📅 {timeAgo(profile.registeredAt)}</span>
           </div>
+
+          {/* Privacy indicator on own profile */}
+          {isMyProfile && privacyMode && (
+            <div className="profile-page__privacy-notice">
+              🔒 Modo Privado activo — los visitantes no ven tus stats
+            </div>
+          )}
+
+          {/* Social Summary for own profile (Level 4 K) */}
+          {isMyProfile && (
+            <div className="profile-page__social-summary">
+              <h2 className="profile-page__summary-title">📊 Resumen Social</h2>
+              <div className="profile-page__summary-grid">
+                <div className="profile-page__summary-item">
+                  <span className="profile-page__summary-val">👀 {profile.totalVisits}</span>
+                  <span className="profile-page__summary-label">Visitas</span>
+                </div>
+                <div className="profile-page__summary-item">
+                  <span className="profile-page__summary-val">💠 {profile.balance}</span>
+                  <span className="profile-page__summary-label">Fragmentos</span>
+                </div>
+                <div className="profile-page__summary-item">
+                  <span className="profile-page__summary-val">⭐ {Math.round(profile.totalPoints / 2.5)}</span>
+                  <span className="profile-page__summary-label">Progreso</span>
+                </div>
+                <div className="profile-page__summary-item">
+                  <span className="profile-page__summary-val">💬 {messages.length}</span>
+                  <span className="profile-page__summary-label">Mensajes</span>
+                </div>
+              </div>
+            </div>
+          )}
         </>
       )}
 
-      {/* Privacy indicator on own profile */}
-      {isMyProfile && privacyMode && (
-        <div className="profile-page__privacy-notice">
-          🔒 Modo Privado activo — los visitantes no ven tus stats
-        </div>
-      )}
-
-      {/* Social Summary for own profile (Level 4 K) */}
-      {isMyProfile && (
-        <div className="profile-page__social-summary">
-          <h2 className="profile-page__summary-title">📊 Resumen Social</h2>
-          <div className="profile-page__summary-grid">
-            <div className="profile-page__summary-item">
-              <span className="profile-page__summary-val">👀 {profile.totalVisits}</span>
-              <span className="profile-page__summary-label">Visitas</span>
-            </div>
-            <div className="profile-page__summary-item">
-              <span className="profile-page__summary-val">💠 {profile.balance}</span>
-              <span className="profile-page__summary-label">Fragmentos</span>
-            </div>
-            <div className="profile-page__summary-item">
-              <span className="profile-page__summary-val">⭐ {Math.round(profile.totalPoints / 2.5)}</span>
-              <span className="profile-page__summary-label">Progreso</span>
-            </div>
-            <div className="profile-page__summary-item">
-              <span className="profile-page__summary-val">💬 {messages.length}</span>
-              <span className="profile-page__summary-label">Mensajes</span>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* === INTERACTIONS (Level 2 + Level 3) === */}
-      {!isMyProfile && isRegistered && (
+      {!isMyProfile && isRegistered && !privacyMode && (
         <div className="profile-page__interactions">
           {/* My balance indicator */}
           <p className="profile-page__my-balance">Tu balance: 💠 {myBalance} Fragmentos</p>
@@ -389,8 +398,8 @@ export default function RegenmonProfilePage() {
         </div>
       )}
 
-      {/* === MESSAGES (Level 3) === */}
-      <div className="profile-page__messages">
+      {/* === MESSAGES (Level 3) — hidden in privacy mode for visitors === */}
+      {!(privacyMode && !isMyProfile) && <div className="profile-page__messages">
         <h2 className="profile-page__messages-title">💬 Mensajes</h2>
 
         {/* Send form (only for others, if registered) */}
@@ -432,7 +441,7 @@ export default function RegenmonProfilePage() {
             ))}
           </ul>
         )}
-      </div>
+      </div>}
     </div>
   );
 }
