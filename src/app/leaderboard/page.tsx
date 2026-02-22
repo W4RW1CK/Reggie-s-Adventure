@@ -69,6 +69,12 @@ export default function LeaderboardPage() {
     return `#${idx + 1}`;
   };
 
+  // Override body overflow:hidden for this page
+  useEffect(() => {
+    document.body.style.overflow = 'auto';
+    return () => { document.body.style.overflow = 'hidden'; };
+  }, []);
+
   return (
     <div className="leaderboard-page">
       <div className="leaderboard-page__header">
@@ -85,7 +91,7 @@ export default function LeaderboardPage() {
               className={`leaderboard-page__filter-btn ${sortMode === mode ? 'leaderboard-page__filter-btn--active' : ''}`}
               onClick={() => setSortMode(mode)}
             >
-              {mode === 'points' ? '⭐ Progreso' : mode === 'balance' ? '💎 Fragmentos' : '🆕 Nuevos'}
+              {mode === 'points' ? '⭐ Progreso' : mode === 'balance' ? '💠 Fragmentos' : '🆕 Nuevos'}
             </button>
           ))}
         </div>
@@ -142,7 +148,7 @@ export default function LeaderboardPage() {
                 </div>
                 <div className="leaderboard-card__stats">
                   <span className="leaderboard-card__points">⭐ {Math.round(entry.totalPoints / 2.5)}</span>
-                  <span className="leaderboard-card__balance">🍊 {entry.balance}</span>
+                  <span className="leaderboard-card__balance">💠 {entry.balance}</span>
                 </div>
               </Link>
             ))}

@@ -215,10 +215,16 @@ export default function RegenmonProfilePage() {
         <div className="profile-page__header">
           <Link href="/leaderboard" className="profile-page__back">← Ranking</Link>
         </div>
-        <p className="profile-page__error">El HUB está descansando, intenta después 🍎</p>
+        <p className="profile-page__error">El HUB está descansando, intenta después</p>
       </div>
     );
   }
+
+  // Override body overflow:hidden for this page
+  useEffect(() => {
+    document.body.style.overflow = 'auto';
+    return () => { document.body.style.overflow = 'hidden'; };
+  }, []);
 
   return (
     <div className="profile-page">
@@ -298,7 +304,7 @@ export default function RegenmonProfilePage() {
               <span className="profile-page__summary-label">Visitas</span>
             </div>
             <div className="profile-page__summary-item">
-              <span className="profile-page__summary-val">🍊 {profile.balance}</span>
+              <span className="profile-page__summary-val">💠 {profile.balance}</span>
               <span className="profile-page__summary-label">Fragmentos</span>
             </div>
             <div className="profile-page__summary-item">

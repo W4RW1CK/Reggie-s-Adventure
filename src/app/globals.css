@@ -6751,6 +6751,8 @@ html, body,
   max-width: 640px;
   margin: 0 auto;
   font-family: var(--font-press-start-2p), monospace;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .leaderboard-page__header {
   display: flex;

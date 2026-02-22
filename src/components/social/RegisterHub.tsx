@@ -81,7 +81,7 @@ export default function RegisterHub({ onClose, regenmonData, onUpdateStats }: Re
       setIsRegistered(true);
       setHubBalance(result.data.balance ?? 0);
     } else {
-      setError('El HUB está descansando, intenta después 🍎');
+      setError('El HUB está descansando, intenta después');
     }
 
     setIsRegistering(false);
@@ -127,7 +127,7 @@ export default function RegisterHub({ onClose, regenmonData, onUpdateStats }: Re
               {activity.map((item, i) => (
                 <li key={i} className="social-panel__activity-item">
                   <span className="social-panel__activity-icon">
-                    {item.type === 'feed_received' ? '🍎' :
+                    {item.type === 'feed_received' ? '🪬' :
                      item.type === 'gift_received' ? '🎁' :
                      item.type === 'message_received' ? '📨' : '📌'}
                   </span>
