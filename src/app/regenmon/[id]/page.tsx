@@ -37,6 +37,12 @@ export default function RegenmonProfilePage() {
   const params = useParams();
   const id = params.id as string;
 
+  // Override body overflow:hidden for this page (must be before any conditional returns)
+  useEffect(() => {
+    document.body.style.overflow = 'auto';
+    return () => { document.body.style.overflow = 'hidden'; };
+  }, []);
+
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -219,12 +225,6 @@ export default function RegenmonProfilePage() {
       </div>
     );
   }
-
-  // Override body overflow:hidden for this page
-  useEffect(() => {
-    document.body.style.overflow = 'auto';
-    return () => { document.body.style.overflow = 'hidden'; };
-  }, []);
 
   return (
     <div className="profile-page">
