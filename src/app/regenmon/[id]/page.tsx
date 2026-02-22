@@ -93,7 +93,7 @@ export default function RegenmonProfilePage() {
     }
     setIsMyProfile(myId === id);
     setIsRegistered(registered && !!myId);
-    // Privacy mode: hide stats from visitors
+    // Privacy mode for own profile
     if (myId === id) {
       setPrivacyMode(localStorage.getItem(STORAGE_KEYS.HUB_PRIVACY) === 'true');
     }
@@ -106,6 +106,11 @@ export default function RegenmonProfilePage() {
     getProfile(id).then(res => {
       if (res?.data) {
         setProfile(res.data);
+        // Detect privacy: if all stats are 0, owner has privacy mode on
+        const s = res.data.stats;
+        if (s.happiness === 0 && s.energy === 0 && s.hunger === 0 && !isMyProfile) {
+          setPrivacyMode(true);
+        }
       } else {
         setError(true);
       }
