@@ -75,10 +75,17 @@ export default function RegenmonProfilePage() {
     if (typeof window === 'undefined') return;
     const myId = localStorage.getItem(STORAGE_KEYS.HUB_REGENMON_ID);
     const registered = localStorage.getItem(STORAGE_KEYS.IS_REGISTERED_IN_HUB) === 'true';
-    const balance = parseInt(localStorage.getItem(STORAGE_KEYS.HUB_BALANCE) ?? '0', 10);
+    // Unified economy: read fragmentos from regenmon save data
+    try {
+      const saved = localStorage.getItem('regenmon_save');
+      const parsed = saved ? JSON.parse(saved) : null;
+      const frags = parsed?.stats?.fragmentos ?? 0;
+      setMyBalance(frags);
+    } catch {
+      setMyBalance(0);
+    }
     setIsMyProfile(myId === id);
     setIsRegistered(registered && !!myId);
-    setMyBalance(balance);
   }, [id]);
 
   // Load profile
@@ -127,13 +134,20 @@ export default function RegenmonProfilePage() {
     const myId = localStorage.getItem(STORAGE_KEYS.HUB_REGENMON_ID) ?? '';
     const result = await feed(id, myId);
     if (result?.data) {
-      const newBalance = result.data.senderBalance;
-      localStorage.setItem(STORAGE_KEYS.HUB_BALANCE, String(newBalance));
-      setMyBalance(newBalance);
-      showToast(`¡Le diste de comer a ${profile.name}! 🍎 -10 Fragmentos`);
-      showCelebration('🍎');
+      // Unified economy: deduct from internal fragmentos
+      try {
+        const saved = localStorage.getItem('regenmon_save');
+        const parsed = saved ? JSON.parse(saved) : null;
+        if (parsed?.stats) {
+          parsed.stats.fragmentos = Math.max(0, (parsed.stats.fragmentos ?? 0) - 10);
+          localStorage.setItem('regenmon_save', JSON.stringify(parsed));
+          setMyBalance(parsed.stats.fragmentos);
+        }
+      } catch { /* fallback */ }
+      showToast(`🪬 ¡Canalizaste energía a ${profile.name}! -10 💠`);
+      showCelebration('🪬');
     } else {
-      showToast('No se pudo alimentar. Intenta después 🍎');
+      showToast('No se pudo canalizar. Intenta después 🪬');
     }
     setFeedLoading(false);
   }, [id, profile, feedLoading, myBalance, feed, showToast]);
@@ -144,10 +158,17 @@ export default function RegenmonProfilePage() {
     const myId = localStorage.getItem(STORAGE_KEYS.HUB_REGENMON_ID) ?? '';
     const result = await gift(id, myId, amount);
     if (result?.data) {
-      const newBalance = result.data.senderBalance;
-      localStorage.setItem(STORAGE_KEYS.HUB_BALANCE, String(newBalance));
-      setMyBalance(newBalance);
-      showToast(`¡Enviaste ${amount} Fragmentos a ${profile.name}! 🎁`);
+      // Unified economy: deduct from internal fragmentos
+      try {
+        const saved = localStorage.getItem('regenmon_save');
+        const parsed = saved ? JSON.parse(saved) : null;
+        if (parsed?.stats) {
+          parsed.stats.fragmentos = Math.max(0, (parsed.stats.fragmentos ?? 0) - amount);
+          localStorage.setItem('regenmon_save', JSON.stringify(parsed));
+          setMyBalance(parsed.stats.fragmentos);
+        }
+      } catch { /* fallback */ }
+      showToast(`¡Enviaste ${amount} 💠 a ${profile.name}! 🎁`);
       showCelebration('🎁');
     } else {
       showToast('No se pudo enviar el regalo. Intenta después 🎁');
@@ -296,7 +317,7 @@ export default function RegenmonProfilePage() {
       {!isMyProfile && isRegistered && (
         <div className="profile-page__interactions">
           {/* My balance indicator */}
-          <p className="profile-page__my-balance">Tu balance: 💎 {myBalance} Fragmentos</p>
+          <p className="profile-page__my-balance">Tu balance: 💠 {myBalance} Fragmentos</p>
 
           {/* Greet (L2) */}
           <button

@@ -9,9 +9,11 @@ import { loadPlayerData } from '@/lib/storage';
 
 interface RegisterHubProps {
   onClose?: () => void;
+  regenmonData?: any;
+  onUpdateStats?: (deltas: Partial<{ fragmentos: number; espiritu: number; pulso: number; esencia: number }>) => void;
 }
 
-export default function RegisterHub({ onClose }: RegisterHubProps) {
+export default function RegisterHub({ onClose, regenmonData, onUpdateStats }: RegisterHubProps) {
   const [isRegistered, setIsRegistered] = useState(false);
   const [hubId, setHubId] = useState<string | null>(null);
   const [isRegistering, setIsRegistering] = useState(false);
@@ -21,13 +23,21 @@ export default function RegisterHub({ onClose }: RegisterHubProps) {
 
   const { register, getActivity } = useHub();
 
-  // Load regenmon data for stats/sync
-  const regenmon = loadRegenmon();
+  // Use passed regenmon data or fallback to storage
+  const regenmon = regenmonData ?? loadRegenmon();
   const stats = regenmon?.stats ?? { espiritu: 50, pulso: 50, esencia: 50 };
   const totalProgress = (regenmon as any)?.evolution?.totalProgress ?? (regenmon as any)?.progress ?? 0;
+  const fragmentos = regenmon?.stats?.fragmentos ?? 0;
 
-  // Auto-sync when registered
-  useHubSync({ stats, totalProgress });
+  // Callback: when HUB reports gifts received, add to internal fragmentos
+  const handleFragmentosChange = useCallback((delta: number) => {
+    if (delta > 0 && onUpdateStats) {
+      onUpdateStats({ fragmentos: delta });
+    }
+  }, [onUpdateStats]);
+
+  // Auto-sync when registered (unified economy)
+  useHubSync({ stats, totalProgress, fragmentos, onFragmentosChange: handleFragmentosChange });
 
   // Check registration state
   useEffect(() => {
@@ -96,7 +106,7 @@ export default function RegisterHub({ onClose }: RegisterHubProps) {
         </div>
 
         <div className="social-panel__balance">
-          💎 {hubBalance} Fragmentos
+          💠 {fragmentos} Fragmentos
         </div>
 
         <div className="social-panel__actions">

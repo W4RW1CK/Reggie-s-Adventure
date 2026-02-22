@@ -449,7 +449,7 @@ export default function GameScreen({
                 {/* Social Overlay (mobile only) */}
                 {showSocial && !isDesktop && (
                     <div className="social-flow-overlay photoflow-enter" style={{ position: 'fixed', inset: 0, zIndex: 100 }}>
-                        <RegisterHub onClose={handleSwitchToChat} />
+                        <RegisterHub onClose={handleSwitchToChat} regenmonData={regenmon} onUpdateStats={onUpdateStats} />
                     </div>
                 )}
 
@@ -514,7 +514,7 @@ export default function GameScreen({
                         </ErrorBoundary>
                     )}
                     {rightPanel === 'social' && showSocial && (
-                        <RegisterHub onClose={handleSwitchToChat} />
+                        <RegisterHub onClose={handleSwitchToChat} regenmonData={regenmon} onUpdateStats={onUpdateStats} />
                     )}
                     {rightPanel === 'photo' && showPhoto && (
                         <PhotoFlow

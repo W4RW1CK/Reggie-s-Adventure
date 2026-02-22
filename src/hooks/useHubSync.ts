@@ -7,6 +7,8 @@ import { useHub } from './useHub';
 interface UseHubSyncOptions {
   stats: { espiritu: number; pulso: number; esencia: number };
   totalProgress: number;
+  fragmentos: number;
+  onFragmentosChange?: (delta: number) => void;
 }
 
 function mapStatsToHub(stats: { espiritu: number; pulso: number; esencia: number }) {
@@ -87,9 +89,10 @@ export function hubStageName(stage: number): string {
   return '🐉 Adulto';
 }
 
-export function useHubSync({ stats, totalProgress }: UseHubSyncOptions) {
+export function useHubSync({ stats, totalProgress, fragmentos, onFragmentosChange }: UseHubSyncOptions) {
   const { sync } = useHub();
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const lastHubBalanceRef = useRef<number | null>(null);
 
   const doSync = useCallback(async () => {
     if (typeof window === 'undefined') return;
@@ -99,9 +102,19 @@ export function useHubSync({ stats, totalProgress }: UseHubSyncOptions) {
 
     const result = await sync(hubId, mapStatsToHub(stats), progressToHubPoints(totalProgress));
     if (result?.data?.balance !== undefined) {
-      localStorage.setItem(STORAGE_KEYS.HUB_BALANCE, String(result.data.balance));
+      const newHubBalance = result.data.balance;
+      const lastKnown = lastHubBalanceRef.current;
+
+      // Detect gifts received: HUB balance went up beyond what we expect
+      if (lastKnown !== null && newHubBalance > lastKnown && onFragmentosChange) {
+        const giftsReceived = newHubBalance - lastKnown;
+        onFragmentosChange(giftsReceived);
+      }
+
+      lastHubBalanceRef.current = newHubBalance;
+      localStorage.setItem(STORAGE_KEYS.HUB_BALANCE, String(newHubBalance));
     }
-  }, [sync, stats, totalProgress]);
+  }, [sync, stats, totalProgress, onFragmentosChange]);
 
   // Sync every 5 minutes
   useEffect(() => {
