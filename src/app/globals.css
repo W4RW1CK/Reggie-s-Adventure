@@ -6745,13 +6745,14 @@ html, body,
 /* ========== LEADERBOARD PAGE ========== */
 .leaderboard-page {
   min-height: 100vh;
+  height: 100vh;
   background: var(--theme-bg, #0a0a1e);
   color: var(--theme-text, #e0e0e0);
   padding: 1rem;
   max-width: 640px;
   margin: 0 auto;
   font-family: var(--font-press-start-2p), monospace;
-  overflow-y: auto;
+  overflow-y: scroll !important;
   -webkit-overflow-scrolling: touch;
 }
 .leaderboard-page__header {
@@ -6869,6 +6870,7 @@ html, body,
 /* ========== PROFILE PAGE ========== */
 .profile-page {
   min-height: 100vh;
+  height: 100vh;
   background: var(--theme-bg, #0a0a1e);
   color: var(--theme-text, #e0e0e0);
   padding: 1rem;
@@ -6876,6 +6878,8 @@ html, body,
   margin: 0 auto;
   font-family: var(--font-press-start-2p), monospace;
   position: relative;
+  overflow-y: scroll !important;
+  -webkit-overflow-scrolling: touch;
 }
 .profile-page__header {
   display: flex;
