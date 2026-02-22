@@ -17,6 +17,25 @@ function mapStatsToHub(stats: { espiritu: number; pulso: number; esencia: number
   };
 }
 
+/**
+ * Map Reggie's internal progress to HUB's 3-stage system.
+ * Reggie internally has 5 stages (4 Fracturas), but the HUB uses 3:
+ *   Stage 1 (Bebé):  progress 0-199
+ *   Stage 2 (Joven): progress 200-399
+ *   Stage 3 (Adulto): progress 400+
+ */
+export function progressToHubStage(progress: number): number {
+  if (progress >= 400) return 3;
+  if (progress >= 200) return 2;
+  return 1;
+}
+
+export function hubStageName(stage: number): string {
+  if (stage <= 1) return '🥚 Bebé';
+  if (stage === 2) return '🐣 Joven';
+  return '🐉 Adulto';
+}
+
 export function useHubSync({ stats, totalProgress }: UseHubSyncOptions) {
   const { sync } = useHub();
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);

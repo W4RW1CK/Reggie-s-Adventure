@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import { useHub, HubMessage } from '@/hooks/useHub';
+import { hubStageName } from '@/hooks/useHubSync';
 import { STORAGE_KEYS } from '@/lib/constants';
 import Link from 'next/link';
 
@@ -30,12 +31,7 @@ function timeAgo(dateStr: string): string {
   return `hace ${days}d`;
 }
 
-function stageName(stage: number): string {
-  if (stage <= 1) return '🥚 Bebé';
-  if (stage === 2) return '🐣 Joven';
-  if (stage === 3) return '🐉 Adulto';
-  return '🐉 Adulto';
-}
+// stageName uses shared hubStageName from useHubSync
 
 export default function RegenmonProfilePage() {
   const params = useParams();
@@ -237,7 +233,7 @@ export default function RegenmonProfilePage() {
         />
         <h1 className="profile-page__name">{profile.name}</h1>
         <p className="profile-page__owner">by {profile.ownerName}</p>
-        <p className="profile-page__stage">{stageName(profile.stage)}</p>
+        <p className="profile-page__stage">{hubStageName(profile.stage)}</p>
       </div>
 
       <div className="profile-page__stats-grid">

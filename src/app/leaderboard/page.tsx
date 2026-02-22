@@ -2,18 +2,12 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { useHub, HubLeaderboardEntry } from '@/hooks/useHub';
+import { hubStageName } from '@/hooks/useHubSync';
 import { STORAGE_KEYS } from '@/lib/constants';
 import Link from 'next/link';
 
 type SortMode = 'points' | 'balance' | 'newest';
 type StageFilter = 'all' | '1' | '2' | '3';
-
-function stageName(stage: number): string {
-  if (stage <= 1) return '🥚 Bebé';
-  if (stage === 2) return '🐣 Joven';
-  if (stage === 3) return '🐉 Adulto';
-  return '🐉 Adulto';
-}
 
 export default function LeaderboardPage() {
   const [allEntries, setAllEntries] = useState<HubLeaderboardEntry[]>([]);
@@ -102,7 +96,7 @@ export default function LeaderboardPage() {
               className={`leaderboard-page__filter-btn ${stageFilter === sf ? 'leaderboard-page__filter-btn--active' : ''}`}
               onClick={() => setStageFilter(sf)}
             >
-              {sf === 'all' ? 'Todos' : stageName(parseInt(sf))}
+              {sf === 'all' ? 'Todos' : hubStageName(parseInt(sf))}
             </button>
           ))}
         </div>
@@ -144,7 +138,7 @@ export default function LeaderboardPage() {
                     {entry.id === myHubId && <span className="leaderboard-card__me-tag"> (tú)</span>}
                   </span>
                   <span className="leaderboard-card__owner">by {entry.ownerName}</span>
-                  <span className="leaderboard-card__stage">{stageName(entry.stage)}</span>
+                  <span className="leaderboard-card__stage">{hubStageName(entry.stage)}</span>
                 </div>
                 <div className="leaderboard-card__stats">
                   <span className="leaderboard-card__points">⭐ {entry.totalPoints}</span>

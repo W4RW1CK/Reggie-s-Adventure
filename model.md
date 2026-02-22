@@ -1110,3 +1110,29 @@ totalPoints → evolution.totalProgress
 - **"Tú" highlight**: Own entry gets orange border + "(tú)" tag via myHubId comparison
 - **Celebration animations**: 12 emoji confetti particles on feed (🍎) and gift (🎁) interactions. CSS keyframe `confetti-fall` with rotation + scale + opacity. 1.5s duration, pointer-events: none.
 - **Social Summary**: 2x2 grid on own profile showing 👀 Visitas, 🍊 $FRUTA, ⭐ Puntos, 💬 Mensajes. Only visible on isMyProfile.
+
+### Translation Layer Decision (2026-02-22)
+
+**Problem:** Reggie has 5 internal stages (4 Fracturas at 50/100/200/400 progress) but HUB uses 3 stages (Bebé/Joven/Adulto).
+
+**Solution: Translation layer in `useHubSync.ts`**
+- `progressToHubStage()`: maps Reggie progress → HUB stage
+  - 0-199 progress → Stage 1 (🥚 Bebé)
+  - 200-399 progress → Stage 2 (🐣 Joven)
+  - 400+ progress → Stage 3 (🐉 Adulto)
+- `hubStageName()`: shared function for consistent stage names across leaderboard + profile
+- `mapStatsToHub()`: Espíritu→happiness, Pulso→energy, Esencia→hunger
+
+**Principle:** Reggie keeps its rich internal world (Fracturas, lore, dual economy, missions). The HUB sees a simplified translation. Like speaking two languages — Reggie thinks in its lore but speaks HUB when socializing.
+
+**Reggie internal stages (unchanged):**
+- Fractura 1: 50 progress
+- Fractura 2: 100 progress
+- Fractura 3: 200 progress
+- Fractura 4: 400 progress
+- Total max: 750 progress
+
+**HUB stages (translation):**
+- Bebé: 0-199 (covers Fracturas 1-2)
+- Joven: 200-399 (covers Fractura 3)
+- Adulto: 400+ (covers Fractura 4+)
