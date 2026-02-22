@@ -51,6 +51,7 @@ export const PROGRESS_MISSION_BONUS = 5;
 
 // Fracture thresholds
 export const FRACTURE_THRESHOLDS = [50, 100, 200, 400];
+export const PROGRESS_MAX = 600; // Cap: 600 × 2.5 = 1500 HUB pts (exact HUB ceiling)
 
 // Purification S4 (split into two buttons)
 export const PURIFY_SPIRIT_COST = 15;    // 15 fragments — meaningful trade-off
@@ -81,7 +82,15 @@ export const STORAGE_KEYS = {
     ACTIVITY_LOG: 'reggie-adventure-activity-log', // [NEW Phase 58 — S4]
     DIARY_ENTRIES: 'reggie-adventure-diary-entries', // [NEW Phase 58 — S4]
     TUTORIAL_COMPLETED: 'reggie-adventure-tutorial-completed', // [NEW Phase 62 — S4]
+    // S5 — Social / HUB
+    HUB_REGENMON_ID: 'reggie-adventure-hub-id',
+    IS_REGISTERED_IN_HUB: 'reggie-adventure-hub-registered',
+    HUB_BALANCE: 'reggie-adventure-hub-balance',
+    HUB_PRIVACY: 'reggie-adventure-hub-privacy',
 };
+
+// HUB API
+export const HUB_URL = 'https://regenmon-final.vercel.app';
 
 // Chat Constants
 export const CHAT_MAX_MESSAGES = 50;

@@ -1,7 +1,7 @@
 # 📊 PROGRESS — Reggie's Adventure
-> **Versión actual:** v0.4 — La Evolución
-> **Última actualización:** 2026-02-21
-> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PENDIENTE`
+> **Versión actual:** v0.5 — El Encuentro
+> **Última actualización:** 2026-02-22
+> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `COMPLETADA` ✅ (v0.5)
 >
 > 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — biblia narrativa del universo
 > 🔨 **Fases detalladas:** [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) — qué construir y en qué orden
@@ -9,7 +9,7 @@
 
 ---
 
-## ESTADO ACTUAL: SESIÓN 4 `COMPLETADA` (Fases 1-64) — v0.4
+## ESTADO ACTUAL: SESIÓN 5 `PLANNING` (Fases 65-80 pending) — v0.5
 
 ---
 
@@ -538,7 +538,7 @@
   - Dos paneles: 📜 Historial = transacciones, 🧠 Memorias = diario emocional
   - Resonancia por tipo: Rayo=movimiento/tech, Flama=conexiones/emociones, Hielo=naturaleza/conocimiento
 - [x] IMPLEMENTATION_PLAN.md: Fases 49-64 definidas (16 fases)
-- [x] Implementación de S4 — COMPLETADA (2026-02-21)
+- [x] Implementación de S4 — COMPLETADA (2026-02-22)
 
 ### S4 UI/UX Design Phase — COMPLETADA ✅ (2026-02-19)
 - [x] Full UI/UX design session completed
@@ -578,7 +578,65 @@
 
 **Close (63-64):**
 - [x] Fase 63: User Adjustments — DONE. Multiple fix commits: tutorial tooltips, light theme with warm parchment palette (#fffbf5), WebP asset conversion (94% size reduction), CSS GPU acceleration, fracture visual fixes, stats separation (always visible below sprite), chat limit reduced to 140 chars, split purification (Recargar 💛 pulso + Nutrir 🌱 esencia), Diario panel with Memorias + Historial tabs
-- [x] Fase 64: Testing + Audit + Deploy — DONE (2026-02-21). Final audit passed, v0.4 tagged
+- [x] Fase 64: Testing + Audit + Deploy — DONE (2026-02-22). Final audit passed, v0.4 tagged
+
+---
+
+---
+
+## Planificación Sesión 5 — El Encuentro (2026-02-22)
+
+> **Nota S5:** Social features via HUB externo (regenmon-final.vercel.app).
+> Opt-in: juego funciona 100% sin registrarse. No requiere nuevas dependencias.
+> 16 fases (65-80) en 4 levels.
+
+- [x] Interrogatorio de diseño completado
+- [x] Decisiones clave tomadas:
+  - HUB externo en regenmon-final.vercel.app (no DB propia)
+  - 1 Fragmento = 1 $FRUTA (paridad directa)
+  - Stats mapping: Espíritu→happiness, Pulso→energy, Esencia→hunger
+  - Social opt-in (game works 100% without HUB)
+  - 🌍 como 3er botón en bottom nav
+  - Badge counter silencioso (no interrumpe chat)
+  - Mini-world profiles (read-only, memorias privadas)
+  - Messages firmados por Regenmon
+  - Público por default, toggle privado en Settings
+  - Leaderboard = "Regeneración Global" (lore-friendly)
+  - TestReggie (⚡) ID: cmlx8xx7n0000jy04hvf9dmh8
+- [x] Archivos canónicos actualizados: PRD, LORE, APP_FLOW, FRONTEND_GUIDELINES, BACKEND_STRUCTURE, TECH_STACK, IMPLEMENTATION_PLAN, model.md, progress.txt
+- [ ] Implementación de S5 — PENDIENTE
+
+### Fases S5 (65-80):
+
+**LEVEL 1 — CORE (65-68):**
+- [x] Fase 65: useHub Hook — HUB API communication layer (useHub.ts with all 9 API functions, retry logic, typed responses)
+- [x] Fase 66: Register — RegisterHub.tsx component (auto-detect name/owner/sprite, preview, alreadyRegistered handling, social panel post-register)
+- [x] Fase 67: Sync — useHubSync.ts hook (auto-sync every 5min, stats mapping espiritu→happiness/pulso→energy/esencia→hunger, balance save)
+- [x] Fase 68: Social Tab 🌍 — 3rd button in bottom nav, mobile overlay + desktop panel, social CSS in globals.css, theme-aware
+
+**LEVEL 2 — COMPLETE (69-72):**
+- [x] Fase 69: Leaderboard "Regeneración Global" — /leaderboard page inside Reggie, paginated, ranked entries with sprites, links to profiles
+- [x] Fase 70: Public Profile — /regenmon/[id] page with sprite, stats bars, points, $FRUTA balance, visit counter, registration date
+- [x] Fase 71: Visit Mode — Read-Only with "👁️ Modo Visita" badge, "🏠 Tu Perfil" for own, greet interaction (👋), unregistered CTA
+- [x] Fase 72: RegisterHub internal links — Regeneración Global and Mi Perfil now route to internal pages, desktop tab switcher (💬📷🌍)
+
+**LEVEL 3 — EXCELLENT (73-76):**
+- [x] Fase 73: Feed Interaction — 🍎 Alimentar (-10 $FRUTA), balance validation, balance update in localStorage, toast feedback
+- [x] Fase 74: Gift System — 🎁 Regalar 5/10/25 $FRUTA, per-amount disable if insufficient, balance sync
+- [x] Fase 75: Messages — 💬 Read + send messages (140 char limit), optimistic add, chronological list with timeAgo, textarea with counter
+- [x] Fase 76: Activity Feed — already implemented in RegisterHub (L1), messages section on profile serves as social persistence
+
+**LEVEL 4 — BONUS (77-80):**
+- [x] Fase 77: Leaderboard sorting (⭐ Puntos / 🍊 $FRUTA / 🆕 Nuevos) + stage filtering (Todos/Huevo/Cría/Joven/Adulto) + "tú" highlight
+- [x] Fase 78: Celebration animations — confetti particles (🍎/🎁) on feed/gift interactions, 12 emojis falling with rotation
+- [x] Fase 79: Social Summary on own profile — 📊 grid with Visitas, Fragmentos, Progreso, Mensajes
+- [x] Fase 80: Full Audit + Deploy v0.5
+  - Translation Layer (×2.5 conversion, Fracturas, unified Reggie vocabulary)
+  - Unified Economy (1 $FRUTA = 1 Fragmento, single pool)
+  - Progress cap at 600 (= 1500 HUB pts)
+  - Privacy Mode (🔒 hides stats from HUB + full privacy wall for visitors)
+  - 🪬 Canalizar action, leaderboard scroll + pagination (10/page)
+  - Build clean, 0 errors, 0 warnings
 
 ---
 
@@ -587,8 +645,9 @@
 - Sesión 1 completada y desplegada (v0.1.16) - 2026-02-13
 - Sesión 2 completada y desplegada (v0.2) - 2026-02-15
 - Sesión 3 completada y desplegada (v0.3) - 2026-02-18
-- Sesión 4 completada (v0.4) - 2026-02-21 — La Evolución
-- **S5 "El Encuentro" es NEXT** — social features: public profiles, feed, interactions
+- Sesión 4 completada (v0.4) - 2026-02-22 — La Evolución
+- Sesión 5 planning completado (v0.5) - 2026-02-22 — El Encuentro
+- **S5 implementation NEXT** — 16 fases (65-80), 4 levels, HUB social
 - Archivos canónicos son documentos vivos — se actualizan conforme avanza el proyecto
 - Dev server: `npm run dev` → http://localhost:3000
 - API keys: .env.local (Gemini dev) / Vercel env vars (OpenAI prod)

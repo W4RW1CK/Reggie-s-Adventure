@@ -15,7 +15,8 @@ import { useStatDecay } from './useStatDecay';
 import { 
     STAT_MIN, STAT_MAX, STAT_INITIAL, 
     CHAT_CRITICAL_THRESHOLD, PHOTO_HISTORY_MAX,
-    PURIFY_SPIRIT_COST, PURIFY_SPIRIT_GAIN, PURIFY_ESSENCE_COST, PURIFY_ESSENCE_GAIN
+    PURIFY_SPIRIT_COST, PURIFY_SPIRIT_GAIN, PURIFY_ESSENCE_COST, PURIFY_ESSENCE_GAIN,
+    PROGRESS_MAX
 } from '@/lib/constants';
 import { getEvolutionStage as calcEvolutionStage, isNewFracture } from '@/lib/evolution';
 import { getWorldState, WorldStateMetadata } from '@/lib/worldState';
@@ -219,7 +220,7 @@ export function useGameState({ privyUserId, isLoggedIn }: UseGameStateProps) {
                 return prev; // Frozen — do not add progress
             }
             const oldProgress = prev.progress;
-            const newProgress = oldProgress + amount;
+            const newProgress = Math.min(oldProgress + amount, PROGRESS_MAX);
             // Detect new fracture for animation trigger
             if (isNewFracture(oldProgress, newProgress)) {
                 setNewFractureJustClosed(true);

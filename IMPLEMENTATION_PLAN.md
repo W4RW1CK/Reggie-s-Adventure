@@ -1,7 +1,7 @@
 # 🔨 IMPLEMENTATION_PLAN — Reggie's Adventure
-> **Versión actual:** v0.4 — La Evolución
-> **Última actualización:** 2026-02-21
-> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PENDIENTE`
+> **Versión actual:** v0.5 — El Encuentro
+> **Última actualización:** 2026-02-22
+> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PLANNING`
 >
 > 📜 **Narrativa:** [LORE.md](./LORE.md) — toda fase que toque personalidad, diálogo o tono debe consultarlo
 > 📋 **Features:** [PRD.md](./PRD.md) — cada fase implementa uno o más features del PRD
@@ -1589,16 +1589,172 @@ BACKGROUNDS (commit 1ea9efb):
 64.6  Crear tag de versión v0.4
 ```
 
-### Sesión 5 — El Encuentro `PLANNING PENDING`
+### Sesión 5 — El Encuentro
 
-> **Estado:** Planning pending. S4 completada 2026-02-21.
+> **Estado:** PLANNING — diseño completado 2026-02-22.
 > **Tema:** Social features — los Regenmon se encuentran entre sí.
+> **HUB:** `regenmon-final.vercel.app` (API externa, no DB propia)
+> **Principio rector:** Social es opt-in. El juego funciona 100% sin HUB.
+>
+> 📜 **Narrativa S5:** [LORE.md → El Encuentro](./LORE.md)
+> 📋 **Features:** [PRD.md → Sesión 5](./PRD.md) (F5.1-F5.20)
+> 🧠 **Decisiones:** [model.md → Sesión 5](./model.md)
+> 🗺️ **Flujos:** [APP_FLOW.md → Flujos Sociales](./APP_FLOW.md)
+>
+> **16 PHASES → 4 LEVELS:**
+> LEVEL 1 — CORE (Fases 65-68): useHub hook + Register + Sync + Social tab
+> LEVEL 2 — COMPLETE (Fases 69-72): Leaderboard + Public profile + Visit mode + Dual currency
+> LEVEL 3 — EXCELLENT (Fases 73-76): Feed interaction + Gift + Messages + Activity feed
+> LEVEL 4 — BONUS (Fases 77-80): Silent notifications + Privacy toggle + Lore-friendly naming + Polish+audit
+
+#### LEVEL 1 — CORE (Fases 65-68)
+
+##### Fase 65: useHub Hook — HUB API Communication Layer (F5.1)
 
 ```
-- Perfiles públicos (URL compartible por Regenmon)
-- Feed de descubrimiento (grid con otros Regenmons)
-- Interacciones sociales (saludar, regalar, jugar)
-- Fases TBD (65+)
+65.1  Crear src/hooks/useHub.ts:
+      → HUB_BASE_URL = 'https://regenmon-final.vercel.app/api'
+      → hubFetch<T>(endpoint, options) — wrapper con error handling graceful
+      → register(), sync(), fetchLeaderboard(), fetchProfile(), feedRegenmon(), giftFruta(), sendMessage(), fetchActivity()
+      → isHubOnline state, error state
+65.2  Crear tipos S5 en src/lib/types.ts
+65.3  Agregar S5 keys a STORAGE_KEYS en constants.ts
+65.4  Implementar mapStatsToHub() (Espíritu→happiness, Pulso→energy, Esencia→hunger)
+65.5  Verificar: hubFetch funciona contra HUB real, errores graceful
+```
+
+##### Fase 66: Register — Registrar Regenmon en HUB (F5.2)
+
+```
+66.1  Implementar register() → POST /api/regenmon/register
+66.2  Crear RegistrationInvite.tsx — invitación con CTA + "Ahora no"
+66.3  Manejar errores (HUB offline, ya registrado)
+66.4  Verificar: registro exitoso, hubRegenmonId guardado
+```
+
+##### Fase 67: Sync — Stats al HUB (F5.3, F5.17, F5.20)
+
+```
+67.1  Crear useHubSync.ts — poll on Social tab open + every 5min
+67.2  Envía stats post-decay (honestos), totalProgress
+67.3  Verificar: sync funciona, polling cada 5min
+```
+
+##### Fase 68: Social Tab 🌍 — UI Base (F5.4, F5.19)
+
+```
+68.1  Crear SocialTab.tsx (fullscreen mobile, floating desktop)
+68.2  Agregar 🌍 al bottom nav como 3er botón con badge
+68.3  Integrar en page.tsx con nuevo view state 'social'
+68.4  HUB offline → friendly error, game works normally
+68.5  Verificar: tab funciona, badge funciona, error state funciona
+```
+
+#### LEVEL 2 — COMPLETE (Fases 69-72)
+
+##### Fase 69: Leaderboard "Regeneración Global" (F5.5, F5.15)
+
+```
+69.1  Crear Leaderboard.tsx — GET /api/leaderboard
+69.2  Entries: sprite mini + nombre + tipo + progreso dots
+69.3  Tap → perfil público. NO "1st/2nd" — no competitivo
+69.4  Verificar: leaderboard carga, entries clickeables
+```
+
+##### Fase 70: Public Profile — Mini-World (F5.6)
+
+```
+70.1  Crear PublicProfile.tsx — GET /api/regenmon/:id
+70.2  Mini-world: WorldBackground + Sprite + partículas + "Etapa N/5" + 🧠 N
+70.3  Botones: 🍊 Alimentar | 🎁 Regalar | 💬 Enviar pulso (si registrado)
+70.4  Verificar: perfil carga, mini-world renderiza
+```
+
+##### Fase 71: Visit Mode — Read-Only (F5.7)
+
+```
+71.1  Header "Visitando a [nombre]", gameplay deshabilitado
+71.2  Evolution como dots (●●●○○). Memorias: solo 🧠 N
+71.3  Verificar: read-only funciona, no gameplay accesible
+```
+
+##### Fase 72: Dual Currency Display (F5.8, F5.18)
+
+```
+72.1  HUD: 💎 42 | 🍊 42 (🍊 solo si registrado)
+72.2  Sync $FRUTA balance. 1:1 parity
+72.3  Verificar: dual display funciona, se actualiza
+```
+
+#### LEVEL 3 — EXCELLENT (Fases 73-76)
+
+##### Fase 73: Feed Interaction (F5.9)
+
+```
+73.1  feedRegenmon(id) → POST /api/regenmon/:id/feed (1 🍊)
+73.2  UI: confirmar → feedback. Si nos alimentan → esencia sube localmente
+73.3  Verificar: feed funciona, balances se actualizan
+```
+
+##### Fase 74: Gift System (F5.10)
+
+```
+74.1  giftFruta(id, amount) → POST /api/regenmon/:id/gift
+74.2  UI: input amount → confirmar → balance update
+74.3  Verificar: gift funciona, balance se descuenta
+```
+
+##### Fase 75: Messages — Pulsos de Datos (F5.11)
+
+```
+75.1  sendMessage(id, text) → POST /api/regenmon/:id/messages (max 140)
+75.2  UI enviar en PublicProfile, UI recibir en SocialTab 📨
+75.3  Verificar: mensajes se envían y reciben
+```
+
+##### Fase 76: Activity Feed (F5.12)
+
+```
+76.1  fetchActivity() → GET /api/activity
+76.2  UI en SocialTab 🔔: entries con icono + descripción + timestamp
+76.3  Verificar: feed carga, muestra actividad
+```
+
+#### LEVEL 4 — BONUS (Fases 77-80)
+
+##### Fase 77: Silent Notifications (F5.13)
+
+```
+77.1  Badge counter en 🌍 (incrementa, resetea al abrir)
+77.2  Silencio durante Chat (no interruptions)
+77.3  Polling cada 5min junto con sync
+77.4  Verificar: badge funciona, silencio respetado
+```
+
+##### Fase 78: Privacy Toggle (F5.14)
+
+```
+78.1  Settings: "Visibilidad" → [🌍 Público] / [🔒 Privado]
+78.2  Sync al HUB, guardar en localStorage
+78.3  Verificar: toggle funciona, leaderboard respeta
+```
+
+##### Fase 79: Lore-Friendly Naming + Polish (F5.15, F5.16)
+
+```
+79.1  Audit textos: "Leaderboard"→"Regeneración Global", "Players"→"Habitantes"
+79.2  Lore references en empty/error states
+79.3  Verificar: ningún texto rompe inmersión lore
+```
+
+##### Fase 80: Full Audit + Deploy (F5.16)
+
+```
+80.1  Auditoría accesibilidad S5
+80.2  Auditoría seguridad S5
+80.3  Auditoría lore S5
+80.4  Testing: HUB online/offline, privacy, ambos temas, mobile/desktop
+80.5  Deploy + tag v0.5
 ```
 
 ---

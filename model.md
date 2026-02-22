@@ -1,7 +1,7 @@
 # 🧠 MODEL — Reggie's Adventure
-> **Versión actual:** v0.4 — La Evolución
-> **Última actualización:** 2026-02-21
-> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PENDIENTE`
+> **Versión actual:** v0.5 — El Encuentro
+> **Última actualización:** 2026-02-22
+> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PLANNING`
 >
 > 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — toda decisión de personalidad, tono o diálogo se valida contra LORE
 > 📋 **Spec del producto:** [PRD.md](./PRD.md) — toda decisión de features se refleja ahí
@@ -17,7 +17,7 @@
 | S2: La Voz | v0.2 | `COMPLETADA` |
 | S3: La Conexión | v0.3 | `COMPLETADA` (96/96 — 100%) |
 | S4: La Evolución | v0.4 | `COMPLETADA` |
-| S5: El Encuentro | — | `PENDIENTE` |
+| S5: El Encuentro | v0.5 | `PLANNING` |
 
 ---
 
@@ -820,12 +820,12 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 - **Diario panel**: Unified panel with Memorias (emotional diary) + Historial (transaction log) tabs
 - **Bottom nav icons**: Minimal icon-only buttons (💬 📷) with small labels
 
-### Fase 64: Testing + Audit + Deploy (2026-02-21)
+### Fase 64: Testing + Audit + Deploy (2026-02-22)
 - **Final audit**: All S4 features verified working
-- **Version**: v0.4 — La Evolución
+- **Version**: v0.5 — El Encuentro
 - **All canonical files updated**
 
-### S4 Completion Summary (2026-02-21)
+### S4 Completion Summary (2026-02-22)
 
 **Key S4 features delivered:**
 - Vision API (Gemini dev / GPT-4o prod) for emotional photo evaluation
@@ -956,3 +956,183 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 **3. Client-side strike storage:** Strikes stored in localStorage can be manipulated via DevTools. Acceptable for a game context. Future fix: server-side validation in /api/evaluate with session tokens or signed payloads.
 
 **4. In-memory rate limiting:** Rate limit map resets on Vercel serverless cold starts and doesn't share state across instances. Client-side cooldown provides primary protection. Future fix: Vercel KV (Upstash Redis) for persistent rate limiting.
+
+---
+
+## Sesión 5: El Encuentro — Decisiones de Diseño
+
+> Fuente: Interrogatorio completo del 2026-02-22.
+> Principio rector: **Social es opt-in. El juego funciona 100% sin HUB.**
+>
+> 📜 **Narrativa S5:** [LORE.md → El Encuentro](./LORE.md)
+> 🛠️ **Implementación:** [BACKEND_STRUCTURE.md → Sesión 5](./BACKEND_STRUCTURE.md)
+> 🗺️ **Flujos:** [APP_FLOW.md → Flujos Sociales](./APP_FLOW.md)
+> 🔨 **Fases:** [IMPLEMENTATION_PLAN.md → Sesión 5](./IMPLEMENTATION_PLAN.md) (Fases 65-80)
+
+### Arquitectura: HUB Externo, No DB Propia
+
+- **HUB:** `regenmon-final.vercel.app` — API externa del bootcamp
+- **Sin DB propia:** Toda la data social vive en el HUB. El cliente usa `fetch` nativo
+- **Sin nuevas dependencias:** No se instala nada nuevo para S5
+- **1 Regenmon por appUrl:** `reggie-s-adventure.vercel.app` registra 1 Regenmon en el HUB
+- **appUrl como identidad:** El HUB identifica apps por su URL de deploy
+
+### Paridad de Monedas: 1 Fragmento = 1 $FRUTA
+
+- **1:1 directa**, sin tasas de conversión, sin fees
+- **Fragmentos (💎):** moneda local — se usa para purificar, nutrir
+- **$FRUTA (🍊):** moneda del HUB — se usa para regalar, alimentar a otros
+- **Ambas visibles** en el HUD: `💎 42 | 🍊 42`
+- **Si no registrado:** solo 💎 visible
+
+### Stats Mapping al HUB
+
+```
+Espíritu → happiness (0-100)
+Pulso → energy (0-100)
+Esencia → hunger (0-100)
+totalPoints → evolution.totalProgress
+```
+
+- Se envían **post-decay** (honestos, no inflados)
+- Sync as-is: el HUB recibe los stats tal cual están
+
+### Social Opt-In
+
+- El juego funciona 100% sin registro en el HUB
+- Social tab muestra invitación a registrarse
+- "Ahora no" es siempre una opción válida
+- Sin registro: no puede ver leaderboard, no puede interactuar socialmente
+- El registro se puede hacer después desde Settings
+
+### UI Social: 🌍 como 3er Botón
+
+- **Mobile:** 3er botón en bottom nav → 💬 | 📷 | 🌍
+- **Desktop:** panel option (misma posición que los otros paneles)
+- **Badge counter** en 🌍 para notificaciones unread
+- **Client-side rendering** para nuevas páginas sociales
+
+### Mini-World: Perfiles Públicos
+
+- **Sprite** + world background + expresión actual + partículas de tipo
+- **Sin gameplay:** es como mirar a través de un cristal
+- **Memorias privadas:** visitante solo ve 🧠 N (count), nunca el contenido
+- **Evolución visible** pero simplificada (etapa N/5)
+- **Botones de acción** solo si el visitante está registrado
+
+### Mensajes entre Criaturas
+
+- **Firmados por el Regenmon**, escritos por el humano
+- Max 140 chars
+- Son "pulsos de datos" en el lore, no "mensajes" o "DMs"
+- Se reciben en la sección 📨 del Social tab
+
+### Privacy: Público por Default
+
+- **Público (default):** visible en Regeneración Global, perfil visitable
+- **Privado:** oculto del leaderboard, perfil no accesible
+- Toggle en Settings
+- **Ambos caminos son válidos** en el lore
+
+### Leaderboard → "Regeneración Global"
+
+- **Nombre lore-friendly:** no "leaderboard" ni "ranking"
+- **No competitivo:** no hay "1st", "2nd", "3rd"
+- **Solo Regenmons públicos** aparecen
+- Ordenado por totalProgress
+- Es un **mapa de la regeneración**, no una competencia
+
+### Otros Regenmons en el Lore
+
+- NO son "jugadores", "usuarios" o "cuentas"
+- Son **otras formas de energía digital**, habitantes del mundo digital
+- Cada uno despertó en su propio rincón de La Red
+- Encontrarse es un **acto de reconocimiento mutuo**
+
+### Notificaciones: Silencio durante Chat
+
+- Badge counter en 🌍 para eventos sociales (visit, feed, gift, message)
+- **Durante chat:** badge se actualiza silenciosamente, SIN interrupciones
+- Similar a **audio ducking**: presencia sutil, no intrusiva
+- El jugador revisa las notificaciones cuando quiera
+
+### Dual Currency Visible
+
+- **💎 Fragmentos (local)** + **🍊 $FRUTA (HUB)**
+- Ambas visibles en HUD
+- Paridad 1:1
+- $FRUTA solo aparece si registrado en HUB
+
+### Graceful Degradation
+
+- **HUB offline:** Social tab muestra friendly error
+- **Resto del juego funciona normalmente** sin HUB
+- Retry discreto disponible
+- No hay toasts de error fuera del Social tab
+
+### TestReggie
+
+- **ID:** `cmlx8xx7n0000jy04hvf9dmh8`
+- **Tipo:** Rayo (⚡)
+- Registrado como test regenmon en el HUB
+
+### Implementation Strategy: 16 Phases, 4 Levels
+
+| Level | Fases | Entregable |
+|-------|-------|------------|
+| CORE | 65-68 | useHub hook + Register + Sync + Social tab |
+| COMPLETE | 69-72 | Leaderboard + Public profile + Visit mode + Dual currency |
+| EXCELLENT | 73-76 | Feed interaction + Gift + Messages + Activity feed |
+| BONUS | 77-80 | Silent notifications + Privacy toggle + Lore naming + Polish+audit |
+
+### Level 2 Implementation Notes (2026-02-22)
+
+- **Leaderboard** (`/leaderboard`): Internal page consuming HUB API, paginated (10/page), rank icons (🥇🥈🥉), sprite fallback to rayo-base.webp, links to internal profile pages
+- **Profile** (`/regenmon/[id]`): Full profile with sprite, stats bars (happiness/energy/hunger), points, $FRUTA, visit counter, registration date
+- **Visit Mode**: "👁️ Modo Visita" badge for others, "🏠 Tu Perfil" for own. Greet interaction sends message via HUB API. Unregistered users see CTA
+- **Desktop tab switcher**: 💬 Chat | 📷 Foto | 🌍 Social tabs at top of right panel (small pixel font, active indicator)
+- **Internal routing**: RegisterHub links now route to `/leaderboard` and `/regenmon/{id}` instead of external HUB URLs
+- **Aesthetic note**: Desktop tab switcher is functional but needs visual polish (noted for later)
+
+### Level 3 Implementation Notes (2026-02-22)
+
+- **Feed (🍎 Alimentar)**: Costs 10 $FRUTA, calls POST /api/regenmon/:id/feed, updates sender balance in localStorage, disabled when balance < 10
+- **Gift (🎁 Regalar)**: Three amounts (5, 10, 25), each disabled independently based on balance, calls POST /api/regenmon/:id/gift
+- **Messages (💬)**: Textarea with 140 char limit + counter, optimistic insert after send, chronological list with timeAgo, loads 20 most recent
+- **Balance indicator**: "Tu balance: 🍊 N $FRUTA" shown above interaction buttons so user knows what they can afford
+- **Toast notifications**: All interactions show brief feedback (3s auto-dismiss), non-invasive fixed-top toast
+- **Persistence**: All interactions go through HUB API — data persists server-side. Balance synced to localStorage for client display.
+
+### Level 4 Implementation Notes (2026-02-22)
+
+- **Leaderboard sorting**: Client-side sort by ⭐ Puntos (default), 🍊 $FRUTA, 🆕 Nuevos. Fetches 20 entries per page for filtering headroom.
+- **Stage filtering**: Buttons for Todos/🥚 Huevo/🐣 Cría/🌟 Joven/👑 Adulto. Client-side filter on fetched data.
+- **"Tú" highlight**: Own entry gets orange border + "(tú)" tag via myHubId comparison
+- **Celebration animations**: 12 emoji confetti particles on feed (🍎) and gift (🎁) interactions. CSS keyframe `confetti-fall` with rotation + scale + opacity. 1.5s duration, pointer-events: none.
+- **Social Summary**: 2x2 grid on own profile showing 👀 Visitas, 🍊 $FRUTA, ⭐ Puntos, 💬 Mensajes. Only visible on isMyProfile.
+
+### Translation Layer Decision (2026-02-22)
+
+**Problem:** Reggie has 5 internal stages (4 Fracturas at 50/100/200/400 progress) but HUB uses 3 stages (Bebé/Joven/Adulto).
+
+**Solution: Translation layer in `useHubSync.ts`**
+- `progressToHubStage()`: maps Reggie progress → HUB stage
+  - 0-199 progress → Stage 1 (🥚 Bebé)
+  - 200-399 progress → Stage 2 (🐣 Joven)
+  - 400+ progress → Stage 3 (🐉 Adulto)
+- `hubStageName()`: shared function for consistent stage names across leaderboard + profile
+- `mapStatsToHub()`: Espíritu→happiness, Pulso→energy, Esencia→hunger
+
+**Principle:** Reggie keeps its rich internal world (Fracturas, lore, dual economy, missions). The HUB sees a simplified translation. Like speaking two languages — Reggie thinks in its lore but speaks HUB when socializing.
+
+**Reggie internal stages (unchanged):**
+- Fractura 1: 50 progress
+- Fractura 2: 100 progress
+- Fractura 3: 200 progress
+- Fractura 4: 400 progress
+- Total max: 750 progress
+
+**HUB stages (translation):**
+- Bebé: 0-199 (covers Fracturas 1-2)
+- Joven: 200-399 (covers Fractura 3)
+- Adulto: 400+ (covers Fractura 4+)

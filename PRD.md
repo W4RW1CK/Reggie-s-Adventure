@@ -1,7 +1,7 @@
 # 📋 PRD — Reggie's Adventure
-> **Versión actual:** v0.4 — La Evolución
-> **Última actualización:** 2026-02-21
-> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PENDIENTE`
+> **Versión actual:** v0.5 — El Encuentro
+> **Última actualización:** 2026-02-22
+> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PLANNING`
 >
 > 📜 **Narrativa completa:** [LORE.md](./LORE.md) — biblia narrativa del universo
 > 🗺️ **Flujos de usuario:** [APP_FLOW.md](./APP_FLOW.md) — cómo navega el jugador
@@ -190,16 +190,34 @@ Al completar las 5 sesiones, el jugador tiene:
 | F4.19 | Asset preloading | Real preloader (not spinner). Sprites + backgrounds for 5 stages + icons. Loading → fullscreen invitation → game |
 | F4.20 | Light theme (Frutero) | Warm bg #fffbf5, dark text #383838, warm gradients. Both Dark+Light supported |
 
-### Sesión 5 — El Encuentro (v0.5) `PENDIENTE`
+### Sesión 5 — El Encuentro (v0.5) `PLANNING`
 
 > Los Regenmon se encuentran entre sí. La regeneración del mundo digital
-> no ocurre en soledad — La Conexión se expande.
+> no ocurre en soledad — La Conexión se expande. HUB externo en regenmon-final.vercel.app.
+> Social es **opt-in**: el juego funciona 100% sin registrarse en el HUB.
 
 | # | Feature | Criterio de éxito |
 |---|---------|-------------------|
-| F5.1 | Perfiles públicos | URL compartible por Regenmon |
-| F5.2 | Feed de descubrimiento | Grid con otros Regenmons |
-| F5.3 | Interacciones sociales | Saludar, regalar, jugar |
+| F5.1 | useHub hook | Hook para comunicación con HUB API (register, sync, fetch). Maneja errores gracefully |
+| F5.2 | Registro en HUB | POST /api/regenmon/register con appUrl, name, type. Obtiene hubRegenmonId |
+| F5.3 | Sync de stats al HUB | POST /api/regenmon/sync envía stats post-decay (honest), totalProgress, fragmentos |
+| F5.4 | Tab Social (🌍) | 3er botón en bottom nav (mobile), panel option (desktop). Badge para notificaciones unread |
+| F5.5 | Leaderboard "Regeneración Global" | GET /api/leaderboard. Ranking lore-friendly (no competitivo). Solo Regenmons públicos |
+| F5.6 | Perfil público Mini-world | GET /api/regenmon/:id. Sprite + world bg + expression + particles. Sin gameplay |
+| F5.7 | Visit mode (read-only) | Visitar otros Regenmons. Ver evolución simplificada. Memorias privadas (solo 🧠 N) |
+| F5.8 | Dual currency display | 💎 Fragmentos (local) + 🍊 $FRUTA (HUB) visibles. Paridad 1:1 |
+| F5.9 | Feed interaction: alimentar | POST /api/regenmon/:id/feed. Alimentar otro Regenmon → su esencia sube localmente |
+| F5.10 | Gift system | POST /api/regenmon/:id/gift. Regalar $FRUTA a otro Regenmon |
+| F5.11 | Messages between creatures | POST /api/regenmon/:id/messages. Firmados por Regenmon, escritos por owner |
+| F5.12 | Activity feed | GET /api/activity. Feed de actividad reciente del ecosistema |
+| F5.13 | Silent notifications | Badge counter en 🌍. No interrumpe durante chat (like audio ducking) |
+| F5.14 | Privacy toggle | Public by default. Toggle private en Settings → hidden from leaderboard |
+| F5.15 | Lore-friendly naming | Leaderboard = "Regeneración Global". Otros Regenmons = habitantes del mundo digital |
+| F5.16 | Polish + audit | HUB offline → friendly error. Rest of game works normally. Full accessibility audit |
+| F5.17 | Stats mapping | Espíritu→happiness, Pulso→energy, Esencia→hunger (0-100) para el HUB |
+| F5.18 | 1:1 parity | 1 Fragmento = 1 $FRUTA (paridad directa, sync bidireccional) |
+| F5.19 | Opt-in social | Game works 100% without HUB registration. Social tab shows invite to register |
+| F5.20 | Poll activity | Poll on Social tab open + every 5min with sync. Keeps data fresh |
 
 ---
 
@@ -278,6 +296,24 @@ US-54: Como jugador, quiero que mi Regenmon pase por 4 Fracturas que marquen mom
 US-55: Como jugador, quiero que si mi Regenmon me pide una foto en una misión, el cooldown se salte.
 ```
 
+## 5e. User Stories — Sesión 5
+
+```
+US-56: Como jugador, quiero registrar mi Regenmon en el HUB para que otros puedan verlo.
+US-57: Como jugador, quiero ver un leaderboard lore-friendly ("Regeneración Global") con otros Regenmons.
+US-58: Como jugador, quiero visitar el perfil público de otro Regenmon y ver su mini-world (sprite + mundo + expresión).
+US-59: Como jugador, quiero alimentar al Regenmon de otro jugador para ayudarlo.
+US-60: Como jugador, quiero regalar $FRUTA a otro Regenmon como muestra de apoyo.
+US-61: Como jugador, quiero enviar mensajes entre Regenmons (firmados por mi criatura, escritos por mí).
+US-62: Como jugador, quiero ver un feed de actividad reciente del ecosistema.
+US-63: Como jugador, quiero recibir notificaciones silenciosas (badge en 🌍) sin que interrumpan mi chat.
+US-64: Como jugador, quiero poder hacer mi perfil privado desde Settings (oculto del leaderboard).
+US-65: Como jugador, quiero que el juego funcione perfectamente sin registrarme en el HUB (opt-in social).
+US-66: Como jugador, quiero ver dos monedas: 💎 Fragmentos (local) y 🍊 $FRUTA (HUB) con paridad 1:1.
+US-67: Como jugador, quiero que si el HUB está offline, solo Social muestre error pero el resto del juego funcione.
+US-68: Como jugador, quiero que mi Regenmon sincronice sus stats honestos (post-decay) al HUB.
+```
+
 ## 6. Requisitos de Accesibilidad (Fix It Phase)
 
 - **A1. Contraste:** Todos los textos deben cumplir WCAG AA (ratio 4.5:1).
@@ -337,6 +373,21 @@ US-55: Como jugador, quiero que si mi Regenmon me pide una foto en una misión, 
 - [x] Split purification: Recargar (💛 pulso) + Nutrir (🌱 esencia) (S4)
 - [x] Always-visible stats below sprite (S4)
 - [x] Diario panel with Memorias + Historial tabs (S4)
+- [ ] HUB registration (opt-in) with appUrl reggie-s-adventure.vercel.app (S5)
+- [ ] Stats sync to HUB: Espíritu→happiness, Pulso→energy, Esencia→hunger (S5)
+- [ ] Social tab 🌍 with badge counter for unread notifications (S5)
+- [ ] Leaderboard "Regeneración Global" (lore-friendly, public Regenmons only) (S5)
+- [ ] Mini-world public profile: sprite + world bg + expression + particles (S5)
+- [ ] Visit mode (read-only): evolution visible, memories private (🧠 N count only) (S5)
+- [ ] Dual currency display: 💎 Fragmentos + 🍊 $FRUTA with 1:1 parity (S5)
+- [ ] Feed interaction: alimentar otro Regenmon (S5)
+- [ ] Gift system: regalar $FRUTA (S5)
+- [ ] Messages between creatures (signed by Regenmon, written by owner) (S5)
+- [ ] Activity feed from HUB ecosystem (S5)
+- [ ] Silent notifications (badge only, no interruption during chat) (S5)
+- [ ] Privacy toggle: public by default, private hides from leaderboard (S5)
+- [ ] HUB offline graceful degradation (friendly error, game works normally) (S5)
+- [ ] Poll activity on Social tab open + every 5min with sync (S5)
 
 ---
 
