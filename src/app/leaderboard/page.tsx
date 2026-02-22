@@ -85,7 +85,7 @@ export default function LeaderboardPage() {
               className={`leaderboard-page__filter-btn ${sortMode === mode ? 'leaderboard-page__filter-btn--active' : ''}`}
               onClick={() => setSortMode(mode)}
             >
-              {mode === 'points' ? '⭐ Puntos' : mode === 'balance' ? '🍊 $FRUTA' : '🆕 Nuevos'}
+              {mode === 'points' ? '⭐ Puntos' : mode === 'balance' ? '💎 Fragmentos' : '🆕 Nuevos'}
             </button>
           ))}
         </div>

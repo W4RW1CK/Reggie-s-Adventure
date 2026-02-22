@@ -130,7 +130,7 @@ export default function RegenmonProfilePage() {
       const newBalance = result.data.senderBalance;
       localStorage.setItem(STORAGE_KEYS.HUB_BALANCE, String(newBalance));
       setMyBalance(newBalance);
-      showToast(`¡Le diste de comer a ${profile.name}! 🍎 -10 $FRUTA`);
+      showToast(`¡Le diste de comer a ${profile.name}! 🍎 -10 Fragmentos`);
       showCelebration('🍎');
     } else {
       showToast('No se pudo alimentar. Intenta después 🍎');
@@ -147,7 +147,7 @@ export default function RegenmonProfilePage() {
       const newBalance = result.data.senderBalance;
       localStorage.setItem(STORAGE_KEYS.HUB_BALANCE, String(newBalance));
       setMyBalance(newBalance);
-      showToast(`¡Enviaste ${amount} $FRUTA a ${profile.name}! 🎁`);
+      showToast(`¡Enviaste ${amount} Fragmentos a ${profile.name}! 🎁`);
       showCelebration('🎁');
     } else {
       showToast('No se pudo enviar el regalo. Intenta después 🎁');
@@ -238,21 +238,21 @@ export default function RegenmonProfilePage() {
 
       <div className="profile-page__stats-grid">
         <div className="profile-page__stat">
-          <span className="profile-page__stat-label">😊 Felicidad</span>
+          <span className="profile-page__stat-label">🔮 Espíritu</span>
           <div className="profile-page__stat-bar">
             <div className="profile-page__stat-fill profile-page__stat-fill--happiness" style={{ width: `${profile.stats.happiness}%` }} />
           </div>
           <span className="profile-page__stat-val">{profile.stats.happiness}</span>
         </div>
         <div className="profile-page__stat">
-          <span className="profile-page__stat-label">⚡ Energía</span>
+          <span className="profile-page__stat-label">💛 Pulso</span>
           <div className="profile-page__stat-bar">
             <div className="profile-page__stat-fill profile-page__stat-fill--energy" style={{ width: `${profile.stats.energy}%` }} />
           </div>
           <span className="profile-page__stat-val">{profile.stats.energy}</span>
         </div>
         <div className="profile-page__stat">
-          <span className="profile-page__stat-label">🍎 Hambre</span>
+          <span className="profile-page__stat-label">🌱 Esencia</span>
           <div className="profile-page__stat-bar">
             <div className="profile-page__stat-fill profile-page__stat-fill--hunger" style={{ width: `${profile.stats.hunger}%` }} />
           </div>
@@ -262,7 +262,7 @@ export default function RegenmonProfilePage() {
 
       <div className="profile-page__meta">
         <span>⭐ {profile.totalPoints} pts</span>
-        <span>🍊 {profile.balance} $FRUTA</span>
+        <span>💎 {profile.balance} Fragmentos</span>
         <span>👀 {profile.totalVisits} visitas</span>
         <span>📅 {timeAgo(profile.registeredAt)}</span>
       </div>
@@ -278,7 +278,7 @@ export default function RegenmonProfilePage() {
             </div>
             <div className="profile-page__summary-item">
               <span className="profile-page__summary-val">🍊 {profile.balance}</span>
-              <span className="profile-page__summary-label">$FRUTA</span>
+              <span className="profile-page__summary-label">Fragmentos</span>
             </div>
             <div className="profile-page__summary-item">
               <span className="profile-page__summary-val">⭐ {profile.totalPoints}</span>
@@ -296,7 +296,7 @@ export default function RegenmonProfilePage() {
       {!isMyProfile && isRegistered && (
         <div className="profile-page__interactions">
           {/* My balance indicator */}
-          <p className="profile-page__my-balance">Tu balance: 🍊 {myBalance} $FRUTA</p>
+          <p className="profile-page__my-balance">Tu balance: 💎 {myBalance} Fragmentos</p>
 
           {/* Greet (L2) */}
           <button
@@ -312,9 +312,9 @@ export default function RegenmonProfilePage() {
             className="profile-page__action-btn profile-page__action-btn--feed"
             onClick={handleFeed}
             disabled={feedLoading || myBalance < 10}
-            title={myBalance < 10 ? 'Necesitas al menos 10 $FRUTA' : ''}
+            title={myBalance < 10 ? 'Necesitas al menos 10 Fragmentos' : ''}
           >
-            {feedLoading ? '🔄...' : '🍎 Alimentar (-10 🍊)'}
+            {feedLoading ? '🔄...' : '🌀 Purificar (-10 💎)'}
           </button>
 
           {/* Gift (L3 F) */}
@@ -325,7 +325,7 @@ export default function RegenmonProfilePage() {
                 className="profile-page__action-btn profile-page__action-btn--gift"
                 onClick={() => handleGift(amt)}
                 disabled={giftLoading !== null || myBalance < amt}
-                title={myBalance < amt ? `Necesitas al menos ${amt} $FRUTA` : ''}
+                title={myBalance < amt ? `Necesitas al menos ${amt} Fragmentos` : ''}
               >
                 {giftLoading === amt ? '🔄' : `🎁 ${amt}`}
               </button>

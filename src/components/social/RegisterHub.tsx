@@ -91,12 +91,12 @@ export default function RegisterHub({ onClose }: RegisterHubProps) {
         </div>
 
         <div className="social-panel__badge">
-          <span className="social-badge">🌍 HUB MEMBER</span>
+          <span className="social-badge">🌍 Habitante de La Red</span>
           <span className="social-panel__name">{regenmon.name}</span>
         </div>
 
         <div className="social-panel__balance">
-          🍊 {hubBalance} $FRUTA
+          💎 {hubBalance} Fragmentos
         </div>
 
         <div className="social-panel__actions">
