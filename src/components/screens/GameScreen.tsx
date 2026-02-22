@@ -482,6 +482,21 @@ export default function GameScreen({
             {/* === RIGHT PANEL (Desktop: always 30% / Mobile: overlay for chat) === */}
             {isDesktop && (
                 <div className="game-screen__right-panel">
+                    {/* Desktop tab switcher */}
+                    <div className="desktop-panel-tabs">
+                        <button
+                            className={`desktop-panel-tabs__btn ${rightPanel === 'chat' ? 'desktop-panel-tabs__btn--active' : ''}`}
+                            onClick={handleSwitchToChat}
+                        >💬 Chat</button>
+                        <button
+                            className={`desktop-panel-tabs__btn ${rightPanel === 'photo' ? 'desktop-panel-tabs__btn--active' : ''}`}
+                            onClick={handleSwitchToPhoto}
+                        >📷 Foto</button>
+                        <button
+                            className={`desktop-panel-tabs__btn ${rightPanel === 'social' ? 'desktop-panel-tabs__btn--active' : ''}`}
+                            onClick={handleSwitchToSocial}
+                        >🌍 Social</button>
+                    </div>
                     {rightPanel === 'chat' && (
                         <ErrorBoundary>
                             <ChatBox

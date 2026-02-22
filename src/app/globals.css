@@ -2905,6 +2905,47 @@ html, body {
     overflow: hidden;
   }
 
+  .desktop-panel-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+    flex-shrink: 0;
+  }
+  .desktop-panel-tabs__btn {
+    flex: 1;
+    padding: 8px 4px;
+    font-family: var(--font-press-start-2p), monospace;
+    font-size: 0.55rem;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.5);
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .desktop-panel-tabs__btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.8);
+  }
+  .desktop-panel-tabs__btn--active {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    border-bottom: 2px solid var(--color-primary, #ff9500);
+  }
+  .theme-light .desktop-panel-tabs {
+    border-bottom-color: rgba(0, 0, 0, 0.1);
+  }
+  .theme-light .desktop-panel-tabs__btn {
+    color: rgba(0, 0, 0, 0.4);
+  }
+  .theme-light .desktop-panel-tabs__btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: rgba(0, 0, 0, 0.7);
+  }
+  .theme-light .desktop-panel-tabs__btn--active {
+    color: #000;
+    background: rgba(0, 0, 0, 0.05);
+  }
+
   @keyframes panel-slide-in {
     from { transform: translateX(100%); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
