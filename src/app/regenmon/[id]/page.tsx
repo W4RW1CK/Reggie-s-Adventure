@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
-import { useHub } from '@/hooks/useHub';
+import { useHub, HubMessage } from '@/hooks/useHub';
 import { STORAGE_KEYS } from '@/lib/constants';
 import Link from 'next/link';
 
@@ -46,20 +46,40 @@ export default function RegenmonProfilePage() {
   const [error, setError] = useState(false);
   const [isMyProfile, setIsMyProfile] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
-  const [greetSent, setGreetSent] = useState(false);
-  const [greetLoading, setGreetLoading] = useState(false);
+  const [myBalance, setMyBalance] = useState(0);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
-  const { getProfile, sendMessage } = useHub();
+  // Interaction states
+  const [greetSent, setGreetSent] = useState(false);
+  const [greetLoading, setGreetLoading] = useState(false);
+  const [feedLoading, setFeedLoading] = useState(false);
+  const [giftLoading, setGiftLoading] = useState<number | null>(null);
 
+  // Messages
+  const [messages, setMessages] = useState<HubMessage[]>([]);
+  const [msgText, setMsgText] = useState('');
+  const [msgSending, setMsgSending] = useState(false);
+  const [messagesLoaded, setMessagesLoaded] = useState(false);
+
+  const { getProfile, sendMessage, feed, gift, getMessages } = useHub();
+
+  const showToast = useCallback((msg: string) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(null), 3000);
+  }, []);
+
+  // Load registration state + balance
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const myId = localStorage.getItem(STORAGE_KEYS.HUB_REGENMON_ID);
     const registered = localStorage.getItem(STORAGE_KEYS.IS_REGISTERED_IN_HUB) === 'true';
+    const balance = parseInt(localStorage.getItem(STORAGE_KEYS.HUB_BALANCE) ?? '0', 10);
     setIsMyProfile(myId === id);
     setIsRegistered(registered && !!myId);
+    setMyBalance(balance);
   }, [id]);
 
+  // Load profile
   useEffect(() => {
     setLoading(true);
     setError(false);
@@ -73,6 +93,19 @@ export default function RegenmonProfilePage() {
     });
   }, [id, getProfile]);
 
+  // Load messages
+  useEffect(() => {
+    if (!id) return;
+    getMessages(id, 20).then(res => {
+      if (res?.data?.messages) {
+        setMessages(res.data.messages);
+      }
+      setMessagesLoaded(true);
+    });
+  }, [id, getMessages]);
+
+  // --- Interactions ---
+
   const handleGreet = useCallback(async () => {
     if (!profile || greetSent || greetLoading) return;
     setGreetLoading(true);
@@ -81,11 +114,64 @@ export default function RegenmonProfilePage() {
     const result = await sendMessage(id, myId, myName, `👋 ¡Hola ${profile.name}!`);
     if (result) {
       setGreetSent(true);
-      setToastMsg(`¡Saludaste a ${profile.name}! 👋`);
-      setTimeout(() => setToastMsg(null), 3000);
+      showToast(`¡Saludaste a ${profile.name}! 👋`);
     }
     setGreetLoading(false);
-  }, [id, profile, greetSent, greetLoading, sendMessage]);
+  }, [id, profile, greetSent, greetLoading, sendMessage, showToast]);
+
+  const handleFeed = useCallback(async () => {
+    if (!profile || feedLoading || myBalance < 10) return;
+    setFeedLoading(true);
+    const myId = localStorage.getItem(STORAGE_KEYS.HUB_REGENMON_ID) ?? '';
+    const result = await feed(id, myId);
+    if (result?.data) {
+      const newBalance = result.data.senderBalance;
+      localStorage.setItem(STORAGE_KEYS.HUB_BALANCE, String(newBalance));
+      setMyBalance(newBalance);
+      showToast(`¡Le diste de comer a ${profile.name}! 🍎 -10 $FRUTA`);
+    } else {
+      showToast('No se pudo alimentar. Intenta después 🍎');
+    }
+    setFeedLoading(false);
+  }, [id, profile, feedLoading, myBalance, feed, showToast]);
+
+  const handleGift = useCallback(async (amount: number) => {
+    if (!profile || giftLoading !== null || myBalance < amount) return;
+    setGiftLoading(amount);
+    const myId = localStorage.getItem(STORAGE_KEYS.HUB_REGENMON_ID) ?? '';
+    const result = await gift(id, myId, amount);
+    if (result?.data) {
+      const newBalance = result.data.senderBalance;
+      localStorage.setItem(STORAGE_KEYS.HUB_BALANCE, String(newBalance));
+      setMyBalance(newBalance);
+      showToast(`¡Enviaste ${amount} $FRUTA a ${profile.name}! 🎁`);
+    } else {
+      showToast('No se pudo enviar el regalo. Intenta después 🎁');
+    }
+    setGiftLoading(null);
+  }, [id, profile, giftLoading, myBalance, gift, showToast]);
+
+  const handleSendMessage = useCallback(async () => {
+    if (!profile || !msgText.trim() || msgSending) return;
+    setMsgSending(true);
+    const myId = localStorage.getItem(STORAGE_KEYS.HUB_REGENMON_ID) ?? '';
+    const myName = localStorage.getItem('reggie-adventure-player-name') || 'Aventurero';
+    const result = await sendMessage(id, myId, myName, msgText.trim());
+    if (result) {
+      // Add optimistically
+      setMessages(prev => [{
+        id: Date.now().toString(),
+        fromName: myName,
+        message: msgText.trim(),
+        createdAt: new Date().toISOString(),
+      }, ...prev]);
+      setMsgText('');
+      showToast('📨 Mensaje enviado');
+    }
+    setMsgSending(false);
+  }, [id, profile, msgText, msgSending, sendMessage, showToast]);
+
+  // --- Render ---
 
   if (loading) {
     return (
@@ -164,16 +250,45 @@ export default function RegenmonProfilePage() {
         <span>📅 {timeAgo(profile.registeredAt)}</span>
       </div>
 
-      {/* Interaction: Greet (Level 2 D) */}
+      {/* === INTERACTIONS (Level 2 + Level 3) === */}
       {!isMyProfile && isRegistered && (
         <div className="profile-page__interactions">
+          {/* My balance indicator */}
+          <p className="profile-page__my-balance">Tu balance: 🍊 {myBalance} $FRUTA</p>
+
+          {/* Greet (L2) */}
           <button
-            className="profile-page__greet-btn"
+            className="profile-page__action-btn profile-page__action-btn--greet"
             onClick={handleGreet}
             disabled={greetSent || greetLoading}
           >
-            {greetLoading ? '🔄 Enviando...' : greetSent ? '✅ ¡Saludo enviado!' : `👋 Saludar a ${profile.name}`}
+            {greetLoading ? '🔄...' : greetSent ? '✅ Saludo enviado' : `👋 Saludar`}
           </button>
+
+          {/* Feed (L3 F) */}
+          <button
+            className="profile-page__action-btn profile-page__action-btn--feed"
+            onClick={handleFeed}
+            disabled={feedLoading || myBalance < 10}
+            title={myBalance < 10 ? 'Necesitas al menos 10 $FRUTA' : ''}
+          >
+            {feedLoading ? '🔄...' : '🍎 Alimentar (-10 🍊)'}
+          </button>
+
+          {/* Gift (L3 F) */}
+          <div className="profile-page__gift-row">
+            {[5, 10, 25].map(amt => (
+              <button
+                key={amt}
+                className="profile-page__action-btn profile-page__action-btn--gift"
+                onClick={() => handleGift(amt)}
+                disabled={giftLoading !== null || myBalance < amt}
+                title={myBalance < amt ? `Necesitas al menos ${amt} $FRUTA` : ''}
+              >
+                {giftLoading === amt ? '🔄' : `🎁 ${amt}`}
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
@@ -183,6 +298,51 @@ export default function RegenmonProfilePage() {
           <Link href="/" className="profile-page__cta-link">Ir a La Red →</Link>
         </div>
       )}
+
+      {/* === MESSAGES (Level 3) === */}
+      <div className="profile-page__messages">
+        <h2 className="profile-page__messages-title">💬 Mensajes</h2>
+
+        {/* Send form (only for others, if registered) */}
+        {!isMyProfile && isRegistered && (
+          <div className="profile-page__msg-form">
+            <textarea
+              className="profile-page__msg-input"
+              value={msgText}
+              onChange={(e) => setMsgText(e.target.value.slice(0, 140))}
+              placeholder={`Escribe a ${profile.name}...`}
+              maxLength={140}
+              rows={2}
+            />
+            <div className="profile-page__msg-form-footer">
+              <span className="profile-page__msg-counter">{msgText.length}/140</span>
+              <button
+                className="profile-page__msg-send"
+                onClick={handleSendMessage}
+                disabled={!msgText.trim() || msgSending}
+              >
+                {msgSending ? '🔄' : '📨 Enviar'}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Message list */}
+        {messagesLoaded && messages.length === 0 && (
+          <p className="profile-page__msg-empty">Aún no hay mensajes. ¡Sé el primero!</p>
+        )}
+        {messages.length > 0 && (
+          <ul className="profile-page__msg-list">
+            {messages.map(msg => (
+              <li key={msg.id} className="profile-page__msg-item">
+                <span className="profile-page__msg-from">{msg.fromName}</span>
+                <span className="profile-page__msg-text">{msg.message}</span>
+                <span className="profile-page__msg-time">{timeAgo(msg.createdAt)}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

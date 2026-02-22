@@ -1093,3 +1093,12 @@ totalPoints → evolution.totalProgress
 - **Desktop tab switcher**: 💬 Chat | 📷 Foto | 🌍 Social tabs at top of right panel (small pixel font, active indicator)
 - **Internal routing**: RegisterHub links now route to `/leaderboard` and `/regenmon/{id}` instead of external HUB URLs
 - **Aesthetic note**: Desktop tab switcher is functional but needs visual polish (noted for later)
+
+### Level 3 Implementation Notes (2026-02-22)
+
+- **Feed (🍎 Alimentar)**: Costs 10 $FRUTA, calls POST /api/regenmon/:id/feed, updates sender balance in localStorage, disabled when balance < 10
+- **Gift (🎁 Regalar)**: Three amounts (5, 10, 25), each disabled independently based on balance, calls POST /api/regenmon/:id/gift
+- **Messages (💬)**: Textarea with 140 char limit + counter, optimistic insert after send, chronological list with timeAgo, loads 20 most recent
+- **Balance indicator**: "Tu balance: 🍊 N $FRUTA" shown above interaction buttons so user knows what they can afford
+- **Toast notifications**: All interactions show brief feedback (3s auto-dismiss), non-invasive fixed-top toast
+- **Persistence**: All interactions go through HUB API — data persists server-side. Balance synced to localStorage for client display.

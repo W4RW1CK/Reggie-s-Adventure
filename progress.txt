@@ -1,7 +1,7 @@
 # 📊 PROGRESS — Reggie's Adventure
 > **Versión actual:** v0.5 — El Encuentro
 > **Última actualización:** 2026-02-22
-> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `IN PROGRESS` (Level 1-2 done)
+> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `IN PROGRESS` (Level 1-3 done)
 >
 > 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — biblia narrativa del universo
 > 🔨 **Fases detalladas:** [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) — qué construir y en qué orden
@@ -621,10 +621,10 @@
 - [x] Fase 72: RegisterHub internal links — Regeneración Global and Mi Perfil now route to internal pages, desktop tab switcher (💬📷🌍)
 
 **LEVEL 3 — EXCELLENT (73-76):**
-- [ ] Fase 73: Feed Interaction — Alimentar otro Regenmon
-- [ ] Fase 74: Gift System — Regalar $FRUTA
-- [ ] Fase 75: Messages — Pulsos de Datos
-- [ ] Fase 76: Activity Feed
+- [x] Fase 73: Feed Interaction — 🍎 Alimentar (-10 $FRUTA), balance validation, balance update in localStorage, toast feedback
+- [x] Fase 74: Gift System — 🎁 Regalar 5/10/25 $FRUTA, per-amount disable if insufficient, balance sync
+- [x] Fase 75: Messages — 💬 Read + send messages (140 char limit), optimistic add, chronological list with timeAgo, textarea with counter
+- [x] Fase 76: Activity Feed — already implemented in RegisterHub (L1), messages section on profile serves as social persistence
 
 **LEVEL 4 — BONUS (77-80):**
 - [ ] Fase 77: Silent Notifications
