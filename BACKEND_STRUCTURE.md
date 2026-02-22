@@ -1,7 +1,7 @@
 # 🛠️ BACKEND_STRUCTURE — Reggie's Adventure
-> **Versión actual:** v0.4 — La Evolución
-> **Última actualización:** 2026-02-21
-> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PENDIENTE`
+> **Versión actual:** v0.5 — El Encuentro
+> **Última actualización:** 2026-02-22
+> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PLANNING`
 >
 > 📜 **System Prompt:** La personalidad, tono, y reglas de diálogo del Regenmon se definen en [LORE.md](./LORE.md). Este doc define la implementación técnica.
 > ⚙️ **Herramientas:** [TECH_STACK.md](./TECH_STACK.md) — versiones de Supabase, Privy, IA providers
@@ -974,11 +974,190 @@ All S4 types are exported from a single canonical source:
 
 ---
 
-## Sesión 5: Endpoints Sociales — PENDIENTE
+## Sesión 5: El Encuentro — Social via HUB API
 
-> - `POST /api/social/register`
-> - `GET /api/social/registry`
-> - `GET /api/social/profile/[id]`
+> **HUB externo:** `regenmon-final.vercel.app` — NO requiere base de datos propia.
+> Toda la data social vive en el HUB. El cliente llama a la HUB API directamente.
+> Social es **opt-in**: el juego funciona 100% sin registro en HUB.
+
+### HUB API Base URL
+
+```typescript
+const HUB_BASE_URL = 'https://regenmon-final.vercel.app/api';
+```
+
+### HUB API Endpoints (externos, consumidos por el cliente)
+
+```
+POST   /api/regenmon/register     → Registrar Regenmon en el HUB
+POST   /api/regenmon/sync         → Sincronizar stats al HUB
+GET    /api/leaderboard           → Obtener "Regeneración Global"
+GET    /api/regenmon/:id          → Obtener perfil público de un Regenmon
+POST   /api/regenmon/:id/feed     → Alimentar a otro Regenmon
+POST   /api/regenmon/:id/gift     → Regalar $FRUTA a otro Regenmon
+POST   /api/regenmon/:id/messages → Enviar mensaje (pulso de datos)
+GET    /api/activity              → Feed de actividad reciente
+```
+
+### Register Request/Response
+
+```typescript
+// POST /api/regenmon/register
+interface RegisterRequest {
+  appUrl: string;           // 'reggie-s-adventure.vercel.app'
+  name: string;             // Nombre del Regenmon
+  type: 'rayo' | 'flama' | 'hielo';
+  stats: {
+    happiness: number;      // Espíritu → happiness (0-100)
+    energy: number;         // Pulso → energy (0-100)
+    hunger: number;         // Esencia → hunger (0-100)
+  };
+  totalPoints: number;      // evolution.totalProgress
+}
+
+interface RegisterResponse {
+  id: string;               // hubRegenmonId
+  frpicouta: number;        // $FRUTA balance
+}
+```
+
+### Sync Request
+
+```typescript
+// POST /api/regenmon/sync
+interface SyncRequest {
+  id: string;               // hubRegenmonId
+  stats: {
+    happiness: number;      // Espíritu post-decay (honest)
+    energy: number;         // Pulso post-decay (honest)
+    hunger: number;         // Esencia post-decay (honest)
+  };
+  totalPoints: number;      // evolution.totalProgress
+}
+```
+
+### Stats Mapping
+
+```typescript
+function mapStatsToHub(localStats: { espiritu: number; pulso: number; esencia: number }) {
+  return {
+    happiness: localStats.espiritu,  // Espíritu → happiness
+    energy: localStats.pulso,        // Pulso → energy
+    hunger: localStats.esencia,      // Esencia → hunger
+  };
+}
+```
+
+### useHub Hook (`hooks/useHub.ts`)
+
+```typescript
+useHub() → {
+  isRegistered: boolean,
+  hubRegenmonId: string | null,
+  hubBalance: number,          // $FRUTA balance
+  register(): Promise<void>,
+  sync(): Promise<void>,
+  fetchLeaderboard(): Promise<LeaderboardEntry[]>,
+  fetchProfile(id: string): Promise<PublicProfile>,
+  feedRegenmon(id: string): Promise<void>,
+  giftFruta(id: string, amount: number): Promise<void>,
+  sendMessage(id: string, text: string): Promise<void>,
+  fetchActivity(): Promise<ActivityItem[]>,
+  isHubOnline: boolean,
+  error: string | null,
+}
+```
+
+### useHubSync Hook (`hooks/useHubSync.ts`)
+
+```typescript
+useHubSync({ stats, progress, isRegistered }) → {
+  lastSyncAt: number | null,
+}
+// Polls and syncs on:
+// 1. Social tab open (immediate)
+// 2. Every 5 minutes while Social tab is open
+// 3. On Social tab close (final sync)
+```
+
+### localStorage Keys (S5)
+
+```typescript
+// Added to STORAGE_KEYS in constants.ts
+const STORAGE_KEYS = {
+  // ... existing S1-S4 keys ...
+  HUB_REGENMON_ID: 'reggie-adventure-hub-id',         // string | null
+  IS_REGISTERED_IN_HUB: 'reggie-adventure-hub-registered', // boolean
+  HUB_BALANCE: 'reggie-adventure-hub-balance',         // number ($FRUTA)
+  HUB_NOTIFICATIONS: 'reggie-adventure-hub-notifs',    // number (unread count)
+  HUB_PRIVACY: 'reggie-adventure-hub-privacy',         // 'public' | 'private'
+};
+```
+
+### Types (S5)
+
+```typescript
+interface LeaderboardEntry {
+  id: string;
+  name: string;
+  type: 'rayo' | 'flama' | 'hielo';
+  totalPoints: number;
+  stats: { happiness: number; energy: number; hunger: number };
+}
+
+interface PublicProfile {
+  id: string;
+  name: string;
+  type: 'rayo' | 'flama' | 'hielo';
+  stats: { happiness: number; energy: number; hunger: number };
+  totalPoints: number;
+  memoryCount: number;      // Only count, NOT content (private)
+  evolutionStage: number;   // 1-5
+}
+
+interface ActivityItem {
+  type: 'feed' | 'gift' | 'message' | 'register';
+  fromName: string;
+  toName: string;
+  timestamp: number;
+  amount?: number;
+  text?: string;
+}
+
+interface HubMessage {
+  from: string;             // hubRegenmonId of sender
+  fromName: string;         // Regenmon name (signed by creature)
+  text: string;             // max 140 chars
+  timestamp: number;
+}
+```
+
+### Error Handling
+
+```typescript
+// All HUB API calls wrapped with:
+async function hubFetch<T>(endpoint: string, options?: RequestInit): Promise<T | null> {
+  try {
+    const res = await fetch(`${HUB_BASE_URL}${endpoint}`, {
+      ...options,
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+    });
+    if (!res.ok) throw new Error(`HUB ${res.status}`);
+    return await res.json();
+  } catch (e) {
+    console.error('[HUB]', e);
+    return null; // Graceful degradation — game works without HUB
+  }
+}
+```
+
+### TestReggie
+
+```
+ID: cmlx8xx7n0000jy04hvf9dmh8
+Type: Rayo (⚡)
+Registered as test regenmon in HUB
+```
 
 ---
 

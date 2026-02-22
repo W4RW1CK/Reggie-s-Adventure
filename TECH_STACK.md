@@ -1,7 +1,7 @@
 # ⚙️ TECH_STACK — Reggie's Adventure
-> **Versión actual:** v0.4 — La Evolución
-> **Última actualización:** 2026-02-21
-> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PENDIENTE`
+> **Versión actual:** v0.5 — El Encuentro
+> **Última actualización:** 2026-02-22
+> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PLANNING`
 >
 > 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — los system prompts de IA (`lib/ai/prompts.ts`) se basan íntegramente en LORE
 > 🛠️ **Implementación técnica:** [BACKEND_STRUCTURE.md](./BACKEND_STRUCTURE.md) — schemas y lógica que usan estas herramientas
@@ -85,6 +85,17 @@
 
 > **Nota:** API nativa del navegador, no requiere dependencia. `document.documentElement.requestFullscreen()`.
 
+## Social / HUB Integration (Sesión 5)
+
+| Herramienta | Propósito |
+|-------------|-----------|
+| `fetch` (browser native) | Llamadas a HUB API — NO requiere dependencias adicionales |
+| HUB API (`regenmon-final.vercel.app`) | API externa para social: register, sync, leaderboard, profiles, interactions |
+
+> **Nota:** S5 NO agrega nuevas dependencias de npm. Toda la comunicación social usa `fetch` nativo
+> contra la API del HUB externo. No requiere base de datos propia — toda la data social vive en el HUB.
+> Las nuevas páginas/paneles sociales usan **client-side rendering** con el mismo stack existente (React + NES.css + Tailwind).
+
 ## Sesiones Futuras (no instalar todavía)
 
 | Paquete | Versión | Sesión | Propósito |
@@ -104,6 +115,7 @@
 | Gemini Vision | S4 | Evaluación emocional de fotos (dev) | Sí |
 | GPT-4o Vision | S4 | Evaluación emocional de fotos (prod) | Sí |
 | Fullscreen API | S4 | Modo inmersivo (browser native) | No |
+| HUB API (`regenmon-final.vercel.app`) | S5 | Social: registro, sync, leaderboard, perfiles, interacciones | No (API pública) |
 
 ---
 
@@ -148,6 +160,11 @@ Clave: "reggie-adventure-progress"  → [NEW S4] Progreso lifetime (never decrea
 Clave: "reggie-adventure-diary"     → [NEW S4] Diary entries del Regenmon (memorias emocionales)
 Clave: "reggie-adventure-missions"  → [NEW S4] Misión activa (max 1)
 Clave: "reggie-adventure-strikes"   → [NEW S4] Strike counter + timestamps
+Clave: "reggie-adventure-hub-id"       → [NEW S5] HUB Regenmon ID
+Clave: "reggie-adventure-hub-registered" → [NEW S5] Is registered in HUB (boolean)
+Clave: "reggie-adventure-hub-balance"  → [NEW S5] $FRUTA balance from HUB
+Clave: "reggie-adventure-hub-notifs"   → [NEW S5] Unread notification count
+Clave: "reggie-adventure-hub-privacy"  → [NEW S5] Privacy setting ('public' | 'private')
 ```
 
 ### Sesión 3+: Supabase (usuarios autenticados)
@@ -221,6 +238,12 @@ reggie-adventure/
 │   │   │   └── MissionCard.tsx      # Misión activa (1 max)
 │   │   ├── evolution/      # [NEW S4] Visuales de evolución
 │   │   │   └── EvolutionVisual.tsx  # Sprites por etapa + Fracturas
+│   │   ├── social/         # [NEW S5] Componentes sociales
+│   │   │   ├── SocialTab.tsx        # Tab principal 🌍
+│   │   │   ├── Leaderboard.tsx      # "Regeneración Global"
+│   │   │   ├── PublicProfile.tsx    # Mini-world perfil público
+│   │   │   ├── RegistrationInvite.tsx # Invitación a registrarse
+│   │   │   └── ActivityFeed.tsx     # Feed de actividad
 │   │   └── ui/             # Componentes reutilizables
 │   │       ├── MusicToggle.tsx
 │   │       ├── TutorialModal.tsx
@@ -239,7 +262,9 @@ reggie-adventure/
 │   │   ├── usePhotoEval.ts       # [NEW S4] Upload + evaluación de fotos
 │   │   ├── useMissions.ts        # [NEW S4] Misiones IA (1 activa max)
 │   │   ├── useStrikes.ts         # [NEW S4] Sistema de strikes anti-abuse
-│   │   └── useFullscreen.ts      # [NEW S4] Fullscreen API wrapper
+│   │   ├── useFullscreen.ts      # [NEW S4] Fullscreen API wrapper
+│   │   ├── useHub.ts             # [NEW S5] HUB API communication
+│   │   └── useHubSync.ts         # [NEW S5] Auto-sync stats to HUB
 │   ├── lib/
 │   │   ├── constants.ts    # Valores fijos (decay rate, stat limits, etc.) (actualizado S4)
 │   │   ├── types.ts        # TypeScript types (actualizado S4)

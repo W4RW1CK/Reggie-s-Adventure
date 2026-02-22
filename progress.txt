@@ -1,7 +1,7 @@
 # 📊 PROGRESS — Reggie's Adventure
-> **Versión actual:** v0.4 — La Evolución
-> **Última actualización:** 2026-02-21
-> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PENDIENTE`
+> **Versión actual:** v0.5 — El Encuentro
+> **Última actualización:** 2026-02-22
+> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PLANNING`
 >
 > 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — biblia narrativa del universo
 > 🔨 **Fases detalladas:** [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) — qué construir y en qué orden
@@ -9,7 +9,7 @@
 
 ---
 
-## ESTADO ACTUAL: SESIÓN 4 `COMPLETADA` (Fases 1-64) — v0.4
+## ESTADO ACTUAL: SESIÓN 5 `PLANNING` (Fases 65-80 pending) — v0.5
 
 ---
 
@@ -538,7 +538,7 @@
   - Dos paneles: 📜 Historial = transacciones, 🧠 Memorias = diario emocional
   - Resonancia por tipo: Rayo=movimiento/tech, Flama=conexiones/emociones, Hielo=naturaleza/conocimiento
 - [x] IMPLEMENTATION_PLAN.md: Fases 49-64 definidas (16 fases)
-- [x] Implementación de S4 — COMPLETADA (2026-02-21)
+- [x] Implementación de S4 — COMPLETADA (2026-02-22)
 
 ### S4 UI/UX Design Phase — COMPLETADA ✅ (2026-02-19)
 - [x] Full UI/UX design session completed
@@ -578,7 +578,59 @@
 
 **Close (63-64):**
 - [x] Fase 63: User Adjustments — DONE. Multiple fix commits: tutorial tooltips, light theme with warm parchment palette (#fffbf5), WebP asset conversion (94% size reduction), CSS GPU acceleration, fracture visual fixes, stats separation (always visible below sprite), chat limit reduced to 140 chars, split purification (Recargar 💛 pulso + Nutrir 🌱 esencia), Diario panel with Memorias + Historial tabs
-- [x] Fase 64: Testing + Audit + Deploy — DONE (2026-02-21). Final audit passed, v0.4 tagged
+- [x] Fase 64: Testing + Audit + Deploy — DONE (2026-02-22). Final audit passed, v0.4 tagged
+
+---
+
+---
+
+## Planificación Sesión 5 — El Encuentro (2026-02-22)
+
+> **Nota S5:** Social features via HUB externo (regenmon-final.vercel.app).
+> Opt-in: juego funciona 100% sin registrarse. No requiere nuevas dependencias.
+> 16 fases (65-80) en 4 levels.
+
+- [x] Interrogatorio de diseño completado
+- [x] Decisiones clave tomadas:
+  - HUB externo en regenmon-final.vercel.app (no DB propia)
+  - 1 Fragmento = 1 $FRUTA (paridad directa)
+  - Stats mapping: Espíritu→happiness, Pulso→energy, Esencia→hunger
+  - Social opt-in (game works 100% without HUB)
+  - 🌍 como 3er botón en bottom nav
+  - Badge counter silencioso (no interrumpe chat)
+  - Mini-world profiles (read-only, memorias privadas)
+  - Messages firmados por Regenmon
+  - Público por default, toggle privado en Settings
+  - Leaderboard = "Regeneración Global" (lore-friendly)
+  - TestReggie (⚡) ID: cmlx8xx7n0000jy04hvf9dmh8
+- [x] Archivos canónicos actualizados: PRD, LORE, APP_FLOW, FRONTEND_GUIDELINES, BACKEND_STRUCTURE, TECH_STACK, IMPLEMENTATION_PLAN, model.md, progress.txt
+- [ ] Implementación de S5 — PENDIENTE
+
+### Fases S5 (65-80):
+
+**LEVEL 1 — CORE (65-68):**
+- [ ] Fase 65: useHub Hook — HUB API communication layer
+- [ ] Fase 66: Register — Registrar Regenmon en HUB
+- [ ] Fase 67: Sync — Sincronizar stats al HUB
+- [ ] Fase 68: Social Tab 🌍 — UI base + bottom nav
+
+**LEVEL 2 — COMPLETE (69-72):**
+- [ ] Fase 69: Leaderboard "Regeneración Global"
+- [ ] Fase 70: Public Profile — Mini-World
+- [ ] Fase 71: Visit Mode — Read-Only
+- [ ] Fase 72: Dual Currency Display (💎 + 🍊)
+
+**LEVEL 3 — EXCELLENT (73-76):**
+- [ ] Fase 73: Feed Interaction — Alimentar otro Regenmon
+- [ ] Fase 74: Gift System — Regalar $FRUTA
+- [ ] Fase 75: Messages — Pulsos de Datos
+- [ ] Fase 76: Activity Feed
+
+**LEVEL 4 — BONUS (77-80):**
+- [ ] Fase 77: Silent Notifications
+- [ ] Fase 78: Privacy Toggle
+- [ ] Fase 79: Lore-Friendly Naming + Polish
+- [ ] Fase 80: Full Audit + Deploy v0.5
 
 ---
 
@@ -587,8 +639,9 @@
 - Sesión 1 completada y desplegada (v0.1.16) - 2026-02-13
 - Sesión 2 completada y desplegada (v0.2) - 2026-02-15
 - Sesión 3 completada y desplegada (v0.3) - 2026-02-18
-- Sesión 4 completada (v0.4) - 2026-02-21 — La Evolución
-- **S5 "El Encuentro" es NEXT** — social features: public profiles, feed, interactions
+- Sesión 4 completada (v0.4) - 2026-02-22 — La Evolución
+- Sesión 5 planning completado (v0.5) - 2026-02-22 — El Encuentro
+- **S5 implementation NEXT** — 16 fases (65-80), 4 levels, HUB social
 - Archivos canónicos son documentos vivos — se actualizan conforme avanza el proyecto
 - Dev server: `npm run dev` → http://localhost:3000
 - API keys: .env.local (Gemini dev) / Vercel env vars (OpenAI prod)

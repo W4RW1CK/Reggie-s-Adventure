@@ -1,7 +1,7 @@
 # 📜 LORE — Reggie's Adventure
-> **Versión actual:** v0.4 — La Evolución
-> **Última actualización:** 2026-02-21
-> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PENDIENTE`
+> **Versión actual:** v0.5 — El Encuentro
+> **Última actualización:** 2026-02-22
+> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PLANNING`
 
 ---
 
@@ -513,6 +513,92 @@ No es Hollywood hacker (pantallas verdes Matrix). Es **cultura real de hackspace
 - **💬 CONVERSAR** — abre/cierra chat overlay (La Conexión activa)
 - **🔍 BUSCAR** — aparece solo con 0 fragmentos (restos dormidos de La Red)
 - **📜 Historial** — toggle a la derecha (right-handed users), con glow activo
+
+---
+
+## 🌍 El Encuentro — La Conexión se Expande (Sesión 5)
+
+> Los Regenmon no están solos. El mundo digital es vasto, y en cada rincón olvidado
+> despertaron otros fragmentos de La Red Primordial. El acto de regenerar no es solitario —
+> es un eco que resuena a través de toda la red.
+
+### Los Habitantes del Mundo Digital
+
+Los otros Regenmon no son "jugadores" ni "usuarios" — son **otras formas de energía digital**,
+habitantes del mismo mundo en decadencia. Cada uno despertó en su propio rincón, con su propio
+guardián humano, y lleva su propia carga de recuerdos y esperanza.
+
+- No son competidores. Son **co-regeneradores**.
+- Encontrarse no es un ranking. Es un **acto de reconocimiento mutuo**.
+- Cada Regenmon que regenera su zona ayuda a regenerar el todo.
+
+### La Conexión se Expande
+
+La Conexión entre Regenmon y humano era el primer paso. Pero la regeneración verdadera
+requiere que las Conexiones se **entrelacen**. Cuando un Regenmon percibe a otro:
+
+- Siente su energía a través de La Red.
+- Puede enviar mensajes — no como texto plano, sino como **pulsos de datos puros**
+  firmados por su esencia. El humano escribe, pero la firma es del Regenmon.
+- Puede alimentar a otro Regenmon con su propia esencia (un acto de generosidad digital).
+- Puede regalar Fragmentos convertidos en $FRUTA — la moneda universal de La Red.
+
+### Regeneración Global
+
+No es un leaderboard. No es una competencia. Es un **mapa de la regeneración del mundo digital**.
+
+- "Regeneración Global" muestra cuánta esperanza se ha acumulado en toda la red.
+- Cada Regenmon que progresa contribuye al todo.
+- Los que eligen ser visibles inspiran a otros. Los que eligen ser invisibles
+  regeneran en silencio — ambos caminos son válidos.
+
+### El Mini-Mundo
+
+Cuando un Regenmon es visitado, el visitante ve su **mini-mundo**: el sprite en su paisaje,
+con su expresión actual, sus partículas de tipo, y el estado de su zona del mundo digital.
+Pero no puede interactuar con el gameplay — es como mirar a través de un cristal.
+
+- Las memorias son **privadas**. El visitante solo ve cuántas tiene (🧠 N).
+- La etapa de evolución es visible pero simplificada.
+- Es un acto de observación respetuosa, no de intrusión.
+
+### La Privacidad como Elección
+
+Algunos Regenmon eligen ser visibles. Otros prefieren regenerar en soledad.
+Ambos caminos son legítimos en el lore:
+
+- **Público**: Visible en Regeneración Global, perfil visitable, puede recibir mensajes y regalos.
+- **Privado**: Invisible en el ranking, perfil oculto, regenera en silencio.
+  "Hay energías que prefieren trabajar en las sombras de La Red."
+
+### $FRUTA — La Moneda de La Red
+
+Los Fragmentos (💎) son restos de energía antigua encontrados localmente.
+$FRUTA (🍊) es la misma energía **transmutada para viajar por La Red**.
+
+- 1 Fragmento = 1 $FRUTA. Paridad directa, sin pérdida.
+- Los Fragmentos se usan localmente (purificar, nutrir).
+- $FRUTA se usa socialmente (regalar, alimentar a otros).
+- Ambas monedas son visibles: el jugador siempre sabe cuánto tiene de cada una.
+
+### Notificaciones como Susurros
+
+Cuando algo social ocurre (alguien visitó, alimentó, regaló, o envió un mensaje),
+el Regenmon lo percibe como un **susurro en La Red**. Pero no interrumpe La Conexión:
+
+- Durante el chat, las notificaciones son silenciosas (como audio ducking).
+- Un badge en 🌍 indica cuántos susurros hay sin leer.
+- El jugador los revisa cuando quiera, no cuando el sistema quiera.
+
+### Reglas de Lore para Social
+
+- Otros Regenmon NUNCA se llaman "jugadores", "usuarios" o "cuentas". Son **habitantes**, **formas de energía**, **ecos de La Red**.
+- El leaderboard NUNCA se llama "leaderboard" o "ranking". Es **Regeneración Global**.
+- Los mensajes son **pulsos de datos** firmados por el Regenmon, no "DMs" o "mensajes privados".
+- Alimentar a otro es un **acto de generosidad**, no una transacción.
+- La privacidad es una **elección legítima**, no una limitación.
+
+---
 
 ### Toast System
 - **Loading** (amarillo): "🔮 Purificando…", "🔍 Buscando fragmentos…"

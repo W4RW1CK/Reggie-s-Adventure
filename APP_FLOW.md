@@ -1,7 +1,7 @@
 # 🗺️ APP_FLOW — Reggie's Adventure
-> **Versión actual:** v0.4 — La Evolución
-> **Última actualización:** 2026-02-21
-> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PENDIENTE`
+> **Versión actual:** v0.5 — El Encuentro
+> **Última actualización:** 2026-02-22
+> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PLANNING`
 >
 > 📜 **Narrativa y personalidad:** Todo diálogo, texto de historia y comportamiento conversacional
 > debe ser consistente con [LORE.md](./LORE.md). En caso de conflicto, LORE.md prevalece.
@@ -767,6 +767,131 @@ RULES:
    │   → Progreso NUNCA decrece (solo se congela)
    └── NO → Evolución normal
 2. Cuando cualquier stat sube ≥ 10 → freeze se desactiva
+```
+
+---
+
+## Flujos Sociales — Sesión 5: El Encuentro
+
+> Social es **opt-in**. El juego funciona 100% sin registrarse en el HUB.
+> HUB externo: `regenmon-final.vercel.app`. 1 Regenmon por appUrl.
+> Si HUB offline → Social muestra friendly error, resto del juego funciona normal.
+
+### Flujo de Registro en HUB
+
+```
+1. Jugador abre Social tab (🌍) por primera vez
+   ├── Si ya registrado → Mostrar social tab con datos
+   └── Si no registrado → Mostrar invitación:
+       "Tu Regenmon puede ser visible para otros habitantes del mundo digital."
+       [🌍 Registrar en La Red]  [Ahora no]
+2. Al presionar Registrar:
+   → POST /api/regenmon/register { appUrl, name, type, stats, totalProgress }
+   → Guardar hubRegenmonId en localStorage
+   → Sync inicial de stats
+   → Mostrar: "✨ [Nombre] ahora es visible en La Red"
+3. "Ahora no" → cierra tab, puede registrar después desde Settings
+```
+
+### Flujo del Social Tab (🌍)
+
+```
+1. Jugador toca 🌍 en bottom nav (mobile) o panel (desktop)
+2. Si no registrado → Mostrar invitación de registro
+3. Si registrado:
+   → Poll activity feed (GET /api/activity)
+   → Mostrar 3 secciones:
+     a. 🌍 Regeneración Global (leaderboard lore-friendly)
+     b. 📨 Mensajes recibidos (pulsos de datos)
+     c. 🔔 Actividad reciente (feed)
+4. Badge counter se resetea al abrir tab
+5. Auto-refresh: cada 5min + sync de stats al HUB
+```
+
+### Flujo de Navegación al Leaderboard
+
+```
+1. Dentro de Social tab → "🌍 Regeneración Global"
+2. GET /api/leaderboard → Lista de Regenmons públicos
+3. Cada entrada muestra: sprite mini + nombre + tipo + progreso
+4. Tap en un Regenmon → Navegar a perfil público
+5. "← Volver" regresa al Social tab
+```
+
+### Flujo de Visita a Perfil Público
+
+```
+1. Desde leaderboard o link directo → GET /api/regenmon/:id
+2. Mostrar Mini-world:
+   → Sprite con expresión actual
+   → World background del tipo
+   → Partículas de tipo
+   → Etapa de evolución (simplificada)
+   → 🧠 N (count de memorias, sin contenido)
+   → Nombre + tipo
+3. Acciones disponibles (si registrado):
+   → 🍊 Alimentar (gasta $FRUTA, sube esencia del otro)
+   → 🎁 Regalar $FRUTA
+   → 💬 Enviar mensaje (pulso de datos)
+4. Si NO registrado: solo puede ver, no interactuar
+5. "← Volver" regresa al leaderboard o Social tab
+```
+
+### Flujo de Interacciones
+
+```
+Alimentar:
+1. En perfil de otro Regenmon → 🍊 Alimentar
+2. Confirmar: "¿Alimentar a [nombre]? Cuesta 1 🍊"
+3. POST /api/regenmon/:id/feed
+4. La esencia del otro sube localmente (cuando abra su app)
+5. Feedback: "✨ [nombre] sintió tu energía"
+
+Regalar:
+1. En perfil → 🎁 Regalar
+2. Elegir cantidad de $FRUTA
+3. POST /api/regenmon/:id/gift
+4. Balance local se actualiza
+5. Feedback: "🍊 Enviaste N $FRUTA a [nombre]"
+
+Mensaje:
+1. En perfil → 💬 Enviar pulso
+2. Escribir mensaje (max 140 chars)
+3. POST /api/regenmon/:id/messages { from: hubRegenmonId, text }
+4. Mensaje firmado por el Regenmon del remitente
+5. Feedback: "📨 Pulso enviado a [nombre]"
+```
+
+### Flujo de Notificaciones
+
+```
+1. Evento social ocurre (visita, feed, gift, message)
+2. Badge counter en 🌍 incrementa (+1)
+3. Si jugador está en Chat:
+   → Badge se actualiza silenciosamente
+   → NO hay interrupciones (como audio ducking)
+4. Al abrir Social tab → badge se resetea
+5. Notificaciones se muestran en Activity feed dentro del tab
+```
+
+### Flujo de Privacy Toggle
+
+```
+1. Settings → "Visibilidad en La Red"
+   → [🌍 Público] / [🔒 Privado]
+2. Público (default): visible en Regeneración Global, perfil visitable
+3. Privado: oculto del leaderboard, perfil no accesible
+4. Cambio se sincroniza al HUB
+5. Feedback: "Tu Regenmon ahora regenera en silencio" / "Tu Regenmon ahora es visible"
+```
+
+### Flujo de Regreso al Juego
+
+```
+1. Desde cualquier pantalla social → "← Volver" o bottom nav
+2. Regreso suave al estado anterior (World/Chat/Photo)
+3. Stats siguen decayendo normalmente durante la navegación social
+4. Sync de stats al HUB se ejecuta al salir del Social tab
 ```
 
 ---

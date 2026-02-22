@@ -1,7 +1,7 @@
 # 🎨 FRONTEND_GUIDELINES — Reggie's Adventure
-> **Versión actual:** v0.4 — La Evolución
-> **Última actualización:** 2026-02-21
-> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PENDIENTE`
+> **Versión actual:** v0.5 — El Encuentro
+> **Última actualización:** 2026-02-22
+> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PLANNING`
 >
 > 📜 **Lore visual:** Los colores por tipo, paisajes, y animaciones del Regenmon
 > reflejan su significado narrativo. Ver [LORE.md](./LORE.md) para contexto.
@@ -965,6 +965,96 @@ Toast notifications with three states for game actions:
 - **Tema Dark (NES)** es el default. Light (GBC) activable en Settings
 - **Temas afectan:** backgrounds, bordes, colores de texto, UI containers. NO afectan colores de tipo ni stats
 - Este archivo se actualiza cuando se agreguen nuevos componentes o cambien colores
+
+---
+
+## 🌍 Social UI — Sesión 5: El Encuentro
+
+> Todos los componentes sociales usan client-side rendering.
+> Mantienen el tema Reggie (NES pixel art) y respetan ambos temas (Dark/Light).
+
+### Bottom Nav — 🌍 Button
+
+- **3er botón** en bottom nav (mobile): 💬 Chat | 📷 Foto | 🌍 Social
+- **Desktop**: panel option en sidebar o top nav
+- **Badge counter**: pequeño círculo rojo con número (unread notifications)
+  - Posición: top-right del icono 🌍
+  - Color: `var(--color-secondary)` (#f6464f)
+  - Font: 8px Press Start 2P
+  - Animación: subtle pulse cuando incrementa
+  - Se oculta cuando count = 0
+
+### Social Panel Layout
+
+- **Mobile + Tablet**: fullscreen overlay (como DiarioPanel y SettingsPanel)
+- **Desktop (≥1025px)**: floating window with dimmed backdrop
+- **Header**: "🌍 La Red" con botón ✕
+- **3 secciones** (tabs o scroll):
+  1. 🌍 Regeneración Global (leaderboard)
+  2. 📨 Pulsos recibidos (mensajes)
+  3. 🔔 Actividad reciente (feed)
+- **Si no registrado**: pantalla de invitación con CTA prominente
+
+### Leaderboard "Regeneración Global"
+
+- **Estilo**: NES container con lista de entries
+- **Cada entry**: sprite mini (32x32) + nombre + tipo emoji (⚡🔥❄️) + progreso visual
+- **Progreso**: barra sutil o puntos de fractura (no número exacto)
+- **Tap** en entry → navegar a perfil público
+- **No usar**: "1st", "2nd", "3rd" — no es competitivo
+- **Ordenar por**: totalProgress (descendente)
+- **Empty state**: "Aún no hay otros habitantes en La Red..."
+
+### Mini-World Public Profile
+
+- **Layout**: vertical, centrado
+  - World background del tipo (reutilizar WorldBackground.tsx)
+  - Sprite con expresión actual (reutilizar RegenmonSVG)
+  - Partículas de tipo
+  - Nombre + tipo + etapa (simplificada: "Etapa N/5")
+  - 🧠 N (memory count, sin contenido)
+- **Read-only**: no se puede interactuar con el gameplay
+- **Botones de acción** (si visitante está registrado):
+  - 🍊 Alimentar — estilo NES button, color `var(--color-accent)`
+  - 🎁 Regalar — estilo NES button
+  - 💬 Enviar pulso — estilo NES button
+- **Si visitante NO registrado**: botones ocultos, solo observación
+
+### Dual Currency HUD
+
+- **Fragmentos**: 💎 N (ya existente, local)
+- **$FRUTA**: 🍊 N (nuevo, HUB balance)
+- **Posición**: en el HUD top bar, junto a Fragmentos
+- **Layout**: `💎 42 | 🍊 42` (separador sutil)
+- **Si no registrado**: solo 💎 visible, 🍊 no aparece
+- **Animación**: pulse sutil cuando cambia cualquier balance
+
+### Notification Badge
+
+- **Ubicación**: sobre el icono 🌍 en bottom nav
+- **Estilo**: círculo rojo (`var(--color-secondary)`) con número blanco
+- **Tamaño**: 16x16px, font 8px
+- **Comportamiento**:
+  - Incrementa con eventos sociales (visit, feed, gift, message)
+  - Se resetea al abrir Social tab
+  - NO aparece durante Chat (silencio)
+  - Animación: bounce sutil al incrementar
+
+### Visit Mode (Read-Only)
+
+- Todo deshabilitado visualmente (botones de gameplay ocultos)
+- Header indica "Visitando a [nombre]"
+- Botón "← Volver a La Red" prominente
+- No se puede chatear, purificar ni tomar fotos del Regenmon visitado
+- Evolución mostrada como dots (●●●○○ para stage 3/5)
+
+### Registration Invitation
+
+- **Pantalla**: dentro del Social tab cuando no registrado
+- **Texto**: "Tu Regenmon puede ser visible para otros habitantes del mundo digital."
+- **CTA**: botón grande "🌍 Registrar en La Red"
+- **Secondary**: link "Ahora no" discreto
+- **Estilo**: NES container centrado con sprite del propio Regenmon
 
 ---
 

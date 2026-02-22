@@ -1,7 +1,7 @@
 # 🧠 MODEL — Reggie's Adventure
-> **Versión actual:** v0.4 — La Evolución
-> **Última actualización:** 2026-02-21
-> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PENDIENTE`
+> **Versión actual:** v0.5 — El Encuentro
+> **Última actualización:** 2026-02-22
+> **Estado:** Sesión 4 — `COMPLETADA` | Sesión 5 — `PLANNING`
 >
 > 📜 **Referencia narrativa:** [LORE.md](./LORE.md) — toda decisión de personalidad, tono o diálogo se valida contra LORE
 > 📋 **Spec del producto:** [PRD.md](./PRD.md) — toda decisión de features se refleja ahí
@@ -17,7 +17,7 @@
 | S2: La Voz | v0.2 | `COMPLETADA` |
 | S3: La Conexión | v0.3 | `COMPLETADA` (96/96 — 100%) |
 | S4: La Evolución | v0.4 | `COMPLETADA` |
-| S5: El Encuentro | — | `PENDIENTE` |
+| S5: El Encuentro | v0.5 | `PLANNING` |
 
 ---
 
@@ -820,12 +820,12 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 - **Diario panel**: Unified panel with Memorias (emotional diary) + Historial (transaction log) tabs
 - **Bottom nav icons**: Minimal icon-only buttons (💬 📷) with small labels
 
-### Fase 64: Testing + Audit + Deploy (2026-02-21)
+### Fase 64: Testing + Audit + Deploy (2026-02-22)
 - **Final audit**: All S4 features verified working
-- **Version**: v0.4 — La Evolución
+- **Version**: v0.5 — El Encuentro
 - **All canonical files updated**
 
-### S4 Completion Summary (2026-02-21)
+### S4 Completion Summary (2026-02-22)
 
 **Key S4 features delivered:**
 - Vision API (Gemini dev / GPT-4o prod) for emotional photo evaluation
@@ -956,3 +956,131 @@ Este archivo es el **registro de decisiones**. Cada decisión aquí se materiali
 **3. Client-side strike storage:** Strikes stored in localStorage can be manipulated via DevTools. Acceptable for a game context. Future fix: server-side validation in /api/evaluate with session tokens or signed payloads.
 
 **4. In-memory rate limiting:** Rate limit map resets on Vercel serverless cold starts and doesn't share state across instances. Client-side cooldown provides primary protection. Future fix: Vercel KV (Upstash Redis) for persistent rate limiting.
+
+---
+
+## Sesión 5: El Encuentro — Decisiones de Diseño
+
+> Fuente: Interrogatorio completo del 2026-02-22.
+> Principio rector: **Social es opt-in. El juego funciona 100% sin HUB.**
+>
+> 📜 **Narrativa S5:** [LORE.md → El Encuentro](./LORE.md)
+> 🛠️ **Implementación:** [BACKEND_STRUCTURE.md → Sesión 5](./BACKEND_STRUCTURE.md)
+> 🗺️ **Flujos:** [APP_FLOW.md → Flujos Sociales](./APP_FLOW.md)
+> 🔨 **Fases:** [IMPLEMENTATION_PLAN.md → Sesión 5](./IMPLEMENTATION_PLAN.md) (Fases 65-80)
+
+### Arquitectura: HUB Externo, No DB Propia
+
+- **HUB:** `regenmon-final.vercel.app` — API externa del bootcamp
+- **Sin DB propia:** Toda la data social vive en el HUB. El cliente usa `fetch` nativo
+- **Sin nuevas dependencias:** No se instala nada nuevo para S5
+- **1 Regenmon por appUrl:** `reggie-s-adventure.vercel.app` registra 1 Regenmon en el HUB
+- **appUrl como identidad:** El HUB identifica apps por su URL de deploy
+
+### Paridad de Monedas: 1 Fragmento = 1 $FRUTA
+
+- **1:1 directa**, sin tasas de conversión, sin fees
+- **Fragmentos (💎):** moneda local — se usa para purificar, nutrir
+- **$FRUTA (🍊):** moneda del HUB — se usa para regalar, alimentar a otros
+- **Ambas visibles** en el HUD: `💎 42 | 🍊 42`
+- **Si no registrado:** solo 💎 visible
+
+### Stats Mapping al HUB
+
+```
+Espíritu → happiness (0-100)
+Pulso → energy (0-100)
+Esencia → hunger (0-100)
+totalPoints → evolution.totalProgress
+```
+
+- Se envían **post-decay** (honestos, no inflados)
+- Sync as-is: el HUB recibe los stats tal cual están
+
+### Social Opt-In
+
+- El juego funciona 100% sin registro en el HUB
+- Social tab muestra invitación a registrarse
+- "Ahora no" es siempre una opción válida
+- Sin registro: no puede ver leaderboard, no puede interactuar socialmente
+- El registro se puede hacer después desde Settings
+
+### UI Social: 🌍 como 3er Botón
+
+- **Mobile:** 3er botón en bottom nav → 💬 | 📷 | 🌍
+- **Desktop:** panel option (misma posición que los otros paneles)
+- **Badge counter** en 🌍 para notificaciones unread
+- **Client-side rendering** para nuevas páginas sociales
+
+### Mini-World: Perfiles Públicos
+
+- **Sprite** + world background + expresión actual + partículas de tipo
+- **Sin gameplay:** es como mirar a través de un cristal
+- **Memorias privadas:** visitante solo ve 🧠 N (count), nunca el contenido
+- **Evolución visible** pero simplificada (etapa N/5)
+- **Botones de acción** solo si el visitante está registrado
+
+### Mensajes entre Criaturas
+
+- **Firmados por el Regenmon**, escritos por el humano
+- Max 140 chars
+- Son "pulsos de datos" en el lore, no "mensajes" o "DMs"
+- Se reciben en la sección 📨 del Social tab
+
+### Privacy: Público por Default
+
+- **Público (default):** visible en Regeneración Global, perfil visitable
+- **Privado:** oculto del leaderboard, perfil no accesible
+- Toggle en Settings
+- **Ambos caminos son válidos** en el lore
+
+### Leaderboard → "Regeneración Global"
+
+- **Nombre lore-friendly:** no "leaderboard" ni "ranking"
+- **No competitivo:** no hay "1st", "2nd", "3rd"
+- **Solo Regenmons públicos** aparecen
+- Ordenado por totalProgress
+- Es un **mapa de la regeneración**, no una competencia
+
+### Otros Regenmons en el Lore
+
+- NO son "jugadores", "usuarios" o "cuentas"
+- Son **otras formas de energía digital**, habitantes del mundo digital
+- Cada uno despertó en su propio rincón de La Red
+- Encontrarse es un **acto de reconocimiento mutuo**
+
+### Notificaciones: Silencio durante Chat
+
+- Badge counter en 🌍 para eventos sociales (visit, feed, gift, message)
+- **Durante chat:** badge se actualiza silenciosamente, SIN interrupciones
+- Similar a **audio ducking**: presencia sutil, no intrusiva
+- El jugador revisa las notificaciones cuando quiera
+
+### Dual Currency Visible
+
+- **💎 Fragmentos (local)** + **🍊 $FRUTA (HUB)**
+- Ambas visibles en HUD
+- Paridad 1:1
+- $FRUTA solo aparece si registrado en HUB
+
+### Graceful Degradation
+
+- **HUB offline:** Social tab muestra friendly error
+- **Resto del juego funciona normalmente** sin HUB
+- Retry discreto disponible
+- No hay toasts de error fuera del Social tab
+
+### TestReggie
+
+- **ID:** `cmlx8xx7n0000jy04hvf9dmh8`
+- **Tipo:** Rayo (⚡)
+- Registrado como test regenmon en el HUB
+
+### Implementation Strategy: 16 Phases, 4 Levels
+
+| Level | Fases | Entregable |
+|-------|-------|------------|
+| CORE | 65-68 | useHub hook + Register + Sync + Social tab |
+| COMPLETE | 69-72 | Leaderboard + Public profile + Visit mode + Dual currency |
+| EXCELLENT | 73-76 | Feed interaction + Gift + Messages + Activity feed |
+| BONUS | 77-80 | Silent notifications + Privacy toggle + Lore naming + Polish+audit |
