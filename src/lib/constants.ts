@@ -86,6 +86,7 @@ export const STORAGE_KEYS = {
     HUB_REGENMON_ID: 'reggie-adventure-hub-id',
     IS_REGISTERED_IN_HUB: 'reggie-adventure-hub-registered',
     HUB_BALANCE: 'reggie-adventure-hub-balance',
+    HUB_PRIVACY: 'reggie-adventure-hub-privacy',
 };
 
 // HUB API

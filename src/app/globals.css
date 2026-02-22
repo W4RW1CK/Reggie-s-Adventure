@@ -7330,3 +7330,45 @@ html, body,
   background: rgba(0,0,0,0.03);
   border-color: rgba(0,0,0,0.06);
 }
+
+/* ========== PRIVACY MODE ========== */
+.profile-page__privacy-notice {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  font-size: 0.5rem;
+  opacity: 0.6;
+  border: 1px dashed rgba(255,255,255,0.15);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+.social-panel__privacy-btn {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: transparent;
+  color: rgba(255,255,255,0.6);
+  font-family: var(--font-press-start-2p), monospace;
+  font-size: 0.4rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 0.75rem;
+}
+.social-panel__privacy-btn:hover {
+  background: rgba(255,255,255,0.06);
+}
+.social-panel__privacy-btn--active {
+  background: rgba(255,149,0,0.1);
+  border-color: var(--color-primary, #ff9500);
+  color: var(--color-primary, #ff9500);
+}
+.theme-light .profile-page__privacy-notice {
+  border-color: rgba(0,0,0,0.1);
+}
+.theme-light .social-panel__privacy-btn {
+  border-color: rgba(0,0,0,0.08);
+  color: rgba(0,0,0,0.5);
+}
+.theme-light .social-panel__privacy-btn--active {
+  background: rgba(255,149,0,0.06);
+}

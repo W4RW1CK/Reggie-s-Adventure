@@ -57,6 +57,7 @@ export default function RegenmonProfilePage() {
   const [feedLoading, setFeedLoading] = useState(false);
   const [giftLoading, setGiftLoading] = useState<number | null>(null);
   const [celebration, setCelebration] = useState<string | null>(null);
+  const [privacyMode, setPrivacyMode] = useState(false);
 
   // Messages
   const [messages, setMessages] = useState<HubMessage[]>([]);
@@ -92,6 +93,10 @@ export default function RegenmonProfilePage() {
     }
     setIsMyProfile(myId === id);
     setIsRegistered(registered && !!myId);
+    // Privacy mode: hide stats from visitors
+    if (myId === id) {
+      setPrivacyMode(localStorage.getItem(STORAGE_KEYS.HUB_PRIVACY) === 'true');
+    }
   }, [id]);
 
   // Load profile
@@ -263,36 +268,52 @@ export default function RegenmonProfilePage() {
         <p className="profile-page__stage">{fracturaName(hubPointsToFractura(profile.totalPoints))}</p>
       </div>
 
-      <div className="profile-page__stats-grid">
-        <div className="profile-page__stat">
-          <span className="profile-page__stat-label">🔮 Espíritu</span>
-          <div className="profile-page__stat-bar">
-            <div className="profile-page__stat-fill profile-page__stat-fill--happiness" style={{ width: `${profile.stats.happiness}%` }} />
-          </div>
-          <span className="profile-page__stat-val">{profile.stats.happiness}</span>
+      {/* Stats — hidden in privacy mode for visitors */}
+      {privacyMode && !isMyProfile ? (
+        <div className="profile-page__privacy-notice">
+          🔒 Este perfil tiene el modo privado activado
         </div>
-        <div className="profile-page__stat">
-          <span className="profile-page__stat-label">💛 Pulso</span>
-          <div className="profile-page__stat-bar">
-            <div className="profile-page__stat-fill profile-page__stat-fill--energy" style={{ width: `${profile.stats.energy}%` }} />
+      ) : (
+        <>
+          <div className="profile-page__stats-grid">
+            <div className="profile-page__stat">
+              <span className="profile-page__stat-label">🔮 Espíritu</span>
+              <div className="profile-page__stat-bar">
+                <div className="profile-page__stat-fill profile-page__stat-fill--happiness" style={{ width: `${profile.stats.happiness}%` }} />
+              </div>
+              <span className="profile-page__stat-val">{profile.stats.happiness}</span>
+            </div>
+            <div className="profile-page__stat">
+              <span className="profile-page__stat-label">💛 Pulso</span>
+              <div className="profile-page__stat-bar">
+                <div className="profile-page__stat-fill profile-page__stat-fill--energy" style={{ width: `${profile.stats.energy}%` }} />
+              </div>
+              <span className="profile-page__stat-val">{profile.stats.energy}</span>
+            </div>
+            <div className="profile-page__stat">
+              <span className="profile-page__stat-label">🌱 Esencia</span>
+              <div className="profile-page__stat-bar">
+                <div className="profile-page__stat-fill profile-page__stat-fill--hunger" style={{ width: `${profile.stats.hunger}%` }} />
+              </div>
+              <span className="profile-page__stat-val">{profile.stats.hunger}</span>
+            </div>
           </div>
-          <span className="profile-page__stat-val">{profile.stats.energy}</span>
-        </div>
-        <div className="profile-page__stat">
-          <span className="profile-page__stat-label">🌱 Esencia</span>
-          <div className="profile-page__stat-bar">
-            <div className="profile-page__stat-fill profile-page__stat-fill--hunger" style={{ width: `${profile.stats.hunger}%` }} />
-          </div>
-          <span className="profile-page__stat-val">{profile.stats.hunger}</span>
-        </div>
-      </div>
 
-      <div className="profile-page__meta">
-        <span>⭐ {Math.round(profile.totalPoints / 2.5)} Progreso</span>
-        <span>💎 {profile.balance} Fragmentos</span>
-        <span>👀 {profile.totalVisits} visitas</span>
-        <span>📅 {timeAgo(profile.registeredAt)}</span>
-      </div>
+          <div className="profile-page__meta">
+            <span>⭐ {Math.round(profile.totalPoints / 2.5)} Progreso</span>
+            <span>💎 {profile.balance} Fragmentos</span>
+            <span>👀 {profile.totalVisits} visitas</span>
+            <span>📅 {timeAgo(profile.registeredAt)}</span>
+          </div>
+        </>
+      )}
+
+      {/* Privacy indicator on own profile */}
+      {isMyProfile && privacyMode && (
+        <div className="profile-page__privacy-notice">
+          🔒 Modo Privado activo — los visitantes no ven tus stats
+        </div>
+      )}
 
       {/* Social Summary for own profile (Level 4 K) */}
       {isMyProfile && (

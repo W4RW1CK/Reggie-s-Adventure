@@ -20,6 +20,7 @@ export default function RegisterHub({ onClose, regenmonData, onUpdateStats }: Re
   const [error, setError] = useState<string | null>(null);
   const [activity, setActivity] = useState<HubActivityItem[]>([]);
   const [hubBalance, setHubBalance] = useState(0);
+  const [privacyMode, setPrivacyMode] = useState(false);
 
   const { register, getActivity } = useHub();
 
@@ -49,6 +50,7 @@ export default function RegisterHub({ onClose, regenmonData, onUpdateStats }: Re
       setIsRegistered(true);
       setHubId(storedId);
       setHubBalance(balance);
+      setPrivacyMode(localStorage.getItem(STORAGE_KEYS.HUB_PRIVACY) === 'true');
     }
   }, []);
 
@@ -108,6 +110,17 @@ export default function RegisterHub({ onClose, regenmonData, onUpdateStats }: Re
         <div className="social-panel__balance">
           💠 {fragmentos} Fragmentos
         </div>
+
+        <button
+          className={`social-panel__privacy-btn ${privacyMode ? 'social-panel__privacy-btn--active' : ''}`}
+          onClick={() => {
+            const next = !privacyMode;
+            setPrivacyMode(next);
+            localStorage.setItem(STORAGE_KEYS.HUB_PRIVACY, String(next));
+          }}
+        >
+          {privacyMode ? '🔒 Modo Privado' : '🔓 Perfil Visible'}
+        </button>
 
         <div className="social-panel__actions">
           <a href="/leaderboard" className="social-panel__btn">
