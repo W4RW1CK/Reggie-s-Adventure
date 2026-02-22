@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import { useHub, HubMessage } from '@/hooks/useHub';
-import { hubStageName } from '@/hooks/useHubSync';
+import { hubPointsToFractura, fracturaName, fracturaShort } from '@/hooks/useHubSync';
 import { STORAGE_KEYS } from '@/lib/constants';
 import Link from 'next/link';
 
@@ -31,7 +31,7 @@ function timeAgo(dateStr: string): string {
   return `hace ${days}d`;
 }
 
-// stageName uses shared hubStageName from useHubSync
+// Stage display uses Fractura system (translated from HUB points)
 
 export default function RegenmonProfilePage() {
   const params = useParams();
@@ -233,7 +233,7 @@ export default function RegenmonProfilePage() {
         />
         <h1 className="profile-page__name">{profile.name}</h1>
         <p className="profile-page__owner">by {profile.ownerName}</p>
-        <p className="profile-page__stage">{hubStageName(profile.stage)}</p>
+        <p className="profile-page__stage">{fracturaName(hubPointsToFractura(profile.totalPoints))}</p>
       </div>
 
       <div className="profile-page__stats-grid">
@@ -261,7 +261,7 @@ export default function RegenmonProfilePage() {
       </div>
 
       <div className="profile-page__meta">
-        <span>⭐ {profile.totalPoints} pts</span>
+        <span>⭐ {Math.round(profile.totalPoints / 2.5)} Progreso</span>
         <span>💎 {profile.balance} Fragmentos</span>
         <span>👀 {profile.totalVisits} visitas</span>
         <span>📅 {timeAgo(profile.registeredAt)}</span>
@@ -281,8 +281,8 @@ export default function RegenmonProfilePage() {
               <span className="profile-page__summary-label">Fragmentos</span>
             </div>
             <div className="profile-page__summary-item">
-              <span className="profile-page__summary-val">⭐ {profile.totalPoints}</span>
-              <span className="profile-page__summary-label">Puntos</span>
+              <span className="profile-page__summary-val">⭐ {Math.round(profile.totalPoints / 2.5)}</span>
+              <span className="profile-page__summary-label">Progreso</span>
             </div>
             <div className="profile-page__summary-item">
               <span className="profile-page__summary-val">💬 {messages.length}</span>

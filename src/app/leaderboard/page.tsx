@@ -2,12 +2,12 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { useHub, HubLeaderboardEntry } from '@/hooks/useHub';
-import { hubStageName } from '@/hooks/useHubSync';
+import { hubPointsToFractura, fracturaShort, fracturaName } from '@/hooks/useHubSync';
 import { STORAGE_KEYS } from '@/lib/constants';
 import Link from 'next/link';
 
 type SortMode = 'points' | 'balance' | 'newest';
-type StageFilter = 'all' | '1' | '2' | '3';
+type FracturaFilter = 'all' | '0' | '1' | '2' | '3' | '4';
 
 export default function LeaderboardPage() {
   const [allEntries, setAllEntries] = useState<HubLeaderboardEntry[]>([]);
@@ -16,7 +16,7 @@ export default function LeaderboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [sortMode, setSortMode] = useState<SortMode>('points');
-  const [stageFilter, setStageFilter] = useState<StageFilter>('all');
+  const [fracturaFilter, setFracturaFilter] = useState<FracturaFilter>('all');
   const [myHubId, setMyHubId] = useState<string | null>(null);
 
   const { getLeaderboard } = useHub();
@@ -45,10 +45,10 @@ export default function LeaderboardPage() {
   const entries = useMemo(() => {
     let filtered = [...allEntries];
 
-    // Filter by stage
-    if (stageFilter !== 'all') {
-      const stageNum = parseInt(stageFilter);
-      filtered = filtered.filter(e => e.stage === stageNum);
+    // Filter by fractura (derived from HUB points)
+    if (fracturaFilter !== 'all') {
+      const targetFractura = parseInt(fracturaFilter);
+      filtered = filtered.filter(e => hubPointsToFractura(e.totalPoints) === targetFractura);
     }
 
     // Sort
@@ -60,7 +60,7 @@ export default function LeaderboardPage() {
     // 'newest' keeps API order (already sorted by registration)
 
     return filtered;
-  }, [allEntries, sortMode, stageFilter]);
+  }, [allEntries, sortMode, fracturaFilter]);
 
   const rankIcon = (idx: number) => {
     if (idx === 0) return '🥇';
@@ -85,18 +85,18 @@ export default function LeaderboardPage() {
               className={`leaderboard-page__filter-btn ${sortMode === mode ? 'leaderboard-page__filter-btn--active' : ''}`}
               onClick={() => setSortMode(mode)}
             >
-              {mode === 'points' ? '⭐ Puntos' : mode === 'balance' ? '💎 Fragmentos' : '🆕 Nuevos'}
+              {mode === 'points' ? '⭐ Progreso' : mode === 'balance' ? '💎 Fragmentos' : '🆕 Nuevos'}
             </button>
           ))}
         </div>
         <div className="leaderboard-page__stage-filter">
-          {(['all', '1', '2', '3'] as StageFilter[]).map(sf => (
+          {(['all', '0', '1', '2', '3', '4'] as FracturaFilter[]).map(sf => (
             <button
               key={sf}
-              className={`leaderboard-page__filter-btn ${stageFilter === sf ? 'leaderboard-page__filter-btn--active' : ''}`}
-              onClick={() => setStageFilter(sf)}
+              className={`leaderboard-page__filter-btn ${fracturaFilter === sf ? 'leaderboard-page__filter-btn--active' : ''}`}
+              onClick={() => setFracturaFilter(sf)}
             >
-              {sf === 'all' ? 'Todos' : hubStageName(parseInt(sf))}
+              {sf === 'all' ? 'Todos' : `F${sf}`}
             </button>
           ))}
         </div>
@@ -138,10 +138,10 @@ export default function LeaderboardPage() {
                     {entry.id === myHubId && <span className="leaderboard-card__me-tag"> (tú)</span>}
                   </span>
                   <span className="leaderboard-card__owner">by {entry.ownerName}</span>
-                  <span className="leaderboard-card__stage">{hubStageName(entry.stage)}</span>
+                  <span className="leaderboard-card__stage">{fracturaShort(hubPointsToFractura(entry.totalPoints))}</span>
                 </div>
                 <div className="leaderboard-card__stats">
-                  <span className="leaderboard-card__points">⭐ {entry.totalPoints}</span>
+                  <span className="leaderboard-card__points">⭐ {Math.round(entry.totalPoints / 2.5)}</span>
                   <span className="leaderboard-card__balance">🍊 {entry.balance}</span>
                 </div>
               </Link>
