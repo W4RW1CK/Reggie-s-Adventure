@@ -6826,6 +6826,10 @@ html, body,
   font-size: 0.45rem;
   opacity: 0.5;
 }
+.leaderboard-card__stage {
+  font-size: 0.4rem;
+  opacity: 0.6;
+}
 .leaderboard-card__stats {
   display: flex;
   flex-direction: column;

@@ -70,6 +70,9 @@ export default function LeaderboardPage() {
                 <div className="leaderboard-card__info">
                   <span className="leaderboard-card__name">{entry.name}</span>
                   <span className="leaderboard-card__owner">by {entry.ownerName}</span>
+                  <span className="leaderboard-card__stage">
+                    {entry.stage <= 1 ? '🥚 Huevo' : entry.stage === 2 ? '🐣 Cría' : entry.stage === 3 ? '🌟 Joven' : '👑 Adulto'}
+                  </span>
                 </div>
                 <div className="leaderboard-card__stats">
                   <span className="leaderboard-card__points">⭐ {entry.totalPoints}</span>
