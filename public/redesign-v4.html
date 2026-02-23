@@ -59,8 +59,19 @@ body {
 body::after {
   content: '';
   position: fixed; inset: 0; z-index: 9998;
-  background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px);
+  background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px);
   pointer-events: none;
+}
+
+/* ===== VIGNETTE OVERLAY ===== */
+.vignette {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.4) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+body.light .vignette {
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(100,70,20,0.12) 100%);
 }
 
 /* ===== PREVIEW NAV ===== */
@@ -103,14 +114,11 @@ body::after {
   display: none;
   min-height: 100vh;
   padding-top: 3rem;
+  position: relative;
 }
 .screen.active { display: flex; }
 
 /* ===== SHARED COMPONENTS — NES STYLE ===== */
-/* rem = layout (padding, margin, gap, max-width) */
-/* em = component-internal (button padding scales with its font) */
-/* px = borders, box-shadows (pixel-perfect NES feel) */
-/* unitless = line-height */
 
 /* NES Pixel Container — thick borders, solid shadow, no blur */
 .pixel-container {
@@ -125,6 +133,33 @@ body::after {
   position: absolute; inset: 3px;
   border: 2px solid var(--border);
   pointer-events: none;
+}
+
+/* ===== RUNIC CORNER DECORATIONS ===== */
+.rune-corners { position: relative; }
+.rune-corners .rune-tl,
+.rune-corners .rune-tr,
+.rune-corners .rune-bl,
+.rune-corners .rune-br {
+  position: absolute;
+  font-family: serif;
+  font-size: 1rem;
+  color: var(--cyan);
+  opacity: 0.1;
+  pointer-events: none;
+  z-index: 3;
+  line-height: 1;
+}
+.rune-corners .rune-tl { top: 6px; left: 8px; }
+.rune-corners .rune-tr { top: 6px; right: 8px; }
+.rune-corners .rune-bl { bottom: 6px; left: 8px; }
+.rune-corners .rune-br { bottom: 6px; right: 8px; }
+body.light .rune-corners .rune-tl,
+body.light .rune-corners .rune-tr,
+body.light .rune-corners .rune-bl,
+body.light .rune-corners .rune-br {
+  color: var(--ink-dark);
+  opacity: 0.12;
 }
 
 /* NES Button — em padding scales with font-size */
@@ -181,21 +216,46 @@ body::after {
 }
 .nes-card:hover { border-color: var(--text-dim); }
 
-/* Floating particles */
-@keyframes float-particle {
-  0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.3; }
-  25% { transform: translateY(-20px) translateX(5px); opacity: 0.7; }
-  50% { transform: translateY(-40px) translateX(-5px); opacity: 0.5; }
-  75% { transform: translateY(-60px) translateX(3px); opacity: 0.2; }
+/* ===== FRAGMENT PARTICLES (diamond shards) ===== */
+@keyframes float-fragment {
+  0%, 100% { transform: translateY(0) translateX(0) rotate(45deg); opacity: 0.2; }
+  25% { transform: translateY(-25px) translateX(6px) rotate(45deg); opacity: 0.6; }
+  50% { transform: translateY(-50px) translateX(-4px) rotate(45deg); opacity: 0.4; }
+  75% { transform: translateY(-70px) translateX(3px) rotate(45deg); opacity: 0.15; }
 }
 
+.fragment-particle {
+  position: absolute;
+  width: 5px; height: 5px;
+  background: var(--cyan);
+  transform: rotate(45deg);
+  animation: float-fragment 5s infinite ease-in-out;
+  box-shadow: 0 0 6px var(--cyan), 0 0 12px rgba(0,240,255,0.2);
+}
+body.light .fragment-particle {
+  background: var(--ink-dark);
+  box-shadow: 0 0 4px rgba(139,105,20,0.3);
+}
+
+.fragment-particles {
+  position: absolute; inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Legacy particle compat */
 .particle {
   position: absolute;
-  width: 3px; height: 3px;
+  width: 5px; height: 5px;
   background: var(--cyan);
-  border-radius: 50%;
-  animation: float-particle 4s infinite ease-in-out;
-  box-shadow: 0 0 6px var(--cyan);
+  transform: rotate(45deg);
+  animation: float-fragment 5s infinite ease-in-out;
+  box-shadow: 0 0 6px var(--cyan), 0 0 12px rgba(0,240,255,0.2);
+}
+body.light .particle {
+  background: var(--ink-dark);
+  box-shadow: 0 0 4px rgba(139,105,20,0.3);
 }
 
 /* ===== ANIMATIONS ===== */
@@ -225,6 +285,11 @@ body::after {
 @keyframes spin-slow {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+@keyframes spin-slow-reverse {
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
 }
 
 @keyframes fade-in {
@@ -257,6 +322,53 @@ body::after {
   66% { content: '...'; }
 }
 
+@keyframes transmission-pulse {
+  0%, 100% { border-color: rgba(255,255,255,0.9); }
+  50% { border-color: rgba(255,255,255,0.5); }
+}
+
+@keyframes bar-glow-pulse {
+  0%, 100% { box-shadow: 0 0 4px rgba(0,240,255,0.3); }
+  50% { box-shadow: 0 0 12px rgba(0,240,255,0.6), 0 0 20px rgba(0,240,255,0.2); }
+}
+
+@keyframes spark-fly {
+  0% { opacity: 1; transform: translate(0, 0) rotate(45deg) scale(1); }
+  100% { opacity: 0; transform: translate(var(--sx, 10px), var(--sy, -20px)) rotate(45deg) scale(0); }
+}
+
+@keyframes flash-pulse {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes fracture-line {
+  0% { opacity: 0; transform: scaleX(0); }
+  30% { opacity: 0.4; transform: scaleX(1); }
+  100% { opacity: 0; transform: scaleX(1); }
+}
+
+/* Type-specific particle animations */
+@keyframes electric-jitter {
+  0%, 100% { transform: translateY(0) translateX(0) rotate(45deg); opacity: 0.5; }
+  10% { transform: translateY(-3px) translateX(8px) rotate(45deg); opacity: 0.9; }
+  20% { transform: translateY(2px) translateX(-5px) rotate(45deg); opacity: 0.3; }
+  40% { transform: translateY(-8px) translateX(3px) rotate(45deg); opacity: 0.8; }
+  60% { transform: translateY(4px) translateX(-7px) rotate(45deg); opacity: 0.4; }
+  80% { transform: translateY(-6px) translateX(6px) rotate(45deg); opacity: 0.7; }
+}
+
+@keyframes flame-rise {
+  0% { transform: translateY(0) rotate(45deg); opacity: 0.6; }
+  50% { transform: translateY(-30px) rotate(45deg); opacity: 0.8; }
+  100% { transform: translateY(-60px) rotate(45deg); opacity: 0; }
+}
+
+@keyframes crystal-float {
+  0%, 100% { transform: translateY(0) translateX(0) rotate(45deg); opacity: 0.3; }
+  50% { transform: translateY(-15px) translateX(5px) rotate(45deg); opacity: 0.6; }
+}
+
 /* =========================================
    P1 — LOADING NES
    ========================================= */
@@ -275,6 +387,7 @@ body::after {
   text-align: center;
   line-height: 1.6;
   animation: nes-pulse 2s infinite;
+  z-index: 1;
 }
 @keyframes nes-pulse {
   0%, 100% { opacity: 0.85; }
@@ -296,24 +409,42 @@ body::after {
   position: relative;
   overflow: hidden;
   box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
+  z-index: 1;
 }
 .loading-bar-fill {
   height: 100%;
   background: var(--cyan);
   width: 0%;
-  animation: bar-fill 2.5s ease-out forwards;
+  animation: bar-fill 2.5s ease-out forwards, bar-glow-pulse 1s infinite;
+  position: relative;
 }
 .loading-bar-container::after {
   content: '';
   position: absolute; inset: 0;
-  background: repeating-linear-gradient(90deg, transparent 0px, transparent 10px, rgba(0,0,0,0.4) 10px, rgba(0,0,0,0.4) 12px);
+  background: repeating-linear-gradient(90deg, transparent 0px, transparent 8px, rgba(0,0,0,0.5) 8px, rgba(0,0,0,0.5) 10px);
   z-index: 1;
+}
+
+/* Loading sparks container */
+.loading-sparks {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none; z-index: 2;
+  overflow: visible;
+}
+.loading-spark {
+  position: absolute;
+  width: 3px; height: 3px;
+  background: #fff;
+  transform: rotate(45deg);
+  opacity: 0;
+  animation: spark-fly 0.6s ease-out forwards;
 }
 
 .loading-text {
   font-size: var(--fs-xs);
   color: var(--text-dim);
   letter-spacing: 0.125em;
+  z-index: 1;
 }
 
 .loading-particles {
@@ -336,6 +467,7 @@ body::after {
 .fullscreen-icon {
   font-size: 2rem;
   animation: breathe 3s infinite;
+  z-index: 1;
 }
 
 .fullscreen-title {
@@ -343,6 +475,7 @@ body::after {
   color: var(--text-primary);
   text-align: center;
   line-height: 1.8;
+  z-index: 1;
 }
 
 .fullscreen-subtitle {
@@ -351,6 +484,7 @@ body::after {
   text-align: center;
   line-height: 2;
   max-width: 20rem;
+  z-index: 1;
 }
 
 .fullscreen-buttons {
@@ -358,6 +492,7 @@ body::after {
   flex-direction: column;
   gap: 0.75rem;
   margin-top: 0.625rem;
+  z-index: 1;
 }
 
 /* =========================================
@@ -373,12 +508,32 @@ body::after {
 }
 
 .title-bg-runes {
-  position: absolute; inset: 0;
+  position: absolute;
+  width: 280px; height: 280px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 72px;
-  color: rgba(0,240,255,0.03);
   pointer-events: none;
-  animation: spin-slow 120s linear infinite;
+  animation: spin-slow 90s linear infinite;
+  z-index: 0;
+}
+.title-bg-runes .rune-circle-char {
+  position: absolute;
+  font-family: serif;
+  font-size: 24px;
+  color: rgba(0,240,255,0.04);
+  transform-origin: 0 140px;
+}
+body.light .title-bg-runes .rune-circle-char {
+  color: rgba(139,105,20,0.06);
+}
+
+.title-vignette {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.5) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+body.light .title-vignette {
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(100,70,20,0.15) 100%);
 }
 
 .title-main {
@@ -469,22 +624,43 @@ body::after {
   padding: 1.5rem;
   position: relative;
   box-shadow: 6px 6px 0 rgba(0,0,0,0.6);
+  animation: transmission-pulse 3s infinite ease-in-out;
+  z-index: 1;
 }
 /* Inner double border */
 .typewriter-box::after {
-  content: '';
+  content: 'ᛊ';
+  position: absolute;
+  bottom: 6px; right: 10px;
+  font-family: serif;
+  font-size: 0.9rem;
+  color: var(--cyan);
+  opacity: 0.1;
+  pointer-events: none;
+  border: none;
+}
+/* Rune corner top-right */
+.typewriter-box .inner-border {
   position: absolute; inset: 4px;
   border: 2px solid #444;
   pointer-events: none;
 }
 .typewriter-box::before {
-  content: '▶ TRANSMISSION';
+  content: 'ᚱ ▶ TRANSMISSION';
   position: absolute; top: -0.625rem; left: 0.75rem;
   font-size: var(--fs-xs);
   color: var(--cyan);
   background: var(--bg-void);
   padding: 0 0.5rem;
   letter-spacing: 0.05em;
+  z-index: 2;
+}
+/* Rune corner decorations on typewriter */
+.typewriter-rune-tl {
+  position: absolute; top: 6px; left: 8px;
+  font-family: serif; font-size: 0.8rem;
+  color: var(--cyan); opacity: 0.1;
+  pointer-events: none; z-index: 3;
 }
 
 .typewriter-text {
@@ -510,6 +686,7 @@ body::after {
   text-align: right;
   opacity: 0;
   transition: opacity 0.5s;
+  z-index: 1;
 }
 .typewriter-continue.visible { opacity: 1; }
 
@@ -531,6 +708,7 @@ body::after {
   padding: 2rem 1.5rem;
   box-shadow: 6px 6px 0 rgba(0,0,0,0.6);
   position: relative;
+  z-index: 1;
 }
 /* Inner double border */
 .login-modal::after {
@@ -640,6 +818,7 @@ body::after {
   color: var(--cyan);
   text-shadow: 0 0 20px rgba(0,240,255,0.4);
   text-align: center;
+  z-index: 1;
 }
 
 .creation-subtitle {
@@ -648,6 +827,7 @@ body::after {
   text-align: center;
   line-height: 2;
   max-width: 25rem;
+  z-index: 1;
 }
 
 /* Carousel */
@@ -658,6 +838,7 @@ body::after {
   width: 100%;
   max-width: 25rem;
   justify-content: center;
+  z-index: 1;
 }
 
 .carousel-arrow {
@@ -690,6 +871,7 @@ body::after {
   transition: all 0.3s;
   position: relative;
   box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
+  overflow: visible;
 }
 .carousel-card.type-rayo {
   border-color: var(--type-rayo);
@@ -703,6 +885,54 @@ body::after {
   border-color: var(--type-hielo);
   box-shadow: 4px 4px 0 #1a003f;
 }
+
+/* Type-specific floating particles on carousel */
+.type-particles {
+  position: absolute; inset: -20px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.carousel-card .type-particles { opacity: 1; }
+
+.type-particle {
+  position: absolute;
+  width: 5px; height: 5px;
+  transform: rotate(45deg);
+}
+
+/* Rayo particles */
+.type-rayo-particles .type-particle {
+  background: var(--type-rayo);
+  box-shadow: 0 0 6px var(--type-rayo);
+  animation: electric-jitter 1.5s infinite;
+}
+.type-rayo-particles .type-particle:nth-child(1) { top: 10%; left: -8px; animation-delay: 0s; }
+.type-rayo-particles .type-particle:nth-child(2) { top: 50%; right: -8px; animation-delay: 0.4s; }
+.type-rayo-particles .type-particle:nth-child(3) { bottom: 20%; left: -8px; animation-delay: 0.8s; }
+.type-rayo-particles .type-particle:nth-child(4) { top: 30%; right: -8px; animation-delay: 1.2s; }
+
+/* Flama particles */
+.type-flama-particles .type-particle {
+  background: var(--type-flama);
+  box-shadow: 0 0 6px var(--type-flama);
+  animation: flame-rise 2s infinite;
+}
+.type-flama-particles .type-particle:nth-child(1) { bottom: 0; left: 15%; animation-delay: 0s; }
+.type-flama-particles .type-particle:nth-child(2) { bottom: 0; left: 45%; animation-delay: 0.5s; }
+.type-flama-particles .type-particle:nth-child(3) { bottom: 0; right: 15%; animation-delay: 1s; }
+.type-flama-particles .type-particle:nth-child(4) { bottom: 0; left: 70%; animation-delay: 1.5s; }
+
+/* Hielo particles */
+.type-hielo-particles .type-particle {
+  background: var(--type-hielo);
+  box-shadow: 0 0 6px var(--type-hielo);
+  animation: crystal-float 4s infinite;
+}
+.type-hielo-particles .type-particle:nth-child(1) { top: 20%; left: -8px; animation-delay: 0s; }
+.type-hielo-particles .type-particle:nth-child(2) { top: 60%; right: -8px; animation-delay: 1s; }
+.type-hielo-particles .type-particle:nth-child(3) { bottom: 10%; left: -8px; animation-delay: 2s; }
+.type-hielo-particles .type-particle:nth-child(4) { top: 40%; right: -8px; animation-delay: 3s; }
 
 .carousel-sprite {
   font-size: 3rem;
@@ -736,6 +966,7 @@ body::after {
   display: flex;
   gap: 0.625rem;
   justify-content: center;
+  z-index: 1;
 }
 .carousel-dot {
   width: 8px; height: 8px;
@@ -754,6 +985,7 @@ body::after {
 .creation-name-wrapper {
   width: 100%;
   max-width: 21.875rem;
+  z-index: 1;
 }
 
 .creation-name-input {
@@ -796,23 +1028,60 @@ body::after {
   animation: energy-pulse 2s infinite;
 }
 
+/* Flash pulse overlay */
+.transition-flash {
+  position: absolute; inset: 0;
+  background: rgba(0,240,255,0.05);
+  animation: flash-pulse 2s infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
 .transition-sprite {
   font-size: 3.5rem;
   animation: breathe 1.5s infinite;
   filter: brightness(1.5);
   text-shadow: 0 0 40px rgba(0,240,255,0.5);
+  z-index: 2;
+  position: relative;
 }
+
+/* Fracture lines radiating from sprite */
+.fracture-lines {
+  position: absolute;
+  width: 200px; height: 200px;
+  pointer-events: none;
+  z-index: 1;
+}
+.fracture-line {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 80px; height: 1px;
+  background: rgba(0,240,255,0.3);
+  transform-origin: 0 0;
+  animation: fracture-line 3s infinite;
+}
+.fracture-line:nth-child(1) { transform: rotate(0deg); animation-delay: 0s; }
+.fracture-line:nth-child(2) { transform: rotate(45deg); animation-delay: 0.3s; }
+.fracture-line:nth-child(3) { transform: rotate(90deg); animation-delay: 0.6s; }
+.fracture-line:nth-child(4) { transform: rotate(135deg); animation-delay: 0.9s; }
+.fracture-line:nth-child(5) { transform: rotate(180deg); animation-delay: 1.2s; }
+.fracture-line:nth-child(6) { transform: rotate(225deg); animation-delay: 1.5s; }
+.fracture-line:nth-child(7) { transform: rotate(270deg); animation-delay: 1.8s; }
+.fracture-line:nth-child(8) { transform: rotate(315deg); animation-delay: 2.1s; }
 
 .transition-text {
   font-size: var(--fs-lg);
   color: var(--cyan);
   text-shadow: 0 0 20px rgba(0,240,255,0.5);
   text-align: center;
+  z-index: 2;
 }
 
 .transition-dots {
   font-size: var(--fs-lg);
   color: var(--purple);
+  z-index: 2;
 }
 .transition-dots .dot {
   animation: blink 1s infinite;
@@ -822,17 +1091,27 @@ body::after {
 
 .transition-energy-ring {
   width: 9.375rem; height: 9.375rem;
-  border: 2px solid rgba(0,240,255,0.2);
+  border: 3px solid rgba(0,240,255,0.25);
   border-radius: 50%;
   position: absolute;
   animation: spin-slow 4s linear infinite;
   box-shadow: 0 0 30px rgba(0,240,255,0.1);
 }
+.transition-energy-ring .ring-runes {
+  position: absolute; inset: -6px;
+  font-family: serif; font-size: 10px;
+  color: rgba(0,240,255,0.2);
+  text-align: center;
+}
+.transition-energy-ring .ring-rune {
+  position: absolute;
+  transform-origin: center;
+}
 .transition-energy-ring:nth-child(2) {
   width: 200px; height: 200px;
-  border-color: rgba(180,74,255,0.15);
-  animation-duration: 6s;
-  animation-direction: reverse;
+  border-color: rgba(180,74,255,0.2);
+  border-width: 3px;
+  animation: spin-slow-reverse 6s linear infinite;
   box-shadow: 0 0 30px rgba(180,74,255,0.1);
 }
 
@@ -844,7 +1123,7 @@ body.light {
   color: var(--ink-dark);
 }
 body.light::after {
-  background: repeating-linear-gradient(0deg, transparent 0px, transparent 3px, rgba(139,105,20,0.03) 3px, rgba(139,105,20,0.03) 6px);
+  background: repeating-linear-gradient(0deg, transparent 0px, transparent 3px, rgba(139,105,20,0.04) 3px, rgba(139,105,20,0.04) 6px);
 }
 
 /* Nav light */
@@ -883,6 +1162,7 @@ body.light .loading-bar-container {
 body.light .loading-bar-fill {
   background: linear-gradient(90deg, var(--ink-red), var(--ink-dark));
   box-shadow: none;
+  animation: bar-fill 2.5s ease-out forwards;
 }
 body.light .loading-text { color: var(--border-papiro); }
 
@@ -906,7 +1186,6 @@ body.light .glow-btn.purple:hover {
 
 /* P3 Title light */
 body.light .screen-title { background: var(--bg-papiro); }
-body.light .title-bg-runes { color: rgba(139,105,20,0.05); }
 body.light .title-main {
   color: var(--ink-red);
   text-shadow: 3px 3px 0 rgba(139,105,20,0.2);
@@ -933,12 +1212,17 @@ body.light .typewriter-box {
   background: var(--surface-papiro);
   border-color: var(--border-papiro);
   box-shadow: 2px 2px 0 rgba(139,105,20,0.2);
+  animation: none;
 }
 body.light .typewriter-box::before {
   content: '📜 PERGAMINO ANCESTRAL';
   color: var(--ink-dark);
   background: var(--bg-papiro);
 }
+body.light .typewriter-box::after {
+  color: var(--ink-dark);
+}
+body.light .typewriter-rune-tl { color: var(--ink-dark); }
 body.light .typewriter-text {
   color: var(--ink-dark);
   text-shadow: none;
@@ -1025,6 +1309,7 @@ body.light .screen-transition {
   background: var(--bg-papiro);
   animation: none;
 }
+body.light .transition-flash { display: none; }
 body.light .transition-text {
   color: var(--ink-dark); text-shadow: none;
 }
@@ -1033,14 +1318,19 @@ body.light .transition-dots .dot { color: var(--ink-red); }
 body.light .transition-energy-ring {
   border-color: rgba(139,105,20,0.15); box-shadow: none;
 }
+body.light .transition-energy-ring .ring-runes { color: rgba(139,105,20,0.15); }
+body.light .fracture-line { background: rgba(139,105,20,0.15); }
+
+/* Light type particles */
+body.light .type-rayo-particles .type-particle { background: var(--ink-dark); box-shadow: none; }
+body.light .type-flama-particles .type-particle { background: var(--ink-red); box-shadow: none; }
+body.light .type-hielo-particles .type-particle { background: var(--ink-dark); box-shadow: none; }
 
 /* ===========================================
    RESPONSIVE — MOBILE FIRST (375px base)
    =========================================== */
 
 /* ===== MOBILE BASE (375px) — base styles ARE mobile ===== */
-/* Only overrides that differ from the component defaults above */
-
 .preview-nav { padding: 0.375rem 0.5rem; gap: 0.1875rem; }
 .preview-nav button { font-size: 0.4rem; padding: 0.3rem 0.4rem; }
 
@@ -1114,7 +1404,8 @@ body.light .transition-energy-ring {
 
 <!-- ===== P1: LOADING ===== -->
 <section id="screen-loading" class="screen screen-loading active">
-  <div class="loading-particles">
+  <div class="vignette"></div>
+  <div class="loading-particles fragment-particles">
     <div class="particle" style="left:10%; top:30%; animation-delay:0s;"></div>
     <div class="particle" style="left:25%; top:60%; animation-delay:1s;"></div>
     <div class="particle" style="left:50%; top:20%; animation-delay:0.5s;"></div>
@@ -1130,12 +1421,14 @@ body.light .transition-energy-ring {
   </div>
   <div class="loading-bar-container">
     <div class="loading-bar-fill"></div>
+    <div class="loading-sparks" id="loading-sparks"></div>
   </div>
-  <div class="loading-text">CARGANDO DATOS...</div>
+  <div class="loading-text">PURIFICANDO DATOS...</div>
 </section>
 
 <!-- ===== P2: FULLSCREEN ===== -->
 <section id="screen-fullscreen" class="screen screen-fullscreen">
+  <div class="vignette"></div>
   <div class="fullscreen-icon">⛶</div>
   <div class="fullscreen-title">Experiencia Completa</div>
   <div class="fullscreen-subtitle">
@@ -1150,7 +1443,13 @@ body.light .transition-energy-ring {
 
 <!-- ===== P3: TITLE ===== -->
 <section id="screen-title" class="screen screen-title">
-  <div class="title-bg-runes">◇◆◇◆◇◆◇◆◇◆◇</div>
+  <div class="title-vignette"></div>
+  <div class="title-bg-runes" id="title-rune-circle"></div>
+  <div class="fragment-particles">
+    <div class="fragment-particle" style="left:30%; top:35%; animation-delay:0s; animation-duration:6s;"></div>
+    <div class="fragment-particle" style="left:65%; top:45%; animation-delay:2s; animation-duration:7s;"></div>
+    <div class="fragment-particle" style="left:50%; top:55%; animation-delay:4s; animation-duration:5s;"></div>
+  </div>
   <button class="title-music-toggle">🎵 ON</button>
   <div class="title-main">
     REGGIE'S
@@ -1169,7 +1468,15 @@ body.light .transition-energy-ring {
 
 <!-- ===== P4: TYPEWRITER ===== -->
 <section id="screen-typewriter" class="screen screen-typewriter">
+  <div class="vignette"></div>
+  <div class="fragment-particles">
+    <div class="fragment-particle" style="left:15%; top:25%; animation-delay:0s; animation-duration:7s;"></div>
+    <div class="fragment-particle" style="left:80%; top:60%; animation-delay:2s; animation-duration:6s;"></div>
+    <div class="fragment-particle" style="left:45%; top:80%; animation-delay:3.5s; animation-duration:5s;"></div>
+  </div>
   <div class="typewriter-box">
+    <div class="inner-border"></div>
+    <span class="typewriter-rune-tl">ᚦ</span>
     <div class="typewriter-text" id="typewriter-output"></div>
     <span class="typewriter-cursor" id="typewriter-cursor"></span>
   </div>
@@ -1180,7 +1487,17 @@ body.light .transition-energy-ring {
 
 <!-- ===== P5: LOGIN ===== -->
 <section id="screen-login" class="screen screen-login">
-  <div class="login-modal">
+  <div class="vignette"></div>
+  <div class="fragment-particles">
+    <div class="fragment-particle" style="left:20%; top:30%; animation-delay:0s; animation-duration:6s;"></div>
+    <div class="fragment-particle" style="left:75%; top:50%; animation-delay:1.5s; animation-duration:7s;"></div>
+    <div class="fragment-particle" style="left:50%; top:75%; animation-delay:3s; animation-duration:5s;"></div>
+  </div>
+  <div class="login-modal rune-corners">
+    <span class="rune-tl">ᛗ</span>
+    <span class="rune-tr">ᚨ</span>
+    <span class="rune-bl">ᛃ</span>
+    <span class="rune-br">ᛈ</span>
     <div class="login-title">⟁ CONEXIÓN</div>
     <div class="login-subtitle">
       Vincula tu identidad<br>
@@ -1209,6 +1526,7 @@ body.light .transition-energy-ring {
 
 <!-- ===== P6: CREACIÓN ===== -->
 <section id="screen-creation" class="screen screen-creation">
+  <div class="vignette"></div>
   <div class="creation-title">Crea tu Regenmon</div>
   <div class="creation-subtitle">
     La energía antigua está lista para tomar forma.<br>
@@ -1218,6 +1536,12 @@ body.light .transition-energy-ring {
   <div class="creation-carousel">
     <button class="carousel-arrow" onclick="prevType()">◀</button>
     <div class="carousel-card type-rayo" id="carousel-card">
+      <div class="type-particles type-rayo-particles" id="type-particles">
+        <div class="type-particle"></div>
+        <div class="type-particle"></div>
+        <div class="type-particle"></div>
+        <div class="type-particle"></div>
+      </div>
       <span class="carousel-sprite" id="carousel-sprite">⚡</span>
       <div class="carousel-type-name" id="carousel-name">Rayo</div>
       <div class="carousel-type-title" id="carousel-title">El Impulso</div>
@@ -1253,8 +1577,30 @@ body.light .transition-energy-ring {
 
 <!-- ===== P7: TRANSICIÓN ===== -->
 <section id="screen-transition" class="screen screen-transition">
-  <div class="transition-energy-ring"></div>
-  <div class="transition-energy-ring"></div>
+  <div class="transition-flash"></div>
+  <div class="vignette"></div>
+  <div class="transition-energy-ring">
+    <span class="ring-rune" style="position:absolute;top:-6px;left:50%;font-family:serif;font-size:10px;color:rgba(0,240,255,0.2);">ᚱ</span>
+    <span class="ring-rune" style="position:absolute;bottom:-6px;left:50%;font-family:serif;font-size:10px;color:rgba(0,240,255,0.2);">ᛊ</span>
+    <span class="ring-rune" style="position:absolute;top:50%;left:-6px;font-family:serif;font-size:10px;color:rgba(0,240,255,0.2);">ᛏ</span>
+    <span class="ring-rune" style="position:absolute;top:50%;right:-6px;font-family:serif;font-size:10px;color:rgba(0,240,255,0.2);">ᚲ</span>
+  </div>
+  <div class="transition-energy-ring">
+    <span class="ring-rune" style="position:absolute;top:-6px;left:50%;font-family:serif;font-size:10px;color:rgba(180,74,255,0.2);">ᛉ</span>
+    <span class="ring-rune" style="position:absolute;bottom:-6px;left:50%;font-family:serif;font-size:10px;color:rgba(180,74,255,0.2);">ᛗ</span>
+    <span class="ring-rune" style="position:absolute;top:50%;left:-6px;font-family:serif;font-size:10px;color:rgba(180,74,255,0.2);">ᚨ</span>
+    <span class="ring-rune" style="position:absolute;top:50%;right:-6px;font-family:serif;font-size:10px;color:rgba(180,74,255,0.2);">ᚦ</span>
+  </div>
+  <div class="fracture-lines">
+    <div class="fracture-line"></div>
+    <div class="fracture-line"></div>
+    <div class="fracture-line"></div>
+    <div class="fracture-line"></div>
+    <div class="fracture-line"></div>
+    <div class="fracture-line"></div>
+    <div class="fracture-line"></div>
+    <div class="fracture-line"></div>
+  </div>
   <div class="transition-sprite" id="transition-sprite">⚡</div>
   <div class="transition-text">Tu Regenmon está despertando</div>
   <div class="transition-dots">
@@ -1331,6 +1677,10 @@ function setType(idx) {
   document.getElementById('carousel-desc').textContent = t.desc;
   document.getElementById('transition-sprite').textContent = t.sprite;
 
+  // Update type particles
+  const particles = document.getElementById('type-particles');
+  particles.className = 'type-particles type-' + t.class + '-particles';
+
   document.querySelectorAll('.carousel-dot').forEach((d, i) => {
     d.classList.toggle('active', i === idx);
   });
@@ -1361,6 +1711,38 @@ function checkAwaken() {
     btn.classList.add('disabled');
   }
 }
+
+// ===== TITLE RUNE CIRCLE (generate on load) =====
+(function() {
+  const runes = ['ᚱ','ᚲ','ᚦ','ᛊ','ᛏ','ᛉ','ᛗ','ᚨ','ᛃ','ᛈ'];
+  const container = document.getElementById('title-rune-circle');
+  container.innerHTML = '';
+  runes.forEach((r, i) => {
+    const span = document.createElement('span');
+    span.className = 'rune-circle-char';
+    span.textContent = r;
+    span.style.transform = 'rotate(' + (i * 36) + 'deg)';
+    container.appendChild(span);
+  });
+})();
+
+// ===== LOADING SPARKS =====
+(function() {
+  const sparksContainer = document.getElementById('loading-sparks');
+  let sparkCount = 0;
+  const interval = setInterval(() => {
+    if (sparkCount > 8) { clearInterval(interval); return; }
+    const spark = document.createElement('div');
+    spark.className = 'loading-spark';
+    spark.style.left = (sparkCount * 12 + 5) + '%';
+    spark.style.top = '50%';
+    spark.style.setProperty('--sx', (Math.random() * 20 - 10) + 'px');
+    spark.style.setProperty('--sy', (-10 - Math.random() * 20) + 'px');
+    sparksContainer.appendChild(spark);
+    sparkCount++;
+    setTimeout(() => spark.remove(), 600);
+  }, 280);
+})();
 </script>
 
 </body>
