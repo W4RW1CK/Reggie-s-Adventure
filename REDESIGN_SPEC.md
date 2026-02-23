@@ -54,16 +54,26 @@ Preview-first en HTML standalone → luego implementar en Next.js components.
 
 | Token | Size | Uso |
 |-------|------|-----|
-| `--fs-xs` | 9px | Labels mínimos, version |
-| `--fs-sm` | 11px | Info secundaria |
-| `--fs-base` | 13px | Texto general, botones |
-| `--fs-lg` | 16px | Subtítulos |
-| `--fs-xl` | 20px | Títulos de pantalla |
-| `--fs-2xl` | 28px | Logo/título principal |
-| `--fs-3xl` | 36px | Impacto (Loading, Fractura) |
+| `--fs-xs` | 0.625rem (10px) | Labels mínimos, version |
+| `--fs-sm` | 0.75rem (12px) | Info secundaria |
+| `--fs-base` | 0.875rem (14px) | Texto general, botones |
+| `--fs-lg` | 1.125rem (18px) | Subtítulos |
+| `--fs-xl` | 1.375rem (22px) | Títulos de pantalla |
+| `--fs-2xl` | 1.875rem (30px) | Logo/título principal |
+| `--fs-3xl` | 2.5rem (40px) | Impacto (Loading, Fractura) |
 
-> **Nota:** Press Start 2P renderiza más pequeño que otras fuentes.
-> Estos tamaños están ajustados para legibilidad en mobile (375px).
+> **Nota:** Usamos `rem` para accesibilidad — respeta la config del navegador del usuario.
+> Press Start 2P renderiza ~30% más pequeño que otras fuentes, los valores están compensados.
+
+### Ratios de contraste (WCAG, verificados)
+
+| Color | Hex | vs `#0a0a0f` |
+|-------|-----|-------------|
+| cyan | `#00f0ff` | 14.02:1 ✅ |
+| purple | `#b44aff` | 5.04:1 ✅ |
+| gold | `#f5c542` | 12.17:1 ✅ |
+| text-primary | `#e0e0e0` | 14.96:1 ✅ |
+| text-dim | `#8a8a8a` | 5.72:1 ✅ |
 
 ### Accesibilidad (WCAG)
 
