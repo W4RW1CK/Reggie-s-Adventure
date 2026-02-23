@@ -559,7 +559,7 @@ body.light .title-vignette {
   display: flex;
   gap: 2.5rem;
   margin: 1.875rem 0;
-  opacity: 0.15;
+  opacity: 0.5;
   font-size: 1.5rem;
   z-index: 1;
 }
@@ -620,33 +620,31 @@ body.light .title-vignette {
   max-width: 31.25rem;
   width: 100%;
   background: #111119;
-  border: 4px solid #fff;
+  border: 3px solid #fff;
   padding: 1.5rem;
   position: relative;
-  box-shadow: 6px 6px 0 rgba(0,0,0,0.6);
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.6);
   animation: transmission-pulse 3s infinite ease-in-out;
   z-index: 1;
 }
 /* Inner double border */
-.typewriter-box::after {
-  content: 'ᛊ';
-  position: absolute;
-  bottom: 6px; right: 10px;
-  font-family: serif;
-  font-size: 0.9rem;
-  color: var(--cyan);
-  opacity: 0.1;
-  pointer-events: none;
-  border: none;
-}
-/* Rune corner top-right */
 .typewriter-box .inner-border {
-  position: absolute; inset: 4px;
+  position: absolute; inset: 3px;
   border: 2px solid #444;
   pointer-events: none;
 }
+/* Rune decoration bottom-right */
+.typewriter-box::after {
+  content: '◆';
+  position: absolute;
+  bottom: 6px; right: 10px;
+  font-size: 0.5rem;
+  color: var(--cyan);
+  opacity: 0.15;
+  pointer-events: none;
+}
 .typewriter-box::before {
-  content: 'ᚱ ▶ TRANSMISSION';
+  content: '◆ ▶ TRANSMISSION';
   position: absolute; top: -0.625rem; left: 0.75rem;
   font-size: var(--fs-xs);
   color: var(--cyan);
@@ -1489,9 +1487,11 @@ body.light .type-hielo-particles .type-particle { background: var(--ink-dark); b
 <section id="screen-login" class="screen screen-login">
   <div class="vignette"></div>
   <div class="fragment-particles">
-    <div class="fragment-particle" style="left:20%; top:30%; animation-delay:0s; animation-duration:6s;"></div>
-    <div class="fragment-particle" style="left:75%; top:50%; animation-delay:1.5s; animation-duration:7s;"></div>
-    <div class="fragment-particle" style="left:50%; top:75%; animation-delay:3s; animation-duration:5s;"></div>
+    <div class="fragment-particle" style="left:5%; top:15%; animation-delay:0s; animation-duration:6s;"></div>
+    <div class="fragment-particle" style="left:90%; top:25%; animation-delay:1.5s; animation-duration:7s;"></div>
+    <div class="fragment-particle" style="left:8%; top:80%; animation-delay:3s; animation-duration:5s;"></div>
+    <div class="fragment-particle" style="left:85%; top:70%; animation-delay:2s; animation-duration:6.5s;"></div>
+    <div class="fragment-particle" style="left:50%; top:10%; animation-delay:0.5s; animation-duration:8s;"></div>
   </div>
   <div class="login-modal rune-corners">
     <span class="rune-tl">ᛗ</span>
@@ -1679,7 +1679,7 @@ function setType(idx) {
 
   // Update type particles
   const particles = document.getElementById('type-particles');
-  particles.className = 'type-particles type-' + t.class + '-particles';
+  particles.className = 'type-particles ' + t.class + '-particles';
 
   document.querySelectorAll('.carousel-dot').forEach((d, i) => {
     d.classList.toggle('active', i === idx);
