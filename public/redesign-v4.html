@@ -16,7 +16,7 @@
   --purple: #b44aff;
   --gold: #f5c542;
   --text-primary: #e0e0e0;
-  --text-dim: #555;
+  --text-dim: #8a8a8a; /* WCAG 4.5:1 on #0a0a0f */
   --surface: #1a1a2a;
   --surface-2: #12121f;
   --border: #222233;
@@ -36,14 +36,15 @@
   --type-flama: #ff6b35;
   --type-hielo: #b44aff;
 
-  /* Font sizes */
-  --fs-xs: 7px;
-  --fs-sm: 9px;
-  --fs-base: 11px;
-  --fs-lg: 14px;
-  --fs-xl: 18px;
-  --fs-2xl: 24px;
-  --fs-3xl: 32px;
+  /* Font sizes — MOBILE FIRST (375px) */
+  /* Press Start 2P renders small, so these are already bumped */
+  --fs-xs: 9px;
+  --fs-sm: 11px;
+  --fs-base: 13px;
+  --fs-lg: 16px;
+  --fs-xl: 20px;
+  --fs-2xl: 28px;
+  --fs-3xl: 36px;
 }
 
 body {
@@ -1067,91 +1068,92 @@ body.light .transition-energy-ring {
    RESPONSIVE — MOBILE FIRST (375px base)
    =========================================== */
 
-/* --- Mobile defaults (375px) are the BASE styles above --- */
-/* All base styles target mobile. Below we SCALE UP for larger screens. */
+/* ===== MOBILE BASE (375px) — all base styles are mobile ===== */
 
-/* Nav: scrollable on mobile */
+/* Nav: scrollable, readable */
 .preview-nav { padding: 6px 8px; gap: 3px; }
-.preview-nav button { font-size: 6px; padding: 5px 7px; }
+.preview-nav button { font-size: 8px; padding: 6px 8px; }
 
-/* Loading: compact on mobile */
-.loading-logo { font-size: var(--fs-xl); }
-.loading-logo .sub { font-size: var(--fs-base); }
-.loading-bar-container { width: 220px; height: 10px; }
+/* Loading */
+.loading-logo { font-size: var(--fs-2xl); }
+.loading-logo .sub { font-size: var(--fs-lg); }
+.loading-bar-container { width: 260px; height: 14px; }
+.loading-text { font-size: var(--fs-sm); }
 
-/* Title: smaller on mobile */
-.title-main { font-size: var(--fs-2xl); }
-.title-main .adventure { font-size: var(--fs-lg); }
-.title-decorative-regenmons { gap: 24px; font-size: 28px; margin: 20px 0; }
-.title-press-start { font-size: var(--fs-sm); padding: 12px 24px; }
+/* Title */
+.title-main { font-size: var(--fs-3xl); }
+.title-main .adventure { font-size: var(--fs-xl); }
+.title-decorative-regenmons { gap: 28px; font-size: 36px; margin: 24px 0; }
+.title-press-start { font-size: var(--fs-base); padding: 14px 28px; }
+.title-music-toggle { font-size: var(--fs-sm); }
+.title-version { font-size: var(--fs-xs); }
 
-/* Typewriter: tighter on mobile */
-.typewriter-box { padding: 16px; }
-.typewriter-text { font-size: 8px; line-height: 2.2; min-height: 120px; }
+/* Fullscreen */
+.fullscreen-icon { font-size: 56px; }
+.fullscreen-title { font-size: var(--fs-lg); }
+.fullscreen-subtitle { font-size: var(--fs-sm); line-height: 2.2; }
+.fullscreen-buttons { width: 100%; max-width: 320px; }
 
-/* Login: full width on mobile */
-.login-modal { width: 95%; padding: 24px 16px; }
-.login-btn { font-size: 8px; padding: 12px; }
+/* Typewriter */
+.typewriter-box { padding: 18px; margin: 0 12px; }
+.typewriter-text { font-size: var(--fs-sm); line-height: 2.4; min-height: 140px; }
 
-/* Creation: compact on mobile */
-.creation-title { font-size: var(--fs-lg); }
-.carousel-card { padding: 16px 12px; }
-.carousel-sprite { font-size: 48px; }
-.carousel-type-desc { font-size: 6px; line-height: 2.2; }
-.creation-name-wrapper { max-width: 300px; }
-.creation-name-input { font-size: var(--fs-sm); padding: 12px; }
+/* Login */
+.login-modal { width: 92%; padding: 24px 18px; }
+.login-title { font-size: var(--fs-lg); }
+.login-subtitle { font-size: var(--fs-sm); line-height: 2.2; }
+.login-btn { font-size: var(--fs-sm); padding: 14px; }
+.login-demo { font-size: var(--fs-xs); }
+
+/* Creation */
+.creation-title { font-size: var(--fs-xl); }
+.creation-subtitle { font-size: var(--fs-sm); line-height: 2.2; }
+.carousel-card { padding: 20px 14px; }
+.carousel-sprite { font-size: 56px; }
+.carousel-type-name { font-size: var(--fs-lg); }
+.carousel-type-title { font-size: var(--fs-sm); }
+.carousel-type-desc { font-size: var(--fs-xs); line-height: 2.2; }
+.creation-name-wrapper { max-width: 320px; width: 100%; }
+.creation-name-input { font-size: var(--fs-base); padding: 14px; }
+.creation-char-count { font-size: var(--fs-xs); }
 
 /* Buttons: full width on mobile */
-.glow-btn { font-size: var(--fs-sm); padding: 10px 18px; width: 100%; max-width: 300px; }
-.fullscreen-buttons { width: 100%; max-width: 300px; }
+.glow-btn { font-size: var(--fs-base); padding: 14px 24px; width: 100%; max-width: 320px; }
 
 /* Transition */
-.transition-text { font-size: var(--fs-base); }
-.transition-sprite { font-size: 60px; }
+.transition-text { font-size: var(--fs-lg); }
+.transition-sprite { font-size: 72px; }
 
 /* --- Medium Devices / Tablets (641px+) --- */
 @media (min-width: 641px) {
   .preview-nav { padding: 8px 12px; gap: 4px; }
   .preview-nav button { font-size: var(--fs-xs); padding: 6px 10px; }
 
-  .loading-logo { font-size: var(--fs-2xl); }
-  .loading-logo .sub { font-size: var(--fs-lg); }
-  .loading-bar-container { width: 280px; height: 12px; }
+  .loading-bar-container { width: 300px; height: 16px; }
 
-  .title-main { font-size: var(--fs-3xl); }
-  .title-main .adventure { font-size: var(--fs-xl); }
-  .title-decorative-regenmons { gap: 40px; font-size: 40px; margin: 30px 0; }
-  .title-press-start { font-size: var(--fs-base); padding: 16px 32px; }
+  .title-decorative-regenmons { gap: 40px; font-size: 44px; }
 
-  .typewriter-box { padding: 24px; }
-  .typewriter-text { font-size: var(--fs-sm); line-height: 2.4; min-height: 150px; }
+  .typewriter-box { padding: 28px; max-width: 520px; margin: 0; }
 
-  .login-modal { width: 90%; max-width: 380px; padding: 32px 24px; }
-  .login-btn { font-size: var(--fs-sm); padding: 14px; }
+  .login-modal { max-width: 400px; padding: 32px 24px; }
 
-  .creation-title { font-size: var(--fs-xl); }
-  .carousel-card { padding: 24px 16px; }
+  .carousel-card { padding: 28px 20px; }
   .carousel-sprite { font-size: 64px; }
-  .carousel-type-desc { font-size: var(--fs-xs); }
-  .creation-name-wrapper { max-width: 350px; }
-  .creation-name-input { font-size: var(--fs-base); padding: 14px; }
 
-  .glow-btn { font-size: var(--fs-base); padding: 12px 24px; width: auto; max-width: none; }
+  .glow-btn { width: auto; max-width: none; }
   .fullscreen-buttons { width: auto; }
 
-  .transition-text { font-size: var(--fs-lg); }
-  .transition-sprite { font-size: 80px; }
+  .transition-sprite { font-size: 88px; }
 }
 
 /* --- Large Devices / Desktops (1025px+) --- */
 @media (min-width: 1025px) {
-  .loading-logo { font-size: 28px; }
-  .loading-bar-container { width: 320px; }
-  .title-main { font-size: 36px; }
+  .loading-bar-container { width: 340px; }
   .typewriter-box { max-width: 600px; }
-  .login-modal { max-width: 420px; }
-  .carousel-card { max-width: 300px; padding: 28px 20px; }
-  .carousel-sprite { font-size: 72px; }
+  .login-modal { max-width: 440px; }
+  .carousel-card { max-width: 320px; padding: 32px 24px; }
+  .carousel-sprite { font-size: 80px; }
+  .transition-sprite { font-size: 96px; }
 }
 </style>
 </head>

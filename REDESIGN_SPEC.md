@@ -54,13 +54,24 @@ Preview-first en HTML standalone → luego implementar en Next.js components.
 
 | Token | Size | Uso |
 |-------|------|-----|
-| `--fs-xs` | 7px | Labels mínimos, version |
-| `--fs-sm` | 9px | Info secundaria |
-| `--fs-base` | 11px | Texto general, botones |
-| `--fs-lg` | 14px | Subtítulos |
-| `--fs-xl` | 18px | Títulos de pantalla |
-| `--fs-2xl` | 24px | Logo/título principal |
-| `--fs-3xl` | 32px | Impacto (Loading, Fractura) |
+| `--fs-xs` | 9px | Labels mínimos, version |
+| `--fs-sm` | 11px | Info secundaria |
+| `--fs-base` | 13px | Texto general, botones |
+| `--fs-lg` | 16px | Subtítulos |
+| `--fs-xl` | 20px | Títulos de pantalla |
+| `--fs-2xl` | 28px | Logo/título principal |
+| `--fs-3xl` | 36px | Impacto (Loading, Fractura) |
+
+> **Nota:** Press Start 2P renderiza más pequeño que otras fuentes.
+> Estos tamaños están ajustados para legibilidad en mobile (375px).
+
+### Accesibilidad (WCAG)
+
+| Regla | Mínimo | Nota |
+|-------|--------|------|
+| Contraste texto normal | 4.5:1 | `--text-dim` = `#8a8a8a` (5.2:1 sobre `#0a0a0f`) |
+| Contraste títulos (≥18px) | 3:1 | Cyan/purple/gold todos pasan sobre `#0a0a0f` |
+| Touch target mínimo | 44×44px | Botones, flechas, inputs |
 
 ### Elementos visuales
 
