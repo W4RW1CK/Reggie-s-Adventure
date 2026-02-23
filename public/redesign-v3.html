@@ -16,21 +16,15 @@
     overflow-x: hidden;
   }
 
-  /* ===== SCANLINES OVERLAY (global, subtle) ===== */
+  /* ===== SCANLINES OVERLAY ===== */
   body::after {
     content: '';
     position: fixed; inset: 0; z-index: 9998;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent 0px,
-      transparent 2px,
-      rgba(0,0,0,0.04) 2px,
-      rgba(0,0,0,0.04) 4px
-    );
+    background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px);
     pointer-events: none;
   }
 
-  /* ===== NAV — always dark terminal ===== */
+  /* ===== NAV ===== */
   .preview-nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
     background: #0a0a0f;
@@ -44,52 +38,24 @@
     background: transparent; color: #555; border: 1px solid #222;
     cursor: pointer; white-space: nowrap; transition: all 0.3s;
   }
-  .preview-nav button:hover {
-    color: #00f0ff; border-color: #00f0ff40;
-    text-shadow: 0 0 8px rgba(0,240,255,0.3);
-  }
-  .preview-nav button.active {
-    color: #00f0ff; border-color: #00f0ff;
-    background: rgba(0,240,255,0.05);
-    text-shadow: 0 0 10px rgba(0,240,255,0.4);
-    box-shadow: 0 0 10px rgba(0,240,255,0.1), inset 0 0 10px rgba(0,240,255,0.05);
-  }
+  .preview-nav button:hover { color: #00f0ff; border-color: #00f0ff40; text-shadow: 0 0 8px rgba(0,240,255,0.3); }
+  .preview-nav button.active { color: #00f0ff; border-color: #00f0ff; background: rgba(0,240,255,0.05); text-shadow: 0 0 10px rgba(0,240,255,0.4); box-shadow: 0 0 10px rgba(0,240,255,0.1), inset 0 0 10px rgba(0,240,255,0.05); }
 
   .theme-toggle {
     margin-left: auto;
     font-family: inherit; font-size: 7px; padding: 6px 12px;
     background: transparent; color: #b44aff; border: 1px solid #b44aff60;
     cursor: pointer; white-space: nowrap; transition: all 0.3s;
-    border-radius: 2px;
   }
-  .theme-toggle:hover {
-    background: rgba(180,74,255,0.1);
-    text-shadow: 0 0 8px rgba(180,74,255,0.4);
-    border-color: #b44aff;
-  }
-  .theme-toggle.active-theme {
-    background: #b44aff20;
-    color: #b44aff;
-    border-color: #b44aff;
-  }
+  .theme-toggle:hover { background: rgba(180,74,255,0.1); text-shadow: 0 0 8px rgba(180,74,255,0.4); border-color: #b44aff; }
+  .theme-toggle.active-theme { background: #b44aff20; color: #b44aff; border-color: #b44aff; }
 
   /* ===== LAYOUT ===== */
   .screens { margin-top: 50px; }
-  .screen-section {
-    display: none; min-height: 100vh;
-    flex-direction: column; align-items: center; justify-content: center;
-    padding: 20px;
-  }
+  .screen-section { display: none; min-height: 100vh; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
   .screen-section.active { display: flex; }
-
-  .label {
-    font-size: 7px; color: #444; letter-spacing: 3px;
-    text-transform: uppercase; margin-bottom: 20px;
-  }
-  .note {
-    font-size: 7px; color: #444; max-width: 500px;
-    text-align: center; line-height: 1.8; margin-top: 20px;
-  }
+  .label { font-size: 7px; color: #444; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px; }
+  .note { font-size: 7px; color: #444; max-width: 600px; text-align: center; line-height: 1.8; margin-top: 20px; }
 
   /* ===== PHONE FRAME ===== */
   .phone {
@@ -97,21 +63,52 @@
     border: 1px solid #1a1a2a;
     border-radius: 16px;
     overflow: hidden; position: relative;
-    box-shadow:
-      0 0 30px rgba(0,240,255,0.06),
-      0 0 60px rgba(180,74,255,0.03),
-      inset 0 0 30px rgba(0,0,0,0.3);
+    box-shadow: 0 0 30px rgba(0,240,255,0.06), 0 0 60px rgba(180,74,255,0.03), inset 0 0 30px rgba(0,0,0,0.3);
   }
 
-  /* ===== RUNIC GLYPHS (decorative corners) ===== */
+  /* ===== RUNE CORNERS ===== */
   .rune-corner { position: absolute; font-size: 10px; opacity: 0.15; color: #00f0ff; z-index: 2; }
   .rune-corner.tl { top: 8px; left: 10px; }
   .rune-corner.tr { top: 8px; right: 10px; }
   .rune-corner.bl { bottom: 8px; left: 10px; }
   .rune-corner.br { bottom: 8px; right: 10px; }
 
+  /* ===== SHARED COMPONENTS ===== */
+  .cyber-btn {
+    font-family: inherit; font-size: 8px; padding: 10px 20px;
+    background: transparent; color: #00f0ff; cursor: pointer;
+    border: 1px solid #00f0ff;
+    text-shadow: 0 0 8px rgba(0,240,255,0.3);
+    box-shadow: 0 0 10px rgba(0,240,255,0.1), inset 0 0 10px rgba(0,240,255,0.05);
+    transition: all 0.3s;
+    position: relative;
+  }
+  .cyber-btn:hover {
+    background: rgba(0,240,255,0.1);
+    box-shadow: 0 0 20px rgba(0,240,255,0.2), inset 0 0 15px rgba(0,240,255,0.08);
+  }
+  .cyber-btn.purple { color: #b44aff; border-color: #b44aff; text-shadow: 0 0 8px rgba(180,74,255,0.3); box-shadow: 0 0 10px rgba(180,74,255,0.1); }
+  .cyber-btn.gold { color: #f5c542; border-color: #f5c542; text-shadow: 0 0 8px rgba(245,197,66,0.3); box-shadow: 0 0 10px rgba(245,197,66,0.1); }
+  .cyber-btn.disabled { color: #333; border-color: #222; text-shadow: none; box-shadow: none; cursor: default; }
+
+  .terminal-box {
+    border: 1px solid #1a1a2a;
+    background: rgba(10,10,15,0.85);
+    padding: 12px;
+    position: relative;
+  }
+  .terminal-box::before {
+    content: '';
+    position: absolute; top: -1px; left: 10px; right: 10px; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,240,255,0.2), transparent);
+  }
+
+  .glow-text-cyan { color: #00f0ff; text-shadow: 0 0 10px rgba(0,240,255,0.4); }
+  .glow-text-purple { color: #b44aff; text-shadow: 0 0 10px rgba(180,74,255,0.4); }
+  .glow-text-gold { color: #f5c542; text-shadow: 0 0 10px rgba(245,197,66,0.4); }
+
   /* ============================================= */
-  /*  01. LOADING SCREEN — DARK (CYBER-ARCANE)     */
+  /*  01. LOADING SCREEN                           */
   /* ============================================= */
   .loading-demo {
     width: 100%; height: 100%;
@@ -120,8 +117,6 @@
     position: relative;
     background: radial-gradient(ellipse at 50% 40%, #0d0d1a 0%, #0a0a0f 70%);
   }
-
-  /* Animated glyph circle behind logo */
   .loading-demo .glyph-ring {
     position: absolute; top: 50%; left: 50%;
     width: 280px; height: 280px;
@@ -145,19 +140,12 @@
     border-radius: 50%;
     animation: glyph-spin 20s linear reverse infinite;
   }
-
   @keyframes glyph-spin {
     from { transform: translate(-50%, -55%) rotate(0deg); }
     to { transform: translate(-50%, -55%) rotate(360deg); }
   }
-
-  /* Floating particles */
   .loading-demo .particle {
-    position: absolute;
-    width: 2px; height: 2px;
-    background: #00f0ff;
-    border-radius: 50%;
-    opacity: 0;
+    position: absolute; width: 2px; height: 2px; background: #00f0ff; border-radius: 50%; opacity: 0;
     animation: particle-float 4s ease-in-out infinite;
   }
   .loading-demo .particle:nth-child(1) { left: 20%; top: 30%; animation-delay: 0s; }
@@ -167,105 +155,37 @@
   .loading-demo .particle:nth-child(5) { left: 85%; top: 50%; animation-delay: 3.2s; }
   .loading-demo .particle:nth-child(6) { left: 15%; top: 55%; animation-delay: 1.2s; background: #f5c542; width: 1px; height: 1px; }
   .loading-demo .particle:nth-child(7) { left: 50%; top: 15%; animation-delay: 2s; }
-
   @keyframes particle-float {
     0% { opacity: 0; transform: translateY(0); }
     30% { opacity: 0.6; }
     70% { opacity: 0.4; }
     100% { opacity: 0; transform: translateY(-30px); }
   }
-
-  /* Logo */
-  .loading-logo {
-    position: relative; z-index: 3;
-    text-align: center;
-  }
+  .loading-logo { position: relative; z-index: 3; text-align: center; }
   .loading-logo .top {
-    font-size: 24px;
-    color: #00f0ff;
-    text-shadow:
-      0 0 20px rgba(0,240,255,0.4),
-      0 0 40px rgba(0,240,255,0.2),
-      0 2px 0 #0a8a9a;
+    font-size: 24px; color: #00f0ff;
+    text-shadow: 0 0 20px rgba(0,240,255,0.4), 0 0 40px rgba(0,240,255,0.2), 0 2px 0 #0a8a9a;
     letter-spacing: 3px;
     animation: logo-glow 3s ease-in-out infinite alternate;
   }
-  .loading-logo .bot {
-    font-size: 11px;
-    color: #b44aff;
-    letter-spacing: 6px;
-    margin-top: 6px;
-    text-shadow: 0 0 15px rgba(180,74,255,0.3);
-  }
-
+  .loading-logo .bot { font-size: 11px; color: #b44aff; letter-spacing: 6px; margin-top: 6px; text-shadow: 0 0 15px rgba(180,74,255,0.3); }
   @keyframes logo-glow {
     from { text-shadow: 0 0 20px rgba(0,240,255,0.4), 0 0 40px rgba(0,240,255,0.2), 0 2px 0 #0a8a9a; }
     to { text-shadow: 0 0 30px rgba(0,240,255,0.6), 0 0 60px rgba(0,240,255,0.3), 0 2px 0 #0a8a9a; }
   }
-
-  /* Rune divider under logo */
-  .loading-logo .rune-divider {
-    margin-top: 12px;
-    font-size: 6px;
-    color: rgba(0,240,255,0.2);
-    letter-spacing: 4px;
-  }
-
-  /* Loading bar */
-  .loading-bar-wrap {
-    position: relative; z-index: 3;
-    margin-top: 40px;
-    width: 200px;
-  }
-  .loading-bar-label {
-    font-size: 6px; color: #444;
-    letter-spacing: 3px; text-align: center;
-    margin-bottom: 8px;
-  }
-  .loading-bar-outer {
-    width: 100%; height: 6px;
-    background: #111;
-    border: 1px solid #1a1a2a;
-    border-radius: 1px;
-    overflow: hidden;
-    position: relative;
-  }
+  .loading-logo .rune-divider { margin-top: 12px; font-size: 6px; color: rgba(0,240,255,0.2); letter-spacing: 4px; }
+  .loading-bar-wrap { position: relative; z-index: 3; margin-top: 40px; width: 200px; }
+  .loading-bar-label { font-size: 6px; color: #444; letter-spacing: 3px; text-align: center; margin-bottom: 8px; }
+  .loading-bar-outer { width: 100%; height: 6px; background: #111; border: 1px solid #1a1a2a; overflow: hidden; }
   .loading-bar-fill {
-    width: 65%;
-    height: 100%;
+    width: 65%; height: 100%;
     background: linear-gradient(90deg, #00f0ff, #b44aff);
     box-shadow: 0 0 10px rgba(0,240,255,0.3);
     animation: bar-pulse 2s ease-in-out infinite;
-    position: relative;
   }
-  .loading-bar-fill::after {
-    content: '';
-    position: absolute; right: 0; top: 0;
-    width: 20px; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3));
-    animation: bar-shine 2s ease-in-out infinite;
-  }
-
-  @keyframes bar-pulse {
-    0%, 100% { opacity: 0.8; }
-    50% { opacity: 1; }
-  }
-  @keyframes bar-shine {
-    0% { transform: translateX(-20px); }
-    100% { transform: translateX(20px); }
-  }
-
-  /* Version tag */
-  .loading-version {
-    position: absolute; bottom: 16px; z-index: 3;
-    font-size: 6px; color: #333;
-    letter-spacing: 2px;
-  }
-
-  /* Glitch effect on hover */
-  .loading-logo:hover .top {
-    animation: glitch 0.3s ease-in-out;
-  }
+  @keyframes bar-pulse { 0%, 100% { opacity: 0.8; } 50% { opacity: 1; } }
+  .loading-version { position: absolute; bottom: 16px; z-index: 3; font-size: 6px; color: #333; letter-spacing: 2px; }
+  .loading-logo:hover .top { animation: glitch 0.3s ease-in-out; }
   @keyframes glitch {
     0% { transform: translate(0); }
     20% { transform: translate(-2px, 1px); color: #ff0040; }
@@ -276,108 +196,795 @@
   }
 
   /* ============================================= */
-  /*  LIGHT THEME — PAPIRO ARCANO                  */
+  /*  02. TITLE SCREEN                             */
   /* ============================================= */
-  body.light .phone {
-    border-color: #c4a56a;
-    box-shadow:
-      0 0 30px rgba(139,105,20,0.1),
-      0 0 60px rgba(139,37,0,0.05);
+  .title-demo {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative;
+    background: radial-gradient(ellipse at 50% 30%, #0d0d1a 0%, #0a0a0f 70%);
+    overflow: hidden;
   }
 
-  body.light .loading-demo {
+  /* Runic circle behind everything */
+  .title-demo .title-circle {
+    position: absolute; top: 42%; left: 50%;
+    width: 320px; height: 320px;
+    transform: translate(-50%, -50%);
+    border: 1px solid rgba(0,240,255,0.05);
+    border-radius: 50%;
+    animation: glyph-spin 40s linear infinite;
+  }
+  .title-demo .title-circle-2 {
+    position: absolute; top: 42%; left: 50%;
+    width: 250px; height: 250px;
+    transform: translate(-50%, -50%);
+    border: 1px dashed rgba(180,74,255,0.04);
+    border-radius: 50%;
+    animation: glyph-spin 25s linear reverse infinite;
+  }
+
+  /* Three Regenmon silhouettes */
+  .title-creatures {
+    position: absolute; top: 28%; left: 50%;
+    transform: translateX(-50%);
+    display: flex; gap: 50px;
+    z-index: 2; opacity: 0.5;
+  }
+  .title-creature {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    animation: creature-float 3s ease-in-out infinite;
+  }
+  .title-creature.rayo {
+    background: radial-gradient(circle, #00f0ff44, #00f0ff11);
+    box-shadow: 0 0 20px rgba(0,240,255,0.2);
+    animation-delay: 0s;
+  }
+  .title-creature.flama {
+    background: radial-gradient(circle, #ff6b3544, #ff6b3511);
+    box-shadow: 0 0 20px rgba(255,107,53,0.2);
+    animation-delay: 0.5s;
+  }
+  .title-creature.hielo {
+    background: radial-gradient(circle, #b44aff44, #b44aff11);
+    box-shadow: 0 0 20px rgba(180,74,255,0.2);
+    animation-delay: 1s;
+  }
+  @keyframes creature-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  /* Title text */
+  .title-text {
+    position: relative; z-index: 3;
+    text-align: center; margin-top: 80px;
+  }
+  .title-text .main {
+    font-size: 22px; color: #00f0ff;
+    text-shadow: 0 0 20px rgba(0,240,255,0.5), 0 0 60px rgba(0,240,255,0.2), 0 2px 0 #0a8a9a;
+    letter-spacing: 2px;
+    animation: logo-glow 3s ease-in-out infinite alternate;
+  }
+  .title-text .sub {
+    font-size: 10px; color: #b44aff;
+    letter-spacing: 6px; margin-top: 8px;
+    text-shadow: 0 0 15px rgba(180,74,255,0.3);
+  }
+  .title-text .rune-line {
+    font-size: 6px; color: rgba(0,240,255,0.15);
+    letter-spacing: 4px; margin-top: 16px;
+  }
+
+  /* Press Start blink */
+  .press-start {
+    position: absolute; bottom: 100px; z-index: 3;
+    font-size: 10px; color: #f5c542;
+    text-shadow: 0 0 15px rgba(245,197,66,0.4);
+    letter-spacing: 3px;
+    animation: blink-gold 1.2s steps(2) infinite;
+  }
+  @keyframes blink-gold {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* Version + music toggle */
+  .title-bottom {
+    position: absolute; bottom: 20px; z-index: 3;
+    display: flex; justify-content: space-between; width: 85%;
+    font-size: 6px; color: #333;
+  }
+  .title-music { color: #555; cursor: pointer; }
+  .title-music:hover { color: #00f0ff; }
+
+  /* ============================================= */
+  /*  03. STORY / TYPEWRITER                       */
+  /* ============================================= */
+  .story-demo {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-end;
+    position: relative;
+    background: radial-gradient(ellipse at 50% 20%, #0f0f1e 0%, #0a0a0f 70%);
+    overflow: hidden;
+  }
+
+  /* Nebula bg */
+  .story-demo .nebula {
+    position: absolute; inset: 0;
     background:
-      radial-gradient(ellipse at 30% 20%, rgba(200,170,110,0.3) 0%, transparent 50%),
-      radial-gradient(ellipse at 70% 80%, rgba(180,150,90,0.2) 0%, transparent 40%),
-      radial-gradient(ellipse at 50% 50%, #f4e8c1 0%, #e8d5a3 50%, #d4c090 100%);
+      radial-gradient(ellipse at 30% 30%, rgba(0,240,255,0.03) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 60%, rgba(180,74,255,0.03) 0%, transparent 40%);
   }
 
-  /* Parchment texture via pseudo-element */
-  body.light .loading-demo::before {
-    content: '';
+  /* Star field */
+  .story-stars {
     position: absolute; inset: 0; z-index: 1;
+  }
+  .story-star {
+    position: absolute; width: 1px; height: 1px;
+    background: #fff; border-radius: 50%;
+    animation: star-twinkle 3s ease-in-out infinite;
+  }
+  .story-star:nth-child(1) { top: 10%; left: 15%; animation-delay: 0s; }
+  .story-star:nth-child(2) { top: 20%; left: 70%; animation-delay: 1s; }
+  .story-star:nth-child(3) { top: 35%; left: 40%; animation-delay: 0.5s; width: 2px; height: 2px; }
+  .story-star:nth-child(4) { top: 15%; left: 85%; animation-delay: 2s; }
+  .story-star:nth-child(5) { top: 45%; left: 25%; animation-delay: 1.5s; }
+  .story-star:nth-child(6) { top: 30%; left: 55%; animation-delay: 0.7s; }
+  @keyframes star-twinkle {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.8; }
+  }
+
+  /* Dialog box NES */
+  .story-dialog {
+    position: relative; z-index: 3;
+    width: 90%; margin-bottom: 40px;
+    border: 2px solid #1a1a2a;
+    background: rgba(10,10,15,0.92);
+    padding: 20px 16px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,240,255,0.02);
+  }
+  .story-dialog::before {
+    content: '';
+    position: absolute; top: -1px; left: 20px; right: 20px; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,240,255,0.15), transparent);
+  }
+  .story-dialog::after {
+    content: '';
+    position: absolute; bottom: -1px; left: 20px; right: 20px; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(180,74,255,0.1), transparent);
+  }
+
+  .story-text {
+    font-size: 8px; line-height: 2.2;
+    color: #c0c0c0;
+    overflow: hidden;
+  }
+  .story-text .typed {
+    border-right: 2px solid #00f0ff;
+    animation: cursor-blink 0.8s steps(2) infinite;
+  }
+  @keyframes cursor-blink {
+    0%, 100% { border-color: #00f0ff; }
+    50% { border-color: transparent; }
+  }
+  .story-text em { color: #00f0ff; font-style: normal; }
+  .story-text strong { color: #f5c542; font-weight: normal; }
+
+  .story-continue {
+    margin-top: 16px; text-align: right;
+    font-size: 7px; color: #f5c542;
+    animation: blink-gold 1.5s steps(2) infinite;
+    letter-spacing: 2px;
+  }
+
+  /* ============================================= */
+  /*  04. CREATION SCREEN                          */
+  /* ============================================= */
+  .creation-demo {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center;
+    position: relative;
+    background: radial-gradient(ellipse at 50% 30%, #0d0d1a 0%, #0a0a0f 70%);
+    overflow: hidden;
+    padding: 30px 20px 20px;
+  }
+
+  .creation-title {
+    font-size: 10px; color: #b44aff;
+    text-shadow: 0 0 15px rgba(180,74,255,0.3);
+    letter-spacing: 4px; margin-bottom: 20px;
+    z-index: 3;
+  }
+
+  /* Carousel */
+  .carousel {
+    z-index: 3;
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 20px;
+  }
+  .carousel-arrow {
+    font-size: 14px; color: #555;
+    cursor: pointer; transition: all 0.3s;
+    background: none; border: none; font-family: inherit;
+  }
+  .carousel-arrow:hover { color: #00f0ff; text-shadow: 0 0 10px rgba(0,240,255,0.4); }
+
+  .carousel-card {
+    width: 220px;
+    text-align: center;
+  }
+
+  /* Creature display in carousel */
+  .creature-preview {
+    width: 100px; height: 100px;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    position: relative;
+    animation: creature-float 3s ease-in-out infinite;
+  }
+  .creature-preview.rayo-preview {
+    background: radial-gradient(circle, rgba(0,240,255,0.3), rgba(0,240,255,0.05));
+    box-shadow: 0 0 30px rgba(0,240,255,0.2), 0 0 60px rgba(0,240,255,0.1);
+  }
+  .creature-preview.flama-preview {
+    background: radial-gradient(circle, rgba(255,107,53,0.3), rgba(255,107,53,0.05));
+    box-shadow: 0 0 30px rgba(255,107,53,0.2), 0 0 60px rgba(255,107,53,0.1);
+  }
+  .creature-preview.hielo-preview {
+    background: radial-gradient(circle, rgba(180,74,255,0.3), rgba(180,74,255,0.05));
+    box-shadow: 0 0 30px rgba(180,74,255,0.2), 0 0 60px rgba(180,74,255,0.1);
+  }
+  .creature-preview .creature-emoji {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 32px;
+    filter: drop-shadow(0 0 10px currentColor);
+  }
+
+  .creature-type-name {
+    font-size: 9px; letter-spacing: 3px;
+    margin-bottom: 4px;
+  }
+  .creature-type-title {
+    font-size: 7px; color: #555;
+    letter-spacing: 2px; margin-bottom: 10px;
+  }
+  .creature-type-desc {
+    font-size: 6px; color: #444;
+    line-height: 2; max-width: 200px;
+    margin: 0 auto;
+  }
+
+  /* Name input */
+  .creation-name-area {
+    z-index: 3; width: 85%;
+    margin-top: 16px;
+  }
+  .creation-name-label {
+    font-size: 6px; color: #555;
+    letter-spacing: 2px; margin-bottom: 6px;
+    text-align: center;
+  }
+  .creation-name-input {
+    width: 100%; padding: 10px 12px;
+    font-family: inherit; font-size: 9px;
+    background: rgba(10,10,15,0.8);
+    border: 1px solid #1a1a2a;
+    color: #e0e0e0;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  .creation-name-input:focus {
+    border-color: #00f0ff;
+    box-shadow: 0 0 10px rgba(0,240,255,0.1);
+  }
+  .creation-name-input::placeholder { color: #333; }
+  .creation-char-count {
+    font-size: 6px; color: #2ecc71;
+    text-align: center; margin-top: 4px;
+  }
+
+  /* Despertar button */
+  .creation-btn-area {
+    z-index: 3; margin-top: 20px;
+  }
+
+  /* ============================================= */
+  /*  05. GAME SCREEN (Mobile World State)         */
+  /* ============================================= */
+  .game-demo {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* World background (Rayo type demo) */
+  .world-bg {
+    position: absolute; inset: 0;
     background:
-      radial-gradient(ellipse at 20% 30%, rgba(139,37,0,0.04) 0%, transparent 40%),
-      radial-gradient(ellipse at 80% 70%, rgba(139,37,0,0.03) 0%, transparent 30%),
-      radial-gradient(ellipse at 50% 10%, rgba(0,0,0,0.02) 0%, transparent 50%);
-    pointer-events: none;
+      radial-gradient(ellipse at 50% 80%, rgba(0,240,255,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 30% 20%, rgba(0,240,255,0.03) 0%, transparent 40%),
+      linear-gradient(180deg, #080818 0%, #0a0a1a 40%, #0d1020 100%);
+    z-index: 0;
   }
-
-  /* Burnt edges vignette */
-  body.light .loading-demo::after {
+  /* Grid floor effect */
+  .world-bg::after {
     content: '';
-    position: absolute; inset: 0; z-index: 1;
-    background: radial-gradient(ellipse at center, transparent 50%, rgba(80,50,10,0.15) 100%);
-    pointer-events: none;
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 40%;
+    background:
+      linear-gradient(transparent, rgba(0,240,255,0.02)),
+      repeating-linear-gradient(90deg, rgba(0,240,255,0.03) 0px, rgba(0,240,255,0.03) 1px, transparent 1px, transparent 40px),
+      repeating-linear-gradient(0deg, rgba(0,240,255,0.02) 0px, rgba(0,240,255,0.02) 1px, transparent 1px, transparent 40px);
+    transform: perspective(300px) rotateX(40deg);
+    transform-origin: bottom;
   }
 
-  body.light .loading-logo .top {
-    color: #2a1a0a;
-    text-shadow:
-      0 0 15px rgba(139,105,20,0.3),
-      0 2px 0 #8b6914;
+  /* HUD top bar */
+  .game-hud {
+    position: relative; z-index: 10;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 14px;
+    background: rgba(10,10,15,0.75);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(0,240,255,0.06);
   }
-  body.light .loading-logo .bot {
-    color: #8b2500;
-    text-shadow: 0 0 10px rgba(139,37,0,0.2);
-  }
-  body.light .loading-logo .rune-divider {
-    color: rgba(139,105,20,0.3);
+  .hud-left { display: flex; gap: 12px; align-items: center; }
+  .hud-right { display: flex; gap: 10px; align-items: center; }
+  .hud-item { font-size: 7px; display: flex; align-items: center; gap: 4px; }
+  .hud-fragments { color: #00f0ff; }
+  .hud-diario { color: #b44aff; cursor: pointer; }
+  .hud-mission { color: #f5c542; animation: mission-pulse 2s ease-in-out infinite; }
+  @keyframes mission-pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+  .hud-settings { color: #555; cursor: pointer; font-size: 8px; }
+  .hud-settings:hover { color: #00f0ff; }
+
+  /* Center: sprite area */
+  .game-center {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative; z-index: 5;
   }
 
-  body.light .glyph-ring {
-    border-color: rgba(139,105,20,0.1);
+  /* Sprite placeholder */
+  .game-sprite {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,240,255,0.25), rgba(0,240,255,0.05));
+    box-shadow: 0 0 40px rgba(0,240,255,0.15), 0 0 80px rgba(0,240,255,0.05);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 48px;
+    animation: creature-float 3s ease-in-out infinite;
+    cursor: pointer;
+    position: relative;
   }
-  body.light .glyph-ring::before {
-    color: rgba(139,105,20,0.15);
+  /* Particle ring around sprite */
+  .game-sprite::before {
+    content: '⚡';
+    position: absolute;
+    font-size: 10px; top: -5px; right: 5px;
+    animation: spark 2s ease-in-out infinite;
+    opacity: 0.4;
   }
-  body.light .glyph-ring-inner {
-    border-color: rgba(139,37,0,0.08);
-  }
-
-  body.light .particle {
-    background: #8b6914 !important;
-  }
-  body.light .particle:nth-child(2),
-  body.light .particle:nth-child(4) {
-    background: #8b2500 !important;
-  }
-
-  body.light .loading-bar-outer {
-    background: #d4c090;
-    border-color: #c4a56a;
-  }
-  body.light .loading-bar-fill {
-    background: linear-gradient(90deg, #8b6914, #8b2500);
-    box-shadow: 0 0 8px rgba(139,105,20,0.3);
+  @keyframes spark {
+    0%, 100% { opacity: 0.2; transform: translateY(0); }
+    50% { opacity: 0.6; transform: translateY(-4px); }
   }
 
-  body.light .loading-bar-label {
-    color: #8b7a5a;
+  .game-name {
+    font-size: 8px; color: #e0e0e0;
+    margin-top: 10px; letter-spacing: 2px;
   }
-  body.light .loading-version {
-    color: #b0a080;
-  }
-
-  body.light .rune-corner {
-    color: #8b6914;
-    opacity: 0.2;
+  .game-day {
+    font-size: 6px; color: #444;
+    margin-top: 4px; letter-spacing: 1px;
   }
 
-  /* Light scanlines — parchment grain */
-  body.light::after {
-    background: repeating-linear-gradient(
-      0deg,
-      transparent 0px,
-      transparent 3px,
-      rgba(80,50,10,0.02) 3px,
-      rgba(80,50,10,0.02) 6px
-    );
+  /* Stats below sprite (always visible in S4) */
+  .game-stats {
+    display: flex; gap: 12px;
+    margin-top: 14px;
+  }
+  .stat-mini {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .stat-mini-label { font-size: 6px; }
+  .stat-mini-bar {
+    width: 50px; height: 4px;
+    background: #111; border: 1px solid #1a1a2a;
+    overflow: hidden;
+  }
+  .stat-mini-fill { height: 100%; transition: width 0.3s; }
+  .stat-espiritu .stat-mini-fill { background: #9b59b6; width: 80%; }
+  .stat-pulso .stat-mini-fill { background: #f1c40f; width: 55%; }
+  .stat-esencia .stat-mini-fill { background: #2ecc71; width: 35%; }
+  .stat-mini-val { font-size: 5px; color: #555; }
+
+  /* Bottom nav */
+  .game-bottom-nav {
+    position: relative; z-index: 10;
+    display: flex; justify-content: center; gap: 40px;
+    padding: 12px 20px 16px;
+    background: rgba(10,10,15,0.75);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid rgba(0,240,255,0.06);
+  }
+  .nav-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    background: none; border: none; cursor: pointer;
+    font-family: inherit; transition: all 0.3s;
+  }
+  .nav-btn-icon { font-size: 18px; }
+  .nav-btn-label { font-size: 5px; color: #555; letter-spacing: 2px; text-transform: uppercase; }
+  .nav-btn:hover .nav-btn-label { color: #00f0ff; }
+  .nav-btn.active .nav-btn-label { color: #00f0ff; }
+
+  /* ============================================= */
+  /*  06. CHAT SCREEN                              */
+  /* ============================================= */
+  .chat-demo {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    position: relative;
+    background: #0a0a0f;
+    overflow: hidden;
   }
 
-  /* Light nav stays dark */
-  body.light .label { color: #666; }
-  body.light .note { color: #555; }
+  /* Chat header */
+  .chat-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 14px;
+    background: rgba(10,10,15,0.9);
+    border-bottom: 1px solid #1a1a2a;
+    z-index: 10;
+  }
+  .chat-header-name { font-size: 8px; color: #00f0ff; letter-spacing: 2px; }
+  .chat-header-stats { font-size: 6px; color: #555; display: flex; gap: 8px; }
+  .chat-header-close {
+    font-size: 10px; color: #555; cursor: pointer;
+    background: none; border: none; font-family: inherit;
+  }
+  .chat-header-close:hover { color: #ff4444; }
+
+  /* Chat messages area */
+  .chat-messages {
+    flex: 1; overflow-y: auto;
+    padding: 16px 12px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+
+  .chat-bubble {
+    max-width: 80%; padding: 10px 12px;
+    font-size: 7px; line-height: 2;
+    position: relative;
+  }
+  .chat-bubble.regenmon {
+    align-self: flex-start;
+    background: rgba(0,240,255,0.04);
+    border: 1px solid rgba(0,240,255,0.1);
+    color: #c0c0c0;
+    border-left: 2px solid rgba(0,240,255,0.3);
+  }
+  .chat-bubble.user {
+    align-self: flex-end;
+    background: rgba(180,74,255,0.04);
+    border: 1px solid rgba(180,74,255,0.08);
+    color: #b0b0b0;
+    border-right: 2px solid rgba(180,74,255,0.2);
+    text-align: right;
+  }
+
+  /* Typing indicator */
+  .chat-typing {
+    align-self: flex-start;
+    display: flex; gap: 4px; padding: 10px 16px;
+  }
+  .typing-dot {
+    width: 4px; height: 4px;
+    background: #00f0ff; border-radius: 50%;
+    animation: typing-bounce 1.4s infinite;
+    opacity: 0.5;
+  }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typing-bounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.3; }
+    40% { transform: translateY(-6px); opacity: 0.8; }
+  }
+
+  /* Chat input */
+  .chat-input-area {
+    padding: 10px 12px;
+    background: rgba(10,10,15,0.9);
+    border-top: 1px solid #1a1a2a;
+    display: flex; gap: 8px; align-items: center;
+    z-index: 10;
+  }
+  .chat-input-field {
+    flex: 1; padding: 8px 10px;
+    font-family: inherit; font-size: 7px;
+    background: rgba(20,20,30,0.8);
+    border: 1px solid #1a1a2a;
+    color: #e0e0e0;
+    outline: none;
+  }
+  .chat-input-field:focus { border-color: #00f0ff40; }
+  .chat-input-field::placeholder { color: #333; }
+  .chat-send {
+    font-family: inherit; font-size: 8px;
+    padding: 8px 12px;
+    background: rgba(0,240,255,0.08);
+    border: 1px solid rgba(0,240,255,0.2);
+    color: #00f0ff; cursor: pointer;
+  }
+  .chat-send:hover { background: rgba(0,240,255,0.15); }
+  .chat-attach {
+    font-size: 12px; color: #555; cursor: pointer;
+    background: none; border: none;
+  }
+  .chat-attach:hover { color: #b44aff; }
+
+  /* ============================================= */
+  /*  07. LEADERBOARD — Regeneración Global        */
+  /* ============================================= */
+  .leaderboard-demo {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    position: relative;
+    background: #0a0a0f;
+    overflow: hidden;
+  }
+
+  .lb-header {
+    padding: 14px;
+    background: rgba(10,10,15,0.9);
+    border-bottom: 1px solid #1a1a2a;
+    text-align: center;
+    z-index: 10;
+  }
+  .lb-title {
+    font-size: 8px; color: #f5c542;
+    letter-spacing: 3px;
+    text-shadow: 0 0 10px rgba(245,197,66,0.3);
+  }
+  .lb-subtitle {
+    font-size: 6px; color: #444;
+    letter-spacing: 2px; margin-top: 6px;
+  }
+
+  /* Filter tabs */
+  .lb-filters {
+    display: flex; gap: 4px; padding: 10px 14px;
+    border-bottom: 1px solid #111;
+  }
+  .lb-filter {
+    font-family: inherit; font-size: 6px; padding: 4px 8px;
+    background: transparent; border: 1px solid #1a1a2a;
+    color: #444; cursor: pointer;
+  }
+  .lb-filter.active { color: #f5c542; border-color: #f5c54260; background: rgba(245,197,66,0.05); }
+
+  /* Entries */
+  .lb-list {
+    flex: 1; overflow-y: auto;
+    padding: 8px 14px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .lb-entry {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid #1a1a2a;
+    background: rgba(10,10,15,0.6);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .lb-entry:hover {
+    border-color: rgba(0,240,255,0.15);
+    background: rgba(0,240,255,0.02);
+  }
+  .lb-entry.self {
+    border-color: rgba(245,197,66,0.2);
+    background: rgba(245,197,66,0.03);
+  }
+  .lb-rank {
+    font-size: 8px; color: #333;
+    width: 24px; text-align: center;
+  }
+  .lb-entry:nth-child(1) .lb-rank { color: #f5c542; }
+  .lb-entry:nth-child(2) .lb-rank { color: #c0c0c0; }
+  .lb-entry:nth-child(3) .lb-rank { color: #cd7f32; }
+  .lb-sprite {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .lb-sprite.rayo-s { background: rgba(0,240,255,0.1); box-shadow: 0 0 8px rgba(0,240,255,0.1); }
+  .lb-sprite.flama-s { background: rgba(255,107,53,0.1); box-shadow: 0 0 8px rgba(255,107,53,0.1); }
+  .lb-sprite.hielo-s { background: rgba(180,74,255,0.1); box-shadow: 0 0 8px rgba(180,74,255,0.1); }
+  .lb-info { flex: 1; }
+  .lb-name { font-size: 7px; color: #e0e0e0; }
+  .lb-type { font-size: 5px; color: #555; margin-top: 2px; }
+  .lb-progress-bar {
+    width: 100%; height: 3px;
+    background: #111; margin-top: 4px;
+    overflow: hidden;
+  }
+  .lb-progress-fill { height: 100%; background: linear-gradient(90deg, #00f0ff, #b44aff); }
+  .lb-points {
+    font-size: 6px; color: #555;
+    text-align: right;
+  }
+
+  /* Social bottom nav */
+  .lb-bottom-nav {
+    display: flex; justify-content: space-around;
+    padding: 10px; z-index: 10;
+    background: rgba(10,10,15,0.9);
+    border-top: 1px solid #1a1a2a;
+  }
+  .lb-nav-item {
+    font-size: 6px; color: #555;
+    text-align: center; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+  }
+  .lb-nav-item.active { color: #f5c542; }
+  .lb-nav-icon { font-size: 14px; }
+  .lb-badge {
+    display: inline-block;
+    width: 12px; height: 12px;
+    background: #f6464f;
+    border-radius: 50%;
+    font-size: 5px; color: white;
+    line-height: 12px; text-align: center;
+    position: relative; top: -8px; left: 4px;
+  }
+
+  /* ============================================= */
+  /*  08. PHOTO SCREEN                             */
+  /* ============================================= */
+  .photo-demo {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative;
+    background: radial-gradient(ellipse at 50% 50%, #0d0d1a 0%, #0a0a0f 70%);
+    overflow: hidden;
+    padding: 20px;
+  }
+  .photo-icon {
+    font-size: 48px;
+    animation: creature-float 3s ease-in-out infinite;
+    opacity: 0.6;
+    margin-bottom: 20px;
+  }
+  .photo-prompt {
+    font-size: 8px; color: #b44aff;
+    text-align: center; letter-spacing: 2px;
+    line-height: 2.2;
+    text-shadow: 0 0 10px rgba(180,74,255,0.2);
+    margin-bottom: 8px;
+  }
+  .photo-mission {
+    font-size: 6px; color: #f5c542;
+    text-align: center; letter-spacing: 1px;
+    line-height: 2;
+    padding: 8px 14px;
+    border: 1px solid rgba(245,197,66,0.15);
+    background: rgba(245,197,66,0.03);
+    margin-bottom: 24px;
+    max-width: 280px;
+  }
+  .photo-buttons {
+    display: flex; gap: 12px;
+  }
+  .photo-privacy {
+    font-size: 5px; color: #333;
+    text-align: center; margin-top: 20px;
+    line-height: 2;
+    max-width: 260px;
+  }
+  .photo-back {
+    position: absolute; top: 14px; left: 14px;
+    font-size: 7px; color: #555; cursor: pointer;
+    background: none; border: none; font-family: inherit;
+  }
+  .photo-back:hover { color: #00f0ff; }
+
+  /* ============================================= */
+  /*  LIGHT THEME OVERRIDES                        */
+  /* ============================================= */
+  body.light .phone { border-color: #c4a56a; box-shadow: 0 0 30px rgba(139,105,20,0.1); }
+  body.light .loading-demo,
+  body.light .title-demo,
+  body.light .story-demo,
+  body.light .creation-demo,
+  body.light .photo-demo {
+    background: radial-gradient(ellipse at 50% 40%, #f4e8c1 0%, #e8d5a3 50%, #d4c090 100%);
+  }
+  body.light .loading-logo .top, body.light .title-text .main { color: #2a1a0a; text-shadow: 0 0 15px rgba(139,105,20,0.3), 0 2px 0 #8b6914; }
+  body.light .loading-logo .bot, body.light .title-text .sub { color: #8b2500; text-shadow: 0 0 10px rgba(139,37,0,0.2); }
+  body.light .loading-logo .rune-divider, body.light .title-text .rune-line { color: rgba(139,105,20,0.3); }
+  body.light .glyph-ring, body.light .title-circle { border-color: rgba(139,105,20,0.1); }
+  body.light .glyph-ring::before { color: rgba(139,105,20,0.15); }
+  body.light .glyph-ring-inner, body.light .title-circle-2 { border-color: rgba(139,37,0,0.08); }
+  body.light .particle { background: #8b6914 !important; }
+  body.light .loading-bar-outer { background: #d4c090; border-color: #c4a56a; }
+  body.light .loading-bar-fill { background: linear-gradient(90deg, #8b6914, #8b2500); }
+  body.light .loading-bar-label, body.light .loading-version { color: #b0a080; }
+  body.light .rune-corner { color: #8b6914; opacity: 0.2; }
+  body.light .press-start { color: #8b2500; text-shadow: 0 0 10px rgba(139,37,0,0.3); }
+  body.light .title-creature.rayo { background: radial-gradient(circle, rgba(139,105,20,0.3), transparent); box-shadow: 0 0 20px rgba(139,105,20,0.15); }
+  body.light .title-creature.flama { background: radial-gradient(circle, rgba(180,80,20,0.3), transparent); box-shadow: 0 0 20px rgba(180,80,20,0.15); }
+  body.light .title-creature.hielo { background: radial-gradient(circle, rgba(139,37,0,0.2), transparent); box-shadow: 0 0 20px rgba(139,37,0,0.1); }
+  body.light .story-dialog { background: rgba(244,232,193,0.95); border-color: #c4a56a; }
+  body.light .story-dialog::before { background: linear-gradient(90deg, transparent, rgba(139,105,20,0.2), transparent); }
+  body.light .story-dialog::after { background: linear-gradient(90deg, transparent, rgba(139,37,0,0.1), transparent); }
+  body.light .story-text { color: #3a2a1a; }
+  body.light .story-text em { color: #8b6914; }
+  body.light .story-text strong { color: #8b2500; }
+  body.light .story-text .typed { border-color: #8b6914; }
+  body.light .story-continue { color: #8b2500; }
+  body.light .story-star { background: rgba(139,105,20,0.3); }
+  body.light .creation-title { color: #8b2500; }
+  body.light .creature-type-name { color: #2a1a0a !important; }
+  body.light .creature-type-desc { color: #6a5a4a; }
+  body.light .creation-name-input { background: rgba(244,232,193,0.8); border-color: #c4a56a; color: #2a1a0a; }
+  body.light .creation-name-input:focus { border-color: #8b6914; box-shadow: 0 0 10px rgba(139,105,20,0.1); }
+  body.light .creation-char-count { color: #8b6914; }
+  body.light .cyber-btn { color: #8b6914; border-color: #8b6914; text-shadow: none; box-shadow: 0 0 8px rgba(139,105,20,0.1); }
+  body.light .game-demo, body.light .chat-demo, body.light .leaderboard-demo {
+    background: #f4e8c1;
+  }
+  body.light .world-bg { background: linear-gradient(180deg, #e8d5a3 0%, #f4e8c1 40%, #d4c090 100%); }
+  body.light .world-bg::after { background: repeating-linear-gradient(90deg, rgba(139,105,20,0.04) 0px, rgba(139,105,20,0.04) 1px, transparent 1px, transparent 40px); }
+  body.light .game-hud { background: rgba(244,232,193,0.85); border-bottom-color: rgba(139,105,20,0.1); }
+  body.light .hud-fragments { color: #8b6914; }
+  body.light .hud-diario { color: #8b2500; }
+  body.light .hud-settings { color: #999; }
+  body.light .game-sprite { background: radial-gradient(circle, rgba(139,105,20,0.2), rgba(139,105,20,0.05)); box-shadow: 0 0 30px rgba(139,105,20,0.1); }
+  body.light .game-name { color: #2a1a0a; }
+  body.light .game-day { color: #8b7a5a; }
+  body.light .stat-mini-bar { background: #d4c090; border-color: #c4a56a; }
+  body.light .game-bottom-nav { background: rgba(244,232,193,0.85); border-top-color: rgba(139,105,20,0.1); }
+  body.light .nav-btn-label { color: #8b7a5a; }
+  body.light .chat-header { background: rgba(244,232,193,0.95); border-bottom-color: #c4a56a; }
+  body.light .chat-header-name { color: #8b6914; }
+  body.light .chat-header-stats { color: #8b7a5a; }
+  body.light .chat-bubble.regenmon { background: rgba(139,105,20,0.05); border-color: rgba(139,105,20,0.12); border-left-color: rgba(139,105,20,0.3); color: #3a2a1a; }
+  body.light .chat-bubble.user { background: rgba(139,37,0,0.04); border-color: rgba(139,37,0,0.08); border-right-color: rgba(139,37,0,0.2); color: #4a3a2a; }
+  body.light .typing-dot { background: #8b6914; }
+  body.light .chat-input-area { background: rgba(244,232,193,0.95); border-top-color: #c4a56a; }
+  body.light .chat-input-field { background: rgba(228,216,183,0.8); border-color: #c4a56a; color: #2a1a0a; }
+  body.light .chat-send { background: rgba(139,105,20,0.08); border-color: rgba(139,105,20,0.2); color: #8b6914; }
+  body.light .lb-header { background: rgba(244,232,193,0.95); border-bottom-color: #c4a56a; }
+  body.light .lb-title { color: #8b2500; }
+  body.light .lb-subtitle { color: #8b7a5a; }
+  body.light .lb-filter { border-color: #c4a56a; color: #8b7a5a; }
+  body.light .lb-filter.active { color: #8b2500; border-color: rgba(139,37,0,0.3); background: rgba(139,37,0,0.05); }
+  body.light .lb-entry { border-color: #c4a56a; background: rgba(244,232,193,0.5); }
+  body.light .lb-entry:hover { border-color: rgba(139,105,20,0.3); background: rgba(139,105,20,0.05); }
+  body.light .lb-name { color: #2a1a0a; }
+  body.light .lb-progress-fill { background: linear-gradient(90deg, #8b6914, #8b2500); }
+  body.light .lb-bottom-nav { background: rgba(244,232,193,0.95); border-top-color: #c4a56a; }
+  body.light .lb-nav-item.active { color: #8b2500; }
+  body.light .photo-prompt { color: #8b2500; }
+  body.light .photo-mission { border-color: rgba(139,105,20,0.2); background: rgba(139,105,20,0.05); color: #8b6914; }
+  body.light .photo-privacy { color: #b0a080; }
+
+  /* Light scanlines */
+  body.light::after { background: repeating-linear-gradient(0deg, transparent 0px, transparent 3px, rgba(80,50,10,0.02) 3px, rgba(80,50,10,0.02) 6px); }
+  body.light .label { color: #999; }
+  body.light .note { color: #888; }
 
 </style>
 </head>
@@ -386,9 +993,11 @@
 <div class="preview-nav">
   <button class="active" onclick="show('loading')">Loading</button>
   <button onclick="show('title')">Title</button>
+  <button onclick="show('story')">Story</button>
   <button onclick="show('creation')">Creation</button>
   <button onclick="show('game')">Game</button>
   <button onclick="show('chat')">Chat</button>
+  <button onclick="show('photo')">Photo</button>
   <button onclick="show('leaderboard')">Leaderboard</button>
 
   <button class="theme-toggle active-theme" onclick="toggleTheme(this)">🌑 Dark</button>
@@ -397,71 +1006,375 @@
 
 <div class="screens">
 
-  <!-- LOADING -->
+  <!-- ======== 01. LOADING ======== -->
   <div class="screen-section active" id="s-loading">
     <div class="label">01 — Loading Screen</div>
     <div class="phone">
       <div class="loading-demo">
-        <!-- Rune corners -->
         <span class="rune-corner tl">⟁</span>
         <span class="rune-corner tr">◈</span>
         <span class="rune-corner bl">⟐</span>
         <span class="rune-corner br">⊛</span>
-
-        <!-- Glyph rings -->
         <div class="glyph-ring"></div>
         <div class="glyph-ring-inner"></div>
-
-        <!-- Particles -->
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-
-        <!-- Logo -->
+        <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+        <div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div>
         <div class="loading-logo">
           <div class="top">REGGIE'S</div>
           <div class="bot">A D V E N T U R E</div>
           <div class="rune-divider">⟁ · ◈ · ⟐ · ◇ · ⊛</div>
         </div>
-
-        <!-- Loading bar -->
         <div class="loading-bar-wrap">
           <div class="loading-bar-label">INVOKING...</div>
-          <div class="loading-bar-outer">
-            <div class="loading-bar-fill"></div>
-          </div>
+          <div class="loading-bar-outer"><div class="loading-bar-fill"></div></div>
         </div>
-
         <div class="loading-version">v0.5 — El Encuentro</div>
       </div>
     </div>
-    <div class="note">Cyber-arcane loading. Glyph rings orbit behind logo. Particles drift. Scanlines subtle. Hover logo for glitch.</div>
+    <div class="note">Cyber-arcane loading. Glyph rings orbit. Particles drift. Hover logo for glitch.</div>
   </div>
 
-  <!-- Placeholder screens -->
+  <!-- ======== 02. TITLE ======== -->
   <div class="screen-section" id="s-title">
     <div class="label">02 — Title Screen</div>
-    <div class="phone"><div class="loading-demo" style="opacity:0.3"><div class="loading-logo"><div class="top" style="font-size:14px">COMING NEXT</div></div></div></div>
+    <div class="phone">
+      <div class="title-demo">
+        <span class="rune-corner tl">⟁</span>
+        <span class="rune-corner tr">◈</span>
+        <span class="rune-corner bl">⟐</span>
+        <span class="rune-corner br">⊛</span>
+
+        <div class="title-circle"></div>
+        <div class="title-circle-2"></div>
+
+        <!-- Three creature silhouettes -->
+        <div class="title-creatures">
+          <div class="title-creature rayo"></div>
+          <div class="title-creature flama"></div>
+          <div class="title-creature hielo"></div>
+        </div>
+
+        <div class="title-text">
+          <div class="main">REGGIE'S</div>
+          <div class="sub">A D V E N T U R E</div>
+          <div class="rune-line">◈ · El Encuentro · ◈</div>
+        </div>
+
+        <div class="press-start">▶ PRESS START</div>
+
+        <div class="title-bottom">
+          <span>v0.5</span>
+          <span class="title-music">🎵 ON</span>
+        </div>
+      </div>
+    </div>
+    <div class="note">Three Regenmon orbs float behind title. Runic circles orbit slowly. "PRESS START" blinks in gold. Music toggle bottom-right.</div>
   </div>
+
+  <!-- ======== 03. STORY / TYPEWRITER ======== -->
+  <div class="screen-section" id="s-story">
+    <div class="label">03 — Story (Typewriter)</div>
+    <div class="phone">
+      <div class="story-demo">
+        <div class="nebula"></div>
+        <div class="story-stars">
+          <div class="story-star"></div><div class="story-star"></div><div class="story-star"></div>
+          <div class="story-star"></div><div class="story-star"></div><div class="story-star"></div>
+        </div>
+
+        <span class="rune-corner tl">⟁</span>
+        <span class="rune-corner tr">◈</span>
+
+        <div class="story-dialog">
+          <div class="story-text">
+            En un rincón olvidado del <em>mundo digital</em>, una señal se enciende... algo quiere <strong>despertar</strong>.
+            <br><br>
+            Un fragmento de <em>energía antigua</em> — de un tiempo en que la información fluía como <em>ríos de luz</em> y las conexiones eran puras — espera a alguien que le dé forma.
+            <br><br>
+            Ese alguien... <span class="typed">eres tú.</span>
+          </div>
+          <div class="story-continue">Continuar ▶</div>
+        </div>
+      </div>
+    </div>
+    <div class="note">Starfield background with subtle nebula glow. NES dialog box with typewriter text. Lore keywords highlighted in cyan and gold. Cursor blinks at text end.</div>
+  </div>
+
+  <!-- ======== 04. CREATION ======== -->
   <div class="screen-section" id="s-creation">
-    <div class="label">03 — Creation</div>
-    <div class="phone"><div class="loading-demo" style="opacity:0.3"><div class="loading-logo"><div class="top" style="font-size:14px">COMING NEXT</div></div></div></div>
+    <div class="label">04 — Creation Screen</div>
+    <div class="phone">
+      <div class="creation-demo">
+        <span class="rune-corner tl">⟁</span>
+        <span class="rune-corner tr">◈</span>
+        <span class="rune-corner bl">⟐</span>
+        <span class="rune-corner br">⊛</span>
+
+        <div class="creation-title">CREA TU REGENMON</div>
+
+        <div class="carousel">
+          <button class="carousel-arrow">◀</button>
+          <div class="carousel-card">
+            <div class="creature-preview rayo-preview">
+              <span class="creature-emoji">⚡</span>
+            </div>
+            <div class="creature-type-name glow-text-cyan">RAYO</div>
+            <div class="creature-type-title">— El Impulso —</div>
+            <div class="creature-type-desc">La corriente que alguna vez fue el flujo limpio de información. Veloz, directo, chispeante.</div>
+          </div>
+          <button class="carousel-arrow">▶</button>
+        </div>
+
+        <div class="creation-name-area">
+          <div class="creation-name-label">NOMBRE DE TU REGENMON</div>
+          <input class="creation-name-input" type="text" placeholder="ej: Voltik" maxlength="15" value="Voltik">
+          <div class="creation-char-count">6/15</div>
+        </div>
+
+        <div class="creation-btn-area">
+          <button class="cyber-btn gold">⟁ ¡DESPERTAR!</button>
+        </div>
+      </div>
+    </div>
+    <div class="note">Carousel shows one type at a time with glowing orb preview. Arrow keys navigate. Name input with char counter. "¡Despertar!" activates when name is valid + type selected.</div>
   </div>
+
+  <!-- ======== 05. GAME (World State) ======== -->
   <div class="screen-section" id="s-game">
-    <div class="label">04 — Game Mobile</div>
-    <div class="phone"><div class="loading-demo" style="opacity:0.3"><div class="loading-logo"><div class="top" style="font-size:14px">COMING NEXT</div></div></div></div>
+    <div class="label">05 — Game Screen (World)</div>
+    <div class="phone">
+      <div class="game-demo">
+        <div class="world-bg"></div>
+
+        <!-- HUD -->
+        <div class="game-hud">
+          <div class="hud-left">
+            <span class="hud-item hud-fragments">💎 42</span>
+            <span class="hud-item hud-diario">📖</span>
+          </div>
+          <div class="hud-right">
+            <span class="hud-item hud-mission">🎯</span>
+            <span class="hud-settings">⚙️</span>
+          </div>
+        </div>
+
+        <!-- Center -->
+        <div class="game-center">
+          <div class="game-sprite">⚡</div>
+          <div class="game-name">「VOLTIK」</div>
+          <div class="game-day">Día 7 de aventura</div>
+
+          <div class="game-stats">
+            <div class="stat-mini stat-espiritu">
+              <span class="stat-mini-label">🔮</span>
+              <div class="stat-mini-bar"><div class="stat-mini-fill"></div></div>
+              <span class="stat-mini-val">80</span>
+            </div>
+            <div class="stat-mini stat-pulso">
+              <span class="stat-mini-label">💛</span>
+              <div class="stat-mini-bar"><div class="stat-mini-fill"></div></div>
+              <span class="stat-mini-val">55</span>
+            </div>
+            <div class="stat-mini stat-esencia">
+              <span class="stat-mini-label">🌱</span>
+              <div class="stat-mini-bar"><div class="stat-mini-fill"></div></div>
+              <span class="stat-mini-val">35</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom nav -->
+        <div class="game-bottom-nav">
+          <button class="nav-btn">
+            <span class="nav-btn-icon">💬</span>
+            <span class="nav-btn-label">CHAT</span>
+          </button>
+          <button class="nav-btn">
+            <span class="nav-btn-icon">📷</span>
+            <span class="nav-btn-label">FOTO</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="note">Compact HUD (fragments, diario, mission, settings). Sprite floats center with mini stats below. Tap sprite for purify overlay. Bottom nav: Chat + Photo. Grid floor = digital world.</div>
   </div>
+
+  <!-- ======== 06. CHAT ======== -->
   <div class="screen-section" id="s-chat">
-    <div class="label">05 — Chat</div>
-    <div class="phone"><div class="loading-demo" style="opacity:0.3"><div class="loading-logo"><div class="top" style="font-size:14px">COMING NEXT</div></div></div></div>
+    <div class="label">06 — Chat Screen</div>
+    <div class="phone">
+      <div class="chat-demo">
+        <!-- Header -->
+        <div class="chat-header">
+          <div>
+            <div class="chat-header-name">⚡ VOLTIK</div>
+            <div class="chat-header-stats">🔮 80 · 💛 55 · 🌱 35</div>
+          </div>
+          <button class="chat-header-close">✕</button>
+        </div>
+
+        <!-- Messages -->
+        <div class="chat-messages">
+          <div class="chat-bubble regenmon">
+            ¡Hey! ⚡ Algo se siente diferente hoy... como si las corrientes estuvieran más claras. ¿Sentiste eso?
+          </div>
+          <div class="chat-bubble user">
+            Hola Voltik! Sí, hoy fue un buen día. Terminé un proyecto que tenía pendiente.
+          </div>
+          <div class="chat-bubble regenmon">
+            ¡¿Un proyecto?! 💫 Cuéntame más... ¿de qué era? Me encantan las cosas que fluyen rápido, como los datos buenos.
+          </div>
+          <div class="chat-bubble user">
+            Era una app web, la logré deployar por fin 🚀
+          </div>
+          <div class="chat-bubble regenmon">
+            ✨ ¡Eso es como... como cuando un río encuentra su camino! Siento la velocidad... algo se regenera cuando tú creas. ⚡
+          </div>
+
+          <!-- Typing -->
+          <div class="chat-typing">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+          </div>
+        </div>
+
+        <!-- Input -->
+        <div class="chat-input-area">
+          <button class="chat-attach">📎</button>
+          <input class="chat-input-field" type="text" placeholder="Háblale a Voltik...">
+          <button class="chat-send">▶</button>
+        </div>
+      </div>
+    </div>
+    <div class="note">Full mobile overlay chat. Compact stats in header. Cyan-tinted Regenmon bubbles (left), purple user bubbles (right). Typing indicator. 📎 opens photo picker. ✕ returns to World.</div>
   </div>
+
+  <!-- ======== 07. PHOTO (Pre-Camera) ======== -->
+  <div class="screen-section" id="s-photo">
+    <div class="label">07 — Photo (Pre-Camera)</div>
+    <div class="phone">
+      <div class="photo-demo">
+        <button class="photo-back">← Volver</button>
+
+        <span class="rune-corner tl">⟁</span>
+        <span class="rune-corner br">⊛</span>
+
+        <div class="photo-icon">📸</div>
+
+        <div class="photo-prompt">
+          Comparte una memoria<br>del mundo real
+        </div>
+
+        <div class="photo-mission">
+          🎯 Misión activa:<br>
+          "¿Puedes mostrarme algo que<br>se mueva muy rápido?"
+        </div>
+
+        <div class="photo-buttons">
+          <button class="cyber-btn">📸 CÁMARA</button>
+          <button class="cyber-btn purple">🖼️ GALERÍA</button>
+        </div>
+
+        <div class="photo-privacy">
+          🔒 Tus fotos nunca se almacenan.<br>
+          Solo las emociones que generan.
+        </div>
+      </div>
+    </div>
+    <div class="note">Full-screen pre-camera. Shows active mission. Two capture options. Privacy notice on first time. Cooldown timer would show here when active.</div>
+  </div>
+
+  <!-- ======== 08. LEADERBOARD ======== -->
   <div class="screen-section" id="s-leaderboard">
-    <div class="label">06 — Leaderboard</div>
-    <div class="phone"><div class="loading-demo" style="opacity:0.3"><div class="loading-logo"><div class="top" style="font-size:14px">COMING NEXT</div></div></div></div>
+    <div class="label">08 — Regeneración Global</div>
+    <div class="phone">
+      <div class="leaderboard-demo">
+        <div class="lb-header">
+          <div class="lb-title">🌍 REGENERACIÓN GLOBAL</div>
+          <div class="lb-subtitle">Habitantes del mundo digital</div>
+        </div>
+
+        <div class="lb-filters">
+          <button class="lb-filter active">⭐ Puntos</button>
+          <button class="lb-filter">🍊 $FRUTA</button>
+          <button class="lb-filter">🆕 Nuevos</button>
+        </div>
+
+        <div class="lb-list">
+          <div class="lb-entry">
+            <span class="lb-rank">1</span>
+            <div class="lb-sprite flama-s">🔥</div>
+            <div class="lb-info">
+              <div class="lb-name">Ignis</div>
+              <div class="lb-type">Flama · Etapa 4</div>
+              <div class="lb-progress-bar"><div class="lb-progress-fill" style="width:85%"></div></div>
+            </div>
+            <div class="lb-points">1250<br><span style="font-size:5px;color:#333">pts</span></div>
+          </div>
+
+          <div class="lb-entry">
+            <span class="lb-rank">2</span>
+            <div class="lb-sprite hielo-s">❄️</div>
+            <div class="lb-info">
+              <div class="lb-name">Crysta</div>
+              <div class="lb-type">Hielo · Etapa 3</div>
+              <div class="lb-progress-bar"><div class="lb-progress-fill" style="width:62%"></div></div>
+            </div>
+            <div class="lb-points">980<br><span style="font-size:5px;color:#333">pts</span></div>
+          </div>
+
+          <div class="lb-entry self">
+            <span class="lb-rank">3</span>
+            <div class="lb-sprite rayo-s">⚡</div>
+            <div class="lb-info">
+              <div class="lb-name">Voltik <span style="font-size:5px;color:#f5c542">← tú</span></div>
+              <div class="lb-type">Rayo · Etapa 2</div>
+              <div class="lb-progress-bar"><div class="lb-progress-fill" style="width:45%"></div></div>
+            </div>
+            <div class="lb-points">670<br><span style="font-size:5px;color:#333">pts</span></div>
+          </div>
+
+          <div class="lb-entry">
+            <span class="lb-rank">4</span>
+            <div class="lb-sprite flama-s">🔥</div>
+            <div class="lb-info">
+              <div class="lb-name">Pyra</div>
+              <div class="lb-type">Flama · Etapa 2</div>
+              <div class="lb-progress-bar"><div class="lb-progress-fill" style="width:38%"></div></div>
+            </div>
+            <div class="lb-points">520<br><span style="font-size:5px;color:#333">pts</span></div>
+          </div>
+
+          <div class="lb-entry">
+            <span class="lb-rank">5</span>
+            <div class="lb-sprite hielo-s">❄️</div>
+            <div class="lb-info">
+              <div class="lb-name">Glacium</div>
+              <div class="lb-type">Hielo · Etapa 1</div>
+              <div class="lb-progress-bar"><div class="lb-progress-fill" style="width:22%"></div></div>
+            </div>
+            <div class="lb-points">310<br><span style="font-size:5px;color:#333">pts</span></div>
+          </div>
+        </div>
+
+        <div class="lb-bottom-nav">
+          <div class="lb-nav-item">
+            <span class="lb-nav-icon">💬</span>
+            <span>Chat</span>
+          </div>
+          <div class="lb-nav-item">
+            <span class="lb-nav-icon">📷</span>
+            <span>Foto</span>
+          </div>
+          <div class="lb-nav-item active">
+            <span class="lb-nav-icon">🌍<span class="lb-badge">3</span></span>
+            <span>Social</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note">Lore-friendly leaderboard. Filter by points/$FRUTA/newest. "← tú" highlights your entry. Tap any entry → public profile. Badge on 🌍 shows unread social events. Bottom nav = 3-state triangle + social.</div>
   </div>
 
 </div>
@@ -473,15 +1386,10 @@ function show(id) {
   document.querySelectorAll('.preview-nav button:not(.theme-toggle)').forEach(b => b.classList.remove('active'));
   event.target.classList.add('active');
 }
-
 function toggleTheme(btn) {
   document.querySelectorAll('.theme-toggle').forEach(b => b.classList.remove('active-theme'));
   btn.classList.add('active-theme');
-  if (btn.textContent.includes('Papiro')) {
-    document.body.className = 'light';
-  } else {
-    document.body.className = '';
-  }
+  document.body.className = btn.textContent.includes('Papiro') ? 'light' : '';
 }
 </script>
 
