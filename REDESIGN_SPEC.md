@@ -54,13 +54,13 @@ Preview-first en HTML standalone → luego implementar en Next.js components.
 
 | Token | Size | Uso |
 |-------|------|-----|
-| `--fs-xs` | 0.625rem (10px) | Labels mínimos, version |
-| `--fs-sm` | 0.75rem (12px) | Info secundaria |
-| `--fs-base` | 0.875rem (14px) | Texto general, botones |
-| `--fs-lg` | 1.125rem (18px) | Subtítulos |
-| `--fs-xl` | 1.375rem (22px) | Títulos de pantalla |
-| `--fs-2xl` | 1.875rem (30px) | Logo/título principal |
-| `--fs-3xl` | 2.5rem (40px) | Impacto (Loading, Fractura) |
+| `--fs-xs` | 0.75rem | Labels mínimos, version |
+| `--fs-sm` | 0.875rem | Info secundaria |
+| `--fs-base` | 1rem | Texto general, botones |
+| `--fs-lg` | 1.25rem | Subtítulos |
+| `--fs-xl` | 1.5rem | Títulos de pantalla |
+| `--fs-2xl` | 2rem | Logo/título principal |
+| `--fs-3xl` | 2.75rem | Impacto (Loading, Fractura) |
 
 > **Nota:** Usamos `rem` para accesibilidad — respeta la config del navegador del usuario.
 > Press Start 2P renderiza ~30% más pequeño que otras fuentes, los valores están compensados.
