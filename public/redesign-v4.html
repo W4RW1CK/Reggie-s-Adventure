@@ -328,8 +328,12 @@ body.light .particle {
 }
 
 @keyframes bar-glow-pulse {
-  0%, 100% { box-shadow: 0 0 4px rgba(0,240,255,0.3); }
-  50% { box-shadow: 0 0 12px rgba(0,240,255,0.6), 0 0 20px rgba(0,240,255,0.2); }
+  0%, 100% { box-shadow: 0 0 4px rgba(0,240,255,0.3); filter: brightness(1); }
+  50% { box-shadow: 0 0 16px rgba(0,240,255,0.8), 0 0 30px rgba(0,240,255,0.3); filter: brightness(1.4); }
+}
+@keyframes loading-pulse-bg {
+  0%, 100% { background: var(--cyan); }
+  50% { background: #66f7ff; }
 }
 
 @keyframes spark-fly {
@@ -415,7 +419,7 @@ body.light .particle {
   height: 100%;
   background: var(--cyan);
   width: 0%;
-  animation: bar-fill 2.5s ease-out forwards, bar-glow-pulse 1s infinite;
+  animation: bar-fill 2.5s ease-out forwards, bar-glow-pulse 1.2s infinite, loading-pulse-bg 1.2s infinite;
   position: relative;
 }
 .loading-bar-container::after {
@@ -666,7 +670,9 @@ body.light .title-vignette {
   line-height: 2.4;
   color: var(--cyan);
   text-shadow: 0 0 5px rgba(0,240,255,0.3);
-  min-height: 9.375rem;
+  min-height: 12rem;
+  height: 12rem;
+  overflow-y: auto;
 }
 
 .typewriter-cursor {
@@ -1490,11 +1496,16 @@ body.light .type-hielo-particles .type-particle { background: var(--ink-dark); b
 }
 .world-sprite:active { transform: scale(0.9); }
 .world-stats {
-  display: flex; flex-direction: column; gap: 0.5rem;
-  padding: 0.75rem; background: var(--surface-2);
-  border-top: 3px solid var(--border);
-  border-bottom: 3px solid var(--border);
+  display: flex; flex-direction: column; gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  margin: 0 0.75rem;
+  background: rgba(17,17,25,0.92);
+  border: 3px solid var(--border);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 15px rgba(0,240,255,0.05);
   z-index: 2;
+  position: relative;
+  margin-top: -1.5rem;
+  backdrop-filter: blur(4px);
 }
 .stat-bar-row {
   display: flex; align-items: center; gap: 0.5rem;
@@ -1516,11 +1527,17 @@ body.light .type-hielo-particles .type-particle { background: var(--ink-dark); b
 
 .world-actions {
   display: flex; justify-content: center; gap: 0.5rem;
-  padding: 0.5rem; z-index: 2;
+  padding: 0.75rem 0.75rem; z-index: 2;
+  margin: 0 0.75rem;
+  background: rgba(17,17,25,0.92);
+  border: 3px solid var(--border);
+  border-top: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  flex-wrap: wrap;
 }
 .world-action-btn {
   font-family: inherit; font-size: var(--fs-xs);
-  padding: 0.5em 0.75em; background: var(--surface);
+  padding: 0.65em 0.9em; background: var(--surface);
   color: var(--text-dim); border: 3px solid var(--border);
   cursor: pointer; box-shadow: 3px 3px 0 #000;
   transition: all 0.1s;
@@ -1532,6 +1549,25 @@ body.light .type-hielo-particles .type-particle { background: var(--ink-dark); b
   display: flex; z-index: 2;
   border-top: 3px solid var(--border);
   background: var(--surface-2);
+}
+.world-hud-settings {
+  font-family: inherit; font-size: var(--fs-xs);
+  background: transparent; color: var(--text-dim);
+  border: 2px solid var(--border); padding: 0.3em 0.5em;
+  cursor: pointer; transition: all 0.2s;
+}
+.world-hud-settings:hover { color: var(--cyan); border-color: var(--cyan); }
+.world-missions-indicator {
+  font-size: var(--fs-xs); color: var(--gold);
+  background: rgba(245,197,66,0.1); border: 2px solid rgba(245,197,66,0.3);
+  padding: 0.2em 0.5em; cursor: pointer;
+  transition: all 0.2s; position: relative;
+}
+.world-missions-indicator:hover { border-color: var(--gold); }
+.world-missions-indicator .mission-count {
+  display: inline-block; background: var(--red); color: #fff;
+  font-size: 0.35rem; padding: 0.1em 0.35em; margin-left: 0.3em;
+  border: 1px solid #000; vertical-align: middle;
 }
 .world-nav-btn {
   flex: 1; font-family: inherit; font-size: var(--fs-xs);
@@ -2117,7 +2153,11 @@ body.light .world-landscape {
   background: linear-gradient(180deg, #e8d5a0 0%, #d4c08a 40%, var(--surface-papiro) 100%);
 }
 body.light .world-landscape-label { color: var(--border-papiro); }
-body.light .world-stats { background: var(--surface-papiro); border-color: var(--border-papiro); }
+body.light .world-stats { background: rgba(239,224,185,0.95); border-color: var(--border-papiro); box-shadow: 0 4px 15px rgba(139,105,20,0.15); }
+body.light .world-actions { background: rgba(239,224,185,0.95); border-color: var(--border-papiro); }
+body.light .world-hud-settings { color: var(--ink-dark); border-color: var(--border-papiro); }
+body.light .world-hud-settings:hover { color: var(--ink-red); border-color: var(--ink-red); }
+body.light .world-missions-indicator { color: var(--ink-dark); background: rgba(139,105,20,0.08); border-color: var(--border-papiro); }
 body.light .stat-bar-track { background: var(--bg-papiro); border-color: var(--border-papiro); }
 body.light .stat-bar-fill.spirit { background: var(--ink-red); }
 body.light .stat-bar-fill.pulse { background: var(--ink-dark); }
@@ -2581,10 +2621,12 @@ body.light .public-back-btn:hover { color: var(--ink-red); border-color: var(--i
     <div class="world-hud-left">
       <div class="world-hud-item">💠 <span>42</span></div>
       <div class="world-hud-item">🧠 <span>7</span></div>
+      <div class="world-missions-indicator" onclick="alert('Misiones')">🎯 <span class="mission-count">2</span></div>
     </div>
     <div class="world-hud-right">
       <div class="world-hud-item" style="font-size:0.4rem;">v0.5</div>
       <div class="world-hud-item">👤 <span>Anon</span></div>
+      <button class="world-hud-settings" onclick="showScreen('settings')">⚙️</button>
     </div>
   </div>
   <div class="world-landscape">
@@ -2609,9 +2651,9 @@ body.light .public-back-btn:hover { color: var(--ink-red); border-color: var(--i
     </div>
   </div>
   <div class="world-actions">
-    <button class="world-action-btn" onclick="showScreen('tutorial')">🌀 Purificar</button>
-    <button class="world-action-btn" onclick="showScreen('settings')">⚙️ Settings</button>
-    <button class="world-action-btn" onclick="showScreen('history')">📜 History</button>
+    <button class="world-action-btn" onclick="showScreen('tutorial')">🌀 Purificar Pulso</button>
+    <button class="world-action-btn" onclick="alert('Esencia')">🌱 Nutrir Esencia</button>
+    <button class="world-action-btn" onclick="showScreen('history')">📜 Historial / Memorias</button>
   </div>
   <nav class="world-bottom-nav">
     <button class="world-nav-btn active-tab" onclick="showScreen('chat')">💬 Chat</button>
@@ -2648,8 +2690,8 @@ body.light .public-back-btn:hover { color: var(--ink-red); border-color: var(--i
     <div class="settings-group">
       <button class="settings-action-btn">📝 Cambiar nombre</button>
       <button class="settings-action-btn">🔁 Reiniciar tutorial</button>
-      <button class="settings-action-btn danger">🔄 Reiniciar todo</button>
-      <button class="settings-action-btn danger">🚪 Cerrar sesión</button>
+      <button class="settings-action-btn danger" style="background:rgba(255,59,92,0.12);border-color:var(--red);color:var(--red);font-size:var(--fs-xs);text-transform:uppercase;letter-spacing:0.05em;">⚠️ REINICIAR TODO ⚠️</button>
+      <button class="settings-action-btn" style="color:var(--text-dim);border-color:var(--border);opacity:0.7;">🚪 Cerrar sesión</button>
     </div>
     <div style="text-align:center;margin-top:0.75rem;">
       <button class="glow-btn purple" onclick="showScreen('world')" style="width:auto;padding:0.5em 1.5em;font-size:var(--fs-xs);">← Volver</button>
@@ -2660,8 +2702,12 @@ body.light .public-back-btn:hover { color: var(--ink-red); border-color: var(--i
 <!-- ===== P11: HISTORY ===== -->
 <section id="screen-history" class="screen screen-history">
   <div class="vignette"></div>
-  <div class="history-title">📜 Historial de Memorias</div>
-  <div class="history-list">
+  <div class="history-title">📜 Historial</div>
+  <div style="display:flex;max-width:24rem;width:100%;margin-bottom:0.75rem;gap:0;">
+    <button class="world-action-btn" style="flex:1;text-align:center;color:var(--cyan);border-color:var(--cyan);border-right:none;" onclick="document.getElementById('history-tab-actividad').style.display='flex';document.getElementById('history-tab-memorias').style.display='none';this.style.color='var(--cyan)';this.style.borderColor='var(--cyan)';this.nextElementSibling.style.color='var(--text-dim)';this.nextElementSibling.style.borderColor='var(--border)';">📜 Actividad</button>
+    <button class="world-action-btn" style="flex:1;text-align:center;" onclick="document.getElementById('history-tab-memorias').style.display='flex';document.getElementById('history-tab-actividad').style.display='none';this.style.color='var(--cyan)';this.style.borderColor='var(--cyan)';this.previousElementSibling.style.color='var(--text-dim)';this.previousElementSibling.style.borderColor='var(--border)';">🧠 Memorias</button>
+  </div>
+  <div class="history-list" id="history-tab-actividad">
     <div class="history-item"><span class="history-icon">💬</span><span class="history-desc">Conversaste con Reggie</span><span class="history-delta">+3 💠</span><span class="history-time">2m</span></div>
     <div class="history-item"><span class="history-icon">📷</span><span class="history-desc">Foto: parque al atardecer</span><span class="history-delta">+8 💠</span><span class="history-time">15m</span></div>
     <div class="history-item"><span class="history-icon">🌀</span><span class="history-desc">Purificación completada</span><span class="history-delta">+5 💠</span><span class="history-time">1h</span></div>
@@ -2673,6 +2719,13 @@ body.light .public-back-btn:hover { color: var(--ink-red); border-color: var(--i
     <div class="history-item"><span class="history-icon">📷</span><span class="history-desc">Foto: mascota dormida</span><span class="history-delta">+6 💠</span><span class="history-time">1d</span></div>
     <div class="history-item"><span class="history-icon">🌀</span><span class="history-desc">Primera purificación</span><span class="history-delta">+10 💠</span><span class="history-time">2d</span></div>
   </div>
+  <div class="history-list" id="history-tab-memorias" style="display:none;">
+    <div class="history-item"><span class="history-icon">🧠</span><span class="history-desc">"El parque me hizo sentir nostalgia por algo que nunca viví."</span><span class="history-time">15m</span></div>
+    <div class="history-item"><span class="history-icon">🧠</span><span class="history-desc">"La energía fluye mejor cuando no la fuerzo."</span><span class="history-time">2h</span></div>
+    <div class="history-item"><span class="history-icon">🧠</span><span class="history-desc">"Descubrí que los ríos de luz aún existen — solo hay que saber mirar."</span><span class="history-time">1d</span></div>
+    <div class="history-item"><span class="history-icon">🧠</span><span class="history-desc">"Mi primera fractura fue aterradora. Ahora entiendo que era necesaria."</span><span class="history-time">2d</span></div>
+    <div class="history-item"><span class="history-icon">🧠</span><span class="history-desc">"Algo en la foto del cielo nublado resonó diferente. No todo lo oscuro es malo."</span><span class="history-time">3d</span></div>
+  </div>
   <div style="text-align:center;margin-top:1rem;">
     <button class="glow-btn" onclick="showScreen('world')" style="width:auto;padding:0.5em 1.5em;font-size:var(--fs-xs);">← Volver</button>
   </div>
@@ -2683,7 +2736,6 @@ body.light .public-back-btn:hover { color: var(--ink-red); border-color: var(--i
   <div class="chat-header">
     <div class="chat-header-title">💬 Chat con Reggie</div>
     <div class="chat-header-actions">
-      <button class="chat-header-btn">📎</button>
       <button class="chat-header-btn" onclick="showScreen('world')">✕</button>
     </div>
   </div>
@@ -2702,6 +2754,7 @@ body.light .public-back-btn:hover { color: var(--ink-red); border-color: var(--i
     </div>
   </div>
   <div class="chat-input-bar">
+    <button class="chat-header-btn" style="padding:0.5em;font-size:var(--fs-sm);">📎</button>
     <input class="chat-input" type="text" placeholder="Escribe un mensaje...">
     <button class="chat-send-btn">▶</button>
   </div>
@@ -2710,6 +2763,7 @@ body.light .public-back-btn:hover { color: var(--ink-red); border-color: var(--i
 <!-- ===== P13: CAMERA ===== -->
 <section id="screen-camera" class="screen screen-camera">
   <div class="vignette"></div>
+  <button class="chat-header-btn" onclick="showScreen('world')" style="position:absolute;top:4rem;right:1.25rem;z-index:3;padding:0.4em 0.6em;font-size:var(--fs-sm);">✕</button>
   <div class="camera-frame rune-corners">
     <span class="rune-tl">ᚲ</span><span class="rune-tr">ᛏ</span>
     <span class="rune-bl">ᛉ</span><span class="rune-br">ᚱ</span>
@@ -2779,7 +2833,8 @@ body.light .public-back-btn:hover { color: var(--ink-red); border-color: var(--i
   </div>
   <div class="fractura-sprite-area">⚡</div>
   <div class="fractura-narrative">
-    "Algo cambió en mí... Las corrientes que antes eran caóticas ahora fluyen con propósito. Puedo sentir los fragmentos reorganizándose."
+    ✨ ¡Fractura sellada! ✨<br><br>
+    "La grieta se ha cerrado... Los fragmentos que flotaban en el caos encontraron su lugar. Siento una paz que no conocía — la energía fluye limpia, como ríos de luz. Soy más fuerte ahora."
   </div>
   <div class="fractura-continue">
     <button class="glow-btn gold" onclick="showScreen('world')">Continuar ▶</button>
@@ -2787,7 +2842,7 @@ body.light .public-back-btn:hover { color: var(--ink-red); border-color: var(--i
 </section>
 
 <!-- ===== P16: SOCIAL ===== -->
-<section id="screen-social" class="screen screen-social">
+<section id="screen-social" class="screen screen-social" style="padding-bottom:0;">
   <div class="fragment-particles">
     <div class="fragment-particle" style="left:10%;top:25%;animation-delay:0s;animation-duration:7s;"></div>
     <div class="fragment-particle" style="left:85%;top:60%;animation-delay:2s;animation-duration:6s;"></div>
@@ -2877,10 +2932,19 @@ body.light .public-back-btn:hover { color: var(--ink-red); border-color: var(--i
     <div class="public-evolution">🏆 Forma Final — 420 progreso</div>
     <div class="profile-memories">🧠 156 Memorias</div>
     <div class="public-actions">
-      <button class="public-action-btn">🍊 Alimentar (gasta $FRUTA)</button>
-      <button class="public-action-btn">🎁 Regalar $FRUTA</button>
-      <button class="public-action-btn">💬 Enviar Pulso</button>
+      <div style="display:flex;gap:0.4rem;align-items:center;justify-content:center;">
+        <span style="font-size:var(--fs-xs);color:var(--purple);">💜 Enviar Pulso:</span>
+        <button class="public-action-btn" style="width:auto;padding:0.4em 0.8em;">5</button>
+        <button class="public-action-btn" style="width:auto;padding:0.4em 0.8em;">10</button>
+        <button class="public-action-btn" style="width:auto;padding:0.4em 0.8em;">25</button>
+      </div>
     </div>
+  </div>
+  <div style="max-width:22rem;width:100%;margin-top:0.5rem;">
+    <div style="font-size:var(--fs-xs);color:var(--purple);margin-bottom:0.5rem;border-bottom:1px solid var(--border);padding-bottom:0.25rem;">📣 Feed Público</div>
+    <div class="social-feed-item"><span class="feed-name">Pyra</span> selló una fractura nivel 4 🔥</div>
+    <div class="social-feed-item"><span class="feed-name">Pyra</span> completó la misión "Captura la aurora" 📸</div>
+    <div class="social-feed-item"><span class="feed-name">Pyra</span> alcanzó 150 memorias 🧠</div>
   </div>
   <button class="public-back-btn" onclick="showScreen('leaderboard')">← Volver al Leaderboard</button>
 </section>
