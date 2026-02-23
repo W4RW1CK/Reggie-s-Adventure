@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reggie's Adventure — Redesign Preview v2.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Press Start 2P', monospace;
+    background: #0a0a12;
+    color: #e8e8e8;
+    image-rendering: pixelated;
+    overflow-x: hidden;
+  }
+
+  /* ===== NAV ===== */
+  .preview-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+    background: rgba(10,10,18,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid #222;
+    display: flex; gap: 4px; padding: 8px 12px;
+    overflow-x: auto; flex-wrap: nowrap;
+  }
+  .preview-nav button {
+    font-family: inherit; font-size: 7px; padding: 6px 10px;
+    background: #1a1a2e; color: #888; border: 1px solid #333;
+    cursor: pointer; white-space: nowrap; transition: all 0.2s;
+  }
+  .preview-nav button:hover { color: #fff; border-color: #555; }
+  .preview-nav button.active { color: #f5c542; border-color: #f5c542; background: #1a1a3e; }
+
+  .screens { margin-top: 50px; }
+  .screen-section {
+    display: none; min-height: 100vh;
+    flex-direction: column; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .screen-section.active { display: flex; }
+
+  .label {
+    font-size: 7px; color: #666; letter-spacing: 2px;
+    text-transform: uppercase; margin-bottom: 20px;
+  }
+  .note {
+    font-size: 7px; color: #555; max-width: 500px;
+    text-align: center; line-height: 1.8; margin-top: 20px;
+  }
+
+  /* ===== PHONE FRAME ===== */
+  .phone {
+    width: 375px; height: 667px;
+    border: 3px solid #333; border-radius: 24px;
+    overflow: hidden; position: relative;
+    box-shadow: 0 0 60px rgba(0,0,0,0.5), 0 0 120px rgba(245,197,66,0.03);
+  }
+
+  /* ===== 1. LOADING SCREEN ===== */
+  .loading-demo {
+    width: 100%; height: 100%;
+    background: #06060f;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .loading-demo::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 30%, rgba(245,197,66,0.04) 0%, transparent 70%);
+  }
+  .loading-demo .stars {
+    position: absolute; inset: 0;
+  }
+  .loading-demo .star {
+    position: absolute; color: #f5c542; font-size: 10px;
+    animation: twinkle 2s ease-in-out infinite;
+  }
+  .loading-demo .star:nth-child(1) { top: 15%; left: 20%; animation-delay: 0s; }
+  .loading-demo .star:nth-child(2) { top: 25%; right: 25%; animation-delay: 0.7s; font-size: 8px; }
+  .loading-demo .star:nth-child(3) { top: 10%; left: 60%; animation-delay: 1.2s; font-size: 6px; }
+  .loading-demo .star:nth-child(4) { top: 35%; left: 15%; animation-delay: 0.4s; font-size: 7px; }
+  .loading-demo .star:nth-child(5) { top: 20%; right: 15%; animation-delay: 1.5s; font-size: 5px; }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.3); }
+  }
+
+  .loading-logo {
+    position: relative; z-index: 2; text-align: center;
+    margin-bottom: 60px;
+  }
+  .loading-logo .top {
+    font-size: 28px; color: #f5c542;
+    text-shadow: 0 0 20px rgba(245,197,66,0.4), 0 2px 0 #b8860b;
+    letter-spacing: 4px;
+  }
+  .loading-logo .bot {
+    font-size: 14px; color: #a0a0a0;
+    letter-spacing: 6px; margin-top: 8px;
+  }
+  .loading-logo .divider {
+    display: flex; gap: 6px; justify-content: center; margin-top: 16px;
+  }
+  .loading-logo .divider span {
+    width: 4px; height: 4px; background: #f5c542; opacity: 0.4;
+  }
+  .loading-logo .divider span:nth-child(4) { opacity: 1; width: 8px; }
+
+  .loading-bar-container {
+    position: relative; z-index: 2;
+    width: 240px; height: 12px;
+    background: #111; border: 2px solid #333;
+    overflow: hidden;
+  }
+  .loading-bar-fill {
+    height: 100%; width: 75%;
+    background: linear-gradient(90deg, #f5c542, #e8a830);
+    box-shadow: 0 0 8px rgba(245,197,66,0.3);
+    animation: loadPulse 1.5s ease-in-out infinite;
+  }
+  @keyframes loadPulse {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+  }
+  .loading-text {
+    font-size: 8px; color: #666; margin-top: 12px;
+    letter-spacing: 3px; position: relative; z-index: 2;
+  }
+  .loading-version {
+    position: absolute; bottom: 20px;
+    font-size: 7px; color: #333; letter-spacing: 2px;
+  }
+
+  /* ===== 2. TITLE SCREEN ===== */
+  .title-demo {
+    width: 100%; height: 100%;
+    background: #0a0a1a;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .title-demo::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 80%, rgba(245,197,66,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 20% 20%, rgba(52,152,219,0.04) 0%, transparent 40%),
+      radial-gradient(ellipse at 80% 30%, rgba(231,76,60,0.04) 0%, transparent 40%);
+  }
+  /* Vignette */
+  .title-demo::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.6) 100%);
+    pointer-events: none;
+  }
+
+  .title-main {
+    position: relative; z-index: 2; text-align: center;
+  }
+  .title-main .reggies {
+    font-size: 36px; color: #f5c542;
+    text-shadow: 0 0 30px rgba(245,197,66,0.3), 0 3px 0 #b8860b, 0 4px 0 #8a6508;
+    letter-spacing: 6px;
+    animation: titleFloat 3s ease-in-out infinite;
+  }
+  @keyframes titleFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+  .title-main .adventure {
+    font-size: 16px; color: #e8e8e8;
+    letter-spacing: 10px; margin-top: 8px;
+    text-shadow: 0 1px 0 #666;
+  }
+  .title-divider {
+    display: flex; align-items: center; gap: 12px;
+    margin-top: 20px; position: relative; z-index: 2;
+  }
+  .title-divider .line {
+    width: 50px; height: 1px;
+    background: linear-gradient(90deg, transparent, #f5c542, transparent);
+  }
+  .title-divider .diamond { color: #f5c542; font-size: 8px; }
+
+  .title-version {
+    font-size: 7px; color: #555; margin-top: 16px;
+    letter-spacing: 2px; position: relative; z-index: 2;
+  }
+  .title-press {
+    font-size: 10px; color: #f5c542; margin-top: 40px;
+    letter-spacing: 4px; position: relative; z-index: 2;
+    animation: blink-steps 1s steps(2) infinite;
+  }
+  @keyframes blink-steps { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+  .title-hint {
+    font-size: 6px; color: #444; margin-top: 12px;
+    position: relative; z-index: 2;
+  }
+
+  .title-creatures {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  }
+  .title-creature {
+    position: absolute; opacity: 0.06; font-size: 60px;
+  }
+  .title-creature.c1 { bottom: 10%; left: 5%; animation: floatCreature 4s ease-in-out infinite; }
+  .title-creature.c2 { bottom: 15%; right: 8%; animation: floatCreature 5s ease-in-out infinite reverse; }
+  .title-creature.c3 { top: 15%; right: 12%; animation: floatCreature 3.5s ease-in-out infinite; font-size: 40px; }
+  @keyframes floatCreature {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* ===== 3. GAME SCREEN ===== */
+  .game-demo {
+    width: 100%; height: 100%;
+    background: #1a1a2e;
+    position: relative; overflow: hidden;
+  }
+  .game-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, #1a0a2e 0%, #2a1040 40%, #1a1a2e 100%);
+  }
+  .game-bg-mountains {
+    position: absolute; bottom: 30%; left: 0; right: 0;
+    height: 40%;
+    background:
+      linear-gradient(135deg, #1a0a2e 25%, transparent 25%) -20px 0,
+      linear-gradient(225deg, #1a0a2e 25%, transparent 25%) -20px 0;
+    background-size: 80px 60px;
+    opacity: 0.3;
+  }
+  .game-ground {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 30%;
+    background: linear-gradient(180deg, #0a0a1a, #050510);
+  }
+
+  /* Fracture lines */
+  .fracture-lines {
+    position: absolute; inset: 0; pointer-events: none;
+  }
+  .fracture-line {
+    position: absolute; background: rgba(231,76,60,0.15);
+    box-shadow: 0 0 8px rgba(231,76,60,0.2);
+  }
+  .fl1 { top: 10%; left: 5%; width: 2px; height: 80%; transform: rotate(5deg); }
+  .fl2 { top: 5%; right: 10%; width: 2px; height: 90%; transform: rotate(-8deg); }
+  .fl3 { top: 20%; left: 30%; width: 1px; height: 60%; transform: rotate(12deg); opacity: 0.5; }
+
+  /* HUD */
+  .game-hud {
+    position: absolute; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 14px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 100%);
+    z-index: 10;
+  }
+  .hud-left { display: flex; gap: 10px; align-items: center; }
+  .hud-right { display: flex; gap: 8px; align-items: center; }
+  .hud-pill {
+    display: flex; align-items: center; gap: 4px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px; padding: 4px 10px;
+    font-size: 8px;
+  }
+  .hud-btn {
+    width: 30px; height: 30px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .hud-btn:hover { background: rgba(255,255,255,0.15); transform: scale(1.1); }
+
+  /* Sprite area */
+  .game-sprite-area {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -55%);
+    z-index: 5;
+  }
+  .sprite-placeholder {
+    width: 140px; height: 140px;
+    background: radial-gradient(circle, rgba(245,197,66,0.15), transparent 70%);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 80px;
+    animation: spriteFloat 2.5s ease-in-out infinite;
+  }
+  @keyframes spriteFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  /* Stats below sprite */
+  .game-stats {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, 60px);
+    z-index: 6; width: 220px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .stat-row {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .stat-icon { font-size: 10px; width: 16px; text-align: center; }
+  .stat-bar-bg {
+    flex: 1; height: 6px; background: rgba(255,255,255,0.08);
+    border-radius: 3px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .stat-bar-fill {
+    height: 100%; border-radius: 3px;
+    transition: width 0.5s ease;
+  }
+  .stat-bar-fill.espiritu { background: linear-gradient(90deg, #7b4db5, #9b59b6); width: 65%; }
+  .stat-bar-fill.pulso { background: linear-gradient(90deg, #d4a017, #f1c40f); width: 78%; }
+  .stat-bar-fill.esencia { background: linear-gradient(90deg, #1a9a5a, #34d399); width: 90%; }
+  .stat-val { font-size: 6px; color: #888; width: 22px; text-align: right; }
+
+  /* Bottom nav */
+  .game-bottom {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    display: flex; justify-content: center; gap: 6px;
+    padding: 12px;
+    background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, transparent 100%);
+    z-index: 10;
+  }
+  .bottom-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px; padding: 8px 16px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .bottom-btn:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+  .bottom-btn .icon { font-size: 18px; }
+  .bottom-btn .lbl { font-size: 5px; color: #888; letter-spacing: 1px; }
+
+  /* ===== 4. CHAT PANEL ===== */
+  .chat-demo {
+    width: 100%; height: 100%;
+    background: #0a0a14;
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+  .chat-header {
+    padding: 12px 14px;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .chat-header .avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: linear-gradient(135deg, #f5c542, #d4a017);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .chat-header .name { font-size: 9px; color: #f5c542; }
+  .chat-header .status { font-size: 6px; color: #4caf50; margin-top: 2px; }
+  .chat-header .close {
+    margin-left: auto; font-size: 14px; color: #555;
+    cursor: pointer; padding: 4px;
+  }
+
+  .chat-messages {
+    flex: 1; padding: 16px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .chat-bubble {
+    max-width: 80%; padding: 10px 12px;
+    font-size: 7px; line-height: 1.8;
+    border-radius: 12px;
+    animation: bubbleIn 0.3s ease;
+  }
+  @keyframes bubbleIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .chat-bubble.bot {
+    align-self: flex-start;
+    background: rgba(245,197,66,0.1);
+    border: 1px solid rgba(245,197,66,0.15);
+    color: #e8e8e8;
+    border-bottom-left-radius: 4px;
+  }
+  .chat-bubble.user {
+    align-self: flex-end;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #ccc;
+    border-bottom-right-radius: 4px;
+  }
+  .chat-bubble .delta {
+    display: inline-block; margin-top: 4px;
+    font-size: 6px; color: #4caf50; opacity: 0.7;
+  }
+
+  .chat-input-area {
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.02);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex; gap: 8px; align-items: center;
+  }
+  .chat-input {
+    flex: 1; background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px; padding: 8px 14px;
+    font-family: inherit; font-size: 7px; color: #e8e8e8;
+    outline: none;
+  }
+  .chat-send {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #f5c542; border: none;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 12px;
+    transition: transform 0.2s;
+  }
+  .chat-send:hover { transform: scale(1.1); }
+
+  /* ===== 5. CREATION SCREEN ===== */
+  .creation-demo {
+    width: 100%; height: 100%;
+    background: #0a0a1a;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative; overflow: hidden; padding: 20px;
+  }
+  .creation-demo::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 70%, rgba(245,197,66,0.03) 0%, transparent 60%);
+  }
+  .creation-title {
+    font-size: 12px; color: #f5c542; letter-spacing: 3px;
+    margin-bottom: 24px; position: relative; z-index: 2;
+  }
+  .creation-carousel {
+    display: flex; gap: 16px; align-items: center;
+    position: relative; z-index: 2; margin-bottom: 24px;
+  }
+  .carousel-arrow {
+    font-size: 16px; color: #555; cursor: pointer;
+    transition: color 0.2s;
+  }
+  .carousel-arrow:hover { color: #f5c542; }
+  .carousel-card {
+    width: 140px; padding: 16px; text-align: center;
+    background: rgba(255,255,255,0.04);
+    border: 2px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    transition: all 0.3s;
+  }
+  .carousel-card.selected {
+    border-color: #f5c542;
+    background: rgba(245,197,66,0.06);
+    box-shadow: 0 0 20px rgba(245,197,66,0.1);
+  }
+  .carousel-card .emoji { font-size: 48px; margin-bottom: 8px; }
+  .carousel-card .type-name { font-size: 8px; color: #f5c542; }
+  .carousel-card .type-desc { font-size: 6px; color: #777; margin-top: 4px; line-height: 1.6; }
+
+  .creation-name-input {
+    width: 220px; text-align: center;
+    background: rgba(255,255,255,0.04);
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 8px; padding: 10px;
+    font-family: inherit; font-size: 10px; color: #e8e8e8;
+    outline: none; position: relative; z-index: 2;
+    transition: border-color 0.2s;
+  }
+  .creation-name-input:focus { border-color: #f5c542; }
+  .creation-name-input::placeholder { color: #444; }
+
+  .creation-start-btn {
+    margin-top: 20px; padding: 10px 28px;
+    background: #f5c542; border: none; border-radius: 8px;
+    font-family: inherit; font-size: 9px; color: #0a0a1a;
+    letter-spacing: 2px; cursor: pointer;
+    position: relative; z-index: 2;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .creation-start-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(245,197,66,0.3);
+  }
+
+  /* ===== DESKTOP GAME ===== */
+  .desktop-frame {
+    width: 900px; height: 560px;
+    border: 3px solid #333; border-radius: 12px;
+    overflow: hidden; display: flex;
+  }
+  .desktop-world {
+    flex: 7; position: relative;
+    background: linear-gradient(180deg, #1a0a2e 0%, #2a1040 40%, #1a1a2e 100%);
+    overflow: hidden;
+  }
+  .desktop-panel {
+    flex: 3; background: #0a0a14;
+    border-left: 1px solid rgba(255,255,255,0.06);
+    display: flex; flex-direction: column;
+  }
+  .desktop-tabs {
+    display: flex; border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .desktop-tab {
+    flex: 1; padding: 10px; text-align: center;
+    font-size: 12px; color: #555; cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .desktop-tab:hover { color: #888; }
+  .desktop-tab.active { color: #f5c542; border-bottom-color: #f5c542; }
+
+  /* ===== LEADERBOARD ===== */
+  .lb-demo {
+    width: 100%; height: 100%;
+    background: #0a0a14;
+    display: flex; flex-direction: column;
+    padding: 16px; overflow-y: auto;
+  }
+  .lb-title {
+    font-size: 10px; color: #f5c542; text-align: center;
+    letter-spacing: 3px; margin-bottom: 4px;
+  }
+  .lb-subtitle {
+    font-size: 6px; color: #555; text-align: center;
+    margin-bottom: 16px;
+  }
+  .lb-filters {
+    display: flex; gap: 4px; justify-content: center; margin-bottom: 12px;
+  }
+  .lb-filter {
+    font-size: 6px; padding: 4px 8px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px; color: #666; cursor: pointer;
+  }
+  .lb-filter.active { color: #f5c542; border-color: #f5c542; background: rgba(245,197,66,0.06); }
+
+  .lb-entry {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; margin-bottom: 4px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 10px;
+    transition: all 0.2s;
+  }
+  .lb-entry:hover { background: rgba(255,255,255,0.04); }
+  .lb-entry.you { border-color: rgba(245,197,66,0.2); background: rgba(245,197,66,0.04); }
+  .lb-rank { font-size: 10px; color: #555; width: 24px; text-align: center; }
+  .lb-rank.gold { color: #f5c542; }
+  .lb-rank.silver { color: #c0c0c0; }
+  .lb-rank.bronze { color: #cd7f32; }
+  .lb-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .lb-info { flex: 1; }
+  .lb-name { font-size: 7px; color: #e8e8e8; }
+  .lb-type { font-size: 5px; color: #666; margin-top: 2px; }
+  .lb-score { font-size: 8px; color: #f5c542; }
+</style>
+</head>
+<body>
+
+<div class="preview-nav">
+  <button class="active" onclick="show('loading')">Loading</button>
+  <button onclick="show('title')">Title</button>
+  <button onclick="show('creation')">Creation</button>
+  <button onclick="show('game-mobile')">Game (Mobile)</button>
+  <button onclick="show('chat')">Chat</button>
+  <button onclick="show('game-desktop')">Game (Desktop)</button>
+  <button onclick="show('leaderboard')">Leaderboard</button>
+</div>
+
+<div class="screens">
+
+  <!-- LOADING -->
+  <div class="screen-section active" id="s-loading">
+    <div class="label">01 — Loading Screen</div>
+    <div class="phone">
+      <div class="loading-demo">
+        <div class="stars">
+          <span class="star">✦</span>
+          <span class="star">✧</span>
+          <span class="star">✦</span>
+          <span class="star">✧</span>
+          <span class="star">✦</span>
+        </div>
+        <div class="loading-logo">
+          <div class="top">REGGIE'S</div>
+          <div class="bot">ADVENTURE</div>
+          <div class="divider">
+            <span></span><span></span><span></span>
+            <span></span>
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="loading-bar-container">
+          <div class="loading-bar-fill"></div>
+        </div>
+        <div class="loading-text">LOADING...</div>
+        <div class="loading-version">v0.5 — El Encuentro</div>
+      </div>
+    </div>
+    <div class="note">
+      Fondo más profundo, logo con glow sutil, estrellas twinkling.
+      Barra de progreso con gradiente dorado y pulse. Minimalista pero premium.
+    </div>
+  </div>
+
+  <!-- TITLE -->
+  <div class="screen-section" id="s-title">
+    <div class="label">02 — Title Screen</div>
+    <div class="phone">
+      <div class="title-demo">
+        <div class="title-creatures">
+          <div class="title-creature c1">⚡</div>
+          <div class="title-creature c2">🔥</div>
+          <div class="title-creature c3">❄️</div>
+        </div>
+        <div class="title-main">
+          <div class="reggies">REGGIE'S</div>
+          <div class="adventure">ADVENTURE</div>
+        </div>
+        <div class="title-divider">
+          <span class="line"></span>
+          <span class="diamond">◆</span>
+          <span class="line"></span>
+        </div>
+        <div class="title-version">v0.5 — El Encuentro</div>
+        <div class="title-press">PRESS START</div>
+        <div class="title-hint">clic · tap · Enter · Space</div>
+      </div>
+    </div>
+    <div class="note">
+      Más cinematográfico. Vignette, glows sutiles por tipo, title con sombra profunda
+      y float animation. Criaturas como sombras en el fondo.
+    </div>
+  </div>
+
+  <!-- CREATION -->
+  <div class="screen-section" id="s-creation">
+    <div class="label">03 — Creation Screen</div>
+    <div class="phone">
+      <div class="creation-demo">
+        <div class="creation-title">ELIGE TU TIPO</div>
+        <div class="creation-carousel">
+          <span class="carousel-arrow">◀</span>
+          <div class="carousel-card selected">
+            <div class="emoji">⚡</div>
+            <div class="type-name">RAYO</div>
+            <div class="type-desc">Movimiento · Tech · Velocidad</div>
+          </div>
+          <span class="carousel-arrow">▶</span>
+        </div>
+        <input class="creation-name-input" placeholder="Nombre..." value="REGGIE">
+        <button class="creation-start-btn">COMENZAR ▸</button>
+      </div>
+    </div>
+    <div class="note">
+      Card con borde glow al seleccionar, fondo radial sutil.
+      Input y botón redondeados, más modernos pero manteniendo pixel font.
+    </div>
+  </div>
+
+  <!-- GAME MOBILE -->
+  <div class="screen-section" id="s-game-mobile">
+    <div class="label">04 — Game Screen (Mobile)</div>
+    <div class="phone">
+      <div class="game-demo">
+        <div class="game-bg"></div>
+        <div class="game-ground"></div>
+        <div class="fracture-lines">
+          <div class="fracture-line fl1"></div>
+          <div class="fracture-line fl2"></div>
+          <div class="fracture-line fl3"></div>
+        </div>
+
+        <div class="game-hud">
+          <div class="hud-left">
+            <div class="hud-pill">💠 90</div>
+            <div class="hud-pill" style="cursor:pointer">📖 Diario</div>
+          </div>
+          <div class="hud-right">
+            <div class="hud-btn">🎯</div>
+            <div class="hud-btn">⚙️</div>
+          </div>
+        </div>
+
+        <div class="game-sprite-area">
+          <div class="sprite-placeholder">⚡</div>
+        </div>
+
+        <div class="game-stats">
+          <div class="stat-row">
+            <span class="stat-icon">🔮</span>
+            <div class="stat-bar-bg"><div class="stat-bar-fill espiritu"></div></div>
+            <span class="stat-val">65</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-icon">💛</span>
+            <div class="stat-bar-bg"><div class="stat-bar-fill pulso"></div></div>
+            <span class="stat-val">78</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-icon">🌱</span>
+            <div class="stat-bar-bg"><div class="stat-bar-fill esencia"></div></div>
+            <span class="stat-val">90</span>
+          </div>
+        </div>
+
+        <div class="game-bottom">
+          <div class="bottom-btn">
+            <span class="icon">💬</span>
+            <span class="lbl">CHAT</span>
+          </div>
+          <div class="bottom-btn">
+            <span class="icon">📷</span>
+            <span class="lbl">FOTO</span>
+          </div>
+          <div class="bottom-btn">
+            <span class="icon">🌍</span>
+            <span class="lbl">SOCIAL</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      HUD con pills glassmorphism (blur + transparencia). Stats como thin bars debajo del sprite.
+      Bottom nav con cards redondeadas. Todo se integra al mundo en vez de "flotar encima".
+    </div>
+  </div>
+
+  <!-- CHAT -->
+  <div class="screen-section" id="s-chat">
+    <div class="label">05 — Chat Panel</div>
+    <div class="phone">
+      <div class="chat-demo">
+        <div class="chat-header">
+          <div class="avatar">⚡</div>
+          <div>
+            <div class="name">Reggie</div>
+            <div class="status">● conectado</div>
+          </div>
+          <span class="close">✕</span>
+        </div>
+        <div class="chat-messages">
+          <div class="chat-bubble bot">
+            ¿Sientes eso? La Red vibra hoy con más fuerza. Algo se acerca... ⚡
+            <div class="delta">+2 🔮 +1 💛</div>
+          </div>
+          <div class="chat-bubble user">
+            Hola Reggie! Cómo estás hoy?
+          </div>
+          <div class="chat-bubble bot">
+            Mejor que nunca. Mi espíritu brilla. Creo que la fractura se está cerrando... puedo sentirlo.
+            <div class="delta">+1 🔮 -1 🌱</div>
+          </div>
+          <div class="chat-bubble user">
+            Qué bien! Vamos a buscar fragmentos
+          </div>
+          <div class="chat-bubble bot">
+            ¡Sí! Vamos. Los fragmentos nos esperan en el mundo real. Toma una foto de algo que te inspire. 📸
+            <div class="delta">+3 🔮 +2 💠</div>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <input class="chat-input" placeholder="Escribe un mensaje...">
+          <button class="chat-send">▸</button>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      Chat tipo messenger moderno. Burbujas con bordes sutiles (no cuadradas NES).
+      Header con avatar y status. Input con border-radius pill. Send button dorado.
+      Stat deltas como subtexto discreto.
+    </div>
+  </div>
+
+  <!-- GAME DESKTOP -->
+  <div class="screen-section" id="s-game-desktop">
+    <div class="label">06 — Game Screen (Desktop 70/30)</div>
+    <div class="desktop-frame">
+      <div class="desktop-world">
+        <div class="game-bg"></div>
+        <div class="game-ground"></div>
+        <div class="fracture-lines">
+          <div class="fracture-line fl1"></div>
+          <div class="fracture-line fl2"></div>
+        </div>
+        <div class="game-hud">
+          <div class="hud-left">
+            <div class="hud-pill">💠 90</div>
+            <div class="hud-pill">📖 Diario</div>
+          </div>
+          <div class="hud-right">
+            <div class="hud-btn">🎯</div>
+            <div class="hud-btn">⚙️</div>
+          </div>
+        </div>
+        <div class="game-sprite-area">
+          <div class="sprite-placeholder" style="font-size:100px; width:180px; height:180px;">⚡</div>
+        </div>
+        <div class="game-stats" style="transform: translate(-50%, 80px); width: 280px;">
+          <div class="stat-row">
+            <span class="stat-icon">🔮</span>
+            <div class="stat-bar-bg"><div class="stat-bar-fill espiritu"></div></div>
+            <span class="stat-val">65</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-icon">💛</span>
+            <div class="stat-bar-bg"><div class="stat-bar-fill pulso"></div></div>
+            <span class="stat-val">78</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-icon">🌱</span>
+            <div class="stat-bar-bg"><div class="stat-bar-fill esencia"></div></div>
+            <span class="stat-val">90</span>
+          </div>
+        </div>
+      </div>
+      <div class="desktop-panel">
+        <div class="desktop-tabs">
+          <div class="desktop-tab active">💬</div>
+          <div class="desktop-tab">📷</div>
+          <div class="desktop-tab">🌍</div>
+        </div>
+        <div class="chat-messages" style="flex:1; padding:12px;">
+          <div class="chat-bubble bot" style="font-size:7px;">
+            ¿Sientes eso? La Red vibra... ⚡
+            <div class="delta">+2 🔮</div>
+          </div>
+          <div class="chat-bubble user" style="font-size:7px;">
+            Hola Reggie!
+          </div>
+          <div class="chat-bubble bot" style="font-size:7px;">
+            Mejor que nunca. Mi espíritu brilla.
+            <div class="delta">+1 🔮 -1 🌱</div>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <input class="chat-input" placeholder="Escribe...">
+          <button class="chat-send">▸</button>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      Desktop 70/30. Tabs limpios con underline accent.
+      Panel de chat integrado, mismo estilo que mobile pero adaptado.
+    </div>
+  </div>
+
+  <!-- LEADERBOARD -->
+  <div class="screen-section" id="s-leaderboard">
+    <div class="label">07 — Leaderboard</div>
+    <div class="phone">
+      <div class="lb-demo">
+        <div class="lb-title">REGENERACIÓN GLOBAL</div>
+        <div class="lb-subtitle">Los guardianes de La Red</div>
+        <div class="lb-filters">
+          <span class="lb-filter active">⭐ Puntos</span>
+          <span class="lb-filter">🍊 $FRUTA</span>
+          <span class="lb-filter">🆕 Nuevos</span>
+        </div>
+
+        <div class="lb-entry">
+          <span class="lb-rank gold">1</span>
+          <div class="lb-avatar">🔥</div>
+          <div class="lb-info">
+            <div class="lb-name">FireWalker</div>
+            <div class="lb-type">🔥 Flama · Joven</div>
+          </div>
+          <div class="lb-score">1,250</div>
+        </div>
+        <div class="lb-entry">
+          <span class="lb-rank silver">2</span>
+          <div class="lb-avatar">⚡</div>
+          <div class="lb-info">
+            <div class="lb-name">VoltMaster</div>
+            <div class="lb-type">⚡ Rayo · Adulto</div>
+          </div>
+          <div class="lb-score">980</div>
+        </div>
+        <div class="lb-entry you">
+          <span class="lb-rank bronze">3</span>
+          <div class="lb-avatar">⚡</div>
+          <div class="lb-info">
+            <div class="lb-name">Reggie ← tú</div>
+            <div class="lb-type">⚡ Rayo · Cría</div>
+          </div>
+          <div class="lb-score">420</div>
+        </div>
+        <div class="lb-entry">
+          <span class="lb-rank">4</span>
+          <div class="lb-avatar">❄️</div>
+          <div class="lb-info">
+            <div class="lb-name">CrystalByte</div>
+            <div class="lb-type">❄️ Hielo · Huevo</div>
+          </div>
+          <div class="lb-score">210</div>
+        </div>
+        <div class="lb-entry">
+          <span class="lb-rank">5</span>
+          <div class="lb-avatar">🔥</div>
+          <div class="lb-info">
+            <div class="lb-name">EmberKid</div>
+            <div class="lb-type">🔥 Flama · Cría</div>
+          </div>
+          <div class="lb-score">150</div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      Cards con bordes sutiles, rank con colores medal. Tu entrada highlighted.
+      Filtros como pills. Clean, legible, sin NES borders pesados.
+    </div>
+  </div>
+
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.screen-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.preview-nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('s-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+
+</body>
+</html>
