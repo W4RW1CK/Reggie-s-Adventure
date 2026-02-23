@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reggie's Adventure — Redesign v3 Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Press Start 2P', monospace;
+    background: #0a0a0f;
+    color: #e0e0e0;
+    image-rendering: pixelated;
+    overflow-x: hidden;
+  }
+
+  /* ===== SCANLINES OVERLAY (global, subtle) ===== */
+  body::after {
+    content: '';
+    position: fixed; inset: 0; z-index: 9998;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 2px,
+      rgba(0,0,0,0.04) 2px,
+      rgba(0,0,0,0.04) 4px
+    );
+    pointer-events: none;
+  }
+
+  /* ===== NAV — always dark terminal ===== */
+  .preview-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+    background: #0a0a0f;
+    border-bottom: 1px solid #1a1a2a;
+    display: flex; gap: 4px; padding: 8px 12px;
+    overflow-x: auto; flex-wrap: nowrap; align-items: center;
+    box-shadow: 0 2px 20px rgba(0,240,255,0.05);
+  }
+  .preview-nav button {
+    font-family: inherit; font-size: 7px; padding: 6px 10px;
+    background: transparent; color: #555; border: 1px solid #222;
+    cursor: pointer; white-space: nowrap; transition: all 0.3s;
+  }
+  .preview-nav button:hover {
+    color: #00f0ff; border-color: #00f0ff40;
+    text-shadow: 0 0 8px rgba(0,240,255,0.3);
+  }
+  .preview-nav button.active {
+    color: #00f0ff; border-color: #00f0ff;
+    background: rgba(0,240,255,0.05);
+    text-shadow: 0 0 10px rgba(0,240,255,0.4);
+    box-shadow: 0 0 10px rgba(0,240,255,0.1), inset 0 0 10px rgba(0,240,255,0.05);
+  }
+
+  .theme-toggle {
+    margin-left: auto;
+    font-family: inherit; font-size: 7px; padding: 6px 12px;
+    background: transparent; color: #b44aff; border: 1px solid #b44aff60;
+    cursor: pointer; white-space: nowrap; transition: all 0.3s;
+    border-radius: 2px;
+  }
+  .theme-toggle:hover {
+    background: rgba(180,74,255,0.1);
+    text-shadow: 0 0 8px rgba(180,74,255,0.4);
+    border-color: #b44aff;
+  }
+  .theme-toggle.active-theme {
+    background: #b44aff20;
+    color: #b44aff;
+    border-color: #b44aff;
+  }
+
+  /* ===== LAYOUT ===== */
+  .screens { margin-top: 50px; }
+  .screen-section {
+    display: none; min-height: 100vh;
+    flex-direction: column; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .screen-section.active { display: flex; }
+
+  .label {
+    font-size: 7px; color: #444; letter-spacing: 3px;
+    text-transform: uppercase; margin-bottom: 20px;
+  }
+  .note {
+    font-size: 7px; color: #444; max-width: 500px;
+    text-align: center; line-height: 1.8; margin-top: 20px;
+  }
+
+  /* ===== PHONE FRAME ===== */
+  .phone {
+    width: 375px; height: 667px;
+    border: 1px solid #1a1a2a;
+    border-radius: 16px;
+    overflow: hidden; position: relative;
+    box-shadow:
+      0 0 30px rgba(0,240,255,0.06),
+      0 0 60px rgba(180,74,255,0.03),
+      inset 0 0 30px rgba(0,0,0,0.3);
+  }
+
+  /* ===== RUNIC GLYPHS (decorative corners) ===== */
+  .rune-corner { position: absolute; font-size: 10px; opacity: 0.15; color: #00f0ff; z-index: 2; }
+  .rune-corner.tl { top: 8px; left: 10px; }
+  .rune-corner.tr { top: 8px; right: 10px; }
+  .rune-corner.bl { bottom: 8px; left: 10px; }
+  .rune-corner.br { bottom: 8px; right: 10px; }
+
+  /* ============================================= */
+  /*  01. LOADING SCREEN — DARK (CYBER-ARCANE)     */
+  /* ============================================= */
+  .loading-demo {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative;
+    background: radial-gradient(ellipse at 50% 40%, #0d0d1a 0%, #0a0a0f 70%);
+  }
+
+  /* Animated glyph circle behind logo */
+  .loading-demo .glyph-ring {
+    position: absolute; top: 50%; left: 50%;
+    width: 280px; height: 280px;
+    transform: translate(-50%, -55%);
+    border: 1px solid rgba(0,240,255,0.08);
+    border-radius: 50%;
+    animation: glyph-spin 30s linear infinite;
+  }
+  .loading-demo .glyph-ring::before {
+    content: '⟁ ⊛ ◈ ⟐ ⊕ ◇ ⟁ ⊛ ◈ ⟐';
+    position: absolute; top: -6px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 8px; color: rgba(0,240,255,0.12);
+    letter-spacing: 8px; white-space: nowrap;
+  }
+  .loading-demo .glyph-ring-inner {
+    position: absolute; top: 50%; left: 50%;
+    width: 200px; height: 200px;
+    transform: translate(-50%, -55%);
+    border: 1px solid rgba(180,74,255,0.06);
+    border-radius: 50%;
+    animation: glyph-spin 20s linear reverse infinite;
+  }
+
+  @keyframes glyph-spin {
+    from { transform: translate(-50%, -55%) rotate(0deg); }
+    to { transform: translate(-50%, -55%) rotate(360deg); }
+  }
+
+  /* Floating particles */
+  .loading-demo .particle {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: #00f0ff;
+    border-radius: 50%;
+    opacity: 0;
+    animation: particle-float 4s ease-in-out infinite;
+  }
+  .loading-demo .particle:nth-child(1) { left: 20%; top: 30%; animation-delay: 0s; }
+  .loading-demo .particle:nth-child(2) { left: 75%; top: 25%; animation-delay: 0.8s; background: #b44aff; }
+  .loading-demo .particle:nth-child(3) { left: 60%; top: 65%; animation-delay: 1.6s; }
+  .loading-demo .particle:nth-child(4) { left: 30%; top: 70%; animation-delay: 2.4s; background: #b44aff; }
+  .loading-demo .particle:nth-child(5) { left: 85%; top: 50%; animation-delay: 3.2s; }
+  .loading-demo .particle:nth-child(6) { left: 15%; top: 55%; animation-delay: 1.2s; background: #f5c542; width: 1px; height: 1px; }
+  .loading-demo .particle:nth-child(7) { left: 50%; top: 15%; animation-delay: 2s; }
+
+  @keyframes particle-float {
+    0% { opacity: 0; transform: translateY(0); }
+    30% { opacity: 0.6; }
+    70% { opacity: 0.4; }
+    100% { opacity: 0; transform: translateY(-30px); }
+  }
+
+  /* Logo */
+  .loading-logo {
+    position: relative; z-index: 3;
+    text-align: center;
+  }
+  .loading-logo .top {
+    font-size: 24px;
+    color: #00f0ff;
+    text-shadow:
+      0 0 20px rgba(0,240,255,0.4),
+      0 0 40px rgba(0,240,255,0.2),
+      0 2px 0 #0a8a9a;
+    letter-spacing: 3px;
+    animation: logo-glow 3s ease-in-out infinite alternate;
+  }
+  .loading-logo .bot {
+    font-size: 11px;
+    color: #b44aff;
+    letter-spacing: 6px;
+    margin-top: 6px;
+    text-shadow: 0 0 15px rgba(180,74,255,0.3);
+  }
+
+  @keyframes logo-glow {
+    from { text-shadow: 0 0 20px rgba(0,240,255,0.4), 0 0 40px rgba(0,240,255,0.2), 0 2px 0 #0a8a9a; }
+    to { text-shadow: 0 0 30px rgba(0,240,255,0.6), 0 0 60px rgba(0,240,255,0.3), 0 2px 0 #0a8a9a; }
+  }
+
+  /* Rune divider under logo */
+  .loading-logo .rune-divider {
+    margin-top: 12px;
+    font-size: 6px;
+    color: rgba(0,240,255,0.2);
+    letter-spacing: 4px;
+  }
+
+  /* Loading bar */
+  .loading-bar-wrap {
+    position: relative; z-index: 3;
+    margin-top: 40px;
+    width: 200px;
+  }
+  .loading-bar-label {
+    font-size: 6px; color: #444;
+    letter-spacing: 3px; text-align: center;
+    margin-bottom: 8px;
+  }
+  .loading-bar-outer {
+    width: 100%; height: 6px;
+    background: #111;
+    border: 1px solid #1a1a2a;
+    border-radius: 1px;
+    overflow: hidden;
+    position: relative;
+  }
+  .loading-bar-fill {
+    width: 65%;
+    height: 100%;
+    background: linear-gradient(90deg, #00f0ff, #b44aff);
+    box-shadow: 0 0 10px rgba(0,240,255,0.3);
+    animation: bar-pulse 2s ease-in-out infinite;
+    position: relative;
+  }
+  .loading-bar-fill::after {
+    content: '';
+    position: absolute; right: 0; top: 0;
+    width: 20px; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3));
+    animation: bar-shine 2s ease-in-out infinite;
+  }
+
+  @keyframes bar-pulse {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+  }
+  @keyframes bar-shine {
+    0% { transform: translateX(-20px); }
+    100% { transform: translateX(20px); }
+  }
+
+  /* Version tag */
+  .loading-version {
+    position: absolute; bottom: 16px; z-index: 3;
+    font-size: 6px; color: #333;
+    letter-spacing: 2px;
+  }
+
+  /* Glitch effect on hover */
+  .loading-logo:hover .top {
+    animation: glitch 0.3s ease-in-out;
+  }
+  @keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 1px); color: #ff0040; }
+    40% { transform: translate(2px, -1px); color: #00f0ff; }
+    60% { transform: translate(-1px, -1px); color: #b44aff; }
+    80% { transform: translate(1px, 1px); }
+    100% { transform: translate(0); }
+  }
+
+  /* ============================================= */
+  /*  LIGHT THEME — PAPIRO ARCANO                  */
+  /* ============================================= */
+  body.light .phone {
+    border-color: #c4a56a;
+    box-shadow:
+      0 0 30px rgba(139,105,20,0.1),
+      0 0 60px rgba(139,37,0,0.05);
+  }
+
+  body.light .loading-demo {
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(200,170,110,0.3) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 80%, rgba(180,150,90,0.2) 0%, transparent 40%),
+      radial-gradient(ellipse at 50% 50%, #f4e8c1 0%, #e8d5a3 50%, #d4c090 100%);
+  }
+
+  /* Parchment texture via pseudo-element */
+  body.light .loading-demo::before {
+    content: '';
+    position: absolute; inset: 0; z-index: 1;
+    background:
+      radial-gradient(ellipse at 20% 30%, rgba(139,37,0,0.04) 0%, transparent 40%),
+      radial-gradient(ellipse at 80% 70%, rgba(139,37,0,0.03) 0%, transparent 30%),
+      radial-gradient(ellipse at 50% 10%, rgba(0,0,0,0.02) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  /* Burnt edges vignette */
+  body.light .loading-demo::after {
+    content: '';
+    position: absolute; inset: 0; z-index: 1;
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(80,50,10,0.15) 100%);
+    pointer-events: none;
+  }
+
+  body.light .loading-logo .top {
+    color: #2a1a0a;
+    text-shadow:
+      0 0 15px rgba(139,105,20,0.3),
+      0 2px 0 #8b6914;
+  }
+  body.light .loading-logo .bot {
+    color: #8b2500;
+    text-shadow: 0 0 10px rgba(139,37,0,0.2);
+  }
+  body.light .loading-logo .rune-divider {
+    color: rgba(139,105,20,0.3);
+  }
+
+  body.light .glyph-ring {
+    border-color: rgba(139,105,20,0.1);
+  }
+  body.light .glyph-ring::before {
+    color: rgba(139,105,20,0.15);
+  }
+  body.light .glyph-ring-inner {
+    border-color: rgba(139,37,0,0.08);
+  }
+
+  body.light .particle {
+    background: #8b6914 !important;
+  }
+  body.light .particle:nth-child(2),
+  body.light .particle:nth-child(4) {
+    background: #8b2500 !important;
+  }
+
+  body.light .loading-bar-outer {
+    background: #d4c090;
+    border-color: #c4a56a;
+  }
+  body.light .loading-bar-fill {
+    background: linear-gradient(90deg, #8b6914, #8b2500);
+    box-shadow: 0 0 8px rgba(139,105,20,0.3);
+  }
+
+  body.light .loading-bar-label {
+    color: #8b7a5a;
+  }
+  body.light .loading-version {
+    color: #b0a080;
+  }
+
+  body.light .rune-corner {
+    color: #8b6914;
+    opacity: 0.2;
+  }
+
+  /* Light scanlines — parchment grain */
+  body.light::after {
+    background: repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 3px,
+      rgba(80,50,10,0.02) 3px,
+      rgba(80,50,10,0.02) 6px
+    );
+  }
+
+  /* Light nav stays dark */
+  body.light .label { color: #666; }
+  body.light .note { color: #555; }
+
+</style>
+</head>
+<body>
+
+<div class="preview-nav">
+  <button class="active" onclick="show('loading')">Loading</button>
+  <button onclick="show('title')">Title</button>
+  <button onclick="show('creation')">Creation</button>
+  <button onclick="show('game')">Game</button>
+  <button onclick="show('chat')">Chat</button>
+  <button onclick="show('leaderboard')">Leaderboard</button>
+
+  <button class="theme-toggle active-theme" onclick="toggleTheme(this)">🌑 Dark</button>
+  <button class="theme-toggle" onclick="toggleTheme(this)">📜 Papiro</button>
+</div>
+
+<div class="screens">
+
+  <!-- LOADING -->
+  <div class="screen-section active" id="s-loading">
+    <div class="label">01 — Loading Screen</div>
+    <div class="phone">
+      <div class="loading-demo">
+        <!-- Rune corners -->
+        <span class="rune-corner tl">⟁</span>
+        <span class="rune-corner tr">◈</span>
+        <span class="rune-corner bl">⟐</span>
+        <span class="rune-corner br">⊛</span>
+
+        <!-- Glyph rings -->
+        <div class="glyph-ring"></div>
+        <div class="glyph-ring-inner"></div>
+
+        <!-- Particles -->
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+
+        <!-- Logo -->
+        <div class="loading-logo">
+          <div class="top">REGGIE'S</div>
+          <div class="bot">A D V E N T U R E</div>
+          <div class="rune-divider">⟁ · ◈ · ⟐ · ◇ · ⊛</div>
+        </div>
+
+        <!-- Loading bar -->
+        <div class="loading-bar-wrap">
+          <div class="loading-bar-label">INVOKING...</div>
+          <div class="loading-bar-outer">
+            <div class="loading-bar-fill"></div>
+          </div>
+        </div>
+
+        <div class="loading-version">v0.5 — El Encuentro</div>
+      </div>
+    </div>
+    <div class="note">Cyber-arcane loading. Glyph rings orbit behind logo. Particles drift. Scanlines subtle. Hover logo for glitch.</div>
+  </div>
+
+  <!-- Placeholder screens -->
+  <div class="screen-section" id="s-title">
+    <div class="label">02 — Title Screen</div>
+    <div class="phone"><div class="loading-demo" style="opacity:0.3"><div class="loading-logo"><div class="top" style="font-size:14px">COMING NEXT</div></div></div></div>
+  </div>
+  <div class="screen-section" id="s-creation">
+    <div class="label">03 — Creation</div>
+    <div class="phone"><div class="loading-demo" style="opacity:0.3"><div class="loading-logo"><div class="top" style="font-size:14px">COMING NEXT</div></div></div></div>
+  </div>
+  <div class="screen-section" id="s-game">
+    <div class="label">04 — Game Mobile</div>
+    <div class="phone"><div class="loading-demo" style="opacity:0.3"><div class="loading-logo"><div class="top" style="font-size:14px">COMING NEXT</div></div></div></div>
+  </div>
+  <div class="screen-section" id="s-chat">
+    <div class="label">05 — Chat</div>
+    <div class="phone"><div class="loading-demo" style="opacity:0.3"><div class="loading-logo"><div class="top" style="font-size:14px">COMING NEXT</div></div></div></div>
+  </div>
+  <div class="screen-section" id="s-leaderboard">
+    <div class="label">06 — Leaderboard</div>
+    <div class="phone"><div class="loading-demo" style="opacity:0.3"><div class="loading-logo"><div class="top" style="font-size:14px">COMING NEXT</div></div></div></div>
+  </div>
+
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.screen-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('s-' + id).classList.add('active');
+  document.querySelectorAll('.preview-nav button:not(.theme-toggle)').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function toggleTheme(btn) {
+  document.querySelectorAll('.theme-toggle').forEach(b => b.classList.remove('active-theme'));
+  btn.classList.add('active-theme');
+  if (btn.textContent.includes('Papiro')) {
+    document.body.className = 'light';
+  } else {
+    document.body.className = '';
+  }
+}
+</script>
+
+</body>
+</html>
