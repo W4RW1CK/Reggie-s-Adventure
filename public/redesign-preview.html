@@ -22,7 +22,7 @@
     backdrop-filter: blur(10px);
     border-bottom: 2px solid #222;
     display: flex; gap: 4px; padding: 8px 12px;
-    overflow-x: auto; flex-wrap: nowrap;
+    overflow-x: auto; flex-wrap: nowrap; align-items: center;
   }
   .preview-nav button {
     font-family: inherit; font-size: 7px; padding: 6px 10px;
@@ -31,6 +31,15 @@
   }
   .preview-nav button:hover { color: #fff; border-color: #555; }
   .preview-nav button.active { color: #f5c542; border-color: #f5c542; background: #1a1a3e; }
+
+  .theme-toggle {
+    margin-left: auto;
+    font-family: inherit; font-size: 7px; padding: 6px 12px;
+    background: #333; color: #f5c542; border: 1px solid #f5c542;
+    cursor: pointer; white-space: nowrap; transition: all 0.2s;
+    border-radius: 12px;
+  }
+  .theme-toggle:hover { background: #f5c542; color: #0a0a12; }
 
   .screens { margin-top: 50px; }
   .screen-section {
@@ -57,23 +66,25 @@
     box-shadow: 0 0 60px rgba(0,0,0,0.5), 0 0 120px rgba(245,197,66,0.03);
   }
 
+  /* ============================================= */
+  /* DARK THEME (default)                          */
+  /* ============================================= */
+
   /* ===== 1. LOADING SCREEN ===== */
   .loading-demo {
     width: 100%; height: 100%;
-    background: #06060f;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     position: relative; overflow: hidden;
+    background: var(--load-bg, #06060f);
   }
   .loading-demo::before {
     content: ''; position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 50% 30%, rgba(245,197,66,0.04) 0%, transparent 70%);
+    background: var(--load-glow, radial-gradient(ellipse at 50% 30%, rgba(245,197,66,0.04) 0%, transparent 70%));
   }
-  .loading-demo .stars {
-    position: absolute; inset: 0;
-  }
+  .loading-demo .stars { position: absolute; inset: 0; }
   .loading-demo .star {
-    position: absolute; color: #f5c542; font-size: 10px;
+    position: absolute; color: var(--star-color, #f5c542); font-size: 10px;
     animation: twinkle 2s ease-in-out infinite;
   }
   .loading-demo .star:nth-child(1) { top: 15%; left: 20%; animation-delay: 0s; }
@@ -92,31 +103,31 @@
     margin-bottom: 60px;
   }
   .loading-logo .top {
-    font-size: 28px; color: #f5c542;
-    text-shadow: 0 0 20px rgba(245,197,66,0.4), 0 2px 0 #b8860b;
+    font-size: 28px; color: var(--logo-color, #f5c542);
+    text-shadow: var(--logo-shadow, 0 0 20px rgba(245,197,66,0.4), 0 2px 0 #b8860b);
     letter-spacing: 4px;
   }
   .loading-logo .bot {
-    font-size: 14px; color: #a0a0a0;
+    font-size: 14px; color: var(--text-secondary, #a0a0a0);
     letter-spacing: 6px; margin-top: 8px;
   }
   .loading-logo .divider {
     display: flex; gap: 6px; justify-content: center; margin-top: 16px;
   }
   .loading-logo .divider span {
-    width: 4px; height: 4px; background: #f5c542; opacity: 0.4;
+    width: 4px; height: 4px; background: var(--logo-color, #f5c542); opacity: 0.4;
   }
   .loading-logo .divider span:nth-child(4) { opacity: 1; width: 8px; }
 
   .loading-bar-container {
     position: relative; z-index: 2;
     width: 240px; height: 12px;
-    background: #111; border: 2px solid #333;
+    background: var(--bar-bg, #111); border: 2px solid var(--bar-border, #333);
     overflow: hidden;
   }
   .loading-bar-fill {
     height: 100%; width: 75%;
-    background: linear-gradient(90deg, #f5c542, #e8a830);
+    background: var(--bar-fill, linear-gradient(90deg, #f5c542, #e8a830));
     box-shadow: 0 0 8px rgba(245,197,66,0.3);
     animation: loadPulse 1.5s ease-in-out infinite;
   }
@@ -125,42 +136,41 @@
     50% { opacity: 1; }
   }
   .loading-text {
-    font-size: 8px; color: #666; margin-top: 12px;
+    font-size: 8px; color: var(--text-muted, #666); margin-top: 12px;
     letter-spacing: 3px; position: relative; z-index: 2;
   }
   .loading-version {
     position: absolute; bottom: 20px;
-    font-size: 7px; color: #333; letter-spacing: 2px;
+    font-size: 7px; color: var(--text-dim, #333); letter-spacing: 2px;
   }
 
   /* ===== 2. TITLE SCREEN ===== */
   .title-demo {
     width: 100%; height: 100%;
-    background: #0a0a1a;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     position: relative; overflow: hidden;
+    background: var(--title-bg, #0a0a1a);
   }
   .title-demo::before {
     content: ''; position: absolute; inset: 0;
-    background:
+    background: var(--title-glow,
       radial-gradient(ellipse at 50% 80%, rgba(245,197,66,0.06) 0%, transparent 50%),
       radial-gradient(ellipse at 20% 20%, rgba(52,152,219,0.04) 0%, transparent 40%),
-      radial-gradient(ellipse at 80% 30%, rgba(231,76,60,0.04) 0%, transparent 40%);
+      radial-gradient(ellipse at 80% 30%, rgba(231,76,60,0.04) 0%, transparent 40%)
+    );
   }
-  /* Vignette */
   .title-demo::after {
     content: ''; position: absolute; inset: 0;
-    background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.6) 100%);
+    background: var(--title-vignette, radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.6) 100%));
     pointer-events: none;
   }
-
   .title-main {
     position: relative; z-index: 2; text-align: center;
   }
   .title-main .reggies {
-    font-size: 36px; color: #f5c542;
-    text-shadow: 0 0 30px rgba(245,197,66,0.3), 0 3px 0 #b8860b, 0 4px 0 #8a6508;
+    font-size: 36px; color: var(--logo-color, #f5c542);
+    text-shadow: var(--title-text-shadow, 0 0 30px rgba(245,197,66,0.3), 0 3px 0 #b8860b, 0 4px 0 #8a6508);
     letter-spacing: 6px;
     animation: titleFloat 3s ease-in-out infinite;
   }
@@ -169,9 +179,9 @@
     50% { transform: translateY(-4px); }
   }
   .title-main .adventure {
-    font-size: 16px; color: #e8e8e8;
+    font-size: 16px; color: var(--text-primary, #e8e8e8);
     letter-spacing: 10px; margin-top: 8px;
-    text-shadow: 0 1px 0 #666;
+    text-shadow: 0 1px 0 var(--text-muted, #666);
   }
   .title-divider {
     display: flex; align-items: center; gap: 12px;
@@ -179,26 +189,23 @@
   }
   .title-divider .line {
     width: 50px; height: 1px;
-    background: linear-gradient(90deg, transparent, #f5c542, transparent);
+    background: var(--divider-gradient, linear-gradient(90deg, transparent, #f5c542, transparent));
   }
-  .title-divider .diamond { color: #f5c542; font-size: 8px; }
-
+  .title-divider .diamond { color: var(--logo-color, #f5c542); font-size: 8px; }
   .title-version {
-    font-size: 7px; color: #555; margin-top: 16px;
+    font-size: 7px; color: var(--text-muted, #555); margin-top: 16px;
     letter-spacing: 2px; position: relative; z-index: 2;
   }
   .title-press {
-    font-size: 10px; color: #f5c542; margin-top: 40px;
+    font-size: 10px; color: var(--logo-color, #f5c542); margin-top: 40px;
     letter-spacing: 4px; position: relative; z-index: 2;
     animation: blink-steps 1s steps(2) infinite;
   }
   @keyframes blink-steps { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-
   .title-hint {
-    font-size: 6px; color: #444; margin-top: 12px;
+    font-size: 6px; color: var(--text-dim, #444); margin-top: 12px;
     position: relative; z-index: 2;
   }
-
   .title-creatures {
     position: absolute; inset: 0; z-index: 1; pointer-events: none;
   }
@@ -213,31 +220,84 @@
     50% { transform: translateY(-10px); }
   }
 
-  /* ===== 3. GAME SCREEN ===== */
+  /* ===== 3. CREATION SCREEN ===== */
+  .creation-demo {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative; overflow: hidden; padding: 20px;
+    background: var(--creation-bg, #0a0a1a);
+  }
+  .creation-demo::before {
+    content: ''; position: absolute; inset: 0;
+    background: var(--creation-glow, radial-gradient(ellipse at 50% 70%, rgba(245,197,66,0.03) 0%, transparent 60%));
+  }
+  .creation-title {
+    font-size: 12px; color: var(--logo-color, #f5c542); letter-spacing: 3px;
+    margin-bottom: 24px; position: relative; z-index: 2;
+  }
+  .creation-carousel {
+    display: flex; gap: 16px; align-items: center;
+    position: relative; z-index: 2; margin-bottom: 24px;
+  }
+  .carousel-arrow {
+    font-size: 16px; color: var(--text-muted, #555); cursor: pointer;
+    transition: color 0.2s;
+  }
+  .carousel-arrow:hover { color: var(--logo-color, #f5c542); }
+  .carousel-card {
+    width: 140px; padding: 16px; text-align: center;
+    background: var(--card-bg, rgba(255,255,255,0.04));
+    border: 2px solid var(--card-border, rgba(255,255,255,0.08));
+    border-radius: 16px; transition: all 0.3s;
+  }
+  .carousel-card.selected {
+    border-color: var(--logo-color, #f5c542);
+    background: var(--card-selected-bg, rgba(245,197,66,0.06));
+    box-shadow: var(--card-selected-shadow, 0 0 20px rgba(245,197,66,0.1));
+  }
+  .carousel-card .emoji { font-size: 48px; margin-bottom: 8px; }
+  .carousel-card .type-name { font-size: 8px; color: var(--logo-color, #f5c542); }
+  .carousel-card .type-desc { font-size: 6px; color: var(--text-muted, #777); margin-top: 4px; line-height: 1.6; }
+
+  .creation-name-input {
+    width: 220px; text-align: center;
+    background: var(--input-bg, rgba(255,255,255,0.04));
+    border: 2px solid var(--input-border, rgba(255,255,255,0.1));
+    border-radius: 8px; padding: 10px;
+    font-family: inherit; font-size: 10px; color: var(--text-primary, #e8e8e8);
+    outline: none; position: relative; z-index: 2;
+    transition: border-color 0.2s;
+  }
+  .creation-name-input:focus { border-color: var(--logo-color, #f5c542); }
+  .creation-name-input::placeholder { color: var(--text-dim, #444); }
+
+  .creation-start-btn {
+    margin-top: 20px; padding: 10px 28px;
+    background: var(--btn-primary-bg, #f5c542); border: none; border-radius: 8px;
+    font-family: inherit; font-size: 9px; color: var(--btn-primary-text, #0a0a1a);
+    letter-spacing: 2px; cursor: pointer;
+    position: relative; z-index: 2;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .creation-start-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(245,197,66,0.3);
+  }
+
+  /* ===== 4. GAME SCREEN (Mobile) ===== */
   .game-demo {
     width: 100%; height: 100%;
-    background: #1a1a2e;
     position: relative; overflow: hidden;
   }
   .game-bg {
     position: absolute; inset: 0;
-    background: linear-gradient(180deg, #1a0a2e 0%, #2a1040 40%, #1a1a2e 100%);
-  }
-  .game-bg-mountains {
-    position: absolute; bottom: 30%; left: 0; right: 0;
-    height: 40%;
-    background:
-      linear-gradient(135deg, #1a0a2e 25%, transparent 25%) -20px 0,
-      linear-gradient(225deg, #1a0a2e 25%, transparent 25%) -20px 0;
-    background-size: 80px 60px;
-    opacity: 0.3;
+    background: var(--game-sky, linear-gradient(180deg, #1a0a2e 0%, #2a1040 40%, #1a1a2e 100%));
   }
   .game-ground {
     position: absolute; bottom: 0; left: 0; right: 0; height: 30%;
-    background: linear-gradient(180deg, #0a0a1a, #050510);
+    background: var(--game-ground, linear-gradient(180deg, #0a0a1a, #050510));
   }
-
-  /* Fracture lines */
   .fracture-lines {
     position: absolute; inset: 0; pointer-events: none;
   }
@@ -254,106 +314,97 @@
     position: absolute; top: 0; left: 0; right: 0;
     display: flex; justify-content: space-between; align-items: center;
     padding: 10px 14px;
-    background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 100%);
+    background: var(--hud-gradient, linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 100%));
     z-index: 10;
   }
   .hud-left { display: flex; gap: 10px; align-items: center; }
   .hud-right { display: flex; gap: 8px; align-items: center; }
   .hud-pill {
     display: flex; align-items: center; gap: 4px;
-    background: rgba(255,255,255,0.08);
+    background: var(--glass-bg, rgba(255,255,255,0.08));
     backdrop-filter: blur(4px);
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid var(--glass-border, rgba(255,255,255,0.1));
     border-radius: 20px; padding: 4px 10px;
-    font-size: 8px;
+    font-size: 8px; color: var(--text-primary, #e8e8e8);
   }
   .hud-btn {
     width: 30px; height: 30px;
-    background: rgba(255,255,255,0.08);
+    background: var(--glass-bg, rgba(255,255,255,0.08));
     backdrop-filter: blur(4px);
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid var(--glass-border, rgba(255,255,255,0.1));
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 12px; cursor: pointer;
-    transition: all 0.2s;
+    font-size: 12px; cursor: pointer; transition: all 0.2s;
   }
   .hud-btn:hover { background: rgba(255,255,255,0.15); transform: scale(1.1); }
 
-  /* Sprite area */
   .game-sprite-area {
     position: absolute; top: 50%; left: 50%;
-    transform: translate(-50%, -55%);
-    z-index: 5;
+    transform: translate(-50%, -55%); z-index: 5;
   }
   .sprite-placeholder {
     width: 140px; height: 140px;
     background: radial-gradient(circle, rgba(245,197,66,0.15), transparent 70%);
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 80px;
-    animation: spriteFloat 2.5s ease-in-out infinite;
+    font-size: 80px; animation: spriteFloat 2.5s ease-in-out infinite;
   }
   @keyframes spriteFloat {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-8px); }
   }
 
-  /* Stats below sprite */
   .game-stats {
     position: absolute; top: 50%; left: 50%;
     transform: translate(-50%, 60px);
     z-index: 6; width: 220px;
     display: flex; flex-direction: column; gap: 6px;
   }
-  .stat-row {
-    display: flex; align-items: center; gap: 6px;
-  }
+  .stat-row { display: flex; align-items: center; gap: 6px; }
   .stat-icon { font-size: 10px; width: 16px; text-align: center; }
   .stat-bar-bg {
-    flex: 1; height: 6px; background: rgba(255,255,255,0.08);
+    flex: 1; height: 6px;
+    background: var(--stat-bar-bg, rgba(255,255,255,0.08));
     border-radius: 3px; overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid var(--stat-bar-border, rgba(255,255,255,0.05));
   }
-  .stat-bar-fill {
-    height: 100%; border-radius: 3px;
-    transition: width 0.5s ease;
-  }
+  .stat-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
   .stat-bar-fill.espiritu { background: linear-gradient(90deg, #7b4db5, #9b59b6); width: 65%; }
   .stat-bar-fill.pulso { background: linear-gradient(90deg, #d4a017, #f1c40f); width: 78%; }
   .stat-bar-fill.esencia { background: linear-gradient(90deg, #1a9a5a, #34d399); width: 90%; }
-  .stat-val { font-size: 6px; color: #888; width: 22px; text-align: right; }
+  .stat-val { font-size: 6px; color: var(--text-muted, #888); width: 22px; text-align: right; }
 
-  /* Bottom nav */
   .game-bottom {
     position: absolute; bottom: 0; left: 0; right: 0;
     display: flex; justify-content: center; gap: 6px;
     padding: 12px;
-    background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, transparent 100%);
+    background: var(--bottom-gradient, linear-gradient(0deg, rgba(0,0,0,0.7) 0%, transparent 100%));
     z-index: 10;
   }
   .bottom-btn {
     display: flex; flex-direction: column; align-items: center; gap: 3px;
-    background: rgba(255,255,255,0.08);
+    background: var(--glass-bg, rgba(255,255,255,0.08));
     backdrop-filter: blur(4px);
-    border: 1px solid rgba(255,255,255,0.12);
+    border: 1px solid var(--glass-border, rgba(255,255,255,0.12));
     border-radius: 12px; padding: 8px 16px;
     cursor: pointer; transition: all 0.2s;
+    color: var(--text-primary, #e8e8e8);
   }
   .bottom-btn:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
   .bottom-btn .icon { font-size: 18px; }
-  .bottom-btn .lbl { font-size: 5px; color: #888; letter-spacing: 1px; }
+  .bottom-btn .lbl { font-size: 5px; color: var(--text-muted, #888); letter-spacing: 1px; }
 
-  /* ===== 4. CHAT PANEL ===== */
+  /* ===== 5. CHAT PANEL ===== */
   .chat-demo {
     width: 100%; height: 100%;
-    background: #0a0a14;
     display: flex; flex-direction: column;
     position: relative;
+    background: var(--chat-bg, #0a0a14);
   }
   .chat-header {
     padding: 12px 14px;
-    background: rgba(255,255,255,0.03);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
+    background: var(--chat-header-bg, rgba(255,255,255,0.03));
+    border-bottom: 1px solid var(--chat-border, rgba(255,255,255,0.06));
     display: flex; align-items: center; gap: 8px;
   }
   .chat-header .avatar {
@@ -362,13 +413,12 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 14px;
   }
-  .chat-header .name { font-size: 9px; color: #f5c542; }
+  .chat-header .name { font-size: 9px; color: var(--logo-color, #f5c542); }
   .chat-header .status { font-size: 6px; color: #4caf50; margin-top: 2px; }
   .chat-header .close {
-    margin-left: auto; font-size: 14px; color: #555;
+    margin-left: auto; font-size: 14px; color: var(--text-muted, #555);
     cursor: pointer; padding: 4px;
   }
-
   .chat-messages {
     flex: 1; padding: 16px; overflow-y: auto;
     display: flex; flex-direction: column; gap: 10px;
@@ -376,8 +426,7 @@
   .chat-bubble {
     max-width: 80%; padding: 10px 12px;
     font-size: 7px; line-height: 1.8;
-    border-radius: 12px;
-    animation: bubbleIn 0.3s ease;
+    border-radius: 12px; animation: bubbleIn 0.3s ease;
   }
   @keyframes bubbleIn {
     from { opacity: 0; transform: translateY(8px); }
@@ -385,152 +434,58 @@
   }
   .chat-bubble.bot {
     align-self: flex-start;
-    background: rgba(245,197,66,0.1);
-    border: 1px solid rgba(245,197,66,0.15);
-    color: #e8e8e8;
+    background: var(--bubble-bot-bg, rgba(245,197,66,0.1));
+    border: 1px solid var(--bubble-bot-border, rgba(245,197,66,0.15));
+    color: var(--text-primary, #e8e8e8);
     border-bottom-left-radius: 4px;
   }
   .chat-bubble.user {
     align-self: flex-end;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.08);
-    color: #ccc;
+    background: var(--bubble-user-bg, rgba(255,255,255,0.06));
+    border: 1px solid var(--bubble-user-border, rgba(255,255,255,0.08));
+    color: var(--text-secondary, #ccc);
     border-bottom-right-radius: 4px;
   }
   .chat-bubble .delta {
     display: inline-block; margin-top: 4px;
     font-size: 6px; color: #4caf50; opacity: 0.7;
   }
-
   .chat-input-area {
     padding: 10px 14px;
-    background: rgba(255,255,255,0.02);
-    border-top: 1px solid rgba(255,255,255,0.06);
+    background: var(--chat-input-area-bg, rgba(255,255,255,0.02));
+    border-top: 1px solid var(--chat-border, rgba(255,255,255,0.06));
     display: flex; gap: 8px; align-items: center;
   }
   .chat-input {
-    flex: 1; background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
+    flex: 1;
+    background: var(--input-bg, rgba(255,255,255,0.05));
+    border: 1px solid var(--input-border, rgba(255,255,255,0.1));
     border-radius: 20px; padding: 8px 14px;
-    font-family: inherit; font-size: 7px; color: #e8e8e8;
+    font-family: inherit; font-size: 7px; color: var(--text-primary, #e8e8e8);
     outline: none;
   }
   .chat-send {
     width: 32px; height: 32px; border-radius: 50%;
-    background: #f5c542; border: none;
+    background: var(--btn-primary-bg, #f5c542); border: none;
     display: flex; align-items: center; justify-content: center;
-    cursor: pointer; font-size: 12px;
-    transition: transform 0.2s;
+    cursor: pointer; font-size: 12px; transition: transform 0.2s;
+    color: var(--btn-primary-text, #0a0a1a);
   }
   .chat-send:hover { transform: scale(1.1); }
 
-  /* ===== 5. CREATION SCREEN ===== */
-  .creation-demo {
-    width: 100%; height: 100%;
-    background: #0a0a1a;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    position: relative; overflow: hidden; padding: 20px;
-  }
-  .creation-demo::before {
-    content: ''; position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 50% 70%, rgba(245,197,66,0.03) 0%, transparent 60%);
-  }
-  .creation-title {
-    font-size: 12px; color: #f5c542; letter-spacing: 3px;
-    margin-bottom: 24px; position: relative; z-index: 2;
-  }
-  .creation-carousel {
-    display: flex; gap: 16px; align-items: center;
-    position: relative; z-index: 2; margin-bottom: 24px;
-  }
-  .carousel-arrow {
-    font-size: 16px; color: #555; cursor: pointer;
-    transition: color 0.2s;
-  }
-  .carousel-arrow:hover { color: #f5c542; }
-  .carousel-card {
-    width: 140px; padding: 16px; text-align: center;
-    background: rgba(255,255,255,0.04);
-    border: 2px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
-    transition: all 0.3s;
-  }
-  .carousel-card.selected {
-    border-color: #f5c542;
-    background: rgba(245,197,66,0.06);
-    box-shadow: 0 0 20px rgba(245,197,66,0.1);
-  }
-  .carousel-card .emoji { font-size: 48px; margin-bottom: 8px; }
-  .carousel-card .type-name { font-size: 8px; color: #f5c542; }
-  .carousel-card .type-desc { font-size: 6px; color: #777; margin-top: 4px; line-height: 1.6; }
-
-  .creation-name-input {
-    width: 220px; text-align: center;
-    background: rgba(255,255,255,0.04);
-    border: 2px solid rgba(255,255,255,0.1);
-    border-radius: 8px; padding: 10px;
-    font-family: inherit; font-size: 10px; color: #e8e8e8;
-    outline: none; position: relative; z-index: 2;
-    transition: border-color 0.2s;
-  }
-  .creation-name-input:focus { border-color: #f5c542; }
-  .creation-name-input::placeholder { color: #444; }
-
-  .creation-start-btn {
-    margin-top: 20px; padding: 10px 28px;
-    background: #f5c542; border: none; border-radius: 8px;
-    font-family: inherit; font-size: 9px; color: #0a0a1a;
-    letter-spacing: 2px; cursor: pointer;
-    position: relative; z-index: 2;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  .creation-start-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(245,197,66,0.3);
-  }
-
-  /* ===== DESKTOP GAME ===== */
-  .desktop-frame {
-    width: 900px; height: 560px;
-    border: 3px solid #333; border-radius: 12px;
-    overflow: hidden; display: flex;
-  }
-  .desktop-world {
-    flex: 7; position: relative;
-    background: linear-gradient(180deg, #1a0a2e 0%, #2a1040 40%, #1a1a2e 100%);
-    overflow: hidden;
-  }
-  .desktop-panel {
-    flex: 3; background: #0a0a14;
-    border-left: 1px solid rgba(255,255,255,0.06);
-    display: flex; flex-direction: column;
-  }
-  .desktop-tabs {
-    display: flex; border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-  .desktop-tab {
-    flex: 1; padding: 10px; text-align: center;
-    font-size: 12px; color: #555; cursor: pointer;
-    border-bottom: 2px solid transparent;
-    transition: all 0.2s;
-  }
-  .desktop-tab:hover { color: #888; }
-  .desktop-tab.active { color: #f5c542; border-bottom-color: #f5c542; }
-
-  /* ===== LEADERBOARD ===== */
+  /* ===== 6. LEADERBOARD ===== */
   .lb-demo {
     width: 100%; height: 100%;
-    background: #0a0a14;
     display: flex; flex-direction: column;
     padding: 16px; overflow-y: auto;
+    background: var(--chat-bg, #0a0a14);
   }
   .lb-title {
-    font-size: 10px; color: #f5c542; text-align: center;
+    font-size: 10px; color: var(--logo-color, #f5c542); text-align: center;
     letter-spacing: 3px; margin-bottom: 4px;
   }
   .lb-subtitle {
-    font-size: 6px; color: #555; text-align: center;
+    font-size: 6px; color: var(--text-muted, #555); text-align: center;
     margin-bottom: 16px;
   }
   .lb-filters {
@@ -538,36 +493,106 @@
   }
   .lb-filter {
     font-size: 6px; padding: 4px 8px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px; color: #666; cursor: pointer;
+    background: var(--card-bg, rgba(255,255,255,0.04));
+    border: 1px solid var(--card-border, rgba(255,255,255,0.08));
+    border-radius: 12px; color: var(--text-muted, #666); cursor: pointer;
   }
-  .lb-filter.active { color: #f5c542; border-color: #f5c542; background: rgba(245,197,66,0.06); }
-
+  .lb-filter.active { color: var(--logo-color, #f5c542); border-color: var(--logo-color, #f5c542); background: var(--card-selected-bg, rgba(245,197,66,0.06)); }
   .lb-entry {
     display: flex; align-items: center; gap: 10px;
     padding: 10px 12px; margin-bottom: 4px;
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.04);
-    border-radius: 10px;
-    transition: all 0.2s;
+    background: var(--card-bg, rgba(255,255,255,0.02));
+    border: 1px solid var(--card-border, rgba(255,255,255,0.04));
+    border-radius: 10px; transition: all 0.2s;
   }
-  .lb-entry:hover { background: rgba(255,255,255,0.04); }
-  .lb-entry.you { border-color: rgba(245,197,66,0.2); background: rgba(245,197,66,0.04); }
-  .lb-rank { font-size: 10px; color: #555; width: 24px; text-align: center; }
+  .lb-entry:hover { background: var(--card-hover, rgba(255,255,255,0.04)); }
+  .lb-entry.you { border-color: rgba(245,197,66,0.2); background: var(--card-selected-bg, rgba(245,197,66,0.04)); }
+  .lb-rank { font-size: 10px; color: var(--text-muted, #555); width: 24px; text-align: center; }
   .lb-rank.gold { color: #f5c542; }
   .lb-rank.silver { color: #c0c0c0; }
   .lb-rank.bronze { color: #cd7f32; }
   .lb-avatar {
     width: 32px; height: 32px; border-radius: 50%;
-    background: rgba(255,255,255,0.06);
+    background: var(--card-bg, rgba(255,255,255,0.06));
     display: flex; align-items: center; justify-content: center;
     font-size: 18px;
   }
   .lb-info { flex: 1; }
-  .lb-name { font-size: 7px; color: #e8e8e8; }
-  .lb-type { font-size: 5px; color: #666; margin-top: 2px; }
-  .lb-score { font-size: 8px; color: #f5c542; }
+  .lb-name { font-size: 7px; color: var(--text-primary, #e8e8e8); }
+  .lb-type { font-size: 5px; color: var(--text-muted, #666); margin-top: 2px; }
+  .lb-score { font-size: 8px; color: var(--logo-color, #f5c542); }
+
+  /* ============================================= */
+  /* LIGHT THEME                                   */
+  /* ============================================= */
+  body.light {
+    background: #f5f0e1;
+    color: #2a2a2a;
+
+    --load-bg: #f5f0e1;
+    --load-glow: radial-gradient(ellipse at 50% 30%, rgba(180,130,50,0.08) 0%, transparent 70%);
+    --star-color: #b8860b;
+    --logo-color: #b8860b;
+    --logo-shadow: 0 0 15px rgba(184,134,11,0.2), 0 2px 0 #8a6508;
+    --text-primary: #2a2a2a;
+    --text-secondary: #5a5a5a;
+    --text-muted: #8b8370;
+    --text-dim: #c4b99a;
+    --bar-bg: #e8dcc8;
+    --bar-border: #c4b99a;
+    --bar-fill: linear-gradient(90deg, #b8860b, #d4a017);
+
+    --title-bg: #f5f0e1;
+    --title-glow: radial-gradient(ellipse at 50% 80%, rgba(184,134,11,0.06) 0%, transparent 50%);
+    --title-vignette: radial-gradient(ellipse at center, transparent 50%, rgba(200,185,155,0.4) 100%);
+    --title-text-shadow: 0 0 20px rgba(184,134,11,0.2), 0 2px 0 #8a6508;
+    --divider-gradient: linear-gradient(90deg, transparent, #b8860b, transparent);
+
+    --creation-bg: #f5f0e1;
+    --creation-glow: radial-gradient(ellipse at 50% 70%, rgba(184,134,11,0.04) 0%, transparent 60%);
+    --card-bg: rgba(0,0,0,0.03);
+    --card-border: rgba(0,0,0,0.08);
+    --card-selected-bg: rgba(184,134,11,0.08);
+    --card-selected-shadow: 0 0 20px rgba(184,134,11,0.1);
+    --card-hover: rgba(0,0,0,0.05);
+    --input-bg: rgba(0,0,0,0.03);
+    --input-border: rgba(0,0,0,0.12);
+    --btn-primary-bg: #b8860b;
+    --btn-primary-text: #f5f0e1;
+
+    --game-sky: linear-gradient(180deg, #e8dcc8 0%, #d4c5a9 40%, #f5f0e1 100%);
+    --game-ground: linear-gradient(180deg, #d4c5a9, #c4b99a);
+    --hud-gradient: linear-gradient(180deg, rgba(245,240,225,0.8) 0%, transparent 100%);
+    --glass-bg: rgba(0,0,0,0.05);
+    --glass-border: rgba(0,0,0,0.08);
+    --bottom-gradient: linear-gradient(0deg, rgba(245,240,225,0.9) 0%, transparent 100%);
+    --stat-bar-bg: rgba(0,0,0,0.06);
+    --stat-bar-border: rgba(0,0,0,0.04);
+
+    --chat-bg: #f5f0e1;
+    --chat-header-bg: rgba(0,0,0,0.03);
+    --chat-border: rgba(0,0,0,0.08);
+    --chat-input-area-bg: rgba(0,0,0,0.02);
+    --bubble-bot-bg: rgba(184,134,11,0.08);
+    --bubble-bot-border: rgba(184,134,11,0.15);
+    --bubble-user-bg: rgba(0,0,0,0.04);
+    --bubble-user-border: rgba(0,0,0,0.08);
+  }
+
+  body.light .preview-nav {
+    background: rgba(245,240,225,0.95);
+    border-bottom-color: #d4c5a9;
+  }
+  body.light .preview-nav button {
+    background: #e8dcc8; color: #8b8370; border-color: #c4b99a;
+  }
+  body.light .preview-nav button:hover { color: #2a2a2a; border-color: #8b8370; }
+  body.light .preview-nav button.active { color: #b8860b; border-color: #b8860b; background: #f5f0e1; }
+  body.light .theme-toggle { background: #b8860b; color: #f5f0e1; border-color: #b8860b; }
+  body.light .phone { border-color: #c4b99a; box-shadow: 0 0 40px rgba(0,0,0,0.1); }
+  body.light .label { color: #8b8370; }
+  body.light .note { color: #8b8370; }
+  body.light .fracture-line { background: rgba(184,134,11,0.12); box-shadow: 0 0 6px rgba(184,134,11,0.1); }
 </style>
 </head>
 <body>
@@ -576,10 +601,10 @@
   <button class="active" onclick="show('loading')">Loading</button>
   <button onclick="show('title')">Title</button>
   <button onclick="show('creation')">Creation</button>
-  <button onclick="show('game-mobile')">Game (Mobile)</button>
+  <button onclick="show('game-mobile')">Game</button>
   <button onclick="show('chat')">Chat</button>
-  <button onclick="show('game-desktop')">Game (Desktop)</button>
   <button onclick="show('leaderboard')">Leaderboard</button>
+  <button class="theme-toggle" onclick="toggleTheme()">🌓 Toggle Theme</button>
 </div>
 
 <div class="screens">
@@ -590,10 +615,8 @@
     <div class="phone">
       <div class="loading-demo">
         <div class="stars">
-          <span class="star">✦</span>
-          <span class="star">✧</span>
-          <span class="star">✦</span>
-          <span class="star">✧</span>
+          <span class="star">✦</span><span class="star">✧</span>
+          <span class="star">✦</span><span class="star">✧</span>
           <span class="star">✦</span>
         </div>
         <div class="loading-logo">
@@ -612,10 +635,7 @@
         <div class="loading-version">v0.5 — El Encuentro</div>
       </div>
     </div>
-    <div class="note">
-      Fondo más profundo, logo con glow sutil, estrellas twinkling.
-      Barra de progreso con gradiente dorado y pulse. Minimalista pero premium.
-    </div>
+    <div class="note">Fondo profundo, logo con glow, estrellas twinkling. Barra dorada con pulse. Click "Toggle Theme" arriba para ver light mode.</div>
   </div>
 
   <!-- TITLE -->
@@ -642,10 +662,7 @@
         <div class="title-hint">clic · tap · Enter · Space</div>
       </div>
     </div>
-    <div class="note">
-      Más cinematográfico. Vignette, glows sutiles por tipo, title con sombra profunda
-      y float animation. Criaturas como sombras en el fondo.
-    </div>
+    <div class="note">Cinematográfico. Vignette, glows sutiles, title con sombra profunda y float. Light mode: parchment cálido estilo Game Boy Color.</div>
   </div>
 
   <!-- CREATION -->
@@ -667,10 +684,7 @@
         <button class="creation-start-btn">COMENZAR ▸</button>
       </div>
     </div>
-    <div class="note">
-      Card con borde glow al seleccionar, fondo radial sutil.
-      Input y botón redondeados, más modernos pero manteniendo pixel font.
-    </div>
+    <div class="note">Card con glow border al seleccionar. Input y botón redondeados. Pixel font se mantiene.</div>
   </div>
 
   <!-- GAME MOBILE -->
@@ -685,22 +699,19 @@
           <div class="fracture-line fl2"></div>
           <div class="fracture-line fl3"></div>
         </div>
-
         <div class="game-hud">
           <div class="hud-left">
             <div class="hud-pill">💠 90</div>
-            <div class="hud-pill" style="cursor:pointer">📖 Diario</div>
+            <div class="hud-pill">📖 Diario</div>
           </div>
           <div class="hud-right">
             <div class="hud-btn">🎯</div>
             <div class="hud-btn">⚙️</div>
           </div>
         </div>
-
         <div class="game-sprite-area">
           <div class="sprite-placeholder">⚡</div>
         </div>
-
         <div class="game-stats">
           <div class="stat-row">
             <span class="stat-icon">🔮</span>
@@ -718,27 +729,14 @@
             <span class="stat-val">90</span>
           </div>
         </div>
-
         <div class="game-bottom">
-          <div class="bottom-btn">
-            <span class="icon">💬</span>
-            <span class="lbl">CHAT</span>
-          </div>
-          <div class="bottom-btn">
-            <span class="icon">📷</span>
-            <span class="lbl">FOTO</span>
-          </div>
-          <div class="bottom-btn">
-            <span class="icon">🌍</span>
-            <span class="lbl">SOCIAL</span>
-          </div>
+          <div class="bottom-btn"><span class="icon">💬</span><span class="lbl">CHAT</span></div>
+          <div class="bottom-btn"><span class="icon">📷</span><span class="lbl">FOTO</span></div>
+          <div class="bottom-btn"><span class="icon">🌍</span><span class="lbl">SOCIAL</span></div>
         </div>
       </div>
     </div>
-    <div class="note">
-      HUD con pills glassmorphism (blur + transparencia). Stats como thin bars debajo del sprite.
-      Bottom nav con cards redondeadas. Todo se integra al mundo en vez de "flotar encima".
-    </div>
+    <div class="note">HUD glassmorphism. Stats como thin bars. Bottom nav redondeado. Todo integrado al mundo. Light mode adapta cielo y suelo a tonos parchment.</div>
   </div>
 
   <!-- CHAT -->
@@ -759,18 +757,14 @@
             ¿Sientes eso? La Red vibra hoy con más fuerza. Algo se acerca... ⚡
             <div class="delta">+2 🔮 +1 💛</div>
           </div>
-          <div class="chat-bubble user">
-            Hola Reggie! Cómo estás hoy?
-          </div>
+          <div class="chat-bubble user">Hola Reggie! Cómo estás hoy?</div>
           <div class="chat-bubble bot">
-            Mejor que nunca. Mi espíritu brilla. Creo que la fractura se está cerrando... puedo sentirlo.
+            Mejor que nunca. Mi espíritu brilla. Creo que la fractura se está cerrando...
             <div class="delta">+1 🔮 -1 🌱</div>
           </div>
-          <div class="chat-bubble user">
-            Qué bien! Vamos a buscar fragmentos
-          </div>
+          <div class="chat-bubble user">Qué bien! Vamos a buscar fragmentos</div>
           <div class="chat-bubble bot">
-            ¡Sí! Vamos. Los fragmentos nos esperan en el mundo real. Toma una foto de algo que te inspire. 📸
+            ¡Sí! Los fragmentos nos esperan en el mundo real. Toma una foto de algo que te inspire. 📸
             <div class="delta">+3 🔮 +2 💠</div>
           </div>
         </div>
@@ -780,89 +774,12 @@
         </div>
       </div>
     </div>
-    <div class="note">
-      Chat tipo messenger moderno. Burbujas con bordes sutiles (no cuadradas NES).
-      Header con avatar y status. Input con border-radius pill. Send button dorado.
-      Stat deltas como subtexto discreto.
-    </div>
-  </div>
-
-  <!-- GAME DESKTOP -->
-  <div class="screen-section" id="s-game-desktop">
-    <div class="label">06 — Game Screen (Desktop 70/30)</div>
-    <div class="desktop-frame">
-      <div class="desktop-world">
-        <div class="game-bg"></div>
-        <div class="game-ground"></div>
-        <div class="fracture-lines">
-          <div class="fracture-line fl1"></div>
-          <div class="fracture-line fl2"></div>
-        </div>
-        <div class="game-hud">
-          <div class="hud-left">
-            <div class="hud-pill">💠 90</div>
-            <div class="hud-pill">📖 Diario</div>
-          </div>
-          <div class="hud-right">
-            <div class="hud-btn">🎯</div>
-            <div class="hud-btn">⚙️</div>
-          </div>
-        </div>
-        <div class="game-sprite-area">
-          <div class="sprite-placeholder" style="font-size:100px; width:180px; height:180px;">⚡</div>
-        </div>
-        <div class="game-stats" style="transform: translate(-50%, 80px); width: 280px;">
-          <div class="stat-row">
-            <span class="stat-icon">🔮</span>
-            <div class="stat-bar-bg"><div class="stat-bar-fill espiritu"></div></div>
-            <span class="stat-val">65</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-icon">💛</span>
-            <div class="stat-bar-bg"><div class="stat-bar-fill pulso"></div></div>
-            <span class="stat-val">78</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-icon">🌱</span>
-            <div class="stat-bar-bg"><div class="stat-bar-fill esencia"></div></div>
-            <span class="stat-val">90</span>
-          </div>
-        </div>
-      </div>
-      <div class="desktop-panel">
-        <div class="desktop-tabs">
-          <div class="desktop-tab active">💬</div>
-          <div class="desktop-tab">📷</div>
-          <div class="desktop-tab">🌍</div>
-        </div>
-        <div class="chat-messages" style="flex:1; padding:12px;">
-          <div class="chat-bubble bot" style="font-size:7px;">
-            ¿Sientes eso? La Red vibra... ⚡
-            <div class="delta">+2 🔮</div>
-          </div>
-          <div class="chat-bubble user" style="font-size:7px;">
-            Hola Reggie!
-          </div>
-          <div class="chat-bubble bot" style="font-size:7px;">
-            Mejor que nunca. Mi espíritu brilla.
-            <div class="delta">+1 🔮 -1 🌱</div>
-          </div>
-        </div>
-        <div class="chat-input-area">
-          <input class="chat-input" placeholder="Escribe...">
-          <button class="chat-send">▸</button>
-        </div>
-      </div>
-    </div>
-    <div class="note">
-      Desktop 70/30. Tabs limpios con underline accent.
-      Panel de chat integrado, mismo estilo que mobile pero adaptado.
-    </div>
+    <div class="note">Chat messenger moderno. Burbujas suaves. Header con avatar. Input pill. Light mode: burbujas con tonos parchment cálidos.</div>
   </div>
 
   <!-- LEADERBOARD -->
   <div class="screen-section" id="s-leaderboard">
-    <div class="label">07 — Leaderboard</div>
+    <div class="label">06 — Leaderboard</div>
     <div class="phone">
       <div class="lb-demo">
         <div class="lb-title">REGENERACIÓN GLOBAL</div>
@@ -872,58 +789,39 @@
           <span class="lb-filter">🍊 $FRUTA</span>
           <span class="lb-filter">🆕 Nuevos</span>
         </div>
-
         <div class="lb-entry">
           <span class="lb-rank gold">1</span>
           <div class="lb-avatar">🔥</div>
-          <div class="lb-info">
-            <div class="lb-name">FireWalker</div>
-            <div class="lb-type">🔥 Flama · Joven</div>
-          </div>
+          <div class="lb-info"><div class="lb-name">FireWalker</div><div class="lb-type">🔥 Flama · Joven</div></div>
           <div class="lb-score">1,250</div>
         </div>
         <div class="lb-entry">
           <span class="lb-rank silver">2</span>
           <div class="lb-avatar">⚡</div>
-          <div class="lb-info">
-            <div class="lb-name">VoltMaster</div>
-            <div class="lb-type">⚡ Rayo · Adulto</div>
-          </div>
+          <div class="lb-info"><div class="lb-name">VoltMaster</div><div class="lb-type">⚡ Rayo · Adulto</div></div>
           <div class="lb-score">980</div>
         </div>
         <div class="lb-entry you">
           <span class="lb-rank bronze">3</span>
           <div class="lb-avatar">⚡</div>
-          <div class="lb-info">
-            <div class="lb-name">Reggie ← tú</div>
-            <div class="lb-type">⚡ Rayo · Cría</div>
-          </div>
+          <div class="lb-info"><div class="lb-name">Reggie ← tú</div><div class="lb-type">⚡ Rayo · Cría</div></div>
           <div class="lb-score">420</div>
         </div>
         <div class="lb-entry">
           <span class="lb-rank">4</span>
           <div class="lb-avatar">❄️</div>
-          <div class="lb-info">
-            <div class="lb-name">CrystalByte</div>
-            <div class="lb-type">❄️ Hielo · Huevo</div>
-          </div>
+          <div class="lb-info"><div class="lb-name">CrystalByte</div><div class="lb-type">❄️ Hielo · Huevo</div></div>
           <div class="lb-score">210</div>
         </div>
         <div class="lb-entry">
           <span class="lb-rank">5</span>
           <div class="lb-avatar">🔥</div>
-          <div class="lb-info">
-            <div class="lb-name">EmberKid</div>
-            <div class="lb-type">🔥 Flama · Cría</div>
-          </div>
+          <div class="lb-info"><div class="lb-name">EmberKid</div><div class="lb-type">🔥 Flama · Cría</div></div>
           <div class="lb-score">150</div>
         </div>
       </div>
     </div>
-    <div class="note">
-      Cards con bordes sutiles, rank con colores medal. Tu entrada highlighted.
-      Filtros como pills. Clean, legible, sin NES borders pesados.
-    </div>
+    <div class="note">Cards sutiles, rank medals, pills para filtros. Tu entrada highlighted. Clean y legible.</div>
   </div>
 
 </div>
@@ -931,9 +829,12 @@
 <script>
 function show(id) {
   document.querySelectorAll('.screen-section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.preview-nav button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.preview-nav button:not(.theme-toggle)').forEach(b => b.classList.remove('active'));
   document.getElementById('s-' + id).classList.add('active');
   event.target.classList.add('active');
+}
+function toggleTheme() {
+  document.body.classList.toggle('light');
 }
 </script>
 
