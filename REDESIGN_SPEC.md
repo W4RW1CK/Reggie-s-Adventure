@@ -350,6 +350,7 @@ Archivo: `public/redesign-v4.html`
 
 ## Notas
 
+- **MOBILE FIRST** — todo se diseña para 375px primero, luego se escala a tablet/desktop
 - Dark mode es prioridad (light mode después)
 - Preview-first: nada se implementa en Next.js sin aprobación en HTML
 - Cada bloque se revisa y aprueba antes de pasar al siguiente

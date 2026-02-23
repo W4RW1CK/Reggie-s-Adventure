@@ -1005,17 +1005,95 @@ body.light .transition-energy-ring {
   border-color: rgba(139,105,20,0.15); box-shadow: none;
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 480px) {
-  .preview-nav { padding: 6px 8px; gap: 3px; }
-  .preview-nav button { font-size: 6px; padding: 5px 7px; }
-  .loading-logo { font-size: var(--fs-xl); }
-  .loading-logo .sub { font-size: var(--fs-base); }
-  .title-main { font-size: var(--fs-2xl); }
-  .title-main .adventure { font-size: var(--fs-lg); }
-  .carousel-card { padding: 16px 12px; }
-  .carousel-sprite { font-size: 48px; }
-  .glow-btn { font-size: var(--fs-sm); padding: 10px 18px; }
+/* ===========================================
+   RESPONSIVE — MOBILE FIRST (375px base)
+   =========================================== */
+
+/* --- Mobile defaults (375px) are the BASE styles above --- */
+/* All base styles target mobile. Below we SCALE UP for larger screens. */
+
+/* Nav: scrollable on mobile */
+.preview-nav { padding: 6px 8px; gap: 3px; }
+.preview-nav button { font-size: 6px; padding: 5px 7px; }
+
+/* Loading: compact on mobile */
+.loading-logo { font-size: var(--fs-xl); }
+.loading-logo .sub { font-size: var(--fs-base); }
+.loading-bar-container { width: 220px; height: 10px; }
+
+/* Title: smaller on mobile */
+.title-main { font-size: var(--fs-2xl); }
+.title-main .adventure { font-size: var(--fs-lg); }
+.title-decorative-regenmons { gap: 24px; font-size: 28px; margin: 20px 0; }
+.title-press-start { font-size: var(--fs-sm); padding: 12px 24px; }
+
+/* Typewriter: tighter on mobile */
+.typewriter-box { padding: 16px; }
+.typewriter-text { font-size: 8px; line-height: 2.2; min-height: 120px; }
+
+/* Login: full width on mobile */
+.login-modal { width: 95%; padding: 24px 16px; }
+.login-btn { font-size: 8px; padding: 12px; }
+
+/* Creation: compact on mobile */
+.creation-title { font-size: var(--fs-lg); }
+.carousel-card { padding: 16px 12px; }
+.carousel-sprite { font-size: 48px; }
+.carousel-type-desc { font-size: 6px; line-height: 2.2; }
+.creation-name-wrapper { max-width: 300px; }
+.creation-name-input { font-size: var(--fs-sm); padding: 12px; }
+
+/* Buttons: full width on mobile */
+.glow-btn { font-size: var(--fs-sm); padding: 10px 18px; width: 100%; max-width: 300px; }
+.fullscreen-buttons { width: 100%; max-width: 300px; }
+
+/* Transition */
+.transition-text { font-size: var(--fs-base); }
+.transition-sprite { font-size: 60px; }
+
+/* --- Tablet (640px+) --- */
+@media (min-width: 640px) {
+  .preview-nav { padding: 8px 12px; gap: 4px; }
+  .preview-nav button { font-size: var(--fs-xs); padding: 6px 10px; }
+
+  .loading-logo { font-size: var(--fs-2xl); }
+  .loading-logo .sub { font-size: var(--fs-lg); }
+  .loading-bar-container { width: 280px; height: 12px; }
+
+  .title-main { font-size: var(--fs-3xl); }
+  .title-main .adventure { font-size: var(--fs-xl); }
+  .title-decorative-regenmons { gap: 40px; font-size: 40px; margin: 30px 0; }
+  .title-press-start { font-size: var(--fs-base); padding: 16px 32px; }
+
+  .typewriter-box { padding: 24px; }
+  .typewriter-text { font-size: var(--fs-sm); line-height: 2.4; min-height: 150px; }
+
+  .login-modal { width: 90%; max-width: 380px; padding: 32px 24px; }
+  .login-btn { font-size: var(--fs-sm); padding: 14px; }
+
+  .creation-title { font-size: var(--fs-xl); }
+  .carousel-card { padding: 24px 16px; }
+  .carousel-sprite { font-size: 64px; }
+  .carousel-type-desc { font-size: var(--fs-xs); }
+  .creation-name-wrapper { max-width: 350px; }
+  .creation-name-input { font-size: var(--fs-base); padding: 14px; }
+
+  .glow-btn { font-size: var(--fs-base); padding: 12px 24px; width: auto; max-width: none; }
+  .fullscreen-buttons { width: auto; }
+
+  .transition-text { font-size: var(--fs-lg); }
+  .transition-sprite { font-size: 80px; }
+}
+
+/* --- Desktop (1024px+) --- */
+@media (min-width: 1024px) {
+  .loading-logo { font-size: 28px; }
+  .loading-bar-container { width: 320px; }
+  .title-main { font-size: 36px; }
+  .typewriter-box { max-width: 600px; }
+  .login-modal { max-width: 420px; }
+  .carousel-card { max-width: 300px; padding: 28px 20px; }
+  .carousel-sprite { font-size: 72px; }
 }
 </style>
 </head>
