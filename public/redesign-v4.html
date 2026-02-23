@@ -37,13 +37,13 @@
   --type-hielo: #b44aff;
 
   /* Font sizes — rem, scales proportionally across devices */
-  --fs-xs: 0.75rem;
-  --fs-sm: 0.875rem;
-  --fs-base: 1rem;
-  --fs-lg: 1.25rem;
-  --fs-xl: 1.5rem;
-  --fs-2xl: 2rem;
-  --fs-3xl: 2.75rem;
+  --fs-xs: 0.5rem;
+  --fs-sm: 0.625rem;
+  --fs-base: 0.75rem;
+  --fs-lg: 0.875rem;
+  --fs-xl: 1rem;
+  --fs-2xl: 1.375rem;
+  --fs-3xl: 1.75rem;
 }
 
 body {
@@ -334,7 +334,7 @@ body::after {
 }
 
 .fullscreen-icon {
-  font-size: 3rem;
+  font-size: 2rem;
   animation: breathe 3s infinite;
 }
 
@@ -375,7 +375,7 @@ body::after {
 .title-bg-runes {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
-  font-size: 120px;
+  font-size: 72px;
   color: rgba(0,240,255,0.03);
   pointer-events: none;
   animation: spin-slow 120s linear infinite;
@@ -405,7 +405,7 @@ body::after {
   gap: 2.5rem;
   margin: 1.875rem 0;
   opacity: 0.15;
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   z-index: 1;
 }
 
@@ -705,7 +705,7 @@ body::after {
 }
 
 .carousel-sprite {
-  font-size: 4rem;
+  font-size: 3rem;
   display: block;
   margin-bottom: 0.75rem;
   animation: breathe 3s infinite;
@@ -797,7 +797,7 @@ body::after {
 }
 
 .transition-sprite {
-  font-size: 5rem;
+  font-size: 3.5rem;
   animation: breathe 1.5s infinite;
   filter: brightness(1.5);
   text-shadow: 0 0 40px rgba(0,240,255,0.5);
@@ -1042,13 +1042,22 @@ body.light .transition-energy-ring {
 /* Only overrides that differ from the component defaults above */
 
 .preview-nav { padding: 0.375rem 0.5rem; gap: 0.1875rem; }
-.preview-nav button { font-size: 0.5rem; padding: 0.375rem 0.5rem; }
+.preview-nav button { font-size: 0.4rem; padding: 0.3rem 0.4rem; }
 
 /* Buttons: full width on mobile */
 .glow-btn { width: 100%; max-width: 20rem; }
 
 /* --- Medium Devices / Tablets (641px+) --- */
 @media (min-width: 641px) {
+  :root {
+    --fs-xs: 0.625rem;
+    --fs-sm: 0.75rem;
+    --fs-base: 0.875rem;
+    --fs-lg: 1rem;
+    --fs-xl: 1.25rem;
+    --fs-2xl: 1.625rem;
+    --fs-3xl: 2.125rem;
+  }
   .preview-nav { padding: 0.5rem 0.75rem; gap: 0.25rem; }
   .preview-nav button { font-size: var(--fs-xs); padding: 0.375rem 0.625rem; }
 
@@ -1071,6 +1080,15 @@ body.light .transition-energy-ring {
 
 /* --- Large Devices / Desktops (1025px+) --- */
 @media (min-width: 1025px) {
+  :root {
+    --fs-xs: 0.75rem;
+    --fs-sm: 0.875rem;
+    --fs-base: 1rem;
+    --fs-lg: 1.125rem;
+    --fs-xl: 1.375rem;
+    --fs-2xl: 1.75rem;
+    --fs-3xl: 2.25rem;
+  }
   .loading-bar-container { width: 21.25rem; }
   .typewriter-box { max-width: 37.5rem; }
   .login-modal { max-width: 27.5rem; }
