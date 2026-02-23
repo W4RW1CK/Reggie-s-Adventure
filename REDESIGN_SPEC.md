@@ -353,4 +353,4 @@ Archivo: `public/redesign-v4.html`
 - Dark mode es prioridad (light mode después)
 - Preview-first: nada se implementa en Next.js sin aprobación en HTML
 - Cada bloque se revisa y aprueba antes de pasar al siguiente
-- Los sprites son PNG pixel art (no SVG) — generados por IA
+- Los sprites son WebP pixel art (no SVG/PNG) — generados por IA, formato WebP para optimizar peso
