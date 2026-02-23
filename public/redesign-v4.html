@@ -106,75 +106,107 @@ body::after {
 }
 .screen.active { display: flex; }
 
-/* ===== SHARED COMPONENTS ===== */
+/* ===== SHARED COMPONENTS — NES STYLE ===== */
 
-/* Pixel Container */
+/* NES Pixel Container — thick borders, solid shadow, no blur */
 .pixel-container {
   background: var(--surface);
-  border: 2px solid var(--border);
+  border: 4px solid var(--text-primary);
   padding: 20px;
   position: relative;
-  box-shadow: 0 0 15px rgba(0,240,255,0.05), inset 0 0 30px rgba(0,0,0,0.3);
+  box-shadow: 4px 4px 0 rgba(0,240,255,0.15);
 }
-.pixel-container::before,
+/* Inner highlight border (NES double-border feel) */
 .pixel-container::after {
-  content: ''; position: absolute; width: 8px; height: 8px;
-  border: 1px solid rgba(0,240,255,0.3);
+  content: '';
+  position: absolute; inset: 3px;
+  border: 2px solid var(--border);
+  pointer-events: none;
 }
-.pixel-container::before { top: 4px; left: 4px; border-right: none; border-bottom: none; }
-.pixel-container::after { bottom: 4px; right: 4px; border-left: none; border-top: none; }
 
-/* Glow Button */
-.glow-btn {
+/* NES Button — solid, chunky, press-effect */
+.nes-btn-custom {
   font-family: inherit;
   font-size: var(--fs-base);
   padding: 12px 24px;
-  background: transparent;
+  background: var(--surface);
   color: var(--cyan);
-  border: 2px solid var(--cyan);
+  border: 4px solid var(--text-primary);
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.1s;
   position: relative;
   text-transform: uppercase;
   letter-spacing: 1px;
+  box-shadow: 4px 4px 0 #000;
+}
+.nes-btn-custom:hover {
+  background: var(--surface-2);
+  color: #fff;
+  text-shadow: 0 0 8px var(--cyan);
+}
+.nes-btn-custom:active {
+  box-shadow: 0px 0px 0 #000;
+  transform: translate(4px, 4px);
+}
+.nes-btn-custom.purple { color: var(--purple); }
+.nes-btn-custom.purple:hover { text-shadow: 0 0 8px var(--purple); }
+.nes-btn-custom.gold { color: var(--gold); }
+.nes-btn-custom.gold:hover { text-shadow: 0 0 8px var(--gold); }
+.nes-btn-custom.disabled { opacity: 0.3; pointer-events: none; }
+
+/* Legacy alias */
+.glow-btn { 
+  font-family: inherit;
+  font-size: var(--fs-base);
+  padding: 12px 24px;
+  background: var(--surface);
+  color: var(--cyan);
+  border: 4px solid var(--text-primary);
+  cursor: pointer;
+  transition: all 0.1s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 4px 4px 0 #000;
 }
 .glow-btn:hover {
-  background: rgba(0,240,255,0.1);
-  box-shadow: 0 0 20px rgba(0,240,255,0.3), inset 0 0 20px rgba(0,240,255,0.05);
-  text-shadow: 0 0 10px rgba(0,240,255,0.5);
+  background: var(--surface-2);
+  color: #fff;
+  text-shadow: 0 0 8px var(--cyan);
 }
 .glow-btn:active {
-  transform: scale(0.97);
+  box-shadow: 0px 0px 0 #000;
+  transform: translate(4px, 4px);
 }
-.glow-btn.purple {
-  color: var(--purple); border-color: var(--purple);
+.glow-btn.purple { color: var(--purple); }
+.glow-btn.purple:hover { text-shadow: 0 0 8px var(--purple); }
+.glow-btn.gold { color: var(--gold); }
+.glow-btn.gold:hover { text-shadow: 0 0 8px var(--gold); }
+.glow-btn.disabled { opacity: 0.3; pointer-events: none; }
+
+/* NES Dialog Box — the classic RPG text box */
+.nes-dialog {
+  background: #111119;
+  border: 4px solid #fff;
+  padding: 20px;
+  position: relative;
+  box-shadow: 6px 6px 0 rgba(0,0,0,0.6);
 }
-.glow-btn.purple:hover {
-  background: rgba(180,74,255,0.1);
-  box-shadow: 0 0 20px rgba(180,74,255,0.3), inset 0 0 20px rgba(180,74,255,0.05);
-  text-shadow: 0 0 10px rgba(180,74,255,0.5);
-}
-.glow-btn.gold {
-  color: var(--gold); border-color: var(--gold);
-}
-.glow-btn.gold:hover {
-  background: rgba(245,197,66,0.1);
-  box-shadow: 0 0 20px rgba(245,197,66,0.3);
-  text-shadow: 0 0 10px rgba(245,197,66,0.5);
-}
-.glow-btn.disabled {
-  opacity: 0.3; pointer-events: none;
+.nes-dialog::after {
+  content: '';
+  position: absolute; inset: 3px;
+  border: 2px solid #444;
+  pointer-events: none;
 }
 
-/* Runic corners for special containers */
-.runic-box {
-  position: relative;
-  border: 1px solid var(--border);
+/* NES Card (for carousel, info panels) */
+.nes-card {
   background: var(--surface-2);
-  padding: 24px;
+  border: 4px solid var(--border);
+  padding: 20px;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.4);
+  transition: border-color 0.3s;
 }
-.runic-box::before { content: '◇'; position: absolute; top: -6px; left: -6px; color: var(--cyan); font-size: 10px; text-shadow: 0 0 8px var(--cyan); }
-.runic-box::after { content: '◇'; position: absolute; bottom: -6px; right: -6px; color: var(--cyan); font-size: 10px; text-shadow: 0 0 8px var(--cyan); }
+.nes-card:hover { border-color: var(--text-dim); }
 
 /* Floating particles */
 @keyframes float-particle {
@@ -266,39 +298,45 @@ body::after {
 .loading-logo {
   font-size: var(--fs-2xl);
   color: var(--cyan);
-  text-shadow: 0 0 20px rgba(0,240,255,0.5), 0 0 40px rgba(0,240,255,0.2);
-  animation: pulse-glow 2s infinite;
+  text-shadow: 3px 3px 0 #003a3f;
   text-align: center;
   line-height: 1.6;
+}
+/* Subtle pulse — NES cartridge loading feel */
+.loading-logo { animation: nes-pulse 2s infinite; }
+@keyframes nes-pulse {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
 }
 .loading-logo .sub {
   display: block;
   font-size: var(--fs-lg);
   color: var(--purple);
-  text-shadow: 0 0 15px rgba(180,74,255,0.4);
+  text-shadow: 2px 2px 0 #1a003f;
   margin-top: 8px;
 }
 
 .loading-bar-container {
   width: 280px;
-  height: 12px;
-  border: 2px solid var(--cyan);
-  background: var(--surface-2);
+  height: 16px;
+  border: 4px solid #fff;
+  background: #111;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 0 10px rgba(0,240,255,0.2);
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
 }
 .loading-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  background: var(--cyan);
   width: 0%;
   animation: bar-fill 2.5s ease-out forwards;
-  box-shadow: 0 0 10px var(--cyan);
 }
+/* Pixel segments inside bar */
 .loading-bar-container::after {
   content: '';
   position: absolute; inset: 0;
-  background: repeating-linear-gradient(90deg, transparent 0px, transparent 8px, rgba(0,0,0,0.2) 8px, rgba(0,0,0,0.2) 10px);
+  background: repeating-linear-gradient(90deg, transparent 0px, transparent 10px, rgba(0,0,0,0.4) 10px, rgba(0,0,0,0.4) 12px);
+  z-index: 1;
 }
 
 .loading-text {
@@ -375,22 +413,19 @@ body::after {
 .title-main {
   font-size: var(--fs-3xl);
   color: var(--cyan);
-  text-shadow:
-    0 0 20px rgba(0,240,255,0.6),
-    0 0 40px rgba(0,240,255,0.3),
-    0 0 80px rgba(0,240,255,0.1),
-    3px 3px 0 rgba(180,74,255,0.3);
+  text-shadow: 4px 4px 0 #0a3a3f, -1px -1px 0 #006070;
   text-align: center;
   line-height: 1.5;
-  animation: glitch-shift 8s infinite;
   position: relative;
   z-index: 2;
 }
+/* Glitch only on hover — subtle, not constant */
+.title-main:hover { animation: glitch-shift 0.3s; }
 .title-main .adventure {
   display: block;
   font-size: var(--fs-xl);
   color: var(--purple);
-  text-shadow: 0 0 15px rgba(180,74,255,0.5), 0 0 30px rgba(180,74,255,0.2);
+  text-shadow: 3px 3px 0 #2a0a3f;
   margin-top: 8px;
 }
 
@@ -458,14 +493,21 @@ body::after {
 .typewriter-box {
   max-width: 500px;
   width: 100%;
-  background: var(--surface-2);
-  border: 2px solid var(--cyan);
+  background: #111119;
+  border: 4px solid #fff;
   padding: 24px;
   position: relative;
-  box-shadow: 0 0 30px rgba(0,240,255,0.1), inset 0 0 40px rgba(0,0,0,0.5);
+  box-shadow: 6px 6px 0 rgba(0,0,0,0.6);
+}
+/* Inner double border */
+.typewriter-box::after {
+  content: '';
+  position: absolute; inset: 4px;
+  border: 2px solid #444;
+  pointer-events: none;
 }
 .typewriter-box::before {
-  content: '> INCOMING TRANSMISSION';
+  content: '▶ TRANSMISSION';
   position: absolute; top: -10px; left: 12px;
   font-size: var(--fs-xs);
   color: var(--cyan);
@@ -513,15 +555,19 @@ body::after {
 .login-modal {
   max-width: 380px;
   width: 90%;
-  background: rgba(26,26,42,0.95);
-  border: 1px solid var(--purple);
+  background: #111119;
+  border: 4px solid #fff;
   padding: 32px 24px;
-  backdrop-filter: blur(20px);
-  box-shadow: 0 0 40px rgba(180,74,255,0.15), inset 0 0 40px rgba(0,0,0,0.3);
+  box-shadow: 6px 6px 0 rgba(0,0,0,0.6);
   position: relative;
 }
-.login-modal::before { content: '◇'; position: absolute; top: -6px; left: -6px; color: var(--purple); font-size: 10px; text-shadow: 0 0 8px var(--purple); }
-.login-modal::after { content: '◇'; position: absolute; bottom: -6px; right: -6px; color: var(--purple); font-size: 10px; text-shadow: 0 0 8px var(--purple); }
+/* Inner double border */
+.login-modal::after {
+  content: '';
+  position: absolute; inset: 4px;
+  border: 2px solid var(--purple);
+  pointer-events: none;
+}
 
 .login-title {
   font-size: var(--fs-lg);
@@ -551,17 +597,21 @@ body::after {
   padding: 14px;
   background: var(--surface);
   color: var(--text-primary);
-  border: 1px solid var(--border);
+  border: 3px solid var(--text-dim);
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.1s;
   display: flex;
   align-items: center;
   gap: 10px;
+  box-shadow: 3px 3px 0 #000;
 }
 .login-btn:hover {
   border-color: var(--purple);
-  background: rgba(180,74,255,0.05);
-  box-shadow: 0 0 15px rgba(180,74,255,0.1);
+  color: #fff;
+}
+.login-btn:active {
+  box-shadow: 0 0 0 #000;
+  transform: translate(3px, 3px);
 }
 .login-btn .icon { font-size: 16px; }
 
@@ -589,14 +639,17 @@ body::after {
   padding: 10px;
   background: transparent;
   color: var(--text-dim);
-  border: 1px dashed var(--border);
+  border: 2px dashed var(--text-dim);
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.1s;
   text-align: center;
   width: 100%;
 }
 .login-demo:hover {
   color: var(--gold); border-color: var(--gold);
+}
+.login-demo:active {
+  transform: translate(2px, 2px);
 }
 
 /* =========================================
@@ -640,16 +693,20 @@ body::after {
   font-family: inherit;
   font-size: var(--fs-xl);
   color: var(--text-dim);
-  background: none;
-  border: 1px solid var(--border);
+  background: var(--surface);
+  border: 3px solid var(--text-dim);
   width: 40px; height: 40px;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.1s;
+  box-shadow: 3px 3px 0 #000;
 }
 .carousel-arrow:hover {
   color: var(--cyan); border-color: var(--cyan);
-  box-shadow: 0 0 15px rgba(0,240,255,0.2);
+}
+.carousel-arrow:active {
+  box-shadow: 0 0 0 #000;
+  transform: translate(3px, 3px);
 }
 
 .carousel-card {
@@ -657,22 +714,23 @@ body::after {
   max-width: 260px;
   text-align: center;
   padding: 24px 16px;
-  background: var(--surface-2);
-  border: 2px solid var(--border);
-  transition: all 0.5s;
+  background: #111119;
+  border: 4px solid var(--text-dim);
+  transition: all 0.3s;
   position: relative;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
 }
 .carousel-card.type-rayo {
-  border-color: rgba(0,240,255,0.3);
-  box-shadow: 0 0 20px rgba(0,240,255,0.1);
+  border-color: var(--type-rayo);
+  box-shadow: 4px 4px 0 #003a3f;
 }
 .carousel-card.type-flama {
-  border-color: rgba(255,107,53,0.3);
-  box-shadow: 0 0 20px rgba(255,107,53,0.1);
+  border-color: var(--type-flama);
+  box-shadow: 4px 4px 0 #3f1a00;
 }
 .carousel-card.type-hielo {
-  border-color: rgba(180,74,255,0.3);
-  box-shadow: 0 0 20px rgba(180,74,255,0.1);
+  border-color: var(--type-hielo);
+  box-shadow: 4px 4px 0 #1a003f;
 }
 
 .carousel-sprite {
@@ -732,17 +790,17 @@ body::after {
   font-size: var(--fs-base);
   width: 100%;
   padding: 14px;
-  background: var(--surface);
+  background: #111;
   color: var(--text-primary);
-  border: 2px solid var(--border);
+  border: 4px solid var(--text-dim);
   outline: none;
-  transition: all 0.3s;
+  transition: all 0.1s;
   text-align: center;
+  box-shadow: inset 3px 3px 0 rgba(0,0,0,0.5);
 }
 .creation-name-input::placeholder { color: var(--text-dim); }
 .creation-name-input:focus {
   border-color: var(--cyan);
-  box-shadow: 0 0 15px rgba(0,240,255,0.2);
 }
 
 .creation-char-count {
