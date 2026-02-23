@@ -1384,6 +1384,931 @@ body.light .type-hielo-particles .type-particle { background: var(--ink-dark); b
   .carousel-sprite { font-size: 5rem; }
   .transition-sprite { font-size: 6rem; }
 }
+
+/* =========================================
+   BLOCK 2+3 — SCREENS 8-19
+   ========================================= */
+
+/* ===== P8 — TUTORIAL ===== */
+.screen-tutorial {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10,10,15,0.92);
+}
+.tutorial-modal {
+  max-width: 26rem; width: 90%;
+  background: #111119; border: 4px solid #fff;
+  padding: 1.75rem 1.25rem;
+  box-shadow: 6px 6px 0 rgba(0,0,0,0.6);
+  position: relative; z-index: 1;
+}
+.tutorial-modal::after {
+  content: ''; position: absolute; inset: 3px;
+  border: 2px solid #444; pointer-events: none;
+}
+.tutorial-step-title {
+  font-size: var(--fs-lg); color: var(--cyan);
+  text-align: center; margin-bottom: 0.5rem;
+}
+.tutorial-step-badge {
+  display: inline-block; font-size: var(--fs-xs);
+  background: var(--gold); color: #000;
+  padding: 0.15em 0.5em; margin-left: 0.5em;
+  border: 2px solid #000;
+}
+.tutorial-step-icon {
+  font-size: 2.5rem; text-align: center;
+  display: block; margin: 0.75rem 0;
+  animation: breathe 3s infinite;
+}
+.tutorial-step-desc {
+  font-size: var(--fs-xs); color: var(--text-dim);
+  text-align: center; line-height: 2.2;
+  margin-bottom: 1rem;
+}
+.tutorial-dots {
+  display: flex; gap: 0.5rem; justify-content: center;
+  margin-bottom: 1rem;
+}
+.tutorial-dot {
+  width: 8px; height: 8px;
+  border: 1px solid var(--text-dim);
+  background: transparent; cursor: pointer;
+  transition: all 0.3s;
+}
+.tutorial-dot.active {
+  background: var(--cyan); border-color: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+}
+.tutorial-dot.completed { background: var(--text-dim); }
+.tutorial-nav {
+  display: flex; justify-content: space-between;
+  align-items: center; gap: 0.5rem;
+}
+.tutorial-skip {
+  font-family: inherit; font-size: var(--fs-xs);
+  background: transparent; color: var(--text-dim);
+  border: 1px dashed var(--text-dim);
+  padding: 0.5em 1em; cursor: pointer;
+  transition: all 0.2s;
+}
+.tutorial-skip:hover { color: var(--gold); border-color: var(--gold); }
+
+/* ===== P9 — WORLD/HOME ===== */
+.screen-world {
+  flex-direction: column;
+  background: var(--bg-void);
+  position: relative; overflow: hidden;
+}
+.world-hud {
+  display: flex; justify-content: space-between;
+  align-items: center; padding: 0.5rem 0.75rem;
+  background: var(--surface-2); border-bottom: 3px solid var(--border);
+  font-size: var(--fs-xs); z-index: 2;
+}
+.world-hud-left, .world-hud-right {
+  display: flex; gap: 0.75rem; align-items: center;
+}
+.world-hud-item { color: var(--text-dim); }
+.world-hud-item span { color: var(--cyan); }
+.world-landscape {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  position: relative; min-height: 14rem;
+  background: linear-gradient(180deg, #0a0a2f 0%, #0f1535 40%, #1a1a2a 100%);
+}
+.world-landscape-label {
+  position: absolute; top: 0.5rem; left: 0.75rem;
+  font-size: var(--fs-xs); color: var(--text-dim);
+  opacity: 0.5;
+}
+.world-sprite {
+  font-size: 4rem; animation: breathe 3s infinite;
+  z-index: 1; cursor: pointer;
+  transition: transform 0.1s;
+}
+.world-sprite:active { transform: scale(0.9); }
+.world-stats {
+  display: flex; flex-direction: column; gap: 0.5rem;
+  padding: 0.75rem; background: var(--surface-2);
+  border-top: 3px solid var(--border);
+  border-bottom: 3px solid var(--border);
+  z-index: 2;
+}
+.stat-bar-row {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-size: var(--fs-xs);
+}
+.stat-bar-label { width: 5.5rem; color: var(--text-dim); }
+.stat-bar-track {
+  flex: 1; height: 0.75rem;
+  background: #111; border: 2px solid var(--border);
+  position: relative; overflow: hidden;
+}
+.stat-bar-fill {
+  height: 100%; transition: width 0.5s;
+}
+.stat-bar-fill.spirit { background: var(--purple); }
+.stat-bar-fill.pulse { background: var(--gold); }
+.stat-bar-fill.essence { background: var(--green); }
+.stat-bar-value { font-size: var(--fs-xs); color: var(--text-dim); width: 2rem; text-align: right; }
+
+.world-actions {
+  display: flex; justify-content: center; gap: 0.5rem;
+  padding: 0.5rem; z-index: 2;
+}
+.world-action-btn {
+  font-family: inherit; font-size: var(--fs-xs);
+  padding: 0.5em 0.75em; background: var(--surface);
+  color: var(--text-dim); border: 3px solid var(--border);
+  cursor: pointer; box-shadow: 3px 3px 0 #000;
+  transition: all 0.1s;
+}
+.world-action-btn:hover { color: var(--cyan); border-color: var(--cyan); }
+.world-action-btn:active { box-shadow: 0 0 0; transform: translate(3px,3px); }
+
+.world-bottom-nav {
+  display: flex; z-index: 2;
+  border-top: 3px solid var(--border);
+  background: var(--surface-2);
+}
+.world-nav-btn {
+  flex: 1; font-family: inherit; font-size: var(--fs-xs);
+  padding: 0.75em 0.5em; background: transparent;
+  color: var(--text-dim); border: none;
+  border-right: 2px solid var(--border);
+  cursor: pointer; transition: all 0.2s;
+  text-align: center;
+}
+.world-nav-btn:last-child { border-right: none; }
+.world-nav-btn:hover { color: var(--cyan); background: rgba(0,240,255,0.03); }
+.world-nav-btn.active-tab { color: var(--cyan); background: rgba(0,240,255,0.05); }
+
+/* ===== P10 — SETTINGS ===== */
+.screen-settings {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: var(--bg-void);
+  padding: 3.75rem 1rem 2rem;
+}
+.settings-panel {
+  max-width: 24rem; width: 100%;
+  background: #111119; border: 4px solid var(--purple);
+  padding: 1.5rem; position: relative;
+  box-shadow: 6px 6px 0 rgba(180,74,255,0.15);
+}
+.settings-panel::after {
+  content: ''; position: absolute; inset: 3px;
+  border: 2px solid rgba(180,74,255,0.2);
+  pointer-events: none;
+}
+.settings-title {
+  font-size: var(--fs-lg); color: var(--purple);
+  text-align: center; margin-bottom: 1rem;
+}
+.settings-group {
+  margin-bottom: 1rem;
+}
+.settings-row {
+  display: flex; justify-content: space-between;
+  align-items: center; padding: 0.6em 0;
+  border-bottom: 1px solid var(--border);
+  font-size: var(--fs-xs);
+}
+.settings-row:last-child { border-bottom: none; }
+.settings-label { color: var(--text-dim); }
+.settings-toggle {
+  width: 2.5rem; height: 1.25rem;
+  background: var(--surface); border: 3px solid var(--text-dim);
+  cursor: pointer; position: relative;
+  transition: all 0.2s;
+}
+.settings-toggle.on {
+  border-color: var(--cyan);
+  background: rgba(0,240,255,0.15);
+}
+.settings-toggle::after {
+  content: ''; position: absolute;
+  width: 0.6rem; height: 0.6rem;
+  background: var(--text-dim); top: 50%;
+  left: 2px; transform: translateY(-50%);
+  transition: all 0.2s;
+}
+.settings-toggle.on::after {
+  left: calc(100% - 0.6rem - 2px);
+  background: var(--cyan);
+}
+.settings-action-btn {
+  font-family: inherit; font-size: var(--fs-xs);
+  padding: 0.6em 1em; width: 100%;
+  background: var(--surface); color: var(--text-dim);
+  border: 3px solid var(--border);
+  cursor: pointer; margin-bottom: 0.4rem;
+  box-shadow: 3px 3px 0 #000;
+  transition: all 0.1s; text-align: left;
+}
+.settings-action-btn:hover { color: var(--purple); border-color: var(--purple); }
+.settings-action-btn:active { box-shadow: 0 0 0; transform: translate(3px,3px); }
+.settings-action-btn.danger { color: var(--red); }
+.settings-action-btn.danger:hover { border-color: var(--red); }
+
+/* ===== P11 — HISTORY ===== */
+.screen-history {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: var(--bg-void);
+  padding: 3.75rem 1rem 2rem;
+}
+.history-title {
+  font-size: var(--fs-lg); color: var(--cyan);
+  margin-bottom: 1rem; text-align: center;
+}
+.history-list {
+  max-width: 24rem; width: 100%;
+  display: flex; flex-direction: column; gap: 0.4rem;
+}
+.history-item {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.6em 0.75em; background: var(--surface-2);
+  border: 3px solid var(--border);
+  font-size: var(--fs-xs);
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+}
+.history-icon { font-size: 1rem; }
+.history-desc { flex: 1; color: var(--text-dim); line-height: 1.8; }
+.history-delta { color: var(--green); white-space: nowrap; }
+.history-delta.negative { color: var(--red); }
+.history-time { color: var(--text-dim); opacity: 0.5; font-size: 0.4rem; white-space: nowrap; }
+
+/* ===== P12 — CHAT ===== */
+.screen-chat {
+  flex-direction: column;
+  background: var(--bg-void);
+}
+.chat-header {
+  display: flex; justify-content: space-between;
+  align-items: center; padding: 0.5rem 0.75rem;
+  background: var(--surface-2); border-bottom: 3px solid var(--border);
+  z-index: 2;
+}
+.chat-header-title { font-size: var(--fs-sm); color: var(--cyan); }
+.chat-header-actions { display: flex; gap: 0.5rem; }
+.chat-header-btn {
+  font-family: inherit; font-size: var(--fs-sm);
+  background: transparent; color: var(--text-dim);
+  border: 2px solid var(--border); padding: 0.3em 0.5em;
+  cursor: pointer; transition: all 0.2s;
+}
+.chat-header-btn:hover { color: var(--cyan); border-color: var(--cyan); }
+.chat-compact-stats {
+  display: flex; gap: 0.75rem; padding: 0.3rem 0.75rem;
+  background: var(--surface); border-bottom: 2px solid var(--border);
+  font-size: var(--fs-xs); color: var(--text-dim);
+}
+.chat-compact-stats span { color: var(--cyan); }
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 0.75rem;
+  display: flex; flex-direction: column; gap: 0.5rem;
+}
+.chat-bubble {
+  max-width: 80%; padding: 0.6em 0.75em;
+  font-size: var(--fs-xs); line-height: 2;
+  border: 3px solid; position: relative;
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+}
+.chat-bubble.bot {
+  align-self: flex-start;
+  background: var(--surface-2); border-color: var(--border);
+  color: var(--text-primary);
+}
+.chat-bubble.user {
+  align-self: flex-end;
+  background: rgba(0,240,255,0.08); border-color: rgba(0,240,255,0.3);
+  color: var(--cyan);
+}
+.chat-typing {
+  font-size: var(--fs-xs); color: var(--text-dim);
+  padding: 0.3em 0.75em;
+}
+.chat-typing-dots span {
+  animation: blink 1s infinite;
+}
+.chat-typing-dots span:nth-child(2) { animation-delay: 0.3s; }
+.chat-typing-dots span:nth-child(3) { animation-delay: 0.6s; }
+.chat-input-bar {
+  display: flex; gap: 0.4rem; padding: 0.5rem;
+  background: var(--surface-2); border-top: 3px solid var(--border);
+}
+.chat-input {
+  flex: 1; font-family: inherit; font-size: var(--fs-xs);
+  padding: 0.6em; background: #111; color: var(--text-primary);
+  border: 3px solid var(--border); outline: none;
+}
+.chat-input:focus { border-color: var(--cyan); }
+.chat-send-btn {
+  font-family: inherit; font-size: var(--fs-xs);
+  padding: 0.6em 1em; background: var(--surface);
+  color: var(--cyan); border: 3px solid var(--cyan);
+  cursor: pointer; box-shadow: 3px 3px 0 #000;
+  transition: all 0.1s;
+}
+.chat-send-btn:active { box-shadow: 0 0 0; transform: translate(3px,3px); }
+
+/* ===== P13 — CAMERA ===== */
+.screen-camera {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-void);
+  padding: 3.75rem 1.25rem 2rem;
+  gap: 1rem;
+}
+.camera-frame {
+  max-width: 22rem; width: 100%;
+  background: #111119; border: 4px solid var(--cyan);
+  padding: 1.5rem; text-align: center;
+  box-shadow: 6px 6px 0 rgba(0,240,255,0.15);
+  position: relative; z-index: 1;
+}
+.camera-frame::after {
+  content: ''; position: absolute; inset: 3px;
+  border: 2px solid rgba(0,240,255,0.2);
+  pointer-events: none;
+}
+.camera-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+.camera-prompt {
+  font-size: var(--fs-sm); color: var(--cyan);
+  line-height: 2.2; margin-bottom: 0.75rem;
+}
+.camera-mission {
+  background: var(--surface); border: 3px solid var(--gold);
+  padding: 0.6em; font-size: var(--fs-xs);
+  color: var(--gold); margin-bottom: 1rem;
+  box-shadow: 3px 3px 0 rgba(245,197,66,0.15);
+}
+.camera-buttons {
+  display: flex; flex-direction: column; gap: 0.5rem;
+}
+.camera-privacy {
+  font-size: 0.4rem; color: var(--text-dim);
+  line-height: 2; text-align: center;
+  margin-top: 0.75rem; max-width: 20rem;
+  z-index: 1;
+}
+
+/* ===== P14 — POST-PHOTO ===== */
+.screen-postphoto {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: var(--bg-void);
+  padding: 3.75rem 1.25rem 2rem;
+  gap: 1rem;
+}
+.postphoto-result {
+  max-width: 24rem; width: 100%;
+  background: #111119; border: 4px solid var(--green);
+  padding: 1.25rem; text-align: center;
+  box-shadow: 6px 6px 0 rgba(0,255,136,0.15);
+  position: relative; z-index: 1;
+}
+.postphoto-result::after {
+  content: ''; position: absolute; inset: 3px;
+  border: 2px solid rgba(0,255,136,0.2);
+  pointer-events: none;
+}
+.postphoto-title {
+  font-size: var(--fs-lg); color: var(--green);
+  margin-bottom: 0.5rem;
+}
+.postphoto-sprite {
+  font-size: 3rem; animation: breathe 2s infinite;
+  margin: 0.5rem 0;
+}
+.postphoto-reaction {
+  font-size: var(--fs-xs); color: var(--cyan);
+  margin-bottom: 0.75rem; line-height: 2;
+}
+.postphoto-deltas {
+  display: flex; justify-content: center; gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+.postphoto-delta {
+  font-size: var(--fs-sm); padding: 0.3em 0.5em;
+  border: 2px solid var(--border); background: var(--surface);
+}
+.postphoto-delta.positive { color: var(--green); border-color: rgba(0,255,136,0.3); }
+.postphoto-delta.negative { color: var(--red); border-color: rgba(255,59,92,0.3); }
+.postphoto-diary {
+  font-size: var(--fs-xs); color: var(--text-dim);
+  line-height: 2.2; text-align: left;
+  padding: 0.75em; background: var(--surface);
+  border: 2px solid var(--border);
+  margin-bottom: 0.75rem;
+}
+.postphoto-buttons {
+  display: flex; gap: 0.5rem; justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ===== P15 — FRACTURA ===== */
+.screen-fractura {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-void);
+  position: relative; overflow: hidden;
+}
+@keyframes fractura-flash {
+  0% { opacity: 0; }
+  10% { opacity: 0.8; }
+  30% { opacity: 0.1; }
+  50% { opacity: 0.6; }
+  70% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes fractura-shake {
+  0%, 100% { transform: translate(0); }
+  10% { transform: translate(-4px, 2px); }
+  20% { transform: translate(3px, -3px); }
+  30% { transform: translate(-2px, 4px); }
+  40% { transform: translate(4px, -2px); }
+  50% { transform: translate(-3px, 3px); }
+  60% { transform: translate(2px, -4px); }
+  70% { transform: translate(-4px, 2px); }
+  80% { transform: translate(3px, -3px); }
+  90% { transform: translate(-2px, 4px); }
+}
+@keyframes fractura-explode {
+  0% { transform: translate(0) rotate(45deg) scale(1); opacity: 1; }
+  100% { transform: translate(var(--ex,30px), var(--ey,-40px)) rotate(45deg) scale(0); opacity: 0; }
+}
+.fractura-flash-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,240,255,0.5);
+  animation: fractura-flash 3s ease-out forwards;
+  z-index: 3; pointer-events: none;
+}
+.fractura-sprite-area {
+  animation: fractura-shake 0.8s ease-out 0.5s;
+  font-size: 5rem; z-index: 2;
+  position: relative; margin: 1rem 0;
+}
+.fractura-particle-burst {
+  position: absolute; inset: -3rem;
+  pointer-events: none; z-index: 1;
+}
+.fractura-particle {
+  position: absolute; width: 6px; height: 6px;
+  background: var(--cyan); transform: rotate(45deg);
+  animation: fractura-explode 1.5s ease-out forwards;
+  box-shadow: 0 0 8px var(--cyan);
+}
+.fractura-narrative {
+  font-size: var(--fs-sm); color: var(--purple);
+  text-align: center; line-height: 2.4;
+  max-width: 22rem; z-index: 2;
+  animation: fade-in 1s 1.5s both;
+}
+.fractura-continue {
+  z-index: 2;
+  animation: fade-in 1s 2.5s both;
+  margin-top: 1rem;
+}
+
+/* ===== P16 — SOCIAL ===== */
+.screen-social {
+  flex-direction: column;
+  background: var(--bg-void);
+  position: relative;
+}
+.social-tabs {
+  display: flex; border-bottom: 3px solid var(--border);
+  background: var(--surface-2);
+}
+.social-tab {
+  flex: 1; font-family: inherit; font-size: var(--fs-xs);
+  padding: 0.6em; background: transparent;
+  color: var(--text-dim); border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer; text-align: center;
+  transition: all 0.2s;
+}
+.social-tab:hover { color: var(--cyan); }
+.social-tab.active-tab {
+  color: var(--cyan); border-bottom-color: var(--cyan);
+}
+.social-content {
+  flex: 1; overflow-y: auto; padding: 0.75rem;
+}
+.social-register-prompt {
+  text-align: center; padding: 2rem 1rem;
+}
+.social-register-prompt p {
+  font-size: var(--fs-xs); color: var(--text-dim);
+  line-height: 2.2; margin-bottom: 1rem;
+}
+.social-section {
+  margin-bottom: 1rem;
+}
+.social-section-title {
+  font-size: var(--fs-xs); color: var(--purple);
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--border);
+}
+.social-feed-item {
+  padding: 0.5em; background: var(--surface-2);
+  border: 2px solid var(--border); margin-bottom: 0.3rem;
+  font-size: var(--fs-xs); color: var(--text-dim);
+  line-height: 1.8;
+}
+.social-feed-item .feed-name { color: var(--cyan); }
+.social-message-item {
+  padding: 0.5em; background: var(--surface);
+  border: 2px solid var(--border); margin-bottom: 0.3rem;
+  font-size: var(--fs-xs); color: var(--text-dim);
+  display: flex; gap: 0.5rem; align-items: center;
+}
+.social-badge {
+  display: inline-block; background: var(--red);
+  color: #fff; font-size: 0.35rem;
+  padding: 0.15em 0.4em; margin-left: 0.3em;
+  border: 1px solid #000;
+}
+
+/* ===== P17 — LEADERBOARD ===== */
+.screen-leaderboard {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: var(--bg-void);
+  padding: 3.75rem 1rem 2rem;
+}
+.leaderboard-title {
+  font-size: var(--fs-lg); color: var(--gold);
+  margin-bottom: 1rem; text-align: center;
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+}
+.leaderboard-list {
+  max-width: 26rem; width: 100%;
+  display: flex; flex-direction: column; gap: 0.4rem;
+}
+.leaderboard-item {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.6em 0.75em; background: var(--surface-2);
+  border: 3px solid var(--border);
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+  cursor: pointer; transition: all 0.2s;
+}
+.leaderboard-item:hover { border-color: var(--cyan); }
+.leaderboard-rank {
+  font-size: var(--fs-sm); color: var(--gold);
+  width: 2rem; text-align: center;
+}
+.leaderboard-rank.top-1 { color: var(--gold); text-shadow: 0 0 8px rgba(245,197,66,0.5); }
+.leaderboard-rank.top-2 { color: #c0c0c0; }
+.leaderboard-rank.top-3 { color: #cd7f32; }
+.leaderboard-sprite { font-size: 1.25rem; }
+.leaderboard-info { flex: 1; }
+.leaderboard-name { font-size: var(--fs-xs); color: var(--text-primary); }
+.leaderboard-type { font-size: 0.4rem; color: var(--text-dim); }
+.leaderboard-progress {
+  width: 3.5rem; height: 0.5rem;
+  background: #111; border: 2px solid var(--border);
+  overflow: hidden;
+}
+.leaderboard-progress-fill {
+  height: 100%; background: var(--cyan);
+}
+
+/* ===== P18 — MI PERFIL ===== */
+.screen-miperfil {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: var(--bg-void);
+  padding: 3.75rem 1.25rem 2rem;
+  gap: 1rem;
+}
+.profile-card {
+  max-width: 22rem; width: 100%;
+  background: #111119; border: 4px solid var(--cyan);
+  padding: 1.5rem; text-align: center;
+  box-shadow: 6px 6px 0 rgba(0,240,255,0.15);
+  position: relative;
+}
+.profile-card::after {
+  content: ''; position: absolute; inset: 3px;
+  border: 2px solid rgba(0,240,255,0.2);
+  pointer-events: none;
+}
+.profile-sprite {
+  font-size: 3.5rem; animation: breathe 3s infinite;
+  margin-bottom: 0.5rem;
+}
+.profile-name {
+  font-size: var(--fs-lg); color: var(--cyan);
+  margin-bottom: 0.25rem;
+}
+.profile-type {
+  font-size: var(--fs-xs); color: var(--text-dim);
+  margin-bottom: 0.75rem;
+}
+.profile-stats-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.5rem; margin-bottom: 0.75rem;
+}
+.profile-stat-cell {
+  padding: 0.4em; background: var(--surface);
+  border: 2px solid var(--border); text-align: center;
+}
+.profile-stat-cell .stat-val {
+  font-size: var(--fs-sm); color: var(--cyan);
+}
+.profile-stat-cell .stat-lbl {
+  font-size: 0.4rem; color: var(--text-dim); margin-top: 0.2em;
+}
+.profile-memories {
+  font-size: var(--fs-xs); color: var(--gold);
+  margin-bottom: 0.75rem;
+}
+.profile-visibility {
+  font-size: var(--fs-xs); color: var(--text-dim);
+  display: flex; align-items: center;
+  justify-content: center; gap: 0.5rem;
+}
+
+/* ===== P19 — PERFIL PÚBLICO ===== */
+.screen-publicperfil {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: var(--bg-void);
+  padding: 3.75rem 1.25rem 2rem;
+  gap: 1rem;
+}
+.public-profile-card {
+  max-width: 22rem; width: 100%;
+  background: #111119; border: 4px solid var(--purple);
+  padding: 1.5rem; text-align: center;
+  box-shadow: 6px 6px 0 rgba(180,74,255,0.15);
+  position: relative;
+}
+.public-profile-card::after {
+  content: ''; position: absolute; inset: 3px;
+  border: 2px solid rgba(180,74,255,0.2);
+  pointer-events: none;
+}
+.public-evolution {
+  font-size: var(--fs-xs); color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+.public-actions {
+  display: flex; flex-direction: column; gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+.public-action-btn {
+  font-family: inherit; font-size: var(--fs-xs);
+  padding: 0.6em; background: var(--surface);
+  color: var(--text-dim); border: 3px solid var(--border);
+  cursor: pointer; box-shadow: 3px 3px 0 #000;
+  transition: all 0.1s; text-align: center;
+}
+.public-action-btn:hover { color: var(--purple); border-color: var(--purple); }
+.public-action-btn:active { box-shadow: 0 0 0; transform: translate(3px,3px); }
+.public-back-btn {
+  font-family: inherit; font-size: var(--fs-xs);
+  background: transparent; color: var(--text-dim);
+  border: 1px dashed var(--text-dim);
+  padding: 0.5em 1em; cursor: pointer;
+  transition: all 0.2s;
+}
+.public-back-btn:hover { color: var(--cyan); border-color: var(--cyan); }
+
+/* =========================================
+   LIGHT THEME — BLOCK 2+3
+   ========================================= */
+
+/* P8 Tutorial light */
+body.light .screen-tutorial { background: rgba(244,232,193,0.95); }
+body.light .tutorial-modal {
+  background: var(--surface-papiro); border-color: var(--border-papiro);
+  box-shadow: 3px 3px 0 rgba(139,105,20,0.2);
+}
+body.light .tutorial-modal::after { border-color: var(--border-papiro); }
+body.light .tutorial-step-title { color: var(--ink-red); text-shadow: none; }
+body.light .tutorial-step-desc { color: var(--ink-dark); }
+body.light .tutorial-step-badge { background: var(--ink-red); color: #fff; }
+body.light .tutorial-dot { border-color: var(--border-papiro); }
+body.light .tutorial-dot.active { background: var(--ink-red); border-color: var(--ink-red); box-shadow: none; }
+body.light .tutorial-dot.completed { background: var(--border-papiro); }
+body.light .tutorial-skip { color: var(--border-papiro); border-color: var(--border-papiro); }
+
+/* P9 World light */
+body.light .screen-world { background: var(--bg-papiro); }
+body.light .world-hud { background: var(--surface-papiro); border-color: var(--border-papiro); }
+body.light .world-hud-item { color: var(--ink-dark); }
+body.light .world-hud-item span { color: var(--ink-red); }
+body.light .world-landscape {
+  background: linear-gradient(180deg, #e8d5a0 0%, #d4c08a 40%, var(--surface-papiro) 100%);
+}
+body.light .world-landscape-label { color: var(--border-papiro); }
+body.light .world-stats { background: var(--surface-papiro); border-color: var(--border-papiro); }
+body.light .stat-bar-track { background: var(--bg-papiro); border-color: var(--border-papiro); }
+body.light .stat-bar-fill.spirit { background: var(--ink-red); }
+body.light .stat-bar-fill.pulse { background: var(--ink-dark); }
+body.light .stat-bar-fill.essence { background: var(--ink-green); }
+body.light .stat-bar-label, body.light .stat-bar-value { color: var(--ink-dark); }
+body.light .world-actions { background: transparent; }
+body.light .world-action-btn {
+  background: var(--bg-papiro); color: var(--ink-dark);
+  border-color: var(--border-papiro); box-shadow: 2px 2px 0 rgba(139,105,20,0.15);
+}
+body.light .world-action-btn:hover { color: var(--ink-red); border-color: var(--ink-red); }
+body.light .world-bottom-nav { background: var(--surface-papiro); border-color: var(--border-papiro); }
+body.light .world-nav-btn { color: var(--ink-dark); border-color: var(--border-papiro); }
+body.light .world-nav-btn:hover { color: var(--ink-red); background: rgba(139,37,0,0.03); }
+body.light .world-nav-btn.active-tab { color: var(--ink-red); }
+
+/* P10 Settings light */
+body.light .screen-settings { background: var(--bg-papiro); }
+body.light .settings-panel {
+  background: var(--surface-papiro); border-color: var(--border-papiro);
+  box-shadow: 3px 3px 0 rgba(139,105,20,0.15);
+}
+body.light .settings-panel::after { border-color: var(--border-papiro); }
+body.light .settings-title { color: var(--ink-red); text-shadow: none; }
+body.light .settings-row { border-color: var(--border-papiro); }
+body.light .settings-label { color: var(--ink-dark); }
+body.light .settings-toggle { background: var(--bg-papiro); border-color: var(--border-papiro); }
+body.light .settings-toggle::after { background: var(--border-papiro); }
+body.light .settings-toggle.on { border-color: var(--ink-red); }
+body.light .settings-toggle.on::after { background: var(--ink-red); }
+body.light .settings-action-btn {
+  background: var(--bg-papiro); color: var(--ink-dark);
+  border-color: var(--border-papiro); box-shadow: 2px 2px 0 rgba(139,105,20,0.1);
+}
+body.light .settings-action-btn:hover { color: var(--ink-red); border-color: var(--ink-red); }
+body.light .settings-action-btn.danger { color: var(--ink-red); }
+
+/* P11 History light */
+body.light .screen-history { background: var(--bg-papiro); }
+body.light .history-title { color: var(--ink-red); text-shadow: none; }
+body.light .history-item {
+  background: var(--surface-papiro); border-color: var(--border-papiro);
+  box-shadow: 2px 2px 0 rgba(139,105,20,0.1);
+}
+body.light .history-desc { color: var(--ink-dark); }
+body.light .history-delta { color: var(--ink-green); }
+body.light .history-delta.negative { color: var(--ink-red); }
+
+/* P12 Chat light */
+body.light .screen-chat { background: var(--bg-papiro); }
+body.light .chat-header { background: var(--surface-papiro); border-color: var(--border-papiro); }
+body.light .chat-header-title { color: var(--ink-red); }
+body.light .chat-header-btn { color: var(--ink-dark); border-color: var(--border-papiro); }
+body.light .chat-compact-stats { background: var(--surface-papiro); border-color: var(--border-papiro); color: var(--ink-dark); }
+body.light .chat-compact-stats span { color: var(--ink-red); }
+body.light .chat-bubble.bot {
+  background: var(--surface-papiro); border-color: var(--border-papiro);
+  color: var(--ink-dark);
+}
+body.light .chat-bubble.user {
+  background: rgba(139,37,0,0.05); border-color: var(--border-papiro);
+  color: var(--ink-red);
+}
+body.light .chat-typing { color: var(--border-papiro); }
+body.light .chat-input-bar { background: var(--surface-papiro); border-color: var(--border-papiro); }
+body.light .chat-input {
+  background: var(--bg-papiro); color: var(--ink-dark);
+  border-color: var(--border-papiro);
+}
+body.light .chat-input:focus { border-color: var(--ink-red); }
+body.light .chat-send-btn {
+  background: var(--bg-papiro); color: var(--ink-red);
+  border-color: var(--ink-red); box-shadow: 2px 2px 0 rgba(139,105,20,0.15);
+}
+
+/* P13 Camera light */
+body.light .screen-camera { background: var(--bg-papiro); }
+body.light .camera-frame {
+  background: var(--surface-papiro); border-color: var(--border-papiro);
+  box-shadow: 3px 3px 0 rgba(139,105,20,0.15);
+}
+body.light .camera-frame::after { border-color: var(--border-papiro); }
+body.light .camera-prompt { color: var(--ink-dark); text-shadow: none; }
+body.light .camera-mission {
+  background: var(--bg-papiro); border-color: var(--ink-dark);
+  color: var(--ink-dark); box-shadow: 2px 2px 0 rgba(139,105,20,0.1);
+}
+body.light .camera-privacy { color: var(--border-papiro); }
+
+/* P14 Post-Photo light */
+body.light .screen-postphoto { background: var(--bg-papiro); }
+body.light .postphoto-result {
+  background: var(--surface-papiro); border-color: var(--ink-green);
+  box-shadow: 3px 3px 0 rgba(74,107,42,0.15);
+}
+body.light .postphoto-result::after { border-color: rgba(74,107,42,0.2); }
+body.light .postphoto-title { color: var(--ink-green); }
+body.light .postphoto-reaction { color: var(--ink-dark); }
+body.light .postphoto-delta { background: var(--bg-papiro); border-color: var(--border-papiro); }
+body.light .postphoto-delta.positive { color: var(--ink-green); border-color: var(--ink-green); }
+body.light .postphoto-delta.negative { color: var(--ink-red); border-color: var(--ink-red); }
+body.light .postphoto-diary { background: var(--bg-papiro); border-color: var(--border-papiro); color: var(--ink-dark); }
+
+/* P15 Fractura light */
+body.light .screen-fractura { background: var(--bg-papiro); }
+body.light .fractura-flash-overlay { background: rgba(245,197,66,0.4); }
+body.light .fractura-particle { background: var(--ink-dark); box-shadow: none; }
+body.light .fractura-narrative { color: var(--ink-red); }
+
+/* P16 Social light */
+body.light .screen-social { background: var(--bg-papiro); }
+body.light .social-tabs { background: var(--surface-papiro); border-color: var(--border-papiro); }
+body.light .social-tab { color: var(--ink-dark); }
+body.light .social-tab:hover { color: var(--ink-red); }
+body.light .social-tab.active-tab { color: var(--ink-red); border-bottom-color: var(--ink-red); }
+body.light .social-section-title { color: var(--ink-red); border-color: var(--border-papiro); }
+body.light .social-feed-item { background: var(--surface-papiro); border-color: var(--border-papiro); color: var(--ink-dark); }
+body.light .social-feed-item .feed-name { color: var(--ink-red); }
+body.light .social-message-item { background: var(--bg-papiro); border-color: var(--border-papiro); color: var(--ink-dark); }
+body.light .social-register-prompt p { color: var(--ink-dark); }
+
+/* P17 Leaderboard light */
+body.light .screen-leaderboard { background: var(--bg-papiro); }
+body.light .leaderboard-title { color: var(--ink-red); text-shadow: none; }
+body.light .leaderboard-item {
+  background: var(--surface-papiro); border-color: var(--border-papiro);
+  box-shadow: 2px 2px 0 rgba(139,105,20,0.1);
+}
+body.light .leaderboard-item:hover { border-color: var(--ink-red); }
+body.light .leaderboard-rank { color: var(--ink-dark); }
+body.light .leaderboard-rank.top-1 { color: var(--ink-red); text-shadow: none; }
+body.light .leaderboard-name { color: var(--ink-dark); }
+body.light .leaderboard-type { color: var(--border-papiro); }
+body.light .leaderboard-progress { background: var(--bg-papiro); border-color: var(--border-papiro); }
+body.light .leaderboard-progress-fill { background: var(--ink-red); }
+
+/* P18 Mi Perfil light */
+body.light .screen-miperfil { background: var(--bg-papiro); }
+body.light .profile-card {
+  background: var(--surface-papiro); border-color: var(--border-papiro);
+  box-shadow: 3px 3px 0 rgba(139,105,20,0.15);
+}
+body.light .profile-card::after { border-color: var(--border-papiro); }
+body.light .profile-name { color: var(--ink-red); }
+body.light .profile-type { color: var(--ink-dark); }
+body.light .profile-stat-cell { background: var(--bg-papiro); border-color: var(--border-papiro); }
+body.light .profile-stat-cell .stat-val { color: var(--ink-red); }
+body.light .profile-stat-cell .stat-lbl { color: var(--ink-dark); }
+body.light .profile-memories { color: var(--ink-dark); }
+body.light .profile-visibility { color: var(--ink-dark); }
+
+/* P19 Perfil Público light */
+body.light .screen-publicperfil { background: var(--bg-papiro); }
+body.light .public-profile-card {
+  background: var(--surface-papiro); border-color: var(--border-papiro);
+  box-shadow: 3px 3px 0 rgba(139,105,20,0.15);
+}
+body.light .public-profile-card::after { border-color: var(--border-papiro); }
+body.light .public-evolution { color: var(--ink-dark); }
+body.light .public-action-btn {
+  background: var(--bg-papiro); color: var(--ink-dark);
+  border-color: var(--border-papiro); box-shadow: 2px 2px 0 rgba(139,105,20,0.1);
+}
+body.light .public-action-btn:hover { color: var(--ink-red); border-color: var(--ink-red); }
+body.light .public-back-btn { color: var(--border-papiro); border-color: var(--border-papiro); }
+body.light .public-back-btn:hover { color: var(--ink-red); border-color: var(--ink-red); }
+
+/* =========================================
+   RESPONSIVE — BLOCK 2+3
+   ========================================= */
+@media (min-width: 641px) {
+  .tutorial-modal { max-width: 28rem; }
+  .settings-panel { max-width: 26rem; }
+  .camera-frame { max-width: 24rem; }
+  .postphoto-result { max-width: 26rem; }
+  .profile-card, .public-profile-card { max-width: 24rem; }
+  .leaderboard-list { max-width: 28rem; }
+  .fractura-sprite-area { font-size: 6rem; }
+  .world-sprite { font-size: 5rem; }
+}
+@media (min-width: 1025px) {
+  .tutorial-modal { max-width: 30rem; }
+  .settings-panel { max-width: 28rem; }
+  .camera-frame { max-width: 26rem; }
+  .postphoto-result { max-width: 28rem; }
+  .profile-card, .public-profile-card { max-width: 26rem; }
+  .leaderboard-list { max-width: 32rem; }
+  .fractura-sprite-area { font-size: 7rem; }
+  .world-sprite { font-size: 6rem; }
+  .chat-messages { max-width: 40rem; margin: 0 auto; }
+}
 </style>
 </head>
 <body>
@@ -1397,6 +2322,20 @@ body.light .type-hielo-particles .type-particle { background: var(--ink-dark); b
   <button onclick="showScreen('login')">5.Login</button>
   <button onclick="showScreen('creation')">6.Creación</button>
   <button onclick="showScreen('transition')">7.Transición</button>
+  <span style="color:var(--text-dim);font-size:0.35rem;padding:0 2px;">|</span>
+  <button onclick="showScreen('tutorial')">8.Tutorial</button>
+  <button onclick="showScreen('world')">9.World</button>
+  <button onclick="showScreen('settings')">10.Settings</button>
+  <button onclick="showScreen('history')">11.History</button>
+  <button onclick="showScreen('chat')">12.Chat</button>
+  <button onclick="showScreen('camera')">13.Camera</button>
+  <button onclick="showScreen('postphoto')">14.PostPhoto</button>
+  <span style="color:var(--text-dim);font-size:0.35rem;padding:0 2px;">|</span>
+  <button onclick="showScreen('fractura')">15.Fractura</button>
+  <button onclick="showScreen('social')">16.Social</button>
+  <button onclick="showScreen('leaderboard')">17.Leader</button>
+  <button onclick="showScreen('miperfil')">18.MiPerfil</button>
+  <button onclick="showScreen('publicperfil')">19.Público</button>
   <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
 </nav>
 
@@ -1608,6 +2547,344 @@ body.light .type-hielo-particles .type-particle { background: var(--ink-dark); b
   </div>
 </section>
 
+<!-- ===== P8: TUTORIAL ===== -->
+<section id="screen-tutorial" class="screen screen-tutorial">
+  <div class="vignette"></div>
+  <div class="tutorial-modal rune-corners">
+    <span class="rune-tl">ᚦ</span><span class="rune-tr">ᛊ</span>
+    <span class="rune-bl">ᛗ</span><span class="rune-br">ᚨ</span>
+    <div class="tutorial-step-title" id="tut-title">👋 Meet Reggie</div>
+    <div class="tutorial-step-icon" id="tut-icon">🐣</div>
+    <div class="tutorial-step-desc" id="tut-desc">Este es tu Regenmon. Nació de un fragmento de energía antigua. Cuídalo y crecerá.</div>
+    <div class="tutorial-dots" id="tut-dots">
+      <div class="tutorial-dot active" onclick="setTutStep(0)"></div>
+      <div class="tutorial-dot" onclick="setTutStep(1)"></div>
+      <div class="tutorial-dot" onclick="setTutStep(2)"></div>
+      <div class="tutorial-dot" onclick="setTutStep(3)"></div>
+      <div class="tutorial-dot" onclick="setTutStep(4)"></div>
+    </div>
+    <div class="tutorial-nav">
+      <button class="tutorial-skip" onclick="showScreen('world')">Saltar ▶</button>
+      <button class="glow-btn" id="tut-next" onclick="nextTutStep()" style="width:auto;padding:0.5em 1.2em;font-size:var(--fs-xs);">Siguiente ▶</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== P9: WORLD/HOME ===== -->
+<section id="screen-world" class="screen screen-world">
+  <div class="fragment-particles">
+    <div class="fragment-particle" style="left:20%;top:30%;animation-delay:0s;animation-duration:6s;"></div>
+    <div class="fragment-particle" style="left:70%;top:50%;animation-delay:2s;animation-duration:7s;"></div>
+    <div class="fragment-particle" style="left:45%;top:70%;animation-delay:3.5s;animation-duration:5s;"></div>
+  </div>
+  <div class="world-hud">
+    <div class="world-hud-left">
+      <div class="world-hud-item">💠 <span>42</span></div>
+      <div class="world-hud-item">🧠 <span>7</span></div>
+    </div>
+    <div class="world-hud-right">
+      <div class="world-hud-item" style="font-size:0.4rem;">v0.5</div>
+      <div class="world-hud-item">👤 <span>Anon</span></div>
+    </div>
+  </div>
+  <div class="world-landscape">
+    <div class="world-landscape-label">⚡ Llanura Eléctrica</div>
+    <div class="world-sprite" id="world-sprite" onclick="this.style.animation='none';setTimeout(()=>this.style.animation='breathe 3s infinite',50);">⚡</div>
+  </div>
+  <div class="world-stats">
+    <div class="stat-bar-row">
+      <div class="stat-bar-label">🔮 Espíritu</div>
+      <div class="stat-bar-track"><div class="stat-bar-fill spirit" style="width:75%;"></div></div>
+      <div class="stat-bar-value">75</div>
+    </div>
+    <div class="stat-bar-row">
+      <div class="stat-bar-label">💛 Pulso</div>
+      <div class="stat-bar-track"><div class="stat-bar-fill pulse" style="width:50%;"></div></div>
+      <div class="stat-bar-value">50</div>
+    </div>
+    <div class="stat-bar-row">
+      <div class="stat-bar-label">🌱 Esencia</div>
+      <div class="stat-bar-track"><div class="stat-bar-fill essence" style="width:30%;"></div></div>
+      <div class="stat-bar-value">30</div>
+    </div>
+  </div>
+  <div class="world-actions">
+    <button class="world-action-btn" onclick="showScreen('tutorial')">🌀 Purificar</button>
+    <button class="world-action-btn" onclick="showScreen('settings')">⚙️ Settings</button>
+    <button class="world-action-btn" onclick="showScreen('history')">📜 History</button>
+  </div>
+  <nav class="world-bottom-nav">
+    <button class="world-nav-btn active-tab" onclick="showScreen('chat')">💬 Chat</button>
+    <button class="world-nav-btn" onclick="showScreen('camera')">📷 Photo</button>
+    <button class="world-nav-btn" onclick="showScreen('social')">🌍 Social</button>
+  </nav>
+</section>
+
+<!-- ===== P10: SETTINGS ===== -->
+<section id="screen-settings" class="screen screen-settings">
+  <div class="vignette"></div>
+  <div class="settings-panel rune-corners">
+    <span class="rune-tl">ᛃ</span><span class="rune-tr">ᛈ</span>
+    <span class="rune-bl">ᚱ</span><span class="rune-br">ᚲ</span>
+    <div class="settings-title">⚙️ Ajustes</div>
+    <div class="settings-group">
+      <div class="settings-row">
+        <span class="settings-label">🎵 Música</span>
+        <div class="settings-toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="settings-row">
+        <span class="settings-label">🌙 Tema</span>
+        <div class="settings-toggle" onclick="this.classList.toggle('on');toggleTheme()"></div>
+      </div>
+      <div class="settings-row">
+        <span class="settings-label">🔤 Texto grande</span>
+        <div class="settings-toggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="settings-row">
+        <span class="settings-label">🌍 Visible en La Red</span>
+        <div class="settings-toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+    </div>
+    <div class="settings-group">
+      <button class="settings-action-btn">📝 Cambiar nombre</button>
+      <button class="settings-action-btn">🔁 Reiniciar tutorial</button>
+      <button class="settings-action-btn danger">🔄 Reiniciar todo</button>
+      <button class="settings-action-btn danger">🚪 Cerrar sesión</button>
+    </div>
+    <div style="text-align:center;margin-top:0.75rem;">
+      <button class="glow-btn purple" onclick="showScreen('world')" style="width:auto;padding:0.5em 1.5em;font-size:var(--fs-xs);">← Volver</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== P11: HISTORY ===== -->
+<section id="screen-history" class="screen screen-history">
+  <div class="vignette"></div>
+  <div class="history-title">📜 Historial de Memorias</div>
+  <div class="history-list">
+    <div class="history-item"><span class="history-icon">💬</span><span class="history-desc">Conversaste con Reggie</span><span class="history-delta">+3 💠</span><span class="history-time">2m</span></div>
+    <div class="history-item"><span class="history-icon">📷</span><span class="history-desc">Foto: parque al atardecer</span><span class="history-delta">+8 💠</span><span class="history-time">15m</span></div>
+    <div class="history-item"><span class="history-icon">🌀</span><span class="history-desc">Purificación completada</span><span class="history-delta">+5 💠</span><span class="history-time">1h</span></div>
+    <div class="history-item"><span class="history-icon">💬</span><span class="history-desc">Chat profundo</span><span class="history-delta">+4 💠</span><span class="history-time">2h</span></div>
+    <div class="history-item"><span class="history-icon">📷</span><span class="history-desc">Foto: cielo nublado</span><span class="history-delta negative">−2 💠</span><span class="history-time">3h</span></div>
+    <div class="history-item"><span class="history-icon">🍊</span><span class="history-desc">Recibiste fruta de Kai</span><span class="history-delta">+2 💠</span><span class="history-time">5h</span></div>
+    <div class="history-item"><span class="history-icon">💬</span><span class="history-desc">Conversación corta</span><span class="history-delta">+1 💠</span><span class="history-time">8h</span></div>
+    <div class="history-item"><span class="history-icon">⚡</span><span class="history-desc">¡Fractura! Nivel 2</span><span class="history-delta">+15 💠</span><span class="history-time">1d</span></div>
+    <div class="history-item"><span class="history-icon">📷</span><span class="history-desc">Foto: mascota dormida</span><span class="history-delta">+6 💠</span><span class="history-time">1d</span></div>
+    <div class="history-item"><span class="history-icon">🌀</span><span class="history-desc">Primera purificación</span><span class="history-delta">+10 💠</span><span class="history-time">2d</span></div>
+  </div>
+  <div style="text-align:center;margin-top:1rem;">
+    <button class="glow-btn" onclick="showScreen('world')" style="width:auto;padding:0.5em 1.5em;font-size:var(--fs-xs);">← Volver</button>
+  </div>
+</section>
+
+<!-- ===== P12: CHAT ===== -->
+<section id="screen-chat" class="screen screen-chat">
+  <div class="chat-header">
+    <div class="chat-header-title">💬 Chat con Reggie</div>
+    <div class="chat-header-actions">
+      <button class="chat-header-btn">📎</button>
+      <button class="chat-header-btn" onclick="showScreen('world')">✕</button>
+    </div>
+  </div>
+  <div class="chat-compact-stats">
+    🔮 <span>75</span> &nbsp; 💛 <span>50</span> &nbsp; 🌱 <span>30</span>
+  </div>
+  <div class="chat-messages">
+    <div class="chat-bubble bot">¡Hola! Siento la energía del día fluyendo. ¿Cómo te sientes?</div>
+    <div class="chat-bubble user">Bien, un poco cansado pero contento.</div>
+    <div class="chat-bubble bot">La calma después del esfuerzo es una forma de energía también. 🌙 ¿Hiciste algo especial hoy?</div>
+    <div class="chat-bubble user">Salí a caminar por el parque.</div>
+    <div class="chat-bubble bot">¡Eso es genial! La naturaleza tiene fragmentos de energía pura. Puedo sentirlos a través de ti. ✨</div>
+    <div class="chat-typing">
+      <span>Reggie está escribiendo</span>
+      <span class="chat-typing-dots"><span>.</span><span>.</span><span>.</span></span>
+    </div>
+  </div>
+  <div class="chat-input-bar">
+    <input class="chat-input" type="text" placeholder="Escribe un mensaje...">
+    <button class="chat-send-btn">▶</button>
+  </div>
+</section>
+
+<!-- ===== P13: CAMERA ===== -->
+<section id="screen-camera" class="screen screen-camera">
+  <div class="vignette"></div>
+  <div class="camera-frame rune-corners">
+    <span class="rune-tl">ᚲ</span><span class="rune-tr">ᛏ</span>
+    <span class="rune-bl">ᛉ</span><span class="rune-br">ᚱ</span>
+    <div class="camera-icon">📸</div>
+    <div class="camera-prompt">
+      Reggie quiere ver el mundo a través de tus ojos. Muéstrale algo que te inspire hoy.
+    </div>
+    <div class="camera-mission">
+      🎯 Misión: Fotografía algo verde y vivo
+    </div>
+    <div class="camera-buttons">
+      <button class="glow-btn" onclick="showScreen('postphoto')">📸 Tomar Foto</button>
+      <button class="glow-btn purple">🖼️ Elegir de Galería</button>
+    </div>
+  </div>
+  <div class="camera-privacy">
+    🔒 Tu foto se analiza con IA para resonancia emocional. No se almacena ni comparte. Solo Reggie la ve.
+  </div>
+</section>
+
+<!-- ===== P14: POST-PHOTO ===== -->
+<section id="screen-postphoto" class="screen screen-postphoto">
+  <div class="vignette"></div>
+  <div class="postphoto-result rune-corners">
+    <span class="rune-tl">ᛊ</span><span class="rune-tr">ᚦ</span>
+    <span class="rune-bl">ᛃ</span><span class="rune-br">ᛈ</span>
+    <div class="postphoto-title">✨ Resonancia Fuerte</div>
+    <div class="postphoto-sprite">⚡</div>
+    <div class="postphoto-reaction">
+      ¡Reggie vibra con energía! Los colores del parque despiertan recuerdos ancestrales de corrientes verdes.
+    </div>
+    <div class="postphoto-deltas">
+      <div class="postphoto-delta positive">🔮 +8</div>
+      <div class="postphoto-delta positive">💛 +5</div>
+      <div class="postphoto-delta positive">🌱 +12</div>
+    </div>
+    <div class="postphoto-diary">
+      📖 "Hoy vi algo verde y vivo. Me recordó que la energía no se crea ni se destruye... solo cambia de forma. Como yo."
+    </div>
+  </div>
+  <div class="postphoto-buttons">
+    <button class="glow-btn" onclick="showScreen('chat')">💬 Conversar</button>
+    <button class="glow-btn purple" onclick="showScreen('world')">🏠 Volver</button>
+  </div>
+</section>
+
+<!-- ===== P15: FRACTURA ===== -->
+<section id="screen-fractura" class="screen screen-fractura">
+  <div class="fractura-flash-overlay"></div>
+  <div class="vignette"></div>
+  <div class="fragment-particles">
+    <div class="fragment-particle" style="left:15%;top:20%;animation-delay:0s;animation-duration:4s;"></div>
+    <div class="fragment-particle" style="left:80%;top:30%;animation-delay:0.5s;animation-duration:5s;"></div>
+    <div class="fragment-particle" style="left:40%;top:75%;animation-delay:1s;animation-duration:4.5s;"></div>
+    <div class="fragment-particle" style="left:65%;top:15%;animation-delay:1.5s;animation-duration:6s;"></div>
+    <div class="fragment-particle" style="left:25%;top:60%;animation-delay:2s;animation-duration:5s;"></div>
+  </div>
+  <div class="fractura-particle-burst">
+    <div class="fractura-particle" style="top:50%;left:50%;--ex:60px;--ey:-50px;animation-delay:0.3s;"></div>
+    <div class="fractura-particle" style="top:50%;left:50%;--ex:-55px;--ey:-40px;animation-delay:0.4s;"></div>
+    <div class="fractura-particle" style="top:50%;left:50%;--ex:40px;--ey:50px;animation-delay:0.5s;"></div>
+    <div class="fractura-particle" style="top:50%;left:50%;--ex:-60px;--ey:30px;animation-delay:0.6s;"></div>
+    <div class="fractura-particle" style="top:50%;left:50%;--ex:30px;--ey:-60px;animation-delay:0.7s;"></div>
+    <div class="fractura-particle" style="top:50%;left:50%;--ex:-40px;--ey:-55px;animation-delay:0.8s;"></div>
+    <div class="fractura-particle" style="top:50%;left:50%;--ex:55px;--ey:40px;animation-delay:0.9s;"></div>
+    <div class="fractura-particle" style="top:50%;left:50%;--ex:-30px;--ey:60px;animation-delay:1s;"></div>
+  </div>
+  <div class="fractura-sprite-area">⚡</div>
+  <div class="fractura-narrative">
+    "Algo cambió en mí... Las corrientes que antes eran caóticas ahora fluyen con propósito. Puedo sentir los fragmentos reorganizándose."
+  </div>
+  <div class="fractura-continue">
+    <button class="glow-btn gold" onclick="showScreen('world')">Continuar ▶</button>
+  </div>
+</section>
+
+<!-- ===== P16: SOCIAL ===== -->
+<section id="screen-social" class="screen screen-social">
+  <div class="fragment-particles">
+    <div class="fragment-particle" style="left:10%;top:25%;animation-delay:0s;animation-duration:7s;"></div>
+    <div class="fragment-particle" style="left:85%;top:60%;animation-delay:2s;animation-duration:6s;"></div>
+    <div class="fragment-particle" style="left:50%;top:80%;animation-delay:3.5s;animation-duration:5s;"></div>
+  </div>
+  <div class="social-tabs">
+    <button class="social-tab active-tab">🌍 Red</button>
+    <button class="social-tab">📨 Mensajes <span class="social-badge">3</span></button>
+    <button class="social-tab">🔔 Actividad</button>
+  </div>
+  <div class="social-content">
+    <div class="social-section">
+      <div class="social-section-title">🌍 Regeneración Global</div>
+      <button class="glow-btn" onclick="showScreen('leaderboard')" style="font-size:var(--fs-xs);padding:0.5em 1em;">Ver Leaderboard ▶</button>
+    </div>
+    <div class="social-section">
+      <div class="social-section-title">📨 Mensajes Recientes</div>
+      <div class="social-message-item">🍊 <span><span class="feed-name">Kai</span> te envió fruta</span></div>
+      <div class="social-message-item">💬 <span><span class="feed-name">Luna</span>: "¡Tu regenmon se ve genial!"</span></div>
+      <div class="social-message-item">🎁 <span><span class="feed-name">Ember</span> te regaló 5 $FRUTA</span></div>
+    </div>
+    <div class="social-section">
+      <div class="social-section-title">🔔 Actividad Reciente</div>
+      <div class="social-feed-item"><span class="feed-name">Kai</span> evolucionó a Fractura 3 🔥</div>
+      <div class="social-feed-item"><span class="feed-name">Luna</span> alcanzó 100 memorias ❄️</div>
+      <div class="social-feed-item"><span class="feed-name">Ember</span> se unió a La Red ⚡</div>
+      <div class="social-feed-item"><span class="feed-name">Frost</span> completó una purificación rara 🌀</div>
+    </div>
+  </div>
+  <nav class="world-bottom-nav">
+    <button class="world-nav-btn" onclick="showScreen('chat')">💬 Chat</button>
+    <button class="world-nav-btn" onclick="showScreen('camera')">📷 Photo</button>
+    <button class="world-nav-btn active-tab" onclick="showScreen('social')">🌍 Social</button>
+  </nav>
+</section>
+
+<!-- ===== P17: LEADERBOARD ===== -->
+<section id="screen-leaderboard" class="screen screen-leaderboard">
+  <div class="vignette"></div>
+  <div class="leaderboard-title">🏆 Regeneración Global</div>
+  <div class="leaderboard-list">
+    <div class="leaderboard-item" onclick="showScreen('publicperfil')"><span class="leaderboard-rank top-1">1</span><span class="leaderboard-sprite">🔥</span><div class="leaderboard-info"><div class="leaderboard-name">Pyra</div><div class="leaderboard-type">Flama · F4</div></div><div class="leaderboard-progress"><div class="leaderboard-progress-fill" style="width:95%;"></div></div></div>
+    <div class="leaderboard-item" onclick="showScreen('publicperfil')"><span class="leaderboard-rank top-2">2</span><span class="leaderboard-sprite">❄️</span><div class="leaderboard-info"><div class="leaderboard-name">Cryo</div><div class="leaderboard-type">Hielo · F3</div></div><div class="leaderboard-progress"><div class="leaderboard-progress-fill" style="width:82%;"></div></div></div>
+    <div class="leaderboard-item" onclick="showScreen('publicperfil')"><span class="leaderboard-rank top-3">3</span><span class="leaderboard-sprite">⚡</span><div class="leaderboard-info"><div class="leaderboard-name">Volt</div><div class="leaderboard-type">Rayo · F3</div></div><div class="leaderboard-progress"><div class="leaderboard-progress-fill" style="width:78%;"></div></div></div>
+    <div class="leaderboard-item"><span class="leaderboard-rank">4</span><span class="leaderboard-sprite">🔥</span><div class="leaderboard-info"><div class="leaderboard-name">Kai</div><div class="leaderboard-type">Flama · F3</div></div><div class="leaderboard-progress"><div class="leaderboard-progress-fill" style="width:65%;"></div></div></div>
+    <div class="leaderboard-item"><span class="leaderboard-rank">5</span><span class="leaderboard-sprite">❄️</span><div class="leaderboard-info"><div class="leaderboard-name">Luna</div><div class="leaderboard-type">Hielo · F2</div></div><div class="leaderboard-progress"><div class="leaderboard-progress-fill" style="width:52%;"></div></div></div>
+    <div class="leaderboard-item"><span class="leaderboard-rank">6</span><span class="leaderboard-sprite">⚡</span><div class="leaderboard-info"><div class="leaderboard-name">Ember</div><div class="leaderboard-type">Rayo · F2</div></div><div class="leaderboard-progress"><div class="leaderboard-progress-fill" style="width:45%;"></div></div></div>
+    <div class="leaderboard-item"><span class="leaderboard-rank">7</span><span class="leaderboard-sprite">🔥</span><div class="leaderboard-info"><div class="leaderboard-name">Frost</div><div class="leaderboard-type">Flama · F1</div></div><div class="leaderboard-progress"><div class="leaderboard-progress-fill" style="width:30%;"></div></div></div>
+  </div>
+  <div style="text-align:center;margin-top:1rem;">
+    <button class="glow-btn purple" onclick="showScreen('social')" style="width:auto;padding:0.5em 1.5em;font-size:var(--fs-xs);">← Volver</button>
+  </div>
+</section>
+
+<!-- ===== P18: MI PERFIL ===== -->
+<section id="screen-miperfil" class="screen screen-miperfil">
+  <div class="vignette"></div>
+  <div class="profile-card rune-corners">
+    <span class="rune-tl">ᚱ</span><span class="rune-tr">ᛊ</span>
+    <span class="rune-bl">ᛏ</span><span class="rune-br">ᚲ</span>
+    <div class="profile-sprite">⚡</div>
+    <div class="profile-name">Sparky</div>
+    <div class="profile-type">⚡ Rayo · Fractura 2</div>
+    <div class="profile-stats-grid">
+      <div class="profile-stat-cell"><div class="stat-val">75</div><div class="stat-lbl">🔮 Espíritu</div></div>
+      <div class="profile-stat-cell"><div class="stat-val">50</div><div class="stat-lbl">💛 Pulso</div></div>
+      <div class="profile-stat-cell"><div class="stat-val">30</div><div class="stat-lbl">🌱 Esencia</div></div>
+    </div>
+    <div class="profile-memories">🧠 7 Memorias</div>
+    <div class="profile-visibility">
+      🌍 Visible en La Red
+      <div class="settings-toggle on" onclick="this.classList.toggle('on')" style="margin-left:0.3rem;"></div>
+    </div>
+  </div>
+  <button class="glow-btn" onclick="showScreen('world')" style="width:auto;padding:0.5em 1.5em;font-size:var(--fs-xs);">← Volver al Mundo</button>
+</section>
+
+<!-- ===== P19: PERFIL PÚBLICO ===== -->
+<section id="screen-publicperfil" class="screen screen-publicperfil">
+  <div class="vignette"></div>
+  <div class="public-profile-card rune-corners">
+    <span class="rune-tl">ᛗ</span><span class="rune-tr">ᚨ</span>
+    <span class="rune-bl">ᛃ</span><span class="rune-br">ᛈ</span>
+    <div class="profile-sprite">🔥</div>
+    <div class="profile-name" style="color:var(--purple);">Pyra</div>
+    <div class="profile-type">🔥 Flama · Fractura 4</div>
+    <div class="public-evolution">🏆 Forma Final — 420 progreso</div>
+    <div class="profile-memories">🧠 156 Memorias</div>
+    <div class="public-actions">
+      <button class="public-action-btn">🍊 Alimentar (gasta $FRUTA)</button>
+      <button class="public-action-btn">🎁 Regalar $FRUTA</button>
+      <button class="public-action-btn">💬 Enviar Pulso</button>
+    </div>
+  </div>
+  <button class="public-back-btn" onclick="showScreen('leaderboard')">← Volver al Leaderboard</button>
+</section>
+
 <script>
 // ===== SCREEN NAVIGATION =====
 function showScreen(id) {
@@ -1616,7 +2893,7 @@ function showScreen(id) {
 
   document.querySelectorAll('.preview-nav button:not(.theme-toggle)').forEach(b => b.classList.remove('active'));
   const btns = document.querySelectorAll('.preview-nav button:not(.theme-toggle)');
-  const screens = ['loading','fullscreen','title','typewriter','login','creation','transition'];
+  const screens = ['loading','fullscreen','title','typewriter','login','creation','transition','tutorial','world','settings','history','chat','camera','postphoto','fractura','social','leaderboard','miperfil','publicperfil'];
   const idx = screens.indexOf(id);
   if (idx >= 0 && btns[idx]) btns[idx].classList.add('active');
 
@@ -1743,6 +3020,31 @@ function checkAwaken() {
     setTimeout(() => spark.remove(), 600);
   }, 280);
 })();
+
+// ===== TUTORIAL STEPS =====
+const tutSteps = [
+  { title: '👋 Meet Reggie', icon: '🐣', desc: 'Este es tu Regenmon. Nació de un fragmento de energía antigua. Cuídalo y crecerá.' },
+  { title: '💬 Chat', icon: '💬', desc: 'Habla con Reggie. Cada conversación genuina fortalece su espíritu y tu vínculo.' },
+  { title: '🌀 Care', icon: '🌀', desc: 'Purifica la energía corrupta. Cuida sus stats: Espíritu, Pulso y Esencia.' },
+  { title: '📸 Photos ✨', icon: '📷', desc: 'Muéstrale el mundo real. Las fotos generan resonancia emocional y fragmentos.', badge: true },
+  { title: '⚡ Evolution ✨', icon: '🌟', desc: 'Al acumular suficiente progreso, Reggie experimentará una Fractura — una evolución dramática.', badge: true },
+];
+let tutStep = 0;
+function setTutStep(i) {
+  tutStep = i;
+  const s = tutSteps[i];
+  document.getElementById('tut-title').innerHTML = s.title + (s.badge ? ' <span class="tutorial-step-badge">✨ Nuevo</span>' : '');
+  document.getElementById('tut-icon').textContent = s.icon;
+  document.getElementById('tut-desc').textContent = s.desc;
+  document.querySelectorAll('.tutorial-dot').forEach((d, j) => {
+    d.className = 'tutorial-dot' + (j === i ? ' active' : j < i ? ' completed' : '');
+  });
+  document.getElementById('tut-next').textContent = i === tutSteps.length - 1 ? '¡Listo! ▶' : 'Siguiente ▶';
+}
+function nextTutStep() {
+  if (tutStep < tutSteps.length - 1) setTutStep(tutStep + 1);
+  else showScreen('world');
+}
 </script>
 
 </body>
