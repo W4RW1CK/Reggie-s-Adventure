@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Reggie's Adventure — Redesign v4 Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET & BASE ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  /* Dark palette */
+  --bg-void: #0a0a0f;
+  --cyan: #00f0ff;
+  --purple: #b44aff;
+  --gold: #f5c542;
+  --text-primary: #e0e0e0;
+  --text-dim: #555;
+  --surface: #1a1a2a;
+  --surface-2: #12121f;
+  --border: #222233;
+  --red: #ff3b5c;
+  --green: #00ff88;
+
+  /* Light palette */
+  --bg-papiro: #f4e8c1;
+  --ink-dark: #8b6914;
+  --ink-red: #8b2500;
+  --border-papiro: #c4a56a;
+  --surface-papiro: #efe0b9;
+  --ink-green: #4a6b2a;
+
+  /* Type colors */
+  --type-rayo: #00f0ff;
+  --type-flama: #ff6b35;
+  --type-hielo: #b44aff;
+
+  /* Font sizes */
+  --fs-xs: 7px;
+  --fs-sm: 9px;
+  --fs-base: 11px;
+  --fs-lg: 14px;
+  --fs-xl: 18px;
+  --fs-2xl: 24px;
+  --fs-3xl: 32px;
+}
+
+body {
+  font-family: 'Press Start 2P', monospace;
+  background: var(--bg-void);
+  color: var(--text-primary);
+  image-rendering: pixelated;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* ===== SCANLINES ===== */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 9998;
+  background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px);
+  pointer-events: none;
+}
+
+/* ===== PREVIEW NAV ===== */
+.preview-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+  background: var(--bg-void);
+  border-bottom: 1px solid var(--border);
+  display: flex; gap: 4px; padding: 8px 12px;
+  overflow-x: auto; flex-wrap: nowrap; align-items: center;
+  box-shadow: 0 2px 20px rgba(0,240,255,0.05);
+}
+.preview-nav button {
+  font-family: inherit; font-size: var(--fs-xs); padding: 6px 10px;
+  background: transparent; color: var(--text-dim); border: 1px solid var(--border);
+  cursor: pointer; white-space: nowrap; transition: all 0.3s;
+}
+.preview-nav button:hover {
+  color: var(--cyan); border-color: rgba(0,240,255,0.4);
+  text-shadow: 0 0 8px rgba(0,240,255,0.3);
+}
+.preview-nav button.active {
+  color: var(--cyan); border-color: var(--cyan);
+  background: rgba(0,240,255,0.05);
+  text-shadow: 0 0 10px rgba(0,240,255,0.4);
+  box-shadow: 0 0 10px rgba(0,240,255,0.1), inset 0 0 10px rgba(0,240,255,0.05);
+}
+.theme-toggle {
+  margin-left: auto;
+  font-family: inherit; font-size: var(--fs-xs); padding: 6px 12px;
+  background: transparent; color: var(--purple); border: 1px solid rgba(180,74,255,0.4);
+  cursor: pointer; white-space: nowrap; transition: all 0.3s;
+}
+.theme-toggle:hover {
+  background: rgba(180,74,255,0.1); border-color: var(--purple);
+  text-shadow: 0 0 8px rgba(180,74,255,0.4);
+}
+
+/* ===== SCREEN CONTAINER ===== */
+.screen {
+  display: none;
+  min-height: 100vh;
+  padding-top: 50px;
+}
+.screen.active { display: flex; }
+
+/* ===== SHARED COMPONENTS ===== */
+
+/* Pixel Container */
+.pixel-container {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  padding: 20px;
+  position: relative;
+  box-shadow: 0 0 15px rgba(0,240,255,0.05), inset 0 0 30px rgba(0,0,0,0.3);
+}
+.pixel-container::before,
+.pixel-container::after {
+  content: ''; position: absolute; width: 8px; height: 8px;
+  border: 1px solid rgba(0,240,255,0.3);
+}
+.pixel-container::before { top: 4px; left: 4px; border-right: none; border-bottom: none; }
+.pixel-container::after { bottom: 4px; right: 4px; border-left: none; border-top: none; }
+
+/* Glow Button */
+.glow-btn {
+  font-family: inherit;
+  font-size: var(--fs-base);
+  padding: 12px 24px;
+  background: transparent;
+  color: var(--cyan);
+  border: 2px solid var(--cyan);
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.glow-btn:hover {
+  background: rgba(0,240,255,0.1);
+  box-shadow: 0 0 20px rgba(0,240,255,0.3), inset 0 0 20px rgba(0,240,255,0.05);
+  text-shadow: 0 0 10px rgba(0,240,255,0.5);
+}
+.glow-btn:active {
+  transform: scale(0.97);
+}
+.glow-btn.purple {
+  color: var(--purple); border-color: var(--purple);
+}
+.glow-btn.purple:hover {
+  background: rgba(180,74,255,0.1);
+  box-shadow: 0 0 20px rgba(180,74,255,0.3), inset 0 0 20px rgba(180,74,255,0.05);
+  text-shadow: 0 0 10px rgba(180,74,255,0.5);
+}
+.glow-btn.gold {
+  color: var(--gold); border-color: var(--gold);
+}
+.glow-btn.gold:hover {
+  background: rgba(245,197,66,0.1);
+  box-shadow: 0 0 20px rgba(245,197,66,0.3);
+  text-shadow: 0 0 10px rgba(245,197,66,0.5);
+}
+.glow-btn.disabled {
+  opacity: 0.3; pointer-events: none;
+}
+
+/* Runic corners for special containers */
+.runic-box {
+  position: relative;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  padding: 24px;
+}
+.runic-box::before { content: '◇'; position: absolute; top: -6px; left: -6px; color: var(--cyan); font-size: 10px; text-shadow: 0 0 8px var(--cyan); }
+.runic-box::after { content: '◇'; position: absolute; bottom: -6px; right: -6px; color: var(--cyan); font-size: 10px; text-shadow: 0 0 8px var(--cyan); }
+
+/* Floating particles */
+@keyframes float-particle {
+  0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.3; }
+  25% { transform: translateY(-20px) translateX(5px); opacity: 0.7; }
+  50% { transform: translateY(-40px) translateX(-5px); opacity: 0.5; }
+  75% { transform: translateY(-60px) translateX(3px); opacity: 0.2; }
+}
+
+.particle {
+  position: absolute;
+  width: 3px; height: 3px;
+  background: var(--cyan);
+  border-radius: 50%;
+  animation: float-particle 4s infinite ease-in-out;
+  box-shadow: 0 0 6px var(--cyan);
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; text-shadow: 0 0 10px rgba(0,240,255,0.3); }
+  50% { opacity: 1; text-shadow: 0 0 30px rgba(0,240,255,0.8), 0 0 60px rgba(0,240,255,0.3); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes glitch-shift {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(2px, -1px); }
+  60% { transform: translate(-1px, -1px); }
+  80% { transform: translate(1px, 2px); }
+}
+
+@keyframes typewriter-cursor {
+  0%, 100% { border-color: var(--cyan); }
+  50% { border-color: transparent; }
+}
+
+@keyframes spin-slow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes bar-fill {
+  from { width: 0%; }
+}
+
+@keyframes energy-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(0,240,255,0.1); }
+  50% { box-shadow: 0 0 40px rgba(0,240,255,0.3), 0 0 80px rgba(180,74,255,0.1); }
+}
+
+@keyframes dots {
+  0% { content: '.'; }
+  33% { content: '..'; }
+  66% { content: '...'; }
+}
+
+/* =========================================
+   P1 — LOADING NES
+   ========================================= */
+.screen-loading {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-void);
+  gap: 30px;
+}
+
+.loading-logo {
+  font-size: var(--fs-2xl);
+  color: var(--cyan);
+  text-shadow: 0 0 20px rgba(0,240,255,0.5), 0 0 40px rgba(0,240,255,0.2);
+  animation: pulse-glow 2s infinite;
+  text-align: center;
+  line-height: 1.6;
+}
+.loading-logo .sub {
+  display: block;
+  font-size: var(--fs-lg);
+  color: var(--purple);
+  text-shadow: 0 0 15px rgba(180,74,255,0.4);
+  margin-top: 8px;
+}
+
+.loading-bar-container {
+  width: 280px;
+  height: 12px;
+  border: 2px solid var(--cyan);
+  background: var(--surface-2);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,240,255,0.2);
+}
+.loading-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  width: 0%;
+  animation: bar-fill 2.5s ease-out forwards;
+  box-shadow: 0 0 10px var(--cyan);
+}
+.loading-bar-container::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(90deg, transparent 0px, transparent 8px, rgba(0,0,0,0.2) 8px, rgba(0,0,0,0.2) 10px);
+}
+
+.loading-text {
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  letter-spacing: 2px;
+}
+
+.loading-particles {
+  position: absolute; inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* =========================================
+   P2 — LOADING + FULLSCREEN
+   ========================================= */
+.screen-fullscreen {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-void);
+  gap: 24px;
+}
+
+.fullscreen-icon {
+  font-size: 48px;
+  animation: breathe 3s infinite;
+}
+
+.fullscreen-title {
+  font-size: var(--fs-lg);
+  color: var(--text-primary);
+  text-align: center;
+  line-height: 1.8;
+}
+
+.fullscreen-subtitle {
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  text-align: center;
+  line-height: 2;
+  max-width: 320px;
+}
+
+.fullscreen-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+/* =========================================
+   P3 — TITLE
+   ========================================= */
+.screen-title {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-void);
+  position: relative;
+  overflow: hidden;
+}
+
+.title-bg-runes {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 120px;
+  color: rgba(0,240,255,0.03);
+  pointer-events: none;
+  animation: spin-slow 120s linear infinite;
+}
+
+.title-main {
+  font-size: var(--fs-3xl);
+  color: var(--cyan);
+  text-shadow:
+    0 0 20px rgba(0,240,255,0.6),
+    0 0 40px rgba(0,240,255,0.3),
+    0 0 80px rgba(0,240,255,0.1),
+    3px 3px 0 rgba(180,74,255,0.3);
+  text-align: center;
+  line-height: 1.5;
+  animation: glitch-shift 8s infinite;
+  position: relative;
+  z-index: 2;
+}
+.title-main .adventure {
+  display: block;
+  font-size: var(--fs-xl);
+  color: var(--purple);
+  text-shadow: 0 0 15px rgba(180,74,255,0.5), 0 0 30px rgba(180,74,255,0.2);
+  margin-top: 8px;
+}
+
+.title-decorative-regenmons {
+  display: flex;
+  gap: 40px;
+  margin: 30px 0;
+  opacity: 0.15;
+  font-size: 40px;
+  z-index: 1;
+}
+
+.title-press-start {
+  font-size: var(--fs-base);
+  color: var(--gold);
+  animation: blink 1.2s infinite;
+  cursor: pointer;
+  padding: 16px 32px;
+  border: 1px solid transparent;
+  transition: all 0.3s;
+  z-index: 2;
+  margin-top: 20px;
+}
+.title-press-start:hover {
+  border-color: var(--gold);
+  background: rgba(245,197,66,0.05);
+  text-shadow: 0 0 15px rgba(245,197,66,0.5);
+}
+
+.title-music-toggle {
+  position: absolute;
+  top: 60px; right: 16px;
+  font-size: var(--fs-sm);
+  color: var(--text-dim);
+  background: none; border: 1px solid var(--border);
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  z-index: 3;
+}
+.title-music-toggle:hover {
+  color: var(--cyan); border-color: var(--cyan);
+}
+
+.title-version {
+  position: absolute;
+  bottom: 16px; right: 16px;
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  opacity: 0.4;
+  z-index: 2;
+}
+
+/* =========================================
+   P4 — TYPEWRITER (HISTORIA)
+   ========================================= */
+.screen-typewriter {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-void);
+  padding: 50px 20px;
+}
+
+.typewriter-box {
+  max-width: 500px;
+  width: 100%;
+  background: var(--surface-2);
+  border: 2px solid var(--cyan);
+  padding: 24px;
+  position: relative;
+  box-shadow: 0 0 30px rgba(0,240,255,0.1), inset 0 0 40px rgba(0,0,0,0.5);
+}
+.typewriter-box::before {
+  content: '> INCOMING TRANSMISSION';
+  position: absolute; top: -10px; left: 12px;
+  font-size: var(--fs-xs);
+  color: var(--cyan);
+  background: var(--bg-void);
+  padding: 0 8px;
+  letter-spacing: 1px;
+}
+
+.typewriter-text {
+  font-size: var(--fs-sm);
+  line-height: 2.4;
+  color: var(--cyan);
+  text-shadow: 0 0 5px rgba(0,240,255,0.3);
+  min-height: 150px;
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  width: 8px; height: 14px;
+  background: var(--cyan);
+  margin-left: 4px;
+  animation: blink 0.8s infinite;
+  vertical-align: middle;
+  box-shadow: 0 0 8px var(--cyan);
+}
+
+.typewriter-continue {
+  margin-top: 20px;
+  text-align: right;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.typewriter-continue.visible { opacity: 1; }
+
+/* =========================================
+   P5 — INICIAR SESIÓN (PRIVY)
+   ========================================= */
+.screen-login {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10,10,15,0.95);
+}
+
+.login-modal {
+  max-width: 380px;
+  width: 90%;
+  background: rgba(26,26,42,0.95);
+  border: 1px solid var(--purple);
+  padding: 32px 24px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 0 40px rgba(180,74,255,0.15), inset 0 0 40px rgba(0,0,0,0.3);
+  position: relative;
+}
+.login-modal::before { content: '◇'; position: absolute; top: -6px; left: -6px; color: var(--purple); font-size: 10px; text-shadow: 0 0 8px var(--purple); }
+.login-modal::after { content: '◇'; position: absolute; bottom: -6px; right: -6px; color: var(--purple); font-size: 10px; text-shadow: 0 0 8px var(--purple); }
+
+.login-title {
+  font-size: var(--fs-lg);
+  color: var(--purple);
+  text-align: center;
+  margin-bottom: 8px;
+  text-shadow: 0 0 15px rgba(180,74,255,0.4);
+}
+
+.login-subtitle {
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  text-align: center;
+  margin-bottom: 24px;
+  line-height: 2;
+}
+
+.login-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.login-btn {
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  padding: 14px;
+  background: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.login-btn:hover {
+  border-color: var(--purple);
+  background: rgba(180,74,255,0.05);
+  box-shadow: 0 0 15px rgba(180,74,255,0.1);
+}
+.login-btn .icon { font-size: 16px; }
+
+.login-divider {
+  text-align: center;
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  margin: 16px 0;
+  position: relative;
+}
+.login-divider::before, .login-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 30%;
+  height: 1px;
+  background: var(--border);
+}
+.login-divider::before { left: 0; }
+.login-divider::after { right: 0; }
+
+.login-demo {
+  font-family: inherit;
+  font-size: var(--fs-xs);
+  padding: 10px;
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px dashed var(--border);
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+  width: 100%;
+}
+.login-demo:hover {
+  color: var(--gold); border-color: var(--gold);
+}
+
+/* =========================================
+   P6 — CREACIÓN
+   ========================================= */
+.screen-creation {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: var(--bg-void);
+  padding: 60px 20px 40px;
+  gap: 20px;
+}
+
+.creation-title {
+  font-size: var(--fs-xl);
+  color: var(--cyan);
+  text-shadow: 0 0 20px rgba(0,240,255,0.4);
+  text-align: center;
+}
+
+.creation-subtitle {
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  text-align: center;
+  line-height: 2;
+  max-width: 400px;
+}
+
+/* Carousel */
+.creation-carousel {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 400px;
+  justify-content: center;
+}
+
+.carousel-arrow {
+  font-family: inherit;
+  font-size: var(--fs-xl);
+  color: var(--text-dim);
+  background: none;
+  border: 1px solid var(--border);
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.carousel-arrow:hover {
+  color: var(--cyan); border-color: var(--cyan);
+  box-shadow: 0 0 15px rgba(0,240,255,0.2);
+}
+
+.carousel-card {
+  flex: 1;
+  max-width: 260px;
+  text-align: center;
+  padding: 24px 16px;
+  background: var(--surface-2);
+  border: 2px solid var(--border);
+  transition: all 0.5s;
+  position: relative;
+}
+.carousel-card.type-rayo {
+  border-color: rgba(0,240,255,0.3);
+  box-shadow: 0 0 20px rgba(0,240,255,0.1);
+}
+.carousel-card.type-flama {
+  border-color: rgba(255,107,53,0.3);
+  box-shadow: 0 0 20px rgba(255,107,53,0.1);
+}
+.carousel-card.type-hielo {
+  border-color: rgba(180,74,255,0.3);
+  box-shadow: 0 0 20px rgba(180,74,255,0.1);
+}
+
+.carousel-sprite {
+  font-size: 64px;
+  display: block;
+  margin-bottom: 12px;
+  animation: breathe 3s infinite;
+}
+
+.carousel-type-name {
+  font-size: var(--fs-lg);
+  margin-bottom: 4px;
+}
+.type-rayo .carousel-type-name { color: var(--type-rayo); text-shadow: 0 0 10px rgba(0,240,255,0.4); }
+.type-flama .carousel-type-name { color: var(--type-flama); text-shadow: 0 0 10px rgba(255,107,53,0.4); }
+.type-hielo .carousel-type-name { color: var(--type-hielo); text-shadow: 0 0 10px rgba(180,74,255,0.4); }
+
+.carousel-type-title {
+  font-size: var(--fs-xs);
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.carousel-type-desc {
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  line-height: 2;
+}
+
+/* Dots */
+.carousel-dots {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.carousel-dot {
+  width: 8px; height: 8px;
+  border: 1px solid var(--text-dim);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.carousel-dot.active {
+  background: var(--cyan);
+  border-color: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+}
+
+/* Name input */
+.creation-name-wrapper {
+  width: 100%;
+  max-width: 350px;
+}
+
+.creation-name-input {
+  font-family: inherit;
+  font-size: var(--fs-base);
+  width: 100%;
+  padding: 14px;
+  background: var(--surface);
+  color: var(--text-primary);
+  border: 2px solid var(--border);
+  outline: none;
+  transition: all 0.3s;
+  text-align: center;
+}
+.creation-name-input::placeholder { color: var(--text-dim); }
+.creation-name-input:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 15px rgba(0,240,255,0.2);
+}
+
+.creation-char-count {
+  text-align: right;
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  margin-top: 4px;
+  transition: color 0.3s;
+}
+.creation-char-count.valid { color: var(--green); }
+.creation-char-count.invalid { color: var(--red); }
+
+/* =========================================
+   P7 — TRANSICIÓN
+   ========================================= */
+.screen-transition {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-void);
+  gap: 20px;
+  animation: energy-pulse 2s infinite;
+}
+
+.transition-sprite {
+  font-size: 80px;
+  animation: breathe 1.5s infinite;
+  filter: brightness(1.5);
+  text-shadow: 0 0 40px rgba(0,240,255,0.5);
+}
+
+.transition-text {
+  font-size: var(--fs-lg);
+  color: var(--cyan);
+  text-shadow: 0 0 20px rgba(0,240,255,0.5);
+  text-align: center;
+}
+
+.transition-dots {
+  font-size: var(--fs-lg);
+  color: var(--purple);
+}
+.transition-dots .dot {
+  animation: blink 1s infinite;
+}
+.transition-dots .dot:nth-child(2) { animation-delay: 0.3s; }
+.transition-dots .dot:nth-child(3) { animation-delay: 0.6s; }
+
+.transition-energy-ring {
+  width: 150px; height: 150px;
+  border: 2px solid rgba(0,240,255,0.2);
+  border-radius: 50%;
+  position: absolute;
+  animation: spin-slow 4s linear infinite;
+  box-shadow: 0 0 30px rgba(0,240,255,0.1);
+}
+.transition-energy-ring:nth-child(2) {
+  width: 200px; height: 200px;
+  border-color: rgba(180,74,255,0.15);
+  animation-duration: 6s;
+  animation-direction: reverse;
+  box-shadow: 0 0 30px rgba(180,74,255,0.1);
+}
+
+/* =========================================
+   LIGHT THEME OVERRIDES
+   ========================================= */
+body.light {
+  background: var(--bg-papiro);
+  color: var(--ink-dark);
+}
+body.light::after {
+  background: repeating-linear-gradient(0deg, transparent 0px, transparent 3px, rgba(139,105,20,0.03) 3px, rgba(139,105,20,0.03) 6px);
+}
+
+/* Nav light */
+body.light .preview-nav {
+  background: var(--bg-papiro);
+  border-bottom-color: var(--border-papiro);
+  box-shadow: 0 2px 10px rgba(139,105,20,0.1);
+}
+body.light .preview-nav button {
+  color: var(--border-papiro); border-color: var(--border-papiro);
+}
+body.light .preview-nav button:hover {
+  color: var(--ink-red); border-color: var(--ink-red);
+  text-shadow: none;
+}
+body.light .preview-nav button.active {
+  color: var(--ink-red); border-color: var(--ink-red);
+  background: rgba(139,37,0,0.05);
+  text-shadow: none; box-shadow: none;
+}
+body.light .theme-toggle {
+  color: var(--ink-red); border-color: var(--border-papiro);
+}
+
+/* P1 Loading light */
+body.light .screen-loading { background: var(--bg-papiro); }
+body.light .loading-logo {
+  color: var(--ink-red);
+  text-shadow: 2px 2px 0 rgba(139,105,20,0.2);
+  animation: none;
+}
+body.light .loading-logo .sub { color: var(--ink-dark); text-shadow: none; }
+body.light .loading-bar-container {
+  border-color: var(--ink-dark); box-shadow: none;
+}
+body.light .loading-bar-fill {
+  background: linear-gradient(90deg, var(--ink-red), var(--ink-dark));
+  box-shadow: none;
+}
+body.light .loading-text { color: var(--border-papiro); }
+
+/* P2 Fullscreen light */
+body.light .screen-fullscreen { background: var(--bg-papiro); }
+body.light .fullscreen-title { color: var(--ink-dark); }
+body.light .fullscreen-subtitle { color: var(--border-papiro); }
+body.light .glow-btn {
+  color: var(--ink-red); border-color: var(--ink-red);
+}
+body.light .glow-btn:hover {
+  background: rgba(139,37,0,0.05);
+  box-shadow: none; text-shadow: none;
+}
+body.light .glow-btn.purple {
+  color: var(--ink-dark); border-color: var(--ink-dark);
+}
+body.light .glow-btn.purple:hover {
+  background: rgba(139,105,20,0.05);
+}
+
+/* P3 Title light */
+body.light .screen-title { background: var(--bg-papiro); }
+body.light .title-bg-runes { color: rgba(139,105,20,0.05); }
+body.light .title-main {
+  color: var(--ink-red);
+  text-shadow: 3px 3px 0 rgba(139,105,20,0.2);
+  animation: none;
+}
+body.light .title-main .adventure {
+  color: var(--ink-dark);
+  text-shadow: 2px 2px 0 rgba(196,165,106,0.3);
+}
+body.light .title-press-start { color: var(--ink-dark); }
+body.light .title-press-start:hover {
+  border-color: var(--ink-dark);
+  background: rgba(139,105,20,0.05);
+  text-shadow: none;
+}
+body.light .title-music-toggle {
+  color: var(--border-papiro); border-color: var(--border-papiro);
+}
+body.light .title-version { color: var(--border-papiro); }
+
+/* P4 Typewriter light */
+body.light .screen-typewriter { background: var(--bg-papiro); }
+body.light .typewriter-box {
+  background: var(--surface-papiro);
+  border-color: var(--border-papiro);
+  box-shadow: 2px 2px 0 rgba(139,105,20,0.2);
+}
+body.light .typewriter-box::before {
+  content: '📜 PERGAMINO ANCESTRAL';
+  color: var(--ink-dark);
+  background: var(--bg-papiro);
+}
+body.light .typewriter-text {
+  color: var(--ink-dark);
+  text-shadow: none;
+}
+body.light .typewriter-cursor {
+  background: var(--ink-dark);
+  box-shadow: none;
+}
+
+/* P5 Login light */
+body.light .screen-login { background: rgba(244,232,193,0.97); }
+body.light .login-modal {
+  background: rgba(239,224,185,0.98);
+  border-color: var(--border-papiro);
+  backdrop-filter: none;
+  box-shadow: 3px 3px 0 rgba(139,105,20,0.2);
+}
+body.light .login-modal::before, body.light .login-modal::after {
+  color: var(--ink-red); text-shadow: none;
+}
+body.light .login-title { color: var(--ink-red); text-shadow: none; }
+body.light .login-subtitle { color: var(--border-papiro); }
+body.light .login-btn {
+  background: var(--bg-papiro); color: var(--ink-dark); border-color: var(--border-papiro);
+}
+body.light .login-btn:hover {
+  border-color: var(--ink-red); background: rgba(139,37,0,0.03);
+  box-shadow: none;
+}
+body.light .login-divider { color: var(--border-papiro); }
+body.light .login-divider::before, body.light .login-divider::after { background: var(--border-papiro); }
+body.light .login-demo { color: var(--border-papiro); border-color: var(--border-papiro); }
+body.light .login-demo:hover { color: var(--ink-dark); border-color: var(--ink-dark); }
+
+/* P6 Creation light */
+body.light .screen-creation { background: var(--bg-papiro); }
+body.light .creation-title {
+  color: var(--ink-red);
+  text-shadow: 2px 2px 0 rgba(139,105,20,0.2);
+}
+body.light .creation-subtitle { color: var(--border-papiro); }
+body.light .carousel-arrow {
+  color: var(--border-papiro); border-color: var(--border-papiro);
+}
+body.light .carousel-arrow:hover {
+  color: var(--ink-red); border-color: var(--ink-red);
+  box-shadow: none;
+}
+body.light .carousel-card {
+  background: var(--surface-papiro);
+  border-color: var(--border-papiro);
+}
+body.light .carousel-card.type-rayo {
+  border-color: var(--ink-dark); box-shadow: 2px 2px 0 rgba(139,105,20,0.15);
+}
+body.light .carousel-card.type-flama {
+  border-color: var(--ink-red); box-shadow: 2px 2px 0 rgba(139,37,0,0.15);
+}
+body.light .carousel-card.type-hielo {
+  border-color: var(--ink-dark); box-shadow: 2px 2px 0 rgba(139,105,20,0.15);
+}
+body.light .type-rayo .carousel-type-name { color: var(--ink-dark); text-shadow: none; }
+body.light .type-flama .carousel-type-name { color: var(--ink-red); text-shadow: none; }
+body.light .type-hielo .carousel-type-name { color: var(--ink-dark); text-shadow: none; }
+body.light .carousel-type-title { color: var(--ink-red); }
+body.light .carousel-type-desc { color: var(--border-papiro); }
+body.light .carousel-dot { border-color: var(--border-papiro); }
+body.light .carousel-dot.active {
+  background: var(--ink-red); border-color: var(--ink-red); box-shadow: none;
+}
+body.light .creation-name-input {
+  background: var(--bg-papiro); color: var(--ink-dark); border-color: var(--border-papiro);
+}
+body.light .creation-name-input:focus {
+  border-color: var(--ink-red); box-shadow: none;
+}
+body.light .creation-name-input::placeholder { color: var(--border-papiro); }
+body.light .creation-char-count { color: var(--border-papiro); }
+body.light .creation-char-count.valid { color: var(--ink-green); }
+body.light .creation-char-count.invalid { color: var(--ink-red); }
+
+/* P7 Transition light */
+body.light .screen-transition {
+  background: var(--bg-papiro);
+  animation: none;
+}
+body.light .transition-text {
+  color: var(--ink-dark); text-shadow: none;
+}
+body.light .transition-sprite { filter: none; text-shadow: none; }
+body.light .transition-dots .dot { color: var(--ink-red); }
+body.light .transition-energy-ring {
+  border-color: rgba(139,105,20,0.15); box-shadow: none;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
+  .preview-nav { padding: 6px 8px; gap: 3px; }
+  .preview-nav button { font-size: 6px; padding: 5px 7px; }
+  .loading-logo { font-size: var(--fs-xl); }
+  .loading-logo .sub { font-size: var(--fs-base); }
+  .title-main { font-size: var(--fs-2xl); }
+  .title-main .adventure { font-size: var(--fs-lg); }
+  .carousel-card { padding: 16px 12px; }
+  .carousel-sprite { font-size: 48px; }
+  .glow-btn { font-size: var(--fs-sm); padding: 10px 18px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== PREVIEW NAV ===== -->
+<nav class="preview-nav">
+  <button class="active" onclick="showScreen('loading')">1.Loading</button>
+  <button onclick="showScreen('fullscreen')">2.Fullscreen</button>
+  <button onclick="showScreen('title')">3.Title</button>
+  <button onclick="showScreen('typewriter')">4.Historia</button>
+  <button onclick="showScreen('login')">5.Login</button>
+  <button onclick="showScreen('creation')">6.Creación</button>
+  <button onclick="showScreen('transition')">7.Transición</button>
+  <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
+</nav>
+
+<!-- ===== P1: LOADING ===== -->
+<section id="screen-loading" class="screen screen-loading active">
+  <div class="loading-particles">
+    <div class="particle" style="left:10%; top:30%; animation-delay:0s;"></div>
+    <div class="particle" style="left:25%; top:60%; animation-delay:1s;"></div>
+    <div class="particle" style="left:50%; top:20%; animation-delay:0.5s;"></div>
+    <div class="particle" style="left:70%; top:70%; animation-delay:1.5s;"></div>
+    <div class="particle" style="left:85%; top:40%; animation-delay:0.8s;"></div>
+    <div class="particle" style="left:40%; top:80%; animation-delay:2s;"></div>
+    <div class="particle" style="left:60%; top:15%; animation-delay:1.2s;"></div>
+    <div class="particle" style="left:15%; top:50%; animation-delay:0.3s;"></div>
+  </div>
+  <div class="loading-logo">
+    REGGIE'S
+    <span class="sub">ADVENTURE</span>
+  </div>
+  <div class="loading-bar-container">
+    <div class="loading-bar-fill"></div>
+  </div>
+  <div class="loading-text">CARGANDO DATOS...</div>
+</section>
+
+<!-- ===== P2: FULLSCREEN ===== -->
+<section id="screen-fullscreen" class="screen screen-fullscreen">
+  <div class="fullscreen-icon">⛶</div>
+  <div class="fullscreen-title">Experiencia Completa</div>
+  <div class="fullscreen-subtitle">
+    Reggie's Adventure se disfruta mejor<br>
+    en pantalla completa
+  </div>
+  <div class="fullscreen-buttons">
+    <button class="glow-btn" onclick="showScreen('title')">⛶ Pantalla Completa</button>
+    <button class="glow-btn purple" onclick="showScreen('title')">Continuar Así</button>
+  </div>
+</section>
+
+<!-- ===== P3: TITLE ===== -->
+<section id="screen-title" class="screen screen-title">
+  <div class="title-bg-runes">◇◆◇◆◇◆◇◆◇◆◇</div>
+  <button class="title-music-toggle">🎵 ON</button>
+  <div class="title-main">
+    REGGIE'S
+    <span class="adventure">ADVENTURE</span>
+  </div>
+  <div class="title-decorative-regenmons">
+    <span>⚡</span>
+    <span>🔥</span>
+    <span>❄️</span>
+  </div>
+  <div class="title-press-start" onclick="showScreen('login')">
+    ▶ PRESS START
+  </div>
+  <div class="title-version">v0.5 — El Encuentro</div>
+</section>
+
+<!-- ===== P4: TYPEWRITER ===== -->
+<section id="screen-typewriter" class="screen screen-typewriter">
+  <div class="typewriter-box">
+    <div class="typewriter-text" id="typewriter-output"></div>
+    <span class="typewriter-cursor" id="typewriter-cursor"></span>
+  </div>
+  <div class="typewriter-continue" id="typewriter-continue">
+    <button class="glow-btn gold" onclick="showScreen('creation')">Continuar ▶</button>
+  </div>
+</section>
+
+<!-- ===== P5: LOGIN ===== -->
+<section id="screen-login" class="screen screen-login">
+  <div class="login-modal">
+    <div class="login-title">⟁ CONEXIÓN</div>
+    <div class="login-subtitle">
+      Vincula tu identidad<br>
+      a La Red Primordial
+    </div>
+    <div class="login-options">
+      <button class="login-btn">
+        <span class="icon">🔵</span>
+        Continuar con Google
+      </button>
+      <button class="login-btn">
+        <span class="icon">✉️</span>
+        Continuar con Email
+      </button>
+      <button class="login-btn">
+        <span class="icon">🔑</span>
+        Continuar con Passkey
+      </button>
+    </div>
+    <div class="login-divider">o</div>
+    <button class="login-demo" onclick="showScreen('typewriter')">
+      👻 Continuar sin cuenta (demo)
+    </button>
+  </div>
+</section>
+
+<!-- ===== P6: CREACIÓN ===== -->
+<section id="screen-creation" class="screen screen-creation">
+  <div class="creation-title">Crea tu Regenmon</div>
+  <div class="creation-subtitle">
+    La energía antigua está lista para tomar forma.<br>
+    Elige cuál cristalizará.
+  </div>
+
+  <div class="creation-carousel">
+    <button class="carousel-arrow" onclick="prevType()">◀</button>
+    <div class="carousel-card type-rayo" id="carousel-card">
+      <span class="carousel-sprite" id="carousel-sprite">⚡</span>
+      <div class="carousel-type-name" id="carousel-name">Rayo</div>
+      <div class="carousel-type-title" id="carousel-title">El Impulso</div>
+      <div class="carousel-type-desc" id="carousel-desc">
+        La corriente que alguna vez fue el flujo limpio de información. Veloz, directo, chispeante.
+      </div>
+    </div>
+    <button class="carousel-arrow" onclick="nextType()">▶</button>
+  </div>
+
+  <div class="carousel-dots">
+    <div class="carousel-dot active" id="dot-0" onclick="setType(0)"></div>
+    <div class="carousel-dot" id="dot-1" onclick="setType(1)"></div>
+    <div class="carousel-dot" id="dot-2" onclick="setType(2)"></div>
+  </div>
+
+  <div class="creation-name-wrapper">
+    <input
+      type="text"
+      class="creation-name-input"
+      id="name-input"
+      placeholder="Nombre de tu Regenmon"
+      maxlength="15"
+      oninput="updateCharCount()"
+    >
+    <div class="creation-char-count" id="char-count">0/15</div>
+  </div>
+
+  <button class="glow-btn gold disabled" id="awaken-btn" onclick="showScreen('transition')">
+    ¡DESPERTAR!
+  </button>
+</section>
+
+<!-- ===== P7: TRANSICIÓN ===== -->
+<section id="screen-transition" class="screen screen-transition">
+  <div class="transition-energy-ring"></div>
+  <div class="transition-energy-ring"></div>
+  <div class="transition-sprite" id="transition-sprite">⚡</div>
+  <div class="transition-text">Tu Regenmon está despertando</div>
+  <div class="transition-dots">
+    <span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+  </div>
+</section>
+
+<script>
+// ===== SCREEN NAVIGATION =====
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+
+  document.querySelectorAll('.preview-nav button:not(.theme-toggle)').forEach(b => b.classList.remove('active'));
+  const btns = document.querySelectorAll('.preview-nav button:not(.theme-toggle)');
+  const screens = ['loading','fullscreen','title','typewriter','login','creation','transition'];
+  const idx = screens.indexOf(id);
+  if (idx >= 0 && btns[idx]) btns[idx].classList.add('active');
+
+  // Start typewriter if needed
+  if (id === 'typewriter') startTypewriter();
+}
+
+// ===== THEME TOGGLE =====
+let isDark = true;
+function toggleTheme() {
+  isDark = !isDark;
+  document.body.classList.toggle('light', !isDark);
+  document.querySelector('.theme-toggle').textContent = isDark ? '🌙 Dark' : '☀️ Light';
+}
+
+// ===== TYPEWRITER =====
+const storyText = "En un rincón olvidado del mundo digital, una señal se enciende... algo quiere despertar. Un fragmento de energía antigua — de un tiempo en que la información fluía como ríos de luz y las conexiones eran puras — espera a alguien que le dé forma. Ese alguien... eres tú.";
+let typewriterStarted = false;
+
+function startTypewriter() {
+  if (typewriterStarted) return;
+  typewriterStarted = true;
+  const output = document.getElementById('typewriter-output');
+  const cursor = document.getElementById('typewriter-cursor');
+  const continueBtn = document.getElementById('typewriter-continue');
+  output.textContent = '';
+  let i = 0;
+
+  function type() {
+    if (i < storyText.length) {
+      output.textContent += storyText[i];
+      i++;
+      setTimeout(type, 40);
+    } else {
+      cursor.style.display = 'none';
+      continueBtn.classList.add('visible');
+    }
+  }
+  type();
+}
+
+// ===== CAROUSEL =====
+const types = [
+  { name: 'Rayo', title: 'El Impulso', sprite: '⚡', desc: 'La corriente que alguna vez fue el flujo limpio de información. Veloz, directo, chispeante.', class: 'type-rayo' },
+  { name: 'Flama', title: 'La Pasión', sprite: '🔥', desc: 'El calor que alguna vez fue la conexión genuina entre seres. Cálido, emotivo, intenso.', class: 'type-flama' },
+  { name: 'Hielo', title: 'La Memoria', sprite: '❄️', desc: 'Los archivos donde el conocimiento vivía eterno. Sabio, reflexivo, sereno.', class: 'type-hielo' },
+];
+let currentType = 0;
+
+function setType(idx) {
+  currentType = idx;
+  const t = types[idx];
+  const card = document.getElementById('carousel-card');
+  card.className = 'carousel-card ' + t.class;
+  document.getElementById('carousel-sprite').textContent = t.sprite;
+  document.getElementById('carousel-name').textContent = t.name;
+  document.getElementById('carousel-title').textContent = t.title;
+  document.getElementById('carousel-desc').textContent = t.desc;
+  document.getElementById('transition-sprite').textContent = t.sprite;
+
+  document.querySelectorAll('.carousel-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === idx);
+  });
+  checkAwaken();
+}
+
+function nextType() { setType((currentType + 1) % 3); }
+function prevType() { setType((currentType + 2) % 3); }
+
+// ===== NAME INPUT =====
+function updateCharCount() {
+  const input = document.getElementById('name-input');
+  const count = document.getElementById('char-count');
+  const len = input.value.length;
+  count.textContent = len + '/15';
+  count.className = 'creation-char-count';
+  if (len >= 2 && len <= 15) count.classList.add('valid');
+  else if (len > 0) count.classList.add('invalid');
+  checkAwaken();
+}
+
+function checkAwaken() {
+  const len = document.getElementById('name-input').value.trim().length;
+  const btn = document.getElementById('awaken-btn');
+  if (len >= 2 && len <= 15) {
+    btn.classList.remove('disabled');
+  } else {
+    btn.classList.add('disabled');
+  }
+}
+</script>
+
+</body>
+</html>
