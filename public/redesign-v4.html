@@ -102,21 +102,24 @@ body::after {
 .screen {
   display: none;
   min-height: 100vh;
-  padding-top: 50px;
+  padding-top: 3rem;
 }
 .screen.active { display: flex; }
 
 /* ===== SHARED COMPONENTS — NES STYLE ===== */
+/* rem = layout (padding, margin, gap, max-width) */
+/* em = component-internal (button padding scales with its font) */
+/* px = borders, box-shadows (pixel-perfect NES feel) */
+/* unitless = line-height */
 
 /* NES Pixel Container — thick borders, solid shadow, no blur */
 .pixel-container {
   background: var(--surface);
   border: 4px solid var(--text-primary);
-  padding: 20px;
+  padding: 1.25rem;
   position: relative;
   box-shadow: 4px 4px 0 rgba(0,240,255,0.15);
 }
-/* Inner highlight border (NES double-border feel) */
 .pixel-container::after {
   content: '';
   position: absolute; inset: 3px;
@@ -124,48 +127,18 @@ body::after {
   pointer-events: none;
 }
 
-/* NES Button — solid, chunky, press-effect */
-.nes-btn-custom {
+/* NES Button — em padding scales with font-size */
+.glow-btn {
   font-family: inherit;
   font-size: var(--fs-base);
-  padding: 12px 24px;
-  background: var(--surface);
-  color: var(--cyan);
-  border: 4px solid var(--text-primary);
-  cursor: pointer;
-  transition: all 0.1s;
-  position: relative;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  box-shadow: 4px 4px 0 #000;
-}
-.nes-btn-custom:hover {
-  background: var(--surface-2);
-  color: #fff;
-  text-shadow: 0 0 8px var(--cyan);
-}
-.nes-btn-custom:active {
-  box-shadow: 0px 0px 0 #000;
-  transform: translate(4px, 4px);
-}
-.nes-btn-custom.purple { color: var(--purple); }
-.nes-btn-custom.purple:hover { text-shadow: 0 0 8px var(--purple); }
-.nes-btn-custom.gold { color: var(--gold); }
-.nes-btn-custom.gold:hover { text-shadow: 0 0 8px var(--gold); }
-.nes-btn-custom.disabled { opacity: 0.3; pointer-events: none; }
-
-/* Legacy alias */
-.glow-btn { 
-  font-family: inherit;
-  font-size: var(--fs-base);
-  padding: 12px 24px;
+  padding: 0.85em 1.75em;
   background: var(--surface);
   color: var(--cyan);
   border: 4px solid var(--text-primary);
   cursor: pointer;
   transition: all 0.1s;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.05em;
   box-shadow: 4px 4px 0 #000;
 }
 .glow-btn:hover {
@@ -183,11 +156,11 @@ body::after {
 .glow-btn.gold:hover { text-shadow: 0 0 8px var(--gold); }
 .glow-btn.disabled { opacity: 0.3; pointer-events: none; }
 
-/* NES Dialog Box — the classic RPG text box */
+/* NES Dialog Box */
 .nes-dialog {
   background: #111119;
   border: 4px solid #fff;
-  padding: 20px;
+  padding: 1.25rem;
   position: relative;
   box-shadow: 6px 6px 0 rgba(0,0,0,0.6);
 }
@@ -198,11 +171,11 @@ body::after {
   pointer-events: none;
 }
 
-/* NES Card (for carousel, info panels) */
+/* NES Card */
 .nes-card {
   background: var(--surface-2);
   border: 4px solid var(--border);
-  padding: 20px;
+  padding: 1.25rem;
   box-shadow: 4px 4px 0 rgba(0,0,0,0.4);
   transition: border-color 0.3s;
 }
@@ -292,7 +265,7 @@ body::after {
   align-items: center;
   justify-content: center;
   background: var(--bg-void);
-  gap: 30px;
+  gap: 1.875rem;
 }
 
 .loading-logo {
@@ -301,9 +274,8 @@ body::after {
   text-shadow: 3px 3px 0 #003a3f;
   text-align: center;
   line-height: 1.6;
+  animation: nes-pulse 2s infinite;
 }
-/* Subtle pulse — NES cartridge loading feel */
-.loading-logo { animation: nes-pulse 2s infinite; }
 @keyframes nes-pulse {
   0%, 100% { opacity: 0.85; }
   50% { opacity: 1; }
@@ -313,12 +285,12 @@ body::after {
   font-size: var(--fs-lg);
   color: var(--purple);
   text-shadow: 2px 2px 0 #1a003f;
-  margin-top: 8px;
+  margin-top: 0.5rem;
 }
 
 .loading-bar-container {
-  width: 280px;
-  height: 16px;
+  width: 17.5rem;
+  height: 1rem;
   border: 4px solid #fff;
   background: #111;
   position: relative;
@@ -331,7 +303,6 @@ body::after {
   width: 0%;
   animation: bar-fill 2.5s ease-out forwards;
 }
-/* Pixel segments inside bar */
 .loading-bar-container::after {
   content: '';
   position: absolute; inset: 0;
@@ -342,7 +313,7 @@ body::after {
 .loading-text {
   font-size: var(--fs-xs);
   color: var(--text-dim);
-  letter-spacing: 2px;
+  letter-spacing: 0.125em;
 }
 
 .loading-particles {
@@ -359,11 +330,11 @@ body::after {
   align-items: center;
   justify-content: center;
   background: var(--bg-void);
-  gap: 24px;
+  gap: 1.5rem;
 }
 
 .fullscreen-icon {
-  font-size: 48px;
+  font-size: 3rem;
   animation: breathe 3s infinite;
 }
 
@@ -375,18 +346,18 @@ body::after {
 }
 
 .fullscreen-subtitle {
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   color: var(--text-dim);
   text-align: center;
   line-height: 2;
-  max-width: 320px;
+  max-width: 20rem;
 }
 
 .fullscreen-buttons {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 10px;
+  gap: 0.75rem;
+  margin-top: 0.625rem;
 }
 
 /* =========================================
@@ -431,10 +402,10 @@ body::after {
 
 .title-decorative-regenmons {
   display: flex;
-  gap: 40px;
-  margin: 30px 0;
+  gap: 2.5rem;
+  margin: 1.875rem 0;
   opacity: 0.15;
-  font-size: 40px;
+  font-size: 2.5rem;
   z-index: 1;
 }
 
@@ -443,11 +414,11 @@ body::after {
   color: var(--gold);
   animation: blink 1.2s infinite;
   cursor: pointer;
-  padding: 16px 32px;
+  padding: 1em 2em;
   border: 1px solid transparent;
   transition: all 0.3s;
   z-index: 2;
-  margin-top: 20px;
+  margin-top: 1.25rem;
 }
 .title-press-start:hover {
   border-color: var(--gold);
@@ -457,11 +428,11 @@ body::after {
 
 .title-music-toggle {
   position: absolute;
-  top: 60px; right: 16px;
+  top: 3.75rem; right: 1rem;
   font-size: var(--fs-sm);
   color: var(--text-dim);
   background: none; border: 1px solid var(--border);
-  padding: 8px;
+  padding: 0.5em;
   cursor: pointer;
   transition: all 0.3s;
   z-index: 3;
@@ -472,7 +443,7 @@ body::after {
 
 .title-version {
   position: absolute;
-  bottom: 16px; right: 16px;
+  bottom: 1rem; right: 1rem;
   font-size: var(--fs-xs);
   color: var(--text-dim);
   opacity: 0.4;
@@ -487,15 +458,15 @@ body::after {
   align-items: center;
   justify-content: center;
   background: var(--bg-void);
-  padding: 50px 20px;
+  padding: 3rem 1.25rem;
 }
 
 .typewriter-box {
-  max-width: 500px;
+  max-width: 31.25rem;
   width: 100%;
   background: #111119;
   border: 4px solid #fff;
-  padding: 24px;
+  padding: 1.5rem;
   position: relative;
   box-shadow: 6px 6px 0 rgba(0,0,0,0.6);
 }
@@ -508,12 +479,12 @@ body::after {
 }
 .typewriter-box::before {
   content: '▶ TRANSMISSION';
-  position: absolute; top: -10px; left: 12px;
+  position: absolute; top: -0.625rem; left: 0.75rem;
   font-size: var(--fs-xs);
   color: var(--cyan);
   background: var(--bg-void);
-  padding: 0 8px;
-  letter-spacing: 1px;
+  padding: 0 0.5rem;
+  letter-spacing: 0.05em;
 }
 
 .typewriter-text {
@@ -521,21 +492,21 @@ body::after {
   line-height: 2.4;
   color: var(--cyan);
   text-shadow: 0 0 5px rgba(0,240,255,0.3);
-  min-height: 150px;
+  min-height: 9.375rem;
 }
 
 .typewriter-cursor {
   display: inline-block;
-  width: 8px; height: 14px;
+  width: 0.5em; height: 1em;
   background: var(--cyan);
-  margin-left: 4px;
+  margin-left: 0.25em;
   animation: blink 0.8s infinite;
   vertical-align: middle;
   box-shadow: 0 0 8px var(--cyan);
 }
 
 .typewriter-continue {
-  margin-top: 20px;
+  margin-top: 1.25rem;
   text-align: right;
   opacity: 0;
   transition: opacity 0.5s;
@@ -553,11 +524,11 @@ body::after {
 }
 
 .login-modal {
-  max-width: 380px;
+  max-width: 23.75rem;
   width: 90%;
   background: #111119;
   border: 4px solid #fff;
-  padding: 32px 24px;
+  padding: 2rem 1.5rem;
   box-shadow: 6px 6px 0 rgba(0,0,0,0.6);
   position: relative;
 }
@@ -573,28 +544,28 @@ body::after {
   font-size: var(--fs-lg);
   color: var(--purple);
   text-align: center;
-  margin-bottom: 8px;
-  text-shadow: 0 0 15px rgba(180,74,255,0.4);
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 8px rgba(180,74,255,0.4);
 }
 
 .login-subtitle {
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   color: var(--text-dim);
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 1.5rem;
   line-height: 2;
 }
 
 .login-options {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0.625rem;
 }
 
 .login-btn {
   font-family: inherit;
   font-size: var(--fs-sm);
-  padding: 14px;
+  padding: 0.875em;
   background: var(--surface);
   color: var(--text-primary);
   border: 3px solid var(--text-dim);
@@ -602,7 +573,7 @@ body::after {
   transition: all 0.1s;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem;
   box-shadow: 3px 3px 0 #000;
 }
 .login-btn:hover {
@@ -613,13 +584,13 @@ body::after {
   box-shadow: 0 0 0 #000;
   transform: translate(3px, 3px);
 }
-.login-btn .icon { font-size: 16px; }
+.login-btn .icon { font-size: 1rem; }
 
 .login-divider {
   text-align: center;
   font-size: var(--fs-xs);
   color: var(--text-dim);
-  margin: 16px 0;
+  margin: 1rem 0;
   position: relative;
 }
 .login-divider::before, .login-divider::after {
@@ -636,7 +607,7 @@ body::after {
 .login-demo {
   font-family: inherit;
   font-size: var(--fs-xs);
-  padding: 10px;
+  padding: 0.75em;
   background: transparent;
   color: var(--text-dim);
   border: 2px dashed var(--text-dim);
@@ -660,8 +631,8 @@ body::after {
   align-items: center;
   justify-content: flex-start;
   background: var(--bg-void);
-  padding: 60px 20px 40px;
-  gap: 20px;
+  padding: 3.75rem 1.25rem 2.5rem;
+  gap: 1.25rem;
 }
 
 .creation-title {
@@ -676,16 +647,16 @@ body::after {
   color: var(--text-dim);
   text-align: center;
   line-height: 2;
-  max-width: 400px;
+  max-width: 25rem;
 }
 
 /* Carousel */
 .creation-carousel {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 1rem;
   width: 100%;
-  max-width: 400px;
+  max-width: 25rem;
   justify-content: center;
 }
 
@@ -695,7 +666,7 @@ body::after {
   color: var(--text-dim);
   background: var(--surface);
   border: 3px solid var(--text-dim);
-  width: 40px; height: 40px;
+  width: 2.75rem; height: 2.75rem;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
   transition: all 0.1s;
@@ -711,9 +682,9 @@ body::after {
 
 .carousel-card {
   flex: 1;
-  max-width: 260px;
+  max-width: 16.25rem;
   text-align: center;
-  padding: 24px 16px;
+  padding: 1.5rem 1rem;
   background: #111119;
   border: 4px solid var(--text-dim);
   transition: all 0.3s;
@@ -734,15 +705,15 @@ body::after {
 }
 
 .carousel-sprite {
-  font-size: 64px;
+  font-size: 4rem;
   display: block;
-  margin-bottom: 12px;
+  margin-bottom: 0.75rem;
   animation: breathe 3s infinite;
 }
 
 .carousel-type-name {
   font-size: var(--fs-lg);
-  margin-bottom: 4px;
+  margin-bottom: 0.25rem;
 }
 .type-rayo .carousel-type-name { color: var(--type-rayo); text-shadow: 0 0 10px rgba(0,240,255,0.4); }
 .type-flama .carousel-type-name { color: var(--type-flama); text-shadow: 0 0 10px rgba(255,107,53,0.4); }
@@ -751,7 +722,7 @@ body::after {
 .carousel-type-title {
   font-size: var(--fs-xs);
   color: var(--gold);
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
 }
 
 .carousel-type-desc {
@@ -763,7 +734,7 @@ body::after {
 /* Dots */
 .carousel-dots {
   display: flex;
-  gap: 10px;
+  gap: 0.625rem;
   justify-content: center;
 }
 .carousel-dot {
@@ -782,14 +753,14 @@ body::after {
 /* Name input */
 .creation-name-wrapper {
   width: 100%;
-  max-width: 350px;
+  max-width: 21.875rem;
 }
 
 .creation-name-input {
   font-family: inherit;
   font-size: var(--fs-base);
   width: 100%;
-  padding: 14px;
+  padding: 0.875em;
   background: #111;
   color: var(--text-primary);
   border: 4px solid var(--text-dim);
@@ -807,7 +778,7 @@ body::after {
   text-align: right;
   font-size: var(--fs-xs);
   color: var(--text-dim);
-  margin-top: 4px;
+  margin-top: 0.25rem;
   transition: color 0.3s;
 }
 .creation-char-count.valid { color: var(--green); }
@@ -821,12 +792,12 @@ body::after {
   align-items: center;
   justify-content: center;
   background: var(--bg-void);
-  gap: 20px;
+  gap: 1.25rem;
   animation: energy-pulse 2s infinite;
 }
 
 .transition-sprite {
-  font-size: 80px;
+  font-size: 5rem;
   animation: breathe 1.5s infinite;
   filter: brightness(1.5);
   text-shadow: 0 0 40px rgba(0,240,255,0.5);
@@ -850,7 +821,7 @@ body::after {
 .transition-dots .dot:nth-child(3) { animation-delay: 0.6s; }
 
 .transition-energy-ring {
-  width: 150px; height: 150px;
+  width: 9.375rem; height: 9.375rem;
   border: 2px solid rgba(0,240,255,0.2);
   border-radius: 50%;
   position: absolute;
@@ -1067,92 +1038,45 @@ body.light .transition-energy-ring {
    RESPONSIVE — MOBILE FIRST (375px base)
    =========================================== */
 
-/* ===== MOBILE BASE (375px) — all base styles are mobile ===== */
+/* ===== MOBILE BASE (375px) — base styles ARE mobile ===== */
+/* Only overrides that differ from the component defaults above */
 
-/* Nav: scrollable, readable */
-.preview-nav { padding: 6px 8px; gap: 3px; }
-.preview-nav button { font-size: 8px; padding: 6px 8px; }
-
-/* Loading */
-.loading-logo { font-size: var(--fs-2xl); }
-.loading-logo .sub { font-size: var(--fs-lg); }
-.loading-bar-container { width: 260px; height: 14px; }
-.loading-text { font-size: var(--fs-sm); }
-
-/* Title */
-.title-main { font-size: var(--fs-3xl); }
-.title-main .adventure { font-size: var(--fs-xl); }
-.title-decorative-regenmons { gap: 28px; font-size: 36px; margin: 24px 0; }
-.title-press-start { font-size: var(--fs-base); padding: 14px 28px; }
-.title-music-toggle { font-size: var(--fs-sm); }
-.title-version { font-size: var(--fs-xs); }
-
-/* Fullscreen */
-.fullscreen-icon { font-size: 56px; }
-.fullscreen-title { font-size: var(--fs-lg); }
-.fullscreen-subtitle { font-size: var(--fs-sm); line-height: 2.2; }
-.fullscreen-buttons { width: 100%; max-width: 320px; }
-
-/* Typewriter */
-.typewriter-box { padding: 18px; margin: 0 12px; }
-.typewriter-text { font-size: var(--fs-sm); line-height: 2.4; min-height: 140px; }
-
-/* Login */
-.login-modal { width: 92%; padding: 24px 18px; }
-.login-title { font-size: var(--fs-lg); }
-.login-subtitle { font-size: var(--fs-sm); line-height: 2.2; }
-.login-btn { font-size: var(--fs-sm); padding: 14px; }
-.login-demo { font-size: var(--fs-xs); }
-
-/* Creation */
-.creation-title { font-size: var(--fs-xl); }
-.creation-subtitle { font-size: var(--fs-sm); line-height: 2.2; }
-.carousel-card { padding: 20px 14px; }
-.carousel-sprite { font-size: 56px; }
-.carousel-type-name { font-size: var(--fs-lg); }
-.carousel-type-title { font-size: var(--fs-sm); }
-.carousel-type-desc { font-size: var(--fs-xs); line-height: 2.2; }
-.creation-name-wrapper { max-width: 320px; width: 100%; }
-.creation-name-input { font-size: var(--fs-base); padding: 14px; }
-.creation-char-count { font-size: var(--fs-xs); }
+.preview-nav { padding: 0.375rem 0.5rem; gap: 0.1875rem; }
+.preview-nav button { font-size: 0.5rem; padding: 0.375rem 0.5rem; }
 
 /* Buttons: full width on mobile */
-.glow-btn { font-size: var(--fs-base); padding: 14px 24px; width: 100%; max-width: 320px; }
-
-/* Transition */
-.transition-text { font-size: var(--fs-lg); }
-.transition-sprite { font-size: 72px; }
+.glow-btn { width: 100%; max-width: 20rem; }
 
 /* --- Medium Devices / Tablets (641px+) --- */
 @media (min-width: 641px) {
-  .preview-nav { padding: 8px 12px; gap: 4px; }
-  .preview-nav button { font-size: var(--fs-xs); padding: 6px 10px; }
+  .preview-nav { padding: 0.5rem 0.75rem; gap: 0.25rem; }
+  .preview-nav button { font-size: var(--fs-xs); padding: 0.375rem 0.625rem; }
 
-  .loading-bar-container { width: 300px; height: 16px; }
+  .loading-bar-container { width: 18.75rem; }
 
-  .title-decorative-regenmons { gap: 40px; font-size: 44px; }
+  .title-decorative-regenmons { gap: 2.75rem; font-size: 2.75rem; }
 
-  .typewriter-box { padding: 28px; max-width: 520px; margin: 0; }
+  .typewriter-box { padding: 1.75rem; max-width: 32.5rem; }
 
-  .login-modal { max-width: 400px; padding: 32px 24px; }
+  .login-modal { max-width: 25rem; padding: 2rem 1.5rem; }
 
-  .carousel-card { padding: 28px 20px; }
-  .carousel-sprite { font-size: 64px; }
+  .carousel-card { padding: 1.75rem 1.25rem; }
+  .carousel-sprite { font-size: 4.5rem; }
 
   .glow-btn { width: auto; max-width: none; }
   .fullscreen-buttons { width: auto; }
 
-  .transition-sprite { font-size: 88px; }
+  .transition-sprite { font-size: 5.5rem; }
 }
 
 /* --- Large Devices / Desktops (1025px+) --- */
 @media (min-width: 1025px) {
-  .loading-bar-container { width: 340px; }
-  .typewriter-box { max-width: 600px; }
-  .login-modal { max-width: 440px; }
-  .carousel-card { max-width: 320px; padding: 32px 24px; }
-  .carousel-sprite { font-size: 80px; }
-  .transition-sprite { font-size: 96px; }
+  .loading-bar-container { width: 21.25rem; }
+  .typewriter-box { max-width: 37.5rem; }
+  .login-modal { max-width: 27.5rem; }
+  .carousel-card { max-width: 20rem; padding: 2rem 1.5rem; }
+  .carousel-sprite { font-size: 5rem; }
+  .transition-sprite { font-size: 6rem; }
 }
 </style>
 </head>
