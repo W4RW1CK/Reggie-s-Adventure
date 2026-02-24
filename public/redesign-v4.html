@@ -2349,6 +2349,286 @@ body.light .public-back-btn:hover { color: var(--ink-red); border-color: var(--i
   .world-sprite { font-size: 6rem; }
   .chat-messages { max-width: 40rem; margin: 0 auto; }
 }
+
+/* =========================================
+   VISUAL POLISH — Hollow Knight + Kirby + Gris
+   "NES game running in a mystical art gallery"
+   ========================================= */
+
+/* --- 1. HOLLOW KNIGHT: Depth & Lighting --- */
+
+/* Enhanced vignette — more dramatic */
+.vignette {
+  background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.25) 60%, rgba(0,0,0,0.6) 100%);
+}
+body.light .vignette {
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(100,70,20,0.08) 65%, rgba(80,50,10,0.2) 100%);
+}
+
+/* Parallax-like layered background on screens via ::before */
+.screen::before {
+  content: '';
+  position: absolute; inset: 0;
+  pointer-events: none; z-index: 0;
+  opacity: 0.03;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 80%, var(--cyan), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 20%, var(--purple), transparent);
+}
+body.light .screen::before {
+  opacity: 0.04;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 80%, rgba(139,105,20,0.3), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 20%, rgba(139,37,0,0.2), transparent);
+}
+
+/* Bloom on active/selected/focused interactive elements */
+.glow-btn:hover,
+.preview-nav button.active,
+.carousel-card.type-rayo,
+.carousel-card.type-flama,
+.carousel-card.type-hielo,
+.world-action-btn:hover,
+.settings-toggle.on,
+.social-tab.active-tab {
+  filter: brightness(1.05);
+}
+
+/* Push neon accents further on dark theme */
+.loading-logo,
+.title-main,
+.creation-title,
+.transition-text,
+.chat-header-title,
+.profile-name {
+  filter: drop-shadow(0 0 12px rgba(0,240,255,0.15));
+}
+body.light .loading-logo,
+body.light .title-main,
+body.light .creation-title,
+body.light .transition-text,
+body.light .chat-header-title,
+body.light .profile-name {
+  filter: none;
+}
+
+/* --- 2. Softer, organic particle animations (dust/spores) --- */
+@keyframes float-fragment-organic {
+  0%   { transform: translateY(0) translateX(0) rotate(45deg) scale(1); opacity: 0.15; }
+  15%  { transform: translateY(-8px) translateX(4px) rotate(47deg) scale(1.05); opacity: 0.35; }
+  35%  { transform: translateY(-22px) translateX(-3px) rotate(43deg) scale(0.95); opacity: 0.5; }
+  55%  { transform: translateY(-40px) translateX(6px) rotate(46deg) scale(1.02); opacity: 0.35; }
+  75%  { transform: translateY(-55px) translateX(-2px) rotate(44deg) scale(0.98); opacity: 0.2; }
+  100% { transform: translateY(-70px) translateX(3px) rotate(45deg) scale(1); opacity: 0.08; }
+}
+
+.fragment-particle,
+.particle {
+  animation: float-fragment-organic 8s infinite ease-in-out;
+  border-radius: 1px;
+}
+
+/* Override crystal-float for slower organic feel */
+@keyframes crystal-float-organic {
+  0%, 100% { transform: translateY(0) translateX(0) rotate(45deg); opacity: 0.2; }
+  30% { transform: translateY(-10px) translateX(4px) rotate(46deg); opacity: 0.45; }
+  60% { transform: translateY(-18px) translateX(-3px) rotate(44deg); opacity: 0.35; }
+}
+.type-hielo-particles .type-particle {
+  animation-name: crystal-float-organic;
+  animation-duration: 6s;
+}
+
+/* --- 3. KIRBY: Sparkle effects --- */
+@keyframes sparkle-4point {
+  0%, 100% { transform: scale(0) rotate(0deg); opacity: 0; }
+  15% { transform: scale(1) rotate(0deg); opacity: 1; }
+  50% { transform: scale(0.6) rotate(45deg); opacity: 0.7; }
+  85% { transform: scale(1) rotate(90deg); opacity: 1; }
+}
+
+/* Sparkle on post-photo success, fractura, leaderboard top ranks */
+.postphoto-title::after,
+.fractura-narrative::after,
+.leaderboard-rank.top-1::after {
+  content: '✦';
+  display: inline-block;
+  margin-left: 0.3em;
+  animation: sparkle-4point 2s infinite ease-in-out;
+  font-size: 0.7em;
+  vertical-align: middle;
+}
+
+/* Rounder sprite containers */
+.carousel-sprite,
+.world-sprite,
+.profile-sprite,
+.postphoto-sprite,
+.transition-sprite,
+.fractura-sprite-area,
+.tutorial-step-icon {
+  border-radius: 12px;
+}
+
+/* Light theme: softer pastel warmth */
+body.light {
+  background: #f7edcf;
+}
+body.light .screen-loading,
+body.light .screen-fullscreen,
+body.light .screen-title,
+body.light .screen-typewriter,
+body.light .screen-creation,
+body.light .screen-tutorial,
+body.light .screen-settings,
+body.light .screen-history,
+body.light .screen-camera,
+body.light .screen-postphoto,
+body.light .screen-fractura,
+body.light .screen-leaderboard,
+body.light .screen-miperfil,
+body.light .screen-publicperfil {
+  background: #f7edcf;
+}
+
+/* --- 4. GRIS: Color narrative & watercolor transitions --- */
+
+/* Color bleed overlays on screens — subtle gradient overlay at top/bottom */
+.screen::after {
+  content: '';
+  position: absolute; inset: 0;
+  pointer-events: none; z-index: 0;
+  opacity: 0;
+}
+
+/* Early screens: cooler tones (cyan-heavy) */
+.screen-loading::after,
+.screen-fullscreen::after,
+.screen-title::after {
+  opacity: 1;
+  background: linear-gradient(180deg, rgba(0,240,255,0.03) 0%, transparent 15%, transparent 85%, rgba(0,240,255,0.02) 100%);
+}
+
+/* Mid screens: balanced */
+.screen-typewriter::after,
+.screen-login::after,
+.screen-creation::after,
+.screen-transition::after {
+  opacity: 1;
+  background: linear-gradient(180deg, rgba(0,200,255,0.02) 0%, transparent 20%, transparent 80%, rgba(180,74,255,0.02) 100%);
+}
+
+/* Later screens: warmer (gold/purple) */
+.screen-tutorial::after,
+.screen-world::after,
+.screen-settings::after,
+.screen-history::after,
+.screen-chat::after {
+  opacity: 1;
+  background: linear-gradient(180deg, rgba(180,74,255,0.02) 0%, transparent 20%, transparent 80%, rgba(245,197,66,0.02) 100%);
+}
+
+/* Final screens: warmest */
+.screen-camera::after,
+.screen-postphoto::after,
+.screen-fractura::after,
+.screen-social::after,
+.screen-leaderboard::after,
+.screen-miperfil::after,
+.screen-publicperfil::after {
+  opacity: 1;
+  background: linear-gradient(180deg, rgba(245,197,66,0.03) 0%, transparent 15%, transparent 85%, rgba(180,74,255,0.03) 100%);
+}
+
+/* Light theme color bleed — warmer watercolor feel */
+body.light .screen-loading::after,
+body.light .screen-fullscreen::after,
+body.light .screen-title::after {
+  background: linear-gradient(180deg, rgba(180,210,230,0.06) 0%, transparent 20%, transparent 80%, rgba(180,210,230,0.04) 100%);
+}
+body.light .screen-camera::after,
+body.light .screen-postphoto::after,
+body.light .screen-fractura::after,
+body.light .screen-social::after,
+body.light .screen-leaderboard::after,
+body.light .screen-miperfil::after,
+body.light .screen-publicperfil::after {
+  background: linear-gradient(180deg, rgba(200,160,80,0.06) 0%, transparent 20%, transparent 80%, rgba(180,100,60,0.04) 100%);
+}
+
+/* Negative space — breathing room on key sections */
+.screen-creation,
+.screen-camera,
+.screen-postphoto,
+.screen-miperfil,
+.screen-publicperfil,
+.screen-leaderboard,
+.screen-settings,
+.screen-history {
+  padding-top: 4.5rem;
+  padding-bottom: 3rem;
+}
+.creation-subtitle,
+.camera-privacy,
+.postphoto-diary,
+.tutorial-step-desc {
+  margin-bottom: 1.25rem;
+}
+.creation-carousel {
+  margin: 0.5rem 0;
+}
+.creation-name-wrapper {
+  margin-top: 0.5rem;
+}
+
+/* --- 5. Enhanced scanlines (subtler) --- */
+body::after {
+  background: repeating-linear-gradient(0deg, transparent 0px, transparent 3px, rgba(0,0,0,0.035) 3px, rgba(0,0,0,0.035) 4px);
+}
+body.light::after {
+  background: repeating-linear-gradient(0deg, transparent 0px, transparent 4px, rgba(139,105,20,0.025) 4px, rgba(139,105,20,0.025) 5px);
+}
+
+/* --- 6. Better focus states --- */
+.glow-btn:focus-visible,
+.login-btn:focus-visible,
+.world-action-btn:focus-visible,
+.settings-action-btn:focus-visible,
+.public-action-btn:focus-visible,
+.chat-send-btn:focus-visible,
+.carousel-arrow:focus-visible,
+.tutorial-skip:focus-visible,
+.preview-nav button:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(0,240,255,0.15);
+}
+body.light .glow-btn:focus-visible,
+body.light .login-btn:focus-visible,
+body.light .world-action-btn:focus-visible,
+body.light .settings-action-btn:focus-visible,
+body.light .public-action-btn:focus-visible,
+body.light .chat-send-btn:focus-visible,
+body.light .carousel-arrow:focus-visible,
+body.light .tutorial-skip:focus-visible,
+body.light .preview-nav button:focus-visible {
+  outline-color: var(--ink-red);
+  box-shadow: 0 0 0 4px rgba(139,37,0,0.12);
+}
+
+.creation-name-input:focus-visible,
+.chat-input:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 1px;
+  box-shadow: 0 0 0 4px rgba(0,240,255,0.1);
+}
+body.light .creation-name-input:focus-visible,
+body.light .chat-input:focus-visible {
+  outline-color: var(--ink-red);
+  box-shadow: 0 0 0 4px rgba(139,37,0,0.08);
+}
+
+/* --- End Visual Polish --- */
 </style>
 </head>
 <body>
