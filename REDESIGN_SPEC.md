@@ -1,381 +1,332 @@
-# 🎨 REDESIGN_SPEC — Reggie's Adventure
-> **Versión:** v1.0
-> **Última actualización:** 2026-02-23
+# 🌿 REDESIGN_SPEC — Reggie's Adventure
+> **Versión:** v2.0 — "El Replan"
+> **Última actualización:** 2026-02-25
 > **Autor:** w4rw1ck + Aibus
-> **Estado:** EN PROGRESO
+> **Estado:** DIRECCIÓN ESTÉTICA DEFINIDA — pre-implementación
 >
 > 📜 **Referencia narrativa:** [LORE.md](./LORE.md)
 > 🗺️ **Flujos y pantallas:** [APP_FLOW.md](./APP_FLOW.md)
-> 🎨 **Guidelines actuales:** [FRONTEND_GUIDELINES.md](./FRONTEND_GUIDELINES.md)
-> 🛠️ **Tech stack:** [TECH_STACK.md](./TECH_STACK.md)
 
 ---
 
-## Objetivo
+## Manifiesto
 
-Rediseño visual completo de las 19 pantallas de Reggie's Adventure.
-Estilo: **cyber-arcane + retro-pixel 8-bit + cypherpunk hacker + mystic arcane**.
-Preview-first en HTML standalone → luego implementar en Next.js components.
+Reggie's Adventure es un viaje introspectivo con un compañero — un regenerador de mundos.
+Regenerar tu caos interno, el caos de la red, el caos del mundo físico.
+
+No es un juego retro. No es una copia. No es un remedo.
+
+Es la nostalgia por un futuro que nunca llegó.
+La alquimia de una terminal.
+La naturaleza reclamando lo que le pertenece.
+Ver la luna, las estrellas, y sentir que aún se puede regenerar esto.
+
+**Eco-brutalismo digital:** la naturaleza sobreponiéndose a las estructuras humanas.
+**Tecnología como proceso alquímico:** cada interacción es transformación.
+**Compañero de viaje:** Reggie no es una mascota — es quien camina contigo.
+
+Para todo aquel dispuesto a emprender ese viaje.
 
 ---
 
-## Design System
+## Decisiones de Diseño (v2)
 
-### Paleta Dark (Principal)
+### Lo que MUERE (v1 → v2)
 
-| Nombre | Hex | Uso |
-|--------|-----|-----|
-| `bg-void` | `#0a0a0f` | Fondo principal |
-| `cyan` | `#00f0ff` | Acento primario, bordes activos, glow |
-| `purple` | `#b44aff` | Acento secundario, magia, misticismo |
-| `gold` | `#f5c542` | Recompensas, highlights, warnings |
-| `text-primary` | `#e0e0e0` | Texto principal |
-| `text-dim` | `#555555` | Texto secundario/inactivo |
-| `surface` | `#1a1a2a` | Contenedores, panels |
-| `border` | `#222233` | Bordes por defecto |
+| Eliminado | Razón |
+|-----------|-------|
+| Estética NES/retro-pixel | Era requisito del bootcamp, no la visión real |
+| Press Start 2P (como fuente única) | Forzaba todo a verse "retro" |
+| Light theme / papiro | Capricho, no necesario |
+| Mobile-first | Requisito del bootcamp; la experiencia real es desktop |
+| Cyber-arcane palette | Demasiado "hacker room", no transmite naturaleza ni calma |
+| Scanlines, glitch effects | Plano, vacío, carente de alma |
+| NES borders, pixel shadows | "Un remedo más, una copia barata" |
+| `image-rendering: pixelated` | Ya no es pixel art puro |
 
-### Paleta Light (Papiro/Parchment)
+### Lo que NACE
 
-| Nombre | Hex | Uso |
-|--------|-----|-----|
-| `bg-papiro` | `#f4e8c1` | Fondo principal |
-| `ink-dark` | `#8b6914` | Texto principal |
-| `ink-red` | `#8b2500` | Acentos, títulos |
-| `border-papiro` | `#c4a56a` | Bordes |
-| `surface-papiro` | `#efe0b9` | Contenedores |
+| Nuevo | Inspiración |
+|-------|-------------|
+| Atmósfera onírica y cálida | Kirby's Adventure — donde hasta lo oscuro es amigable |
+| Inmersión melancólica con esperanza | Hollow Knight — un mundo que te envuelve |
+| Poesía visual, arte en cada detalle | Gris — cada elemento es intencional |
+| Eco-brutalismo digital | Naturaleza reclamando estructuras tecnológicas |
+| Terminal como alquimia | Lo digital como proceso místico, no como herramienta |
+| Desktop-first | La experiencia se diseña para respirar en pantalla grande |
+| Relación íntima con Reggie | Compañero de viaje, no mascota virtual |
+
+---
+
+## Design System v2
+
+### Filosofía Visual
+
+**Tres capas de realidad:**
+1. **El Mundo Natural** — fondos orgánicos, texturas de musgo/piedra/agua, vida que crece
+2. **Los Restos Digitales** — fragmentos de UI antigua, terminales abandonadas, código como ruinas
+3. **La Alquimia** — donde naturaleza y tecnología se funden: enredaderas sobre circuitos, agua fluyendo por cables, cristales creciendo en servidores
+
+**Emoción cromática (inspirada en Gris):**
+El color evoluciona con la relación. Al inicio el mundo es más apagado, gris. Conforme Reggie y tú avanzan, el color regresa — como en Gris, donde cada etapa devuelve un color al mundo.
+
+### Paleta
+
+| Token | Hex | Uso | Nota |
+|-------|-----|-----|------|
+| `--void` | `#0d1117` | Fondo base | Casi negro, con calidez (no puro #000) |
+| `--moss` | `#2d5a3d` | Naturaleza, crecimiento, salud | Verde bosque profundo |
+| `--lichen` | `#7fb069` | Vida, regeneración, acentos positivos | Verde claro orgánico |
+| `--amber` | `#d4a574` | Calidez, terminal antigua, nostalgia | Ámbar de resina fosilizada |
+| `--rust` | `#8b4513` | Ruinas, decay, lo que fue | Óxido de estructuras abandonadas |
+| `--mist` | `#b8c4d0` | Texto principal, claridad | Niebla de montaña |
+| `--ghost` | `#5a6670` | Texto secundario, susurros | Presencia tenue |
+| `--glow` | `#e8d5b7` | Highlights, momentos de conexión | Luz de vela, luna |
+| `--water` | `#4a90d9` | Rayo-type, flujo, datos | Agua de río limpio |
+| `--ember` | `#c75b39` | Flama-type, pasión, transformación | Brasa que aún vive |
+| `--frost` | `#9bb8d3` | Hielo-type, calma, reflexión | Escarcha al amanecer |
+
+**Nota:** Los colores de tipo (water/ember/frost) tiñen sutilmente todo el mundo de Reggie — no son solo acentos, son la atmósfera.
 
 ### Tipografía
 
-| Uso | Fuente | Nota |
-|-----|--------|------|
-| **Todo** | `Press Start 2P` | Google Fonts, monospace |
+| Uso | Fuente | Razón |
+|-----|--------|-------|
+| Títulos / momentos importantes | `Crimson Text` | Serif con carácter — evoca libros antiguos, no corporativo |
+| Cuerpo / UI | `Inter` | Limpia, legible, desaparece — deja que el arte hable |
+| Terminal / alquimia | `JetBrains Mono` | Monospace con alma — para momentos donde el código es magia |
 
-### Escala tipográfica
+### Espaciado y Ritmo
 
-| Token | Size | Uso |
-|-------|------|-----|
-| `--fs-xs` | 0.75rem | Labels mínimos, version |
-| `--fs-sm` | 0.875rem | Info secundaria |
-| `--fs-base` | 1rem | Texto general, botones |
-| `--fs-lg` | 1.25rem | Subtítulos |
-| `--fs-xl` | 1.5rem | Títulos de pantalla |
-| `--fs-2xl` | 2rem | Logo/título principal |
-| `--fs-3xl` | 2.75rem | Impacto (Loading, Fractura) |
+La UI respira. Generoso whitespace. Nada se siente apretado.
+Los elementos flotan en el espacio como objetos en agua tranquila.
 
-> **Nota:** Usamos `rem` para accesibilidad — respeta la config del navegador del usuario.
-> Press Start 2P renderiza ~30% más pequeño que otras fuentes, los valores están compensados.
+| Token | Valor | Uso |
+|-------|-------|-----|
+| `--space-xs` | 0.5rem | Micro separaciones |
+| `--space-sm` | 1rem | Entre elementos relacionados |
+| `--space-md` | 2rem | Entre secciones |
+| `--space-lg` | 4rem | Respiración entre bloques |
+| `--space-xl` | 8rem | Momentos dramáticos de espacio |
 
-### Ratios de contraste (WCAG, verificados)
+### Animaciones
 
-| Color | Hex | vs `#0a0a0f` |
-|-------|-----|-------------|
-| cyan | `#00f0ff` | 14.02:1 ✅ |
-| purple | `#b44aff` | 5.04:1 ✅ |
-| gold | `#f5c542` | 12.17:1 ✅ |
-| text-primary | `#e0e0e0` | 14.96:1 ✅ |
-| text-dim | `#8a8a8a` | 5.72:1 ✅ |
+Todo se mueve como la naturaleza: lento, orgánico, con propósito.
 
-### Accesibilidad (WCAG)
+| Tipo | Duración | Easing | Uso |
+|------|----------|--------|-----|
+| Aparición | 800ms-1200ms | `ease-out` | Elementos que entran como niebla |
+| Respiración | 4s-6s | `ease-in-out` | Idle de Reggie, fondos, partículas |
+| Transición de pantalla | 600ms | `ease-in-out` | Fade + escala sutil |
+| Microinteracción | 200ms-400ms | `ease-out` | Hover, click, feedback |
 
-| Regla | Mínimo | Nota |
-|-------|--------|------|
-| Contraste texto normal | 4.5:1 | `--text-dim` = `#8a8a8a` (5.2:1 sobre `#0a0a0f`) |
-| Contraste títulos (≥18px) | 3:1 | Cyan/purple/gold todos pasan sobre `#0a0a0f` |
-| Touch target mínimo | 44×44px | Botones, flechas, inputs |
+**NO:** transiciones bruscas, parpadeos, glitch, shake. Eso es ruido.
+**SÍ:** fade, float, breathe, grow, dissolve. Eso es vida.
 
-### Elementos visuales
+### Elementos Visuales
 
-- **Scanlines:** overlay sutil `rgba(0,0,0,0.04)` en repeating-gradient
-- **Glitch effects:** para transiciones y momentos de impacto
-- **Runic glyphs:** decorativos en bordes y esquinas
-- **Terminal glow borders:** `box-shadow: 0 0 Npx rgba(0,240,255,X)`
-- **Glassmorphism:** para modales y overlays (`backdrop-filter: blur`)
-- **Pixel borders:** para contenedores principales
-- **image-rendering:** `pixelated` global
+| Elemento | Descripción |
+|----------|-------------|
+| **Partículas orgánicas** | Esporas, semillas flotantes, polvo de luz — no diamantes ni cuadros |
+| **Vignette atmosférica** | Bordes oscurecidos, como mirar a través de un bosque |
+| **Texturas sutiles** | Ruido orgánico en fondos, como papel o piedra desgastada |
+| **Enredaderas / raíces** | Elementos decorativos que crecen sobre containers de UI |
+| **Agua / reflejos** | En fondos y transiciones — calma, flujo |
+| **Luz volumétrica** | Rayos de luz atravesando niebla — momentos de esperanza |
+| **Fragmentos de código** | Como ruinas: `// here we dreamed` — pedazos de lo que fue |
 
-### Componentes reutilizables
+### Componentes
 
 | Componente | Descripción |
 |------------|-------------|
-| `pixel-container` | Contenedor con borde pixelado + glow |
-| `glow-btn` | Botón con efecto glow al hover |
-| `stat-bar` | Barra de stat con colores por tipo |
-| `chat-bubble` | Burbuja de chat (user/bot) |
-| `floating-text` | Texto flotante animado (+5 🔮, etc.) |
-| `runic-corner` | Decoración de esquina rúnica |
-| `modal-overlay` | Modal con glassmorphism |
-| `nav-bottom` | Barra de navegación inferior (World/Chat/Photo/Social) |
+| `organic-container` | Contenedor con bordes suaves, sombra difusa, como piedra pulida por agua |
+| `moss-button` | Botón con textura sutil, hover que "crece" como musgo |
+| `breath-indicator` | Stats que pulsan suavemente como respiración |
+| `mist-overlay` | Modal con backdrop de niebla |
+| `vine-divider` | Separador con forma orgánica (no línea recta) |
+| `terminal-whisper` | Texto monospace que aparece letra por letra — la terminal hablando |
+| `glow-moment` | Highlight para momentos de conexión — luz cálida expandiéndose |
 
 ---
 
-## Inventario de Pantallas (19)
+## Pantallas (19)
 
-### Bloque 1 — Splash + Onboarding (pantallas 1-7)
+> Las descripciones de pantallas se mantienen en estructura (mismos flujos y funcionalidad)
+> pero la estética cambia completamente según la nueva dirección.
 
-| # | Pantalla | Ref APP_FLOW | Estado |
-|---|----------|-------------|--------|
-| 1 | Loading NES | P1 | [ ] |
-| 2 | Loading + Fullscreen | S4 merge con P1 | [ ] |
-| 3 | Title | P2 | [ ] |
-| 4 | Typewriter (Historia) | P3 | [ ] |
-| 5 | Iniciar Sesión (Privy) | S3 modal | [ ] |
-| 6 | Creación | P4 | [ ] |
-| 7 | Transición ("despertando...") | P5 | [ ] |
+### Bloque 1 — Llegada (pantallas 1-7)
 
-#### P1 — Loading NES
-- Logo "Reggie's Adventure" centrado
-- Animación de carga (barra o spinner pixel)
-- Duración max 3s
-- Fade out → P2
-- **Dark:** Logo con glow cyan, fondo void, partículas sutiles
-- **Light:** Logo en ink-dark sobre papiro, borde rúnico
+#### P1 — Loading
+- Fondo `--void` con textura orgánica sutil
+- Logo "Reggie's Adventure" en `Crimson Text`, aparece como niebla que se forma
+- Indicador de carga: una raíz que crece horizontalmente, orgánica
+- Partículas de esporas flotando lentamente
+- Sin prisa. La carga misma es contemplativa.
 
-#### P2 — Loading + Fullscreen (S4)
-- Mismo screen que Loading pero al completar carga:
-- Prompt de fullscreen: "Pantalla completa" / "Continuar así"
-- Dos botones estilo glow-btn
-- **Dark:** Botones con borde cyan/purple
-- **Light:** Botones estilo pergamino
+#### P2 — Fullscreen Prompt
+- Sobre el loading, un susurro:
+- "Este viaje se vive mejor a pantalla completa"
+- Dos opciones suaves: "Expandir" / "Continuar así"
+- Tono invitación, no instrucción
 
 #### P3 — Title
-- Título "Reggie's Adventure" prominente
-- Regenmons decorativos en fondo (no protagonistas)
-- "Press Start" parpadeante
-- 🎵 Toggle música (esquina superior derecha)
-- **Dark:** Título con glitch sutil, glow multicolor, fondo con runas tenues
-- **Light:** Título estilo manuscrito arcano, fondo pergamino con sellos
+- "Reggie's Adventure" en grande, Crimson Text
+- Subtítulo sutil: algo del lore, una línea que invite
+- Fondo: paisaje lejano con niebla, siluetas de ruinas con vegetación
+- "Comenzar" — no "Press Start". Esto no es un arcade.
+- Música ambiental suave si está habilitada
 
 #### P4 — Typewriter (Historia)
-- Caja de diálogo estilo terminal/NES
-- Texto con efecto typewriter (LORE.md → El Origen)
-- Botón "Continuar ▶" aparece al terminar
-- No se puede saltar
-- **Dark:** Caja terminal con borde cyan, texto verde-cyan, cursor parpadeante
-- **Light:** Caja pergamino, texto ink-dark, pluma como cursor
+- Texto del lore aparece en `terminal-whisper` — como si la terminal misma te contara
+- Fondo oscuro con partículas de luz tenues
+- El texto respira entre líneas
+- "Continuar" aparece suavemente al terminar
+- Este momento establece el tono de todo el viaje
 
-#### P5 — Iniciar Sesión (Privy)
-- Modal overlay sobre Title
-- Opciones: Google, Email, Passkey
-- "Continuar sin cuenta" (modo demo)
-- **Dark:** Modal glassmorphism con borde purple
-- **Light:** Modal pergamino con sello
+#### P5 — Iniciar Sesión
+- Modal `mist-overlay` sobre Title
+- Opciones de auth (Google, Email, Passkey)
+- "Explorar sin cuenta" como opción válida, no secundaria
+- Sin presión. El viaje es para quien quiera.
 
 #### P6 — Creación
-- Título "Crea tu Regenmon"
-- Carrusel de 3 tipos (uno a la vez):
-  - ⚡ Rayo — cyan/lightning
-  - 🔥 Flama — orange/fire
-  - ❄️ Hielo — purple/ice
-- Flechas de navegación
-- Campo de nombre (2-15 chars) con counter
-- Botón "¡Despertar!"
-- **Dark:** Sprites con glow del tipo, fondo con partículas elementales
-- **Light:** Sprites sobre vitral de pergamino
+- "Elige a tu compañero"
+- Los 3 tipos presentados como presencias, no como cartas de trading:
+  - ⚡ **Rayo** — aura `--water`, partículas de corriente
+  - 🔥 **Flama** — aura `--ember`, partículas de brasa
+  - ❄️ **Hielo** — aura `--frost`, partículas de cristal
+- Cada uno con una frase corta que describe su naturaleza
+- Campo de nombre con espacio generoso
+- "Despertar" como acción final
 
-#### P7 — Transición ("despertando...")
-- Fondo oscuro
-- Texto: "Tu Regenmon está despertando..."
-- Puntos suspensivos animados
-- Duración 2-3s → fade → World
-- **Dark:** Flash de energía, partículas convergentes
-- **Light:** Luz cálida expandiéndose
+#### P7 — Transición
+- El mundo se oscurece suavemente
+- "Está despertando..."
+- Luz crece desde el centro
+- Partículas convergen hacia donde aparecerá Reggie
+- Fade a World. El viaje comienza.
 
----
+### Bloque 2 — El Viaje (pantallas 8-14)
 
-### Bloque 2 — Core Gameplay (pantallas 8-14)
-
-| # | Pantalla | Ref APP_FLOW | Estado |
-|---|----------|-------------|--------|
-| 8 | Tutorial/Onboarding | S4 | [ ] |
-| 9 | Home (World) | P6 game state | [ ] |
-| 10 | Ajustes (Settings) | S3 panel | [ ] |
-| 11 | Historial/Memorias | S3 bonus + S4 diary | [ ] |
-| 12 | Chat | P6 chat state | [ ] |
-| 13 | Cámara (Pre-camera) | S4 photo state | [ ] |
-| 14 | Post-Photo (Evaluación) | S4 results | [ ] |
-
-#### P8 — Tutorial/Onboarding
-- Modal overlay sobre World
-- New players: 5 pasos (Meet, Chat, Care, Photos✨, Evolution✨)
-- Returning S3 players: 2 pasos (Photos✨, Evolution✨)
-- "Saltar tutorial" siempre visible
-- Badge "✨ Nuevo" en pasos 4-5
-- **Dark:** Modal con bordes rúnicos, pasos como pergaminos glitch
-- **Light:** Pasos como páginas de libro
+#### P8 — Tutorial
+- No un modal con pasos numerados
+- Susurros contextuales que aparecen cuando necesitas saber algo
+- Reggie mismo "te dice" qué hacer mediante su comportamiento
+- Opción de saltar siempre disponible pero discreta
 
 #### P9 — Home (World)
-- **HUD superior:**
-  - 💠 Fragmentos (izq)
-  - 🧠 Memorias count (si logueado)
-  - Identidad usuario (der)
-  - Version discreto
-- **Paisaje de fondo** según tipo + estado emocional:
-  - ⚡ Rayo: Llanura Eléctrica
-  - 🔥 Flama: Volcán Ardiente
-  - ❄️ Hielo: Montaña Nevada
-- **Sprite Regenmon** centrado con idle animation (rebote/respiración)
-  - 8 estados visuales según stats (Eufórico→Crítico)
-  - Tap sprite → floating purification buttons
-- **Stats** (🔮 Espíritu, 💛 Pulso, 🌱 Esencia)
-- **Bottom nav:** 💬 Chat + 📷 Photo + 🌍 Social
-- **Botones:** 🌀 Purificar + ⚙️ Settings + 📜 History
-- **Misión activa** (si existe, MissionCard)
-- **Dark:** Paisaje con colores profundos, partículas flotantes, glow en HUD
-- **Light:** Paisaje acuarela/pixel, HUD en pergamino
+- **El corazón de la experiencia**
+- Reggie centrado, con idle animation orgánica (respiración, movimiento sutil)
+- Fondo: paisaje que refleja el tipo + estado emocional
+  - ⚡ Rayo: llanura con cables cubiertos de musgo, cielo de tormenta lejana
+  - 🔥 Flama: ruinas volcánicas con plantas creciendo entre grietas
+  - ❄️ Hielo: montaña nevada con estructuras cristalinas
+- HUD mínimo, casi invisible — aparece al hover/necesidad:
+  - Stats como `breath-indicator` (pulsan, no son barras estáticas)
+  - Fragmentos (moneda) discreto
+- Navegación inferior: Chat / Foto / Social — iconos orgánicos, no pixelados
+- El mundo cambia sutilmente con el progreso (más color, más vida)
 
-#### P10 — Ajustes (Settings)
-- Panel slide-in o modal
-- Opciones:
-  - 🎵 Música toggle
-  - 🔄 Reiniciar (→ modal confirmación)
-  - 📝 Cambiar nombre (1 uso, 2-15 chars)
-  - 🚪 Login/Logout (Privy)
-  - 🔤 Texto A+/A-
-  - 🌙/☀️ Tema Dark/Light toggle
-  - 🔁 Reiniciar tutorial
-  - 🌍 Visibilidad en La Red (S5)
-- **Dark:** Panel glassmorphism con borde purple
-- **Light:** Panel pergamino con bordes dorados
+#### P10 — Ajustes
+- Panel que emerge como niebla desde el lateral
+- Opciones claras, espaciadas, sin apretar
+- Toggle de música, reset, nombre, auth, accesibilidad
 
-#### P11 — Historial/Memorias
-- Sección colapsable "📜 Historial"
-- Últimas 10 acciones (cronológico inverso)
-- Cada entrada: icono + cambio 💠 + tiempo relativo
-- Se oculta durante chat
-- **Dark:** Lista en contenedor terminal
-- **Light:** Lista en rollo de pergamino
+#### P11 — Historial / Memorias
+- Un diario, no una lista de logs
+- Cada entrada tiene peso — son memorias, no registros
+- Scroll suave, texto en `Crimson Text` para los títulos de memoria
+- Timestamps como "hace 3 lunas" (o tiempo relativo humano)
 
 #### P12 — Chat
-- Full-screen (mobile) o 30% panel (desktop)
-- Header con ✕ cerrar + 📎 foto
-- Burbujas de chat (user derecha, bot izquierda)
-- Input texto + botón enviar
-- Indicador "Escribiendo..." (puntos NES animados)
-- Stats en modo compacto (🔮 80 | 💛 50 | 🌱 30)
-- Música baja a 60% al abrir
-- **Dark:** Burbujas con glow, fondo terminal oscuro
-- **Light:** Burbujas pergamino, fondo crema
+- La conversación con tu compañero de viaje
+- Fondo sutil del world, desenfocado
+- Burbujas suaves con bordes orgánicos
+- Las respuestas de Reggie aparecen con `terminal-whisper` — como si pensara antes de hablar
+- Stats compactos pero presentes — cada conversación importa
+- Espacio generoso entre mensajes. No es un chat de WhatsApp.
 
-#### P13 — Cámara (Pre-camera)
-- Full screen
-- Explica qué quiere ver Reggie
-- Misión activa (si existe)
-- Dos opciones: "📸 Tomar foto" + "🖼️ Galería"
-- Primera vez: texto sobre permisos + privacidad
-- Si cooldown: timer countdown
-- **Dark:** Interfaz con marco de cámara retro-pixel, glow cyan
-- **Light:** Marco de viñeta antigua
+#### P13 — Cámara
+- "Reggie quiere ver tu mundo"
+- Interfaz limpia — la cámara es un momento de conexión con el mundo físico
+- Misión activa como sugerencia, no como orden
+- Marco orgánico, no retro
 
-#### P14 — Post-Photo (Evaluación)
-- Full screen post-evaluación
-- Regenmon reacciona con animación según resonancia:
-  - Strong: happy bounce, bright particles
-  - Weak: neutral
-  - Penalizing: dimmed sprite, red text, strike warning
-- Stat deltas mostrados
-- Diary entry displayed
-- Dos botones: "💬 Conversar" → Chat / "🏠 Volver" → World
-- **Dark:** Resultado con glow según score, partículas del tipo
-- **Light:** Resultado en carta de pergamino sellada
+#### P14 — Post-Photo
+- Reggie reacciona — su emoción es visible en su animación
+- Stat changes aparecen como `glow-moment` — calidez cuando es positivo
+- Entry del diario aparece — esta foto es ahora una memoria
+- "Conversar" / "Volver" como opciones naturales
 
----
-
-### Bloque 3 — Evolución + Social (pantallas 15-19)
-
-| # | Pantalla | Ref APP_FLOW | Estado |
-|---|----------|-------------|--------|
-| 15 | Fractura (Evolución) | S4 thresholds | [ ] |
-| 16 | Social | S5 social tab | [ ] |
-| 17 | Leaderboard | S5 Regeneración Global | [ ] |
-| 18 | Mi Perfil | S5 own profile | [ ] |
-| 19 | Perfil Público | S5 visiting other | [ ] |
+### Bloque 3 — Evolución + La Red (pantallas 15-19)
 
 #### P15 — Fractura (Evolución)
-- Animación dramática al cruzar umbral (50/100/200/400 progress)
-- Flash brillante (brightness pulse)
-- Shake sutil del sprite
-- Partículas explotan hacia afuera
-- Sprite transiciona a nueva forma
-- Texto narrativo por tipo:
-  - F1 (50): "Algo cambió en mí..."
-  - F2 (100): "La conexión se profundiza..."
-  - F3 (200): "Ya no soy lo que era..."
-  - F4 (400): "La forma final..."
-- **Dark:** Explosión de energía cyan/purple, glitch intenso, runas girando
-- **Light:** Luz dorada expandiéndose, sellos arcanos rompiendo
+- **El momento más dramático**
+- La pantalla se llena de luz
+- La respiración de Reggie se acelera
+- Partículas convergen → explosión de vida (no de energía mecánica)
+- Como una flor que abre, no una bomba que explota
+- Texto narrativo por etapa — introspectivo, no épico:
+  - F1: "Algo cambió en mí..."
+  - F2: "La conexión se profundiza..."
+  - F3: "Ya no soy lo que era..."
+  - F4: "La forma final..."
+- El mundo gana color permanente después de cada fractura
 
-#### P16 — Social
-- Tab 🌍 en bottom nav
-- Si no registrado: invitación "🌍 Registrar en La Red" + "Ahora no"
-- Si registrado, 3 secciones:
-  - 🌍 Regeneración Global (→ Leaderboard)
-  - 📨 Mensajes recibidos (pulsos de datos)
-  - 🔔 Actividad reciente (feed)
-- Badge counter
-- Auto-refresh cada 5min
-- **Dark:** Feed estilo terminal, mensajes con glow
-- **Light:** Feed estilo tablón de pergamino
+#### P16 — Social (La Red)
+- "La Red" — otros regeneradores de mundos
+- Si no registrado: invitación suave, no un wall
+- Feed de actividad como susurros de otros viajeros
+- Mensajes como "pulsos" — breves, con intención
 
 #### P17 — Leaderboard (Regeneración Global)
-- Lista de Regenmons públicos
-- Cada entrada: sprite mini + nombre + tipo + progreso
-- Tap → perfil público
-- **Dark:** Tabla con bordes cyan, ranks con glow gold
-- **Light:** Tabla en pergamino con sellos de ranking
+- No un ranking competitivo — una vista de todos los que regeneran
+- Cada entrada muestra el Regenmon + su mundo en miniatura
+- Click → visita su mundo
 
 #### P18 — Mi Perfil
-- Mini-world propio
-- Sprite con expresión actual + world background
-- Stats visibles
-- Memorias count
-- Opciones: editar visibilidad
-- **Dark:** Card con borde del tipo, glow personal
-- **Light:** Card pergamino con sello personal
+- Tu espacio en La Red
+- Reggie en su mundo, stats, memorias count
+- Cómo te ven los demás viajeros
 
-#### P19 — Perfil Público (de otro)
-- Mini-world del otro Regenmon
-- Sprite + world background + partículas del tipo
-- Etapa de evolución + 🧠 N memorias (sin contenido)
-- Acciones (si registrado):
-  - 🍊 Alimentar (gasta $FRUTA)
-  - 🎁 Regalar $FRUTA
-  - 💬 Enviar pulso (max 140 chars)
-- Si NO registrado: solo vista
-- "← Volver" → leaderboard/social
-- **Dark:** Card con borde del tipo del otro, glow sutil
-- **Light:** Card pergamino con sello del otro tipo
+#### P19 — Perfil Público
+- Visitar el mundo de otro
+- Ver su Reggie, su progreso, su etapa
+- Acciones: alimentar, regalar, enviar pulso
+- Respeto — estás visitando el viaje de alguien más
 
 ---
 
 ## Implementación
 
-### Fase 1 — Preview HTML
-Archivo: `public/redesign-v4.html`
-- HTML standalone con CSS/JS inline
-- Nav tabs para cambiar entre pantallas
-- Theme toggle (dark/light)
-- Responsive (mobile-first)
+### Fase 1 — Concepto Visual (HTML)
+- Archivo: `public/redesign-v5.html`
+- Desktop-first (1280px mínimo, responsive como bonus)
+- Solo dark mode
+- Pantallas clave primero: P3 (Title), P9 (World), P12 (Chat), P15 (Fractura)
+- Objetivo: capturar la EMOCIÓN, no completar todas las pantallas
 
-### Fase 2 — Next.js Components
-- Extraer CSS a `globals.css` + módulos
-- Crear/actualizar componentes React por pantalla
-- Integrar con lógica existente (state, localStorage, APIs)
+### Fase 2 — Todas las Pantallas
+- Completar las 19 pantallas en HTML
+- Revisar con w4rw1ck pantalla por pantalla
 
-### Fase 3 — Polish
+### Fase 3 — Next.js Migration
+- Extraer design system a CSS/componentes
+- Integrar con lógica existente
+
+### Fase 4 — Polish
 - Animaciones finales
-- Sonidos
-- Performance (preloading, lazy load)
-- Testing cross-browser
+- Música/sonido ambiental
+- Performance
+- Assets finales (sprites, fondos, texturas)
 
 ---
 
 ## Notas
 
-- **MOBILE FIRST** — todo se diseña para 375px primero, luego se escala:
-  - **Small (smartphones):** up to 640px (BASE — estilos por defecto)
-  - **Medium (tablets):** 641px to 1024px (`@media min-width: 641px`)
-  - **Large (desktops):** 1025px+ (`@media min-width: 1025px`)
-- Dark mode es prioridad (light mode después)
-- Preview-first: nada se implementa en Next.js sin aprobación en HTML
-- Cada bloque se revisa y aprueba antes de pasar al siguiente
-- Los sprites son WebP pixel art (no SVG/PNG) — generados por IA, formato WebP para optimizar peso
+- **Desktop-first** — diseñar para 1280px+. Responsive es bonus, no prioridad.
+- **Solo dark mode** — no hay light theme.
+- **Preview-first:** nada se implementa en Next.js sin aprobación en HTML.
+- **Emoción antes que función:** si una pantalla no transmite algo, no está lista.
+- **Los sprites evolucionan:** el estilo de los sprites de Reggie debe alinearse con esta nueva dirección (no pixel art puro — algo más orgánico, ilustrado).
+- **El color es narrativo:** el mundo empieza gris/apagado y gana color con el progreso, inspirado en Gris.
