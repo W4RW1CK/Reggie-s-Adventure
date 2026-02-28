@@ -62,13 +62,22 @@ Para todo aquel dispuesto a emprender ese viaje.
 
 ### Filosofía Visual
 
+**Tres referencias fundacionales:**
+- **Journey** — la relación con el compañero, la esperanza silenciosa, las ruinas de algo que fue
+- **Ori and the Blind Forest** — la naturaleza regenerándose, la luz que vuelve, el mundo que revive
+- **Rain World** — eco-brutalismo, lo industrial abandonado, vegetación reclamando estructuras
+
 **Tres capas de realidad:**
 1. **El Mundo Natural** — fondos orgánicos, texturas de musgo/piedra/agua, vida que crece
-2. **Los Restos Digitales** — fragmentos de UI antigua, terminales abandonadas, código como ruinas
+2. **Los Restos Digitales** — fragmentos de código como ruinas en el fondo, terminales abandonadas. Presencia moderada — visible pero no saturante
 3. **La Alquimia** — donde naturaleza y tecnología se funden: enredaderas sobre circuitos, agua fluyendo por cables, cristales creciendo en servidores
 
-**Emoción cromática (inspirada en Gris):**
-El color evoluciona con la relación. Al inicio el mundo es más apagado, gris. Conforme Reggie y tú avanzan, el color regresa — como en Gris, donde cada etapa devuelve un color al mundo.
+**Estilo de arte:**
+- **Reggie:** entre watercolor y digital painting — no pixel art, no 3D. Orgánico, pintado, con alma.
+- **Fondos:** siluetas atmosféricas + pintado/ilustrado. Capas de profundidad (parallax). Inspirado en Ori (luminosidad) y Rain World (ruinas industriales).
+
+**Narrativa cromática:**
+NO empieza en escala de grises literal, pero el mundo se siente apagado, sin vida, abandonado al inicio. Conforme avanzas y regeneras, los colores ganan saturación, las tonalidades se expanden, la "vida" crece. La progresión visual ES la narrativa — como en Journey y Ori, donde ver el mundo cambiar es la recompensa.
 
 ### Paleta
 
