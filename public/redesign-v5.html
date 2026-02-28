@@ -612,6 +612,749 @@ html, body {
   100% { opacity: 0; transform: translate(var(--bx), var(--by)) scale(0); }
 }
 
+/* ══════════════════════════════════════════
+   SCREEN 5 — DESPERTAR (Loading)
+   ══════════════════════════════════════════ */
+#despertar {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: linear-gradient(to top, #080b10 0%, #0a0e13 40%, #0d1117 100%);
+}
+.despertar-root-track {
+  position: relative; z-index: 20;
+  width: 400px; height: 6px;
+  background: rgba(45,90,61,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 60px;
+}
+.despertar-root-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(to right, var(--moss), var(--lichen));
+  border-radius: 3px;
+  position: relative;
+  transition: width 0.3s ease-out;
+  box-shadow: 0 0 12px rgba(127,176,105,0.3);
+}
+.despertar-root-fill::after {
+  content: ''; position: absolute; right: -4px; top: -3px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: radial-gradient(circle, var(--lichen), transparent);
+}
+/* Vine tendrils along root */
+.despertar-tendril {
+  position: absolute; z-index: 19;
+  width: 2px; border-radius: 1px;
+  background: linear-gradient(to top, var(--moss), transparent);
+  opacity: 0; transition: opacity 1s, height 2s ease-out;
+}
+.despertar-whisper {
+  position: relative; z-index: 20;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 1.5s ease-out;
+}
+.despertar-whisper.visible { opacity: 1; }
+.despertar-whisper p {
+  font-family: 'Crimson Text', serif;
+  font-size: 16px; color: var(--ghost);
+  letter-spacing: 1px; line-height: 1.8;
+  margin-bottom: 40px;
+}
+.despertar-btns {
+  display: flex; gap: 24px; justify-content: center;
+}
+.despertar-btn {
+  font-family: 'Crimson Text', serif;
+  font-size: 15px; letter-spacing: 2px;
+  color: var(--amber);
+  background: rgba(212,165,116,0.06);
+  border: 1px solid rgba(212,165,116,0.12);
+  padding: 12px 36px; border-radius: 30px;
+  cursor: pointer; transition: all 0.5s ease;
+}
+.despertar-btn:hover {
+  background: rgba(212,165,116,0.1);
+  border-color: rgba(212,165,116,0.25);
+  box-shadow: 0 0 30px rgba(212,165,116,0.08);
+}
+
+/* ══════════════════════════════════════════
+   SCREEN 6 — EL ORIGEN (Story/Lore)
+   ══════════════════════════════════════════ */
+#origen {
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(to top, #0a0e13 0%, #111a24 50%, #0d1117 100%);
+}
+.origen-landscape {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, #0a0e13 0%, #0f1620 30%, #111a24 60%, #0d1117 100%);
+}
+.origen-lines {
+  position: relative; z-index: 20;
+  max-width: 700px; padding: 0 40px;
+  display: flex; flex-direction: column; gap: 32px;
+}
+.origen-line {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px; font-weight: 300;
+  color: var(--glow);
+  letter-spacing: 0.5px;
+  line-height: 2;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 1.2s ease-out, transform 1.2s ease-out;
+  text-shadow: 0 0 40px rgba(232,213,183,0.1);
+}
+.origen-line.visible {
+  opacity: 1; transform: translateY(0);
+}
+.origen-continuar {
+  font-family: 'Crimson Text', serif;
+  font-size: 16px; letter-spacing: 3px;
+  color: var(--amber);
+  background: none; border: 1px solid rgba(212,165,116,0.12);
+  padding: 12px 40px; border-radius: 30px;
+  cursor: pointer; opacity: 0;
+  transition: opacity 1.5s ease-out, background 0.4s, border-color 0.4s;
+  align-self: center; margin-top: 20px;
+}
+.origen-continuar.visible { opacity: 1; }
+.origen-continuar:hover {
+  background: rgba(212,165,116,0.08);
+  border-color: rgba(212,165,116,0.25);
+}
+/* Light particles per line */
+.origen-particle {
+  position: absolute; width: 3px; height: 3px;
+  border-radius: 50%;
+  background: var(--glow);
+  opacity: 0;
+  animation: origenFloat 5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes origenFloat {
+  0% { opacity: 0; transform: translate(0, 0); }
+  30% { opacity: 0.4; }
+  100% { opacity: 0; transform: translate(var(--ofx, 30px), var(--ofy, -50px)); }
+}
+
+/* ══════════════════════════════════════════
+   SCREEN 7 — ACCESO (Login overlay)
+   ══════════════════════════════════════════ */
+#acceso {
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(to top, #0a0e13 0%, #0d1117 30%, #111a24 60%, #0f1922 100%);
+}
+.acceso-mist {
+  position: absolute; inset: 0; z-index: 5;
+  background: radial-gradient(ellipse at center, rgba(184,196,208,0.06) 0%, rgba(13,17,23,0.9) 70%);
+  animation: fogDrift 10s ease-in-out infinite alternate;
+}
+.acceso-container {
+  position: relative; z-index: 20;
+  display: flex; flex-direction: column; align-items: center; gap: 32px;
+  padding: 60px;
+}
+.acceso-title {
+  font-family: 'Crimson Text', serif;
+  font-size: clamp(28px, 3vw, 42px);
+  color: var(--glow);
+  letter-spacing: 3px;
+  text-shadow: 0 0 50px rgba(232,213,183,0.12);
+  margin-bottom: 16px;
+}
+.acceso-subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 300;
+  color: var(--ghost); letter-spacing: 3px;
+  margin-bottom: 20px;
+}
+.acceso-options {
+  display: flex; flex-direction: column; gap: 16px;
+  width: 320px;
+}
+.acceso-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px; font-weight: 300;
+  color: var(--mist);
+  background: rgba(184,196,208,0.04);
+  border: 1px solid rgba(184,196,208,0.1);
+  padding: 16px 28px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.5s ease;
+  display: flex; align-items: center; gap: 12px;
+  justify-content: center;
+  letter-spacing: 1px;
+}
+.acceso-btn:hover {
+  background: rgba(184,196,208,0.08);
+  border-color: rgba(184,196,208,0.2);
+  box-shadow: 0 0 30px rgba(184,196,208,0.05);
+}
+.acceso-btn .btn-icon {
+  font-size: 18px; opacity: 0.7;
+}
+.acceso-explorar {
+  font-family: 'Crimson Text', serif;
+  font-size: 15px; letter-spacing: 2px;
+  color: var(--amber);
+  background: rgba(212,165,116,0.04);
+  border: 1px solid rgba(212,165,116,0.1);
+  padding: 14px 36px; border-radius: 30px;
+  cursor: pointer; margin-top: 16px;
+  transition: all 0.5s ease;
+}
+.acceso-explorar:hover {
+  background: rgba(212,165,116,0.1);
+  border-color: rgba(212,165,116,0.2);
+  box-shadow: 0 0 30px rgba(212,165,116,0.08);
+}
+
+/* ══════════════════════════════════════════
+   SCREEN 8 — ELECCIÓN (Choose companion)
+   ══════════════════════════════════════════ */
+#eleccion {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: linear-gradient(to top, #0a0e13, #0d1117 40%, #111a24);
+}
+.eleccion-title {
+  position: relative; z-index: 20;
+  font-family: 'Crimson Text', serif;
+  font-size: clamp(28px, 3vw, 44px);
+  color: var(--glow); letter-spacing: 3px;
+  margin-bottom: 60px;
+  text-shadow: 0 0 50px rgba(232,213,183,0.12);
+  animation: titleFadeIn 2s ease-out both;
+}
+.eleccion-essences {
+  position: relative; z-index: 20;
+  display: flex; gap: 80px;
+  margin-bottom: 60px;
+}
+.eleccion-essence {
+  display: flex; flex-direction: column; align-items: center; gap: 24px;
+  cursor: pointer; padding: 30px; border-radius: 20px;
+  border: 1px solid transparent;
+  transition: all 0.6s ease;
+  width: 240px;
+}
+.eleccion-essence:hover {
+  border-color: rgba(232,213,183,0.08);
+  background: rgba(232,213,183,0.02);
+}
+.eleccion-essence.selected {
+  border-color: rgba(232,213,183,0.15);
+  background: rgba(232,213,183,0.03);
+}
+/* Brasa essence */
+.essence-brasa {
+  width: 80px; height: 80px; position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.essence-brasa-core {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: radial-gradient(circle, #f0c070, var(--ember), transparent);
+  box-shadow: 0 0 30px rgba(199,91,57,0.5), 0 0 60px rgba(212,165,116,0.3);
+  animation: brasaPulse 3s ease-in-out infinite;
+}
+@keyframes brasaPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(199,91,57,0.5), 0 0 60px rgba(212,165,116,0.3); }
+  50% { transform: scale(1.3); box-shadow: 0 0 45px rgba(199,91,57,0.7), 0 0 90px rgba(212,165,116,0.4); }
+}
+.essence-brasa-spark {
+  position: absolute; width: 3px; height: 3px; border-radius: 50%;
+  background: var(--amber);
+  animation: sparkOrbit var(--sdur, 3s) linear infinite;
+}
+@keyframes sparkOrbit {
+  0% { transform: rotate(0deg) translateX(var(--srad, 30px)); opacity: 0.8; }
+  50% { opacity: 0.3; }
+  100% { transform: rotate(360deg) translateX(var(--srad, 30px)); opacity: 0.8; }
+}
+/* Niebla essence */
+.essence-niebla {
+  width: 80px; height: 80px; position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.essence-niebla-cloud {
+  width: 60px; height: 60px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(184,196,208,0.25), rgba(90,102,112,0.1), transparent);
+  box-shadow: 0 0 40px rgba(184,196,208,0.15), 0 0 80px rgba(184,196,208,0.08);
+  animation: nieblaBreathe 5s ease-in-out infinite;
+  filter: blur(6px);
+}
+@keyframes nieblaBreathe {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.5); opacity: 0.9; }
+}
+/* Cristal essence */
+.essence-cristal {
+  width: 80px; height: 80px; position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.essence-cristal-form {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, rgba(155,184,211,0.4), rgba(232,213,183,0.3), rgba(155,184,211,0.2));
+  clip-path: polygon(50% 0%, 85% 25%, 85% 75%, 50% 100%, 15% 75%, 15% 25%);
+  animation: cristalRotate 12s linear infinite;
+  box-shadow: 0 0 30px rgba(155,184,211,0.3);
+  position: relative;
+}
+.essence-cristal-form::after {
+  content: ''; position: absolute; inset: 4px;
+  background: linear-gradient(225deg, rgba(232,213,183,0.2), transparent);
+  clip-path: polygon(50% 0%, 85% 25%, 85% 75%, 50% 100%, 15% 75%, 15% 25%);
+}
+@keyframes cristalRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.essence-cristal-refract {
+  position: absolute; width: 2px; height: 2px; border-radius: 50%;
+  animation: refractGlint 4s ease-in-out infinite;
+}
+@keyframes refractGlint {
+  0%, 100% { opacity: 0; transform: translate(0, 0) scale(0.5); }
+  50% { opacity: 0.7; transform: translate(var(--rx, 15px), var(--ry, -20px)) scale(1); }
+}
+.essence-name {
+  font-family: 'Crimson Text', serif;
+  font-size: 20px; color: var(--glow);
+  letter-spacing: 2px;
+}
+.essence-quote {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 300;
+  color: var(--ghost); line-height: 1.7;
+  text-align: center; letter-spacing: 0.3px;
+  max-width: 200px;
+}
+.eleccion-name-input {
+  position: relative; z-index: 20;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  margin-bottom: 40px;
+}
+.eleccion-name-input label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--ghost);
+}
+.eleccion-name-input input {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px; font-weight: 300;
+  color: var(--mist);
+  background: rgba(184,196,208,0.04);
+  border: 1px solid rgba(184,196,208,0.1);
+  border-radius: 30px;
+  padding: 14px 32px;
+  text-align: center;
+  outline: none; width: 280px;
+  transition: border-color 0.4s;
+}
+.eleccion-name-input input::placeholder { color: var(--ghost); opacity: 0.4; }
+.eleccion-name-input input:focus { border-color: rgba(212,165,116,0.2); }
+.btn-despertar {
+  position: relative; z-index: 20;
+  font-family: 'Crimson Text', serif;
+  font-size: 18px; letter-spacing: 3px;
+  color: var(--amber);
+  background: rgba(212,165,116,0.06);
+  border: 1px solid rgba(212,165,116,0.15);
+  padding: 14px 48px; border-radius: 40px;
+  cursor: pointer;
+  transition: all 0.6s ease;
+}
+.btn-despertar:hover {
+  background: rgba(212,165,116,0.12);
+  border-color: rgba(212,165,116,0.3);
+  box-shadow: 0 0 40px rgba(212,165,116,0.1);
+}
+
+/* ══════════════════════════════════════════
+   SCREEN 9 — NACIMIENTO (Birth transition)
+   ══════════════════════════════════════════ */
+#nacimiento {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--void);
+  overflow: hidden;
+}
+.nacimiento-dark {
+  position: absolute; inset: 0; z-index: 1;
+  background: var(--void);
+  transition: opacity 3s ease-out;
+}
+.nacimiento-text {
+  position: relative; z-index: 20;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px; font-weight: 300;
+  color: var(--ghost);
+  letter-spacing: 4px;
+  opacity: 0;
+  transition: opacity 2s ease-out;
+}
+.nacimiento-text.visible { opacity: 1; }
+.nacimiento-text.fade-out { opacity: 0; transition: opacity 1.5s ease-in; }
+.nacimiento-light {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0; height: 0; border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,213,183,0.3) 0%, rgba(212,165,116,0.15) 30%, rgba(199,91,57,0.05) 60%, transparent 70%);
+  z-index: 10;
+  transition: width 4s ease-out, height 4s ease-out;
+}
+.nacimiento-light.grow {
+  width: 600px; height: 600px;
+}
+.nacimiento-light.burst {
+  width: 300vw; height: 300vh;
+  transition: width 2s ease-out, height 2s ease-out;
+}
+/* Converging particles */
+.nacimiento-converge {
+  position: absolute; width: 4px; height: 4px;
+  border-radius: 50%; z-index: 15;
+  opacity: 0;
+}
+.nacimiento-converge.active {
+  animation: converge 3s ease-in forwards;
+}
+@keyframes converge {
+  0% { opacity: 0; }
+  20% { opacity: 0.8; }
+  100% { opacity: 0; transform: translate(var(--cx), var(--cy)) scale(0); }
+}
+
+/* ══════════════════════════════════════════
+   SCREEN 10 — CAPTURA (Camera + Result)
+   ══════════════════════════════════════════ */
+#captura {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--void);
+}
+.captura-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, #0a0e13, #111a24 50%, #0d1117);
+}
+.captura-container {
+  position: relative; z-index: 10;
+  width: 700px; max-width: 90%;
+  display: flex; flex-direction: column; gap: 32px;
+  align-items: center;
+}
+.captura-header {
+  font-family: 'Crimson Text', serif;
+  font-size: clamp(24px, 3vw, 36px);
+  color: var(--glow); letter-spacing: 2px;
+  text-shadow: 0 0 40px rgba(232,213,183,0.1);
+}
+.captura-prompt {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; font-weight: 300;
+  color: var(--ghost); line-height: 2;
+  text-align: center; letter-spacing: 0.5px;
+  max-width: 500px;
+}
+.captura-buttons {
+  display: flex; gap: 24px;
+}
+.captura-btn {
+  font-family: 'Crimson Text', serif;
+  font-size: 15px; letter-spacing: 2px;
+  color: var(--mist);
+  background: rgba(184,196,208,0.04);
+  border: 1px solid rgba(184,196,208,0.1);
+  padding: 14px 32px; border-radius: 30px;
+  cursor: pointer; transition: all 0.5s ease;
+}
+.captura-btn:hover {
+  background: rgba(184,196,208,0.08);
+  border-color: rgba(184,196,208,0.2);
+}
+/* Result area */
+.captura-result {
+  width: 100%;
+  display: flex; gap: 28px; align-items: flex-start;
+  padding: 28px;
+  background: rgba(232,213,183,0.02);
+  border: 1px solid rgba(232,213,183,0.06);
+  border-radius: 20px;
+}
+.captura-image {
+  width: 200px; height: 200px; flex-shrink: 0;
+  border-radius: 16px; overflow: hidden;
+  background: linear-gradient(135deg, #1a2332, #0f1922, #1a2332);
+  position: relative;
+  filter: saturate(0.7) contrast(1.1) sepia(0.2);
+}
+.captura-image::after {
+  content: '🌿'; position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 40px; opacity: 0.3;
+}
+.captura-image-frame {
+  position: absolute; inset: 0;
+  border: 2px solid rgba(232,213,183,0.08);
+  border-radius: 16px;
+  pointer-events: none;
+}
+.captura-details {
+  flex: 1; display: flex; flex-direction: column; gap: 20px;
+}
+.captura-reaction {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; font-weight: 300;
+  color: var(--glow);
+  padding: 12px 16px;
+  background: rgba(232,213,183,0.04);
+  border-radius: 12px;
+  animation: glowMoment 4s ease-in-out infinite;
+}
+@keyframes glowMoment {
+  0%, 100% { box-shadow: 0 0 0 rgba(232,213,183,0); }
+  50% { box-shadow: 0 0 20px rgba(232,213,183,0.08); }
+}
+.captura-stats {
+  display: flex; gap: 20px;
+}
+.captura-stat {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 300;
+  color: var(--lichen);
+  opacity: 0;
+  animation: statFloat 2s ease-out forwards;
+}
+.captura-stat:nth-child(1) { animation-delay: 0.5s; }
+.captura-stat:nth-child(2) { animation-delay: 0.8s; }
+.captura-stat:nth-child(3) { animation-delay: 1.1s; }
+@keyframes statFloat {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 0.7; transform: translateY(0); }
+}
+.captura-diary {
+  font-family: 'Crimson Text', serif;
+  font-size: 14px; color: var(--mist);
+  font-style: italic; line-height: 1.8;
+  border-left: 2px solid rgba(45,90,61,0.2);
+  padding-left: 16px;
+}
+
+/* ══════════════════════════════════════════
+   SCREEN 11 — LA RED (Social)
+   ══════════════════════════════════════════ */
+#lared {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--void);
+}
+.lared-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, #0a0e13, #0f1620 40%, #0d1117);
+}
+.lared-container {
+  position: relative; z-index: 10;
+  width: 700px; max-width: 90%;
+  display: flex; flex-direction: column; gap: 40px;
+}
+.lared-title {
+  font-family: 'Crimson Text', serif;
+  font-size: clamp(24px, 3vw, 36px);
+  color: var(--glow); letter-spacing: 2px;
+  text-align: center;
+  text-shadow: 0 0 40px rgba(232,213,183,0.1);
+}
+.lared-subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 300;
+  color: var(--ghost); letter-spacing: 3px;
+  text-align: center; margin-top: -24px;
+}
+.lared-feed {
+  display: flex; flex-direction: column; gap: 20px;
+}
+.lared-whisper {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; font-weight: 300;
+  color: var(--ghost);
+  padding: 16px 24px;
+  background: rgba(184,196,208,0.02);
+  border: 1px solid rgba(184,196,208,0.04);
+  border-radius: 16px;
+  line-height: 1.8;
+  letter-spacing: 0.3px;
+  opacity: 0;
+  animation: whisperIn 1.2s ease-out forwards;
+}
+.lared-whisper:nth-child(1) { animation-delay: 0.2s; }
+.lared-whisper:nth-child(2) { animation-delay: 0.6s; }
+.lared-whisper:nth-child(3) { animation-delay: 1.0s; }
+.lared-whisper:nth-child(4) { animation-delay: 1.4s; }
+@keyframes whisperIn {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 0.6; transform: translateY(0); }
+}
+.lared-presence {
+  display: flex; align-items: center; gap: 20px;
+  padding: 20px 24px;
+  background: rgba(232,213,183,0.02);
+  border: 1px solid rgba(232,213,183,0.06);
+  border-radius: 16px;
+}
+.lared-mini-reggie {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: radial-gradient(circle, var(--glow) 0%, var(--amber) 50%, transparent 100%);
+  box-shadow: 0 0 20px rgba(212,165,116,0.3);
+  animation: reggieBreathe 5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+.lared-presence-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 300;
+  color: var(--mist); letter-spacing: 1px;
+}
+.lared-pulse-section {
+  text-align: center;
+}
+.lared-pulse-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--ghost); margin-bottom: 16px;
+}
+.lared-pulse-btn {
+  font-family: 'Crimson Text', serif;
+  font-size: 15px; letter-spacing: 2px;
+  color: var(--amber);
+  background: rgba(212,165,116,0.04);
+  border: 1px solid rgba(212,165,116,0.1);
+  padding: 12px 36px; border-radius: 30px;
+  cursor: pointer; transition: all 0.5s ease;
+}
+.lared-pulse-btn:hover {
+  background: rgba(212,165,116,0.1);
+  border-color: rgba(212,165,116,0.2);
+  box-shadow: 0 0 40px rgba(212,165,116,0.08);
+}
+
+/* ══════════════════════════════════════════
+   SCREEN 12 — OTRO VIAJERO (Public profile)
+   ══════════════════════════════════════════ */
+#viajero {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--void);
+}
+.viajero-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, #0a0e13, #0f1620 40%, #0d1117);
+}
+.viajero-container {
+  position: relative; z-index: 10;
+  width: 600px; max-width: 90%;
+  display: flex; flex-direction: column; align-items: center; gap: 32px;
+}
+.viajero-note {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 300;
+  color: var(--ghost); letter-spacing: 2px;
+  opacity: 0.6;
+}
+/* Their Reggie (Cristal type) */
+.viajero-reggie {
+  width: 70px; height: 70px; position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.viajero-reggie-core {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, rgba(155,184,211,0.5), rgba(232,213,183,0.3), rgba(155,184,211,0.3));
+  clip-path: polygon(50% 0%, 85% 25%, 85% 75%, 50% 100%, 15% 75%, 15% 25%);
+  box-shadow: 0 0 30px rgba(155,184,211,0.3), 0 0 60px rgba(155,184,211,0.15);
+  animation: cristalRotate 15s linear infinite;
+}
+.viajero-reggie-aura {
+  position: absolute; inset: -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(155,184,211,0.06), transparent 70%);
+  animation: reggieBreathe 6s ease-in-out infinite;
+}
+.viajero-name {
+  font-family: 'Crimson Text', serif;
+  font-size: 24px; color: var(--glow);
+  letter-spacing: 2px;
+}
+.viajero-type {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--frost); opacity: 0.6;
+}
+/* Miniature world */
+.viajero-world {
+  width: 100%; height: 120px;
+  border-radius: 16px; overflow: hidden;
+  position: relative;
+  background: linear-gradient(to top, #0a0e13, #111a24, #0f1620);
+  border: 1px solid rgba(155,184,211,0.06);
+}
+.viajero-world-regen {
+  position: absolute; inset: 0;
+  background: linear-gradient(to right, rgba(155,184,211,0.05), rgba(127,176,105,0.08), rgba(155,184,211,0.05));
+  filter: saturate(1.4);
+}
+.viajero-world-ground {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 30%;
+  background: linear-gradient(to top, #0a0e13, transparent);
+}
+.viajero-world-ruin {
+  position: absolute; bottom: 30%;
+  background: #141c26; opacity: 0.5;
+}
+.viajero-world-ruin:nth-child(3) { left: 15%; width: 20px; height: 50px; clip-path: polygon(0 100%, 0 10%, 50% 0, 100% 15%, 100% 100%); }
+.viajero-world-ruin:nth-child(4) { right: 20%; width: 30px; height: 65px; clip-path: polygon(10% 100%, 0 20%, 40% 0, 100% 25%, 90% 100%); }
+/* Progress as saturation */
+.viajero-progress {
+  width: 100%; display: flex; align-items: center; gap: 16px;
+}
+.viajero-progress-bar {
+  flex: 1; height: 3px; border-radius: 2px;
+  background: rgba(155,184,211,0.1);
+  overflow: hidden;
+}
+.viajero-progress-fill {
+  width: 68%; height: 100%;
+  background: linear-gradient(to right, var(--frost), var(--glow));
+  border-radius: 2px;
+}
+.viajero-progress-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--ghost); letter-spacing: 1px;
+}
+.viajero-actions {
+  display: flex; gap: 20px;
+}
+.viajero-action {
+  font-family: 'Crimson Text', serif;
+  font-size: 14px; letter-spacing: 2px;
+  color: var(--mist);
+  background: rgba(184,196,208,0.04);
+  border: 1px solid rgba(184,196,208,0.08);
+  padding: 12px 28px; border-radius: 30px;
+  cursor: pointer; transition: all 0.5s ease;
+}
+.viajero-action:hover {
+  background: rgba(184,196,208,0.08);
+  border-color: rgba(184,196,208,0.15);
+  box-shadow: 0 0 25px rgba(184,196,208,0.05);
+}
+.viajero-back {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 300;
+  color: var(--ghost); letter-spacing: 2px;
+  background: none; border: none;
+  cursor: pointer; padding: 8px 16px;
+  transition: color 0.4s;
+}
+.viajero-back:hover { color: var(--amber); }
+
 /* ── Ambient particles (spores) ── */
 .spore {
   position: absolute;
@@ -635,9 +1378,17 @@ html, body {
 
 <!-- Tab Navigation -->
 <nav class="tab-nav">
+  <button data-screen="despertar">Despertar</button>
+  <button data-screen="origen">Origen</button>
+  <button data-screen="acceso">Acceso</button>
   <button class="active" data-screen="umbral">Umbral</button>
+  <button data-screen="eleccion">Elección</button>
+  <button data-screen="nacimiento">Nacimiento</button>
   <button data-screen="mundo">El Mundo</button>
   <button data-screen="dialogo">Diálogo</button>
+  <button data-screen="captura">Captura</button>
+  <button data-screen="lared">La Red</button>
+  <button data-screen="viajero">Viajero</button>
   <button data-screen="fractura">Fractura</button>
 </nav>
 
@@ -769,6 +1520,193 @@ html, body {
   <div class="vignette"></div>
 </section>
 
+<!-- ═══ SCREEN 5: DESPERTAR ═══ -->
+<section id="despertar" class="screen">
+  <canvas class="particle-canvas" id="despertar-particles"></canvas>
+  <div class="despertar-root-track">
+    <div class="despertar-root-fill" id="despertar-root"></div>
+  </div>
+  <div class="despertar-whisper" id="despertar-whisper">
+    <p>Este viaje se vive mejor a pantalla completa</p>
+    <div class="despertar-btns">
+      <button class="despertar-btn" onclick="document.documentElement.requestFullscreen?.()">Expandir</button>
+      <button class="despertar-btn" onclick="switchScreen('origen')">Continuar así</button>
+    </div>
+  </div>
+  <div class="vignette"></div>
+</section>
+
+<!-- ═══ SCREEN 6: EL ORIGEN ═══ -->
+<section id="origen" class="screen">
+  <div class="origen-landscape"></div>
+  <canvas class="particle-canvas" id="origen-particles"></canvas>
+  <div class="origen-lines" id="origen-lines">
+    <div class="origen-line">Hubo un tiempo en que el mundo recordaba.</div>
+    <div class="origen-line">Los circuitos cantaban con la lluvia.</div>
+    <div class="origen-line">Las raíces bebían datos como agua.</div>
+    <div class="origen-line">Entonces, el silencio.</div>
+    <div class="origen-line">La gran desconexión.</div>
+    <div class="origen-line">Ahora, algo despierta entre las ruinas...</div>
+    <button class="origen-continuar" id="origen-continuar" onclick="switchScreen('acceso')">Continuar</button>
+  </div>
+  <div class="vignette"></div>
+</section>
+
+<!-- ═══ SCREEN 7: ACCESO ═══ -->
+<section id="acceso" class="screen">
+  <div class="acceso-mist"></div>
+  <canvas class="particle-canvas" id="acceso-particles"></canvas>
+  <div class="acceso-container">
+    <h2 class="acceso-title">Reggie's Adventure</h2>
+    <span class="acceso-subtitle">entra al viaje</span>
+    <div class="acceso-options">
+      <button class="acceso-btn"><span class="btn-icon">◉</span> Continuar con Google</button>
+      <button class="acceso-btn"><span class="btn-icon">✉</span> Correo electrónico</button>
+      <button class="acceso-btn"><span class="btn-icon">🔑</span> Passkey</button>
+    </div>
+    <button class="acceso-explorar" onclick="switchScreen('eleccion')">Explorar sin cuenta</button>
+  </div>
+  <div class="vignette"></div>
+</section>
+
+<!-- ═══ SCREEN 8: ELECCIÓN ═══ -->
+<section id="eleccion" class="screen">
+  <canvas class="particle-canvas" id="eleccion-particles"></canvas>
+  <h2 class="eleccion-title">Elige a tu compañero</h2>
+  <div class="eleccion-essences">
+    <div class="eleccion-essence" onclick="selectEssence(this, 'brasa')">
+      <div class="essence-brasa">
+        <div class="essence-brasa-core"></div>
+        <div class="essence-brasa-spark" style="--sdur:2.5s;--srad:28px"></div>
+        <div class="essence-brasa-spark" style="--sdur:3.2s;--srad:35px;animation-delay:-1.2s"></div>
+        <div class="essence-brasa-spark" style="--sdur:2.8s;--srad:22px;animation-delay:-0.6s"></div>
+      </div>
+      <span class="essence-name">Brasa</span>
+      <span class="essence-quote">Lo que queda después del fuego aún calienta.</span>
+    </div>
+    <div class="eleccion-essence" onclick="selectEssence(this, 'niebla')">
+      <div class="essence-niebla">
+        <div class="essence-niebla-cloud"></div>
+      </div>
+      <span class="essence-name">Niebla</span>
+      <span class="essence-quote">Lo esencial se revela cuando lo demás se oculta.</span>
+    </div>
+    <div class="eleccion-essence" onclick="selectEssence(this, 'cristal')">
+      <div class="essence-cristal">
+        <div class="essence-cristal-form"></div>
+        <div class="essence-cristal-refract" style="--rx:18px;--ry:-22px;background:var(--frost);width:3px;height:3px;border-radius:50%"></div>
+        <div class="essence-cristal-refract" style="--rx:-15px;--ry:20px;background:var(--glow);width:2px;height:2px;border-radius:50%;animation-delay:-2s"></div>
+        <div class="essence-cristal-refract" style="--rx:25px;--ry:10px;background:var(--frost);width:2px;height:2px;border-radius:50%;animation-delay:-1s"></div>
+      </div>
+      <span class="essence-name">Cristal</span>
+      <span class="essence-quote">La presión crea lo que el tiempo no puede destruir.</span>
+    </div>
+  </div>
+  <div class="eleccion-name-input">
+    <label>Nombre de tu compañero</label>
+    <input type="text" placeholder="..." maxlength="20">
+  </div>
+  <button class="btn-despertar" onclick="switchScreen('nacimiento')">Despertar</button>
+  <div class="vignette"></div>
+</section>
+
+<!-- ═══ SCREEN 9: NACIMIENTO ═══ -->
+<section id="nacimiento" class="screen">
+  <div class="nacimiento-dark" id="nacimiento-dark"></div>
+  <div class="nacimiento-light" id="nacimiento-light"></div>
+  <div id="nacimiento-converge-container"></div>
+  <div class="nacimiento-text" id="nacimiento-text">Está despertando...</div>
+  <canvas class="particle-canvas" id="nacimiento-particles"></canvas>
+  <div class="vignette"></div>
+</section>
+
+<!-- ═══ SCREEN 10: CAPTURA ═══ -->
+<section id="captura" class="screen">
+  <div class="captura-bg"></div>
+  <div class="captura-container">
+    <h2 class="captura-header">Reggie quiere ver tu mundo</h2>
+    <p class="captura-prompt">Hay algo allá afuera que brilla sin electricidad... ¿me lo mostrarías?</p>
+    <div class="captura-buttons">
+      <button class="captura-btn">📸 Capturar</button>
+      <button class="captura-btn">🖼️ Galería</button>
+    </div>
+    <div class="captura-result">
+      <div class="captura-image">
+        <div class="captura-image-frame"></div>
+      </div>
+      <div class="captura-details">
+        <div class="captura-reaction">✦ reggie observa con curiosidad... su luz se intensifica</div>
+        <div class="captura-stats">
+          <span class="captura-stat">+3 calor</span>
+          <span class="captura-stat">+2 vida</span>
+          <span class="captura-stat">+1 luz</span>
+        </div>
+        <div class="captura-diary">"Encontré algo verde entre el concreto. Reggie tembló un poco — creo que lo reconoció."</div>
+      </div>
+    </div>
+  </div>
+  <div class="vignette"></div>
+</section>
+
+<!-- ═══ SCREEN 11: LA RED ═══ -->
+<section id="lared" class="screen">
+  <div class="lared-bg"></div>
+  <canvas class="particle-canvas" id="lared-particles"></canvas>
+  <div class="lared-container">
+    <h2 class="lared-title">La Red</h2>
+    <span class="lared-subtitle">Huellas de otros viajeros</span>
+    <div class="lared-feed">
+      <div class="lared-whisper">Un viajero de Niebla regeneró su mundo... las siluetas se aclararon un poco.</div>
+      <div class="lared-whisper">Alguien envió un pulso de luz desde un lugar que olía a lluvia.</div>
+      <div class="lared-whisper">Un compañero de Cristal creció una faceta nueva hoy.</div>
+      <div class="lared-whisper">Dos viajeros se encontraron en silencio. El mundo se iluminó brevemente.</div>
+    </div>
+    <div class="lared-presence">
+      <div class="lared-mini-reggie"></div>
+      <span class="lared-presence-text">Tu Brasa late suavemente... estás conectado a la red.</span>
+    </div>
+    <div class="lared-pulse-section">
+      <div class="lared-pulse-label">enviar un pulso</div>
+      <button class="lared-pulse-btn">Enviar luz</button>
+    </div>
+  </div>
+  <div class="vignette"></div>
+</section>
+
+<!-- ═══ SCREEN 12: OTRO VIAJERO ═══ -->
+<section id="viajero" class="screen">
+  <div class="viajero-bg"></div>
+  <canvas class="particle-canvas" id="viajero-particles"></canvas>
+  <div class="viajero-container">
+    <span class="viajero-note">Estás visitando el viaje de alguien más.</span>
+    <div class="viajero-reggie">
+      <div class="viajero-reggie-aura"></div>
+      <div class="viajero-reggie-core"></div>
+    </div>
+    <span class="viajero-name">Lumina</span>
+    <span class="viajero-type">💎 Cristal</span>
+    <div class="viajero-world">
+      <div class="viajero-world-regen"></div>
+      <div class="viajero-world-ruin"></div>
+      <div class="viajero-world-ruin"></div>
+      <div class="viajero-world-ground"></div>
+    </div>
+    <div class="viajero-progress">
+      <div class="viajero-progress-bar">
+        <div class="viajero-progress-fill"></div>
+      </div>
+      <span class="viajero-progress-label">68% regenerado</span>
+    </div>
+    <div class="viajero-actions">
+      <button class="viajero-action">Alimentar</button>
+      <button class="viajero-action">Regalar</button>
+      <button class="viajero-action">Enviar pulso</button>
+    </div>
+    <button class="viajero-back" onclick="switchScreen('lared')">← volver</button>
+  </div>
+  <div class="vignette"></div>
+</section>
+
 <script>
 // ── Tab Navigation ──
 const tabs = document.querySelectorAll('.tab-nav button');
@@ -784,6 +1722,9 @@ function switchScreen(id) {
 
   if (id === 'fractura') startFractura();
   if (id === 'dialogo') startTerminalWhisper();
+  if (id === 'despertar') startDespertar();
+  if (id === 'origen') startOrigen();
+  if (id === 'nacimiento') startNacimiento();
 }
 
 tabs.forEach(t => t.addEventListener('click', () => switchScreen(t.dataset.screen)));
@@ -842,6 +1783,13 @@ function initParticles(canvasId, config = {}) {
 initParticles('umbral-particles', { count: 50, colors: ['rgba(232,213,183,', 'rgba(184,196,208,'] });
 initParticles('mundo-particles', { count: 35, colors: ['rgba(199,91,57,', 'rgba(212,165,116,', 'rgba(232,213,183,'] });
 initParticles('fractura-particles', { count: 25, colors: ['rgba(127,176,105,', 'rgba(232,213,183,'] });
+initParticles('despertar-particles', { count: 30, colors: ['rgba(232,213,183,', 'rgba(184,196,208,'] });
+initParticles('origen-particles', { count: 20, colors: ['rgba(232,213,183,', 'rgba(212,165,116,'] });
+initParticles('acceso-particles', { count: 25, colors: ['rgba(184,196,208,', 'rgba(232,213,183,'] });
+initParticles('eleccion-particles', { count: 30, colors: ['rgba(232,213,183,', 'rgba(184,196,208,'] });
+initParticles('nacimiento-particles', { count: 15, colors: ['rgba(232,213,183,', 'rgba(212,165,116,'] });
+initParticles('lared-particles', { count: 20, colors: ['rgba(184,196,208,', 'rgba(232,213,183,'] });
+initParticles('viajero-particles', { count: 20, colors: ['rgba(155,184,211,', 'rgba(232,213,183,'] });
 
 // ── Parallax (El Mundo) ──
 document.addEventListener('mousemove', (e) => {
@@ -911,6 +1859,85 @@ function startFractura() {
   setTimeout(() => {
     document.getElementById('fractura-text').classList.add('visible');
   }, 2500);
+}
+
+// ── Despertar (Loading) ──
+let despertarStarted = false;
+function startDespertar() {
+  if (despertarStarted) return;
+  despertarStarted = true;
+  const root = document.getElementById('despertar-root');
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += Math.random() * 3 + 0.5;
+    if (progress >= 100) {
+      progress = 100;
+      clearInterval(interval);
+      setTimeout(() => {
+        document.getElementById('despertar-whisper').classList.add('visible');
+      }, 800);
+    }
+    root.style.width = progress + '%';
+  }, 120);
+}
+
+// ── El Origen (Lore) ──
+let origenStarted = false;
+function startOrigen() {
+  if (origenStarted) return;
+  origenStarted = true;
+  const lines = document.querySelectorAll('.origen-line');
+  lines.forEach((line, i) => {
+    setTimeout(() => line.classList.add('visible'), i * 1800 + 400);
+  });
+  setTimeout(() => {
+    document.getElementById('origen-continuar').classList.add('visible');
+  }, lines.length * 1800 + 1200);
+}
+
+// ── Elección ──
+function selectEssence(el, type) {
+  document.querySelectorAll('.eleccion-essence').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ── Nacimiento ──
+let nacimientoStarted = false;
+function startNacimiento() {
+  if (nacimientoStarted) return;
+  nacimientoStarted = true;
+  const text = document.getElementById('nacimiento-text');
+  const light = document.getElementById('nacimiento-light');
+  const container = document.getElementById('nacimiento-converge-container');
+
+  // Create converging particles
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.className = 'nacimiento-converge';
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 200 + Math.random() * 300;
+    const sx = Math.cos(angle) * dist;
+    const sy = Math.sin(angle) * dist;
+    p.style.left = `calc(50% + ${sx}px)`;
+    p.style.top = `calc(50% + ${sy}px)`;
+    p.style.setProperty('--cx', `${-sx}px`);
+    p.style.setProperty('--cy', `${-sy}px`);
+    p.style.background = Math.random() > 0.5 ? 'var(--glow)' : 'var(--amber)';
+    p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
+    container.appendChild(p);
+  }
+
+  setTimeout(() => text.classList.add('visible'), 500);
+  setTimeout(() => {
+    container.querySelectorAll('.nacimiento-converge').forEach((p, i) => {
+      setTimeout(() => p.classList.add('active'), i * 80);
+    });
+  }, 1500);
+  setTimeout(() => light.classList.add('grow'), 2000);
+  setTimeout(() => {
+    text.classList.add('fade-out');
+  }, 4000);
+  setTimeout(() => light.classList.add('burst'), 5500);
 }
 </script>
 </body>
